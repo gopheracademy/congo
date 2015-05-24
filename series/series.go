@@ -29,6 +29,10 @@ type SeriesPgStorage struct {
 	DSN string
 }
 
+func (ss *SeriesService) List() ([]Series, error) {
+	return ss.storage.List()
+}
+
 func (pgs *SeriesPgStorage) List() ([]Series, error) {
 }
 func (pgs *SeriesPgStorage) Get() (Series, error) {
@@ -38,7 +42,7 @@ func (pgs *SeriesPgStorage) Update(s Series) error {
 func (pgs *SeriesPgStorage) Create(s Series) error {
 }
 
-func (pgs *SeriesPgStorage) ListEndpoint() server.Endpoint {
+func (ss *SeriesService) ListEndpoint() server.Endpoint {
 	return func(ctx context.Context, req server.Request) (server.Response, error) {
 		select {
 		case <-ctx.Done():
@@ -51,7 +55,7 @@ func (pgs *SeriesPgStorage) ListEndpoint() server.Endpoint {
 			return nil, server.ErrBadCast
 		}
 
-		s, err := pgs(listrequest)
+		s, err := ss(listrequest)
 
 		return response{
 			series: s,
