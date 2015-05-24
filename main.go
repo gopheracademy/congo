@@ -3,25 +3,30 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	stdlog "log"
-	"net"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"reflect"
 	"syscall"
+	"time"
 
+	"github.com/go-kit/kit/server"
+	jsoncodec "github.com/go-kit/kit/transport/codec/json"
+
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/streadway/handy/cors"
 	"github.com/streadway/handy/encoding"
 	"golang.org/x/net/context"
-	"google.golang.org/grpc"
 
-	"github.com/go-kit/kit/addsvc/pb"
 	kitlog "github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics"
+	"github.com/go-kit/kit/metrics/expvar"
+	"github.com/go-kit/kit/metrics/prometheus"
+	"github.com/go-kit/kit/metrics/statsd"
 	"github.com/go-kit/kit/tracing/zipkin"
-	jsoncodec "github.com/go-kit/kit/transport/codec/json"
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
@@ -29,7 +34,6 @@ func main() {
 	var (
 		debugAddr = flag.String("debug.addr", ":8000", "Address for HTTP debug/instrumentation server")
 		httpAddr  = flag.String("http.addr", ":8001", "Address for HTTP (JSON) server")
-		grpcAddr  = flag.String("grpc.addr", ":8002", "Address for gRPC server")
 	)
 	flag.Parse()
 
@@ -40,6 +44,35 @@ func main() {
 	kitlog.DefaultLogger = logger                     // for other gokit components
 	stdlog.SetOutput(kitlog.NewStdlibAdapter(logger)) // redirect stdlib logging to us
 	stdlog.SetFlags(0)                                // flags are handled in our logger
+	// `package metrics` domain
+	requests := metrics.NewMultiCounter(
+		expvar.NewCounter("requests"),
+		statsd.NewCounter(ioutil.Discard, "requests_total", time.Second),
+		prometheus.NewCounter(stdprometheus.CounterOpts{
+			Namespace: "congo",
+			Name:      "requests_total",
+			Help:      "Total number of received requests.",
+		}, []string{}),
+	)
+	duration := metrics.NewMultiHistogram(
+		expvar.NewHistogram("duration_nanoseconds_total", 0, 100000000, 3),
+		statsd.NewHistogram(ioutil.Discard, "duration_nanoseconds_total", time.Second),
+		prometheus.NewSummary(stdprometheus.SummaryOpts{
+			Namespace: "congo",
+			Name:      "duration_nanoseconds_total",
+			Help:      "Total nanoseconds spend serving requests.",
+		}, []string{}),
+	)
+
+	// `package tracing` domain
+	zipkinHost := "my-host"
+	zipkinCollector := loggingCollector{}
+	zipkinAddName := "CONGO" // is that right?
+	zipkinAddSpanFunc := zipkin.NewSpanFunc(zipkinHost, zipkinAddName)
+
+	var e server.Endpoint
+	//	e = makeEndpoint(a)
+	e = zipkin.AnnotateEndpoint(zipkinAddSpanFunc, zipkinCollector)(e)
 
 	// Mechanical stuff
 	root := context.Background()
@@ -51,7 +84,7 @@ func main() {
 
 	// Transport: HTTP (debug/instrumentation)
 	go func() {
-		logger.Log("addr", *debugAddr, "transport", "debug")
+		logger.Log("congo", *debugAddr, "transport", "debug")
 		errc <- http.ListenAndServe(*debugAddr, nil)
 	}()
 
@@ -71,33 +104,22 @@ func main() {
 		handler = httpInstrument(requests.With(field), duration.With(field))(handler)
 
 		mux := http.NewServeMux()
-		mux.Handle("/add", handler)
-		logger.Log("addr", *httpAddr, "transport", "HTTP")
+		// Add handlers here
+		logger.Log("congo", *httpAddr, "transport", "HTTP")
 		errc <- http.ListenAndServe(*httpAddr, mux)
-	}()
-
-	// Transport: gRPC
-	go func() {
-		ln, err := net.Listen("tcp", *grpcAddr)
-		if err != nil {
-			errc <- err
-			return
-		}
-		s := grpc.NewServer() // uses its own context?
-		field := metrics.Field{Key: "transport", Value: "grpc"}
-
-		var addServer pb.AddServer
-		addServer = grpcBinding{e}
-		addServer = grpcInstrument(requests.With(field), duration.With(field))(addServer)
-
-		pb.RegisterAddServer(s, addServer)
-		logger.Log("addr", *grpcAddr, "transport", "gRPC")
-		errc <- s.Serve(ln)
 	}()
 
 	logger.Log("fatal", <-errc)
 }
-
+func httpInstrument(requests metrics.Counter, duration metrics.Histogram) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			requests.Add(1)
+			defer func(begin time.Time) { duration.Observe(time.Since(begin).Nanoseconds()) }(time.Now())
+			next.ServeHTTP(w, r)
+		})
+	}
+}
 func interrupt() error {
 	c := make(chan os.Signal)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
@@ -113,4 +135,10 @@ func (loggingCollector) Collect(s *zipkin.Span) error {
 		"parent_span_id", s.ParentSpanID(),
 	)
 	return nil
+}
+
+type request struct {
+}
+
+type response struct {
 }
