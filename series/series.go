@@ -32,10 +32,13 @@ type SeriesPgStorage struct {
 func (ss *SeriesService) List() ([]Series, error) {
 	return ss.storage.List()
 }
+func (ss *SeriesService) Get(r getrequest) (Series, error) {
+	return ss.storage.Get(getrequest.id)
+}
 
 func (pgs *SeriesPgStorage) List() ([]Series, error) {
 }
-func (pgs *SeriesPgStorage) Get() (Series, error) {
+func (pgs *SeriesPgStorage) Get(id string) (Series, error) {
 }
 func (pgs *SeriesPgStorage) Update(s Series) error {
 }
@@ -55,7 +58,28 @@ func (ss *SeriesService) ListEndpoint() server.Endpoint {
 			return nil, server.ErrBadCast
 		}
 
-		s, err := ss.List(listReq)
+		s, err := ss.List()
+
+		return response{
+			series: s,
+		}, err
+	}
+}
+
+func (ss *SeriesService) GetEndpoint() server.Endpoint {
+	return func(ctx context.Context, req server.Request) (server.Response, error) {
+		select {
+		case <-ctx.Done():
+			return nil, server.ErrContextCanceled
+		default:
+		}
+
+		getReq, ok := req.(*getrequest)
+		if !ok {
+			return nil, server.ErrBadCast
+		}
+
+		s, err := ss.Get(getReq)
 
 		return response{
 			series: s,
