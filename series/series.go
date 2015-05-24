@@ -55,7 +55,7 @@ func (ss *SeriesService) ListEndpoint() server.Endpoint {
 			return nil, server.ErrBadCast
 		}
 
-		s, err := ss(listrequest)
+		s, err := ss.List(listrequest)
 
 		return response{
 			series: s,
