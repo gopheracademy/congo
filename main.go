@@ -38,9 +38,12 @@ func main() {
 	flag.Parse()
 
 	// `package log` domain
+	// This logger should get passed into other components
+	// and wrapped with component specifics
 	var logger kitlog.Logger
 	logger = kitlog.NewPrefixLogger(os.Stderr)
 	logger = kitlog.With(logger, "ts", kitlog.DefaultTimestampUTC)
+
 	kitlog.DefaultLogger = logger                     // for other gokit components
 	stdlog.SetOutput(kitlog.NewStdlibAdapter(logger)) // redirect stdlib logging to us
 	stdlog.SetFlags(0)                                // flags are handled in our logger
@@ -64,15 +67,8 @@ func main() {
 		}, []string{}),
 	)
 
-	// `package tracing` domain
-	zipkinHost := "my-host"
-	zipkinCollector := loggingCollector{}
-	zipkinAddName := "CONGO" // is that right?
-	zipkinAddSpanFunc := zipkin.NewSpanFunc(zipkinHost, zipkinAddName)
-
 	var e server.Endpoint
 	//	e = makeEndpoint(a)
-	e = zipkin.AnnotateEndpoint(zipkinAddSpanFunc, zipkinCollector)(e)
 
 	// Mechanical stuff
 	root := context.Background()
@@ -94,15 +90,14 @@ func main() {
 		defer cancel()
 
 		field := metrics.Field{Key: "transport", Value: "http"}
-		before := httptransport.Before(zipkin.ToContext(zipkin.FromHTTP(zipkinAddSpanFunc)))
 		after := httptransport.After(httptransport.SetContentType("application/json"))
 
 		var handler http.Handler
-		handler = httptransport.NewBinding(ctx, reflect.TypeOf(request{}), jsoncodec.New(), e, before, after)
+		handler = httptransport.NewBinding(ctx, reflect.TypeOf(request{}), jsoncodec.New(), e, nil, after)
 		handler = encoding.Gzip(handler)
 		handler = cors.Middleware(cors.Config{})(handler)
 		handler = httpInstrument(requests.With(field), duration.With(field))(handler)
-
+		// move this out so it is available for other components to add subroutes?
 		mux := http.NewServeMux()
 		// Add handlers here
 		logger.Log("congo", *httpAddr, "transport", "HTTP")
