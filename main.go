@@ -26,7 +26,6 @@ import (
 	"github.com/go-kit/kit/metrics/expvar"
 	"github.com/go-kit/kit/metrics/prometheus"
 	"github.com/go-kit/kit/metrics/statsd"
-	"github.com/go-kit/kit/tracing/zipkin"
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
@@ -119,17 +118,6 @@ func interrupt() error {
 	c := make(chan os.Signal)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	return fmt.Errorf("%s", <-c)
-}
-
-type loggingCollector struct{}
-
-func (loggingCollector) Collect(s *zipkin.Span) error {
-	kitlog.With(kitlog.DefaultLogger, "caller", kitlog.DefaultCaller).Log(
-		"trace_id", s.TraceID(),
-		"span_id", s.SpanID(),
-		"parent_span_id", s.ParentSpanID(),
-	)
-	return nil
 }
 
 type request struct {
