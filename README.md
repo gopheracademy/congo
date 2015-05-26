@@ -8,7 +8,7 @@
 
 Conference Management Software for Conference Organizers
 
-## YOU can help
+## We'd love you to join our effort
 We need Go developers to volunteer for the backend / API.  We also need front-end developers for help with frontend applications (management interface, conference websites, etc)
 
 Don't be shy, jump into an issue, propose a solution and start helping!
