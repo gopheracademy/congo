@@ -35,6 +35,38 @@ var Account = MediaType("application/vnd.congo.api.account", func() {
 	})
 })
 
+// User is the user resource media type.
+var User = MediaType("application/vnd.congo.api.user", func() {
+	Description("A user belonging to a tenant account")
+	Attributes(func() {
+		Attribute("id", Integer, "ID of user")
+		Attribute("href", String, "API href of user")
+		Attribute("first_name", String, "First name of user")
+		Attribute("last_name", String, "Last name of user")
+		Attribute("email", String, "Email address of user", func() {
+			Format("email")
+		})
+		Attribute("created_at", String, "Date of creation", func() {
+			Format("date-time")
+		})
+	})
+
+	View("default", func() {
+		Attribute("id")
+		Attribute("href")
+		Attribute("first_name")
+		Attribute("last_name")
+		Attribute("email")
+		Attribute("created_at")
+	})
+
+	View("link", func() {
+		Attribute("id")
+		Attribute("href")
+		Attribute("email")
+	})
+})
+
 // Series represents a recurring conference (GopherCon)
 var Series = MediaType("application/vnd.congo.api.series", func() {
 	Description("A recurring event or conference")

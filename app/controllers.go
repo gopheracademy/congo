@@ -116,3 +116,53 @@ func MountSeriesController(service goa.Service, ctrl SeriesController) {
 	router.Handle("PATCH", "/congo/accounts/:accountID/series/:seriesID", goa.NewHTTPRouterHandle(service, "Series", "Update", h))
 	service.Info("mount", "ctrl", "Series", "action", "Update", "route", "PATCH /congo/accounts/:accountID/series/:seriesID")
 }
+
+// UserController is the controller interface for the User actions.
+type UserController interface {
+	Create(*CreateUserContext) error
+	List(*ListUserContext) error
+	Show(*ShowUserContext) error
+	Update(*UpdateUserContext) error
+}
+
+// MountUserController "mounts" a User resource controller on the given service.
+func MountUserController(service goa.Service, ctrl UserController) {
+	router := service.HTTPHandler().(*httprouter.Router)
+	var h goa.Handler
+	h = func(c *goa.Context) error {
+		ctx, err := NewCreateUserContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Create(ctx)
+	}
+	router.Handle("POST", "/congo/accounts/:accountID/users", goa.NewHTTPRouterHandle(service, "User", "Create", h))
+	service.Info("mount", "ctrl", "User", "action", "Create", "route", "POST /congo/accounts/:accountID/users")
+	h = func(c *goa.Context) error {
+		ctx, err := NewListUserContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.List(ctx)
+	}
+	router.Handle("GET", "/congo/accounts/:accountID/users", goa.NewHTTPRouterHandle(service, "User", "List", h))
+	service.Info("mount", "ctrl", "User", "action", "List", "route", "GET /congo/accounts/:accountID/users")
+	h = func(c *goa.Context) error {
+		ctx, err := NewShowUserContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Show(ctx)
+	}
+	router.Handle("GET", "/congo/accounts/:accountID/users/:userID", goa.NewHTTPRouterHandle(service, "User", "Show", h))
+	service.Info("mount", "ctrl", "User", "action", "Show", "route", "GET /congo/accounts/:accountID/users/:userID")
+	h = func(c *goa.Context) error {
+		ctx, err := NewUpdateUserContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Update(ctx)
+	}
+	router.Handle("PATCH", "/congo/accounts/:accountID/users/:userID", goa.NewHTTPRouterHandle(service, "User", "Update", h))
+	service.Info("mount", "ctrl", "User", "action", "Update", "route", "PATCH /congo/accounts/:accountID/users/:userID")
+}

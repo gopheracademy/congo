@@ -433,3 +433,287 @@ func (ctx *UpdateSeriesContext) NoContent() error {
 func (ctx *UpdateSeriesContext) NotFound() error {
 	return ctx.Respond(404, nil)
 }
+
+// CreateUserContext provides the user create action context.
+type CreateUserContext struct {
+	*goa.Context
+	AccountID int
+	Payload   *CreateUserPayload
+}
+
+// NewCreateUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller create action.
+func NewCreateUserContext(c *goa.Context) (*CreateUserContext, error) {
+	var err error
+	ctx := CreateUserContext{Context: c}
+	rawAccountID, ok := c.Get("accountID")
+	if ok {
+		if accountID, err2 := strconv.Atoi(rawAccountID); err2 == nil {
+			ctx.AccountID = int(accountID)
+		} else {
+			err = goa.InvalidParamTypeError("accountID", rawAccountID, "integer", err)
+		}
+	}
+	p, err := NewCreateUserPayload(c.Payload())
+	if err != nil {
+		return nil, err
+	}
+	ctx.Payload = p
+	return &ctx, err
+}
+
+// CreateUserPayload is the user create action payload.
+type CreateUserPayload struct {
+	Email     string
+	FirstName string
+	LastName  string
+}
+
+// NewCreateUserPayload instantiates a CreateUserPayload from a raw request body.
+// It validates each field and returns an error if any validation fails.
+func NewCreateUserPayload(raw interface{}) (*CreateUserPayload, error) {
+	var err error
+	var p *CreateUserPayload
+	if val, ok := raw.(map[string]interface{}); ok {
+		p = new(CreateUserPayload)
+		if v, ok := val["email"]; ok {
+			var tmp5 string
+			if val, ok := v.(string); ok {
+				tmp5 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp5) < 2 {
+					err = goa.InvalidLengthError(`payload.Email`, tmp5, 2, true, err)
+				}
+			}
+			p.Email = tmp5
+		}
+		if v, ok := val["first_name"]; ok {
+			var tmp6 string
+			if val, ok := v.(string); ok {
+				tmp6 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.FirstName`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp6) < 2 {
+					err = goa.InvalidLengthError(`payload.FirstName`, tmp6, 2, true, err)
+				}
+			}
+			p.FirstName = tmp6
+		} else {
+			err = goa.MissingAttributeError(`payload`, "first_name", err)
+		}
+		if v, ok := val["last_name"]; ok {
+			var tmp7 string
+			if val, ok := v.(string); ok {
+				tmp7 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.LastName`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp7) < 2 {
+					err = goa.InvalidLengthError(`payload.LastName`, tmp7, 2, true, err)
+				}
+			}
+			p.LastName = tmp7
+		}
+	} else {
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+	}
+	return p, err
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreateUserContext) Created() error {
+	return ctx.Respond(201, nil)
+}
+
+// ListUserContext provides the user list action context.
+type ListUserContext struct {
+	*goa.Context
+	AccountID int
+}
+
+// NewListUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller list action.
+func NewListUserContext(c *goa.Context) (*ListUserContext, error) {
+	var err error
+	ctx := ListUserContext{Context: c}
+	rawAccountID, ok := c.Get("accountID")
+	if ok {
+		if accountID, err2 := strconv.Atoi(rawAccountID); err2 == nil {
+			ctx.AccountID = int(accountID)
+		} else {
+			err = goa.InvalidParamTypeError("accountID", rawAccountID, "integer", err)
+		}
+	}
+	return &ctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListUserContext) OK(resp UserCollection) error {
+	r, err := resp.Dump()
+	if err != nil {
+		return fmt.Errorf("invalid response: %s", err)
+	}
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user; type=collection; charset=utf-8")
+	return ctx.JSON(200, r)
+}
+
+// ShowUserContext provides the user show action context.
+type ShowUserContext struct {
+	*goa.Context
+	AccountID int
+	UserID    int
+}
+
+// NewShowUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller show action.
+func NewShowUserContext(c *goa.Context) (*ShowUserContext, error) {
+	var err error
+	ctx := ShowUserContext{Context: c}
+	rawAccountID, ok := c.Get("accountID")
+	if ok {
+		if accountID, err2 := strconv.Atoi(rawAccountID); err2 == nil {
+			ctx.AccountID = int(accountID)
+		} else {
+			err = goa.InvalidParamTypeError("accountID", rawAccountID, "integer", err)
+		}
+	}
+	rawUserID, ok := c.Get("userID")
+	if ok {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
+	}
+	return &ctx, err
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowUserContext) NotFound() error {
+	return ctx.Respond(404, nil)
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowUserContext) OK(resp *User, view UserViewEnum) error {
+	r, err := resp.Dump(view)
+	if err != nil {
+		return fmt.Errorf("invalid response: %s", err)
+	}
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user; charset=utf-8")
+	return ctx.JSON(200, r)
+}
+
+// UpdateUserContext provides the user update action context.
+type UpdateUserContext struct {
+	*goa.Context
+	AccountID int
+	UserID    int
+	Payload   *UpdateUserPayload
+}
+
+// NewUpdateUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller update action.
+func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
+	var err error
+	ctx := UpdateUserContext{Context: c}
+	rawAccountID, ok := c.Get("accountID")
+	if ok {
+		if accountID, err2 := strconv.Atoi(rawAccountID); err2 == nil {
+			ctx.AccountID = int(accountID)
+		} else {
+			err = goa.InvalidParamTypeError("accountID", rawAccountID, "integer", err)
+		}
+	}
+	rawUserID, ok := c.Get("userID")
+	if ok {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
+	}
+	p, err := NewUpdateUserPayload(c.Payload())
+	if err != nil {
+		return nil, err
+	}
+	ctx.Payload = p
+	return &ctx, err
+}
+
+// UpdateUserPayload is the user update action payload.
+type UpdateUserPayload struct {
+	Email     string
+	FirstName string
+	LastName  string
+}
+
+// NewUpdateUserPayload instantiates a UpdateUserPayload from a raw request body.
+// It validates each field and returns an error if any validation fails.
+func NewUpdateUserPayload(raw interface{}) (*UpdateUserPayload, error) {
+	var err error
+	var p *UpdateUserPayload
+	if val, ok := raw.(map[string]interface{}); ok {
+		p = new(UpdateUserPayload)
+		if v, ok := val["email"]; ok {
+			var tmp8 string
+			if val, ok := v.(string); ok {
+				tmp8 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp8) < 2 {
+					err = goa.InvalidLengthError(`payload.Email`, tmp8, 2, true, err)
+				}
+			}
+			p.Email = tmp8
+		}
+		if v, ok := val["first_name"]; ok {
+			var tmp9 string
+			if val, ok := v.(string); ok {
+				tmp9 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.FirstName`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp9) < 2 {
+					err = goa.InvalidLengthError(`payload.FirstName`, tmp9, 2, true, err)
+				}
+			}
+			p.FirstName = tmp9
+		}
+		if v, ok := val["last_name"]; ok {
+			var tmp10 string
+			if val, ok := v.(string); ok {
+				tmp10 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.LastName`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp10) < 2 {
+					err = goa.InvalidLengthError(`payload.LastName`, tmp10, 2, true, err)
+				}
+			}
+			p.LastName = tmp10
+		}
+	} else {
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+	}
+	return p, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *UpdateUserContext) NoContent() error {
+	return ctx.Respond(204, nil)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateUserContext) NotFound() error {
+	return ctx.Respond(404, nil)
+}

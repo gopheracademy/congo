@@ -16,3 +16,10 @@ package app
 type SeriesPayload struct {
 	Name string
 }
+
+// UserPayload type
+type UserPayload struct {
+	Email     string
+	FirstName string
+	LastName  string
+}

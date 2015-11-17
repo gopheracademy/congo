@@ -61,7 +61,61 @@ var _ = Resource("account", func() {
 		Response(NotFound)
 	})
 })
+var _ = Resource("user", func() {
 
+	DefaultMedia(User)
+	BasePath("users")
+	Parent("account")
+
+	Action("list", func() {
+		Routing(
+			GET(""),
+		)
+		Description("List all users in account")
+		Response(OK, func() {
+			Media(CollectionOf(User, func() {
+				View("default")
+			}))
+		})
+	})
+
+	Action("show", func() {
+		Routing(
+			GET("/:userID"),
+		)
+		Description("Retrieve user with given id")
+		Params(func() {
+			Param("userID", Integer)
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
+	Action("create", func() {
+		Routing(
+			POST(""),
+		)
+		Description("Record new user")
+		Payload(UserPayload, func() {
+			Required("first_name")
+			Required("last_name")
+			Required("email")
+		})
+		Response(Created, "^/accounts/[0-9]+/users/[0-9]+$")
+	})
+
+	Action("update", func() {
+		Routing(
+			PATCH("/:userID"),
+		)
+		Params(func() {
+			Param("userID", Integer)
+		})
+		Payload(UserPayload)
+		Response(NoContent)
+		Response(NotFound)
+	})
+})
 var _ = Resource("series", func() {
 
 	DefaultMedia(Series)
