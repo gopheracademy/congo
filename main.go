@@ -18,9 +18,9 @@ func main() {
 	// Mount "account" controller
 	c := NewAccountController()
 	app.MountAccountController(api, c)
-	// Mount "bottle" controller
-	c2 := NewBottleController()
-	app.MountBottleController(api, c2)
+	// Mount "series" controller
+	c2 := NewSeriesController()
+	app.MountSeriesController(api, c2)
 
 	// Mount Swagger spec provider controller
 	swagger.MountController(api)
