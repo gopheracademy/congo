@@ -1,0 +1,35 @@
+//************************************************************************//
+// congo Swagger Spec
+//
+// Generated with goagen v0.0.1, command line:
+// $ goagen
+// --out=/home/bketelsen/src/github.com/bketelsen/congo
+// --design=github.com/bketelsen/congo/design
+//
+// The content of this file is auto-generated, DO NOT MODIFY
+//************************************************************************//
+
+package swagger
+
+import (
+	"github.com/julienschmidt/httprouter"
+	"github.com/raphael/goa"
+)
+
+// MountController mounts the swagger spec controller under "/swagger.json".
+func MountController(service goa.Service) {
+	service.Info("mount", "ctrl", "Swagger", "action", "Show", "route", "GET /swagger.json")
+	h := goa.NewHTTPRouterHandle(service, "Swagger", "Show", getSwagger)
+	service.HTTPHandler().(*httprouter.Router).Handle("GET", "/swagger.json", h)
+}
+
+// getSwagger is the httprouter handle that returns the Swagger spec.
+// func getSwagger(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func getSwagger(ctx *goa.Context) error {
+	ctx.Header().Set("Content-Type", "application/swagger+json")
+	ctx.Header().Set("Cache-Control", "public, max-age=3600")
+	return ctx.Respond(200, []byte(spec))
+}
+
+// Generated spec
+const spec = `{"swagger":"2.0","info":{"title":"Congo - Conference Management Made Easy","description":"Multi-tenant conference management application","contact":{"name":"Gopher Academy","email":"social@gopheracademy.com","url":"https://gopheracademy.com"},"license":{"name":"MIT","url":"https://github.com/gopheracademy/congo/blob/master/LICENSE"},"version":""},"host":"api.gopheracademy.com","basePath":"/congo","schemes":["http"],"consumes":["application/json"],"produces":["application/json"],"paths":{"/accounts":{"post":{"description":"Create new account","operationId":"account#create","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"payload","in":"body","required":true,"schema":{"$ref":"#/definitions/CreateAccountPayload"}}],"responses":{"201":{"description":"Resource created","headers":{"Location":{"description":"href to created resource","type":"string","pattern":"/accounts/[0-9]+"}}}},"schemes":["https"]}},"/accounts/{accountID}":{"get":{"description":"Retrieve account with given id","operationId":"account#show","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"accountID","in":"path","description":"Account ID","required":true,"type":"integer"}],"responses":{"200":{"description":"","schema":{"$ref":"#/definitions/Account"}},"404":{"description":""}},"schemes":["https"]},"put":{"description":"Change account name","operationId":"account#update","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"accountID","in":"path","description":"Account ID","required":true,"type":"integer"},{"name":"payload","in":"body","required":true,"schema":{"$ref":"#/definitions/UpdateAccountPayload"}}],"responses":{"204":{"description":""},"404":{"description":""}},"schemes":["https"]},"delete":{"operationId":"account#delete","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"accountID","in":"path","description":"Account ID","required":true,"type":"integer"}],"responses":{"204":{"description":""},"404":{"description":""}},"schemes":["https"]}},"/accounts/{accountID}/series":{"get":{"description":"List all series in account","operationId":"series#list","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"accountID","in":"path","required":true,"type":"string"}],"responses":{"200":{"description":"","schema":{"$ref":"#/definitions/SeriesCollection"}}},"schemes":["https"]},"post":{"description":"Record new series","operationId":"series#create","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"accountID","in":"path","required":true,"type":"string"},{"name":"payload","in":"body","required":true,"schema":{"$ref":"#/definitions/CreateSeriesPayload"}}],"responses":{"201":{"description":"Resource created","headers":{"Location":{"description":"href to created resource","type":"string","pattern":"^/accounts/[0-9]+/series/[0-9]+$"}}}},"schemes":["https"]}},"/accounts/{accountID}/series/{seriesID}":{"get":{"description":"Retrieve series with given id","operationId":"series#show","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"accountID","in":"path","required":true,"type":"string"},{"name":"seriesID","in":"path","required":true,"type":"integer"}],"responses":{"200":{"description":"","schema":{"$ref":"#/definitions/Series"}},"404":{"description":""}},"schemes":["https"]},"patch":{"operationId":"series#update","consumes":["application/json"],"produces":["application/json"],"parameters":[{"name":"accountID","in":"path","required":true,"type":"string"},{"name":"seriesID","in":"path","required":true,"type":"integer"},{"name":"payload","in":"body","required":true,"schema":{"$ref":"#/definitions/UpdateSeriesPayload"}}],"responses":{"204":{"description":""},"404":{"description":""}},"schemes":["https"]}}},"definitions":{"Account":{"title":"Mediatype identifier: application/vnd.congo.api.account","type":"object","properties":{"created_at":{"type":"string","description":"Date of creation","format":"date-time"},"created_by":{"type":"string","description":"Email of account owner","format":"email"},"href":{"type":"string","description":"API href of account"},"id":{"type":"integer","description":"ID of account"},"name":{"type":"string","description":"Name of account"}},"description":"A tenant account"},"CreateAccountPayload":{"title":"CreateAccountPayload","type":"object","properties":{"name":{"type":"string","description":"Name of account"}},"required":["name"]},"CreateSeriesPayload":{"title":"CreateSeriesPayload","type":"object","properties":{"name":{"type":"string","minLength":2}},"required":["name"]},"Series":{"title":"Mediatype identifier: application/vnd.congo.api.series","type":"object","properties":{"account":{"description":"Account that owns bottle","$ref":"#/definitions/Account"},"created_at":{"type":"string","description":"Date of creation","format":"date-time"},"href":{"type":"string","description":"API href of series"},"id":{"type":"integer","description":"ID of series"},"name":{"type":"string","minLength":2},"updated_at":{"type":"string","description":"Date of last update","format":"date-time"}},"description":"A recurring event or conference"},"SeriesCollection":{"title":"Mediatype identifier: application/vnd.congo.api.series; type=collection","type":"array","items":{"$ref":"#/definitions/Series"}},"UpdateAccountPayload":{"title":"UpdateAccountPayload","type":"object","properties":{"name":{"type":"string","description":"Name of account"}},"required":["name"]},"UpdateSeriesPayload":{"title":"UpdateSeriesPayload","type":"object","properties":{"name":{"type":"string","minLength":2}}}},"externalDocs":{"description":"congo guide","url":"https://gopheracademy.com/congo/getting-started.html"}} `
