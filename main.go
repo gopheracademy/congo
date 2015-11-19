@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/bketelsen/congo/app"
-	"github.com/bketelsen/congo/schema"
-	"github.com/bketelsen/congo/swagger"
+	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/schema"
+	"github.com/gopheracademy/congo/swagger"
 	"github.com/raphael/goa"
 )
 

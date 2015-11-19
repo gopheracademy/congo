@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/bketelsen/congo/app"
+	"github.com/gopheracademy/congo/app"
 )
 
 // AccountController implements the account resource.
