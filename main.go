@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// Create service
-	api := goa.New("API")
+	api := goa.NewGraceful("API")
 
 	// Setup middleware
 	api.Use(goa.RequestID())

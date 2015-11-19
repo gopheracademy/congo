@@ -24,7 +24,7 @@ var _ = API("congo", func() {
 	})
 	Host("api.gopheracademy.com")
 	Schemes("http")
-	BasePath("/congo")
+	BasePath("/api")
 
 	ResponseTemplate(Created, func(pattern string) {
 		Description("Resource created")

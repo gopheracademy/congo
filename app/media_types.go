@@ -15,7 +15,7 @@ package app
 import "github.com/raphael/goa"
 
 // A tenant account
-// Identifier: application/vnd.congo.api.account
+// Identifier: application/vnd.congo.api.account+json
 type Account struct {
 	// Date of creation
 	CreatedAt string
@@ -165,7 +165,7 @@ func (mt *Account) Validate() (err error) {
 }
 
 // A recurring event or conference
-// Identifier: application/vnd.congo.api.series
+// Identifier: application/vnd.congo.api.series+json
 type Series struct {
 	// Account that owns bottle
 	Account *Account
@@ -471,7 +471,7 @@ func (mt *Series) Validate() (err error) {
 }
 
 // SeriesCollection media type
-// Identifier: application/vnd.congo.api.series; type=collection
+// Identifier: application/vnd.congo.api.series+json; type=collection
 type SeriesCollection []*Series
 
 // array views
@@ -727,7 +727,7 @@ func (mt SeriesCollection) Validate() (err error) {
 }
 
 // A user belonging to a tenant account
-// Identifier: application/vnd.congo.api.user
+// Identifier: application/vnd.congo.api.user+json
 type User struct {
 	// Date of creation
 	CreatedAt string
@@ -894,7 +894,7 @@ func (mt *User) Validate() (err error) {
 }
 
 // UserCollection media type
-// Identifier: application/vnd.congo.api.user; type=collection
+// Identifier: application/vnd.congo.api.user+json; type=collection
 type UserCollection []*User
 
 // array views
