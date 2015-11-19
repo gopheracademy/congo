@@ -138,7 +138,7 @@ func (ctx *ShowAccountContext) OK(resp *Account, view AccountViewEnum) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.account; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.account+json; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -305,7 +305,7 @@ func (ctx *ListSeriesContext) OK(resp SeriesCollection, view SeriesCollectionVie
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.series; type=collection; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.series+json; type=collection; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -351,7 +351,7 @@ func (ctx *ShowSeriesContext) OK(resp *Series, view SeriesViewEnum) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.series; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.series+json; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -559,7 +559,7 @@ func (ctx *ListUserContext) OK(resp UserCollection) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user; type=collection; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user+json; type=collection; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -605,7 +605,7 @@ func (ctx *ShowUserContext) OK(resp *User, view UserViewEnum) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user+json; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 

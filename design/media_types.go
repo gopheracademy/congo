@@ -6,7 +6,7 @@ import (
 )
 
 // Account is the account resource media type.
-var Account = MediaType("application/vnd.congo.api.account", func() {
+var Account = MediaType("application/vnd.congo.api.account+json", func() {
 	Description("A tenant account")
 	Attributes(func() {
 		Attribute("id", Integer, "ID of account")
@@ -36,7 +36,7 @@ var Account = MediaType("application/vnd.congo.api.account", func() {
 })
 
 // User is the user resource media type.
-var User = MediaType("application/vnd.congo.api.user", func() {
+var User = MediaType("application/vnd.congo.api.user+json", func() {
 	Description("A user belonging to a tenant account")
 	Attributes(func() {
 		Attribute("id", Integer, "ID of user")
@@ -68,7 +68,7 @@ var User = MediaType("application/vnd.congo.api.user", func() {
 })
 
 // Series represents a recurring conference (GopherCon)
-var Series = MediaType("application/vnd.congo.api.series", func() {
+var Series = MediaType("application/vnd.congo.api.series+json", func() {
 	Description("A recurring event or conference")
 	Reference(SeriesPayload)
 	Attributes(func() {
