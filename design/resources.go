@@ -9,7 +9,17 @@ var _ = Resource("account", func() {
 
 	DefaultMedia(Account)
 	BasePath("/accounts")
-
+	Action("list", func() {
+		Routing(
+			GET(""),
+		)
+		Description("List all accounts")
+		Response(OK, func() {
+			Media(CollectionOf(Account, func() {
+				View("default")
+			}))
+		})
+	})
 	Action("show", func() {
 		Routing(
 			GET("/:accountID"),
@@ -115,6 +125,16 @@ var _ = Resource("user", func() {
 		Response(NoContent)
 		Response(NotFound)
 	})
+	Action("delete", func() {
+		Routing(
+			DELETE("/:userID"),
+		)
+		Params(func() {
+			Param("userID", Integer, "User ID")
+		})
+		Response(NoContent)
+		Response(NotFound)
+	})
 })
 var _ = Resource("series", func() {
 
@@ -166,6 +186,16 @@ var _ = Resource("series", func() {
 			Param("seriesID", Integer)
 		})
 		Payload(SeriesPayload)
+		Response(NoContent)
+		Response(NotFound)
+	})
+	Action("delete", func() {
+		Routing(
+			DELETE("/:seriesID"),
+		)
+		Params(func() {
+			Param("seriesID", Integer, "Series ID")
+		})
 		Response(NoContent)
 		Response(NotFound)
 	})

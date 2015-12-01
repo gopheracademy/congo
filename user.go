@@ -2,14 +2,17 @@ package main
 
 import (
 	"github.com/gopheracademy/congo/app"
+	"github.com/raphael/goa"
 )
 
 // UserController implements the user resource.
-type UserController struct{}
+type UserController struct {
+	goa.Controller
+}
 
 // NewUserController creates a user controller.
-func NewUserController() *UserController {
-	return &UserController{}
+func NewUserController(service goa.Service) app.UserController {
+	return &UserController{Controller: service.NewController("UserController")}
 }
 
 // Create runs the create action.
@@ -31,5 +34,10 @@ func (c *UserController) Show(ctx *app.ShowUserContext) error {
 
 // Update runs the update action.
 func (c *UserController) Update(ctx *app.UpdateUserContext) error {
+	return nil
+}
+
+// Delete runs the delete action.
+func (c *UserController) Delete(ctx *app.DeleteUserContext) error {
 	return nil
 }

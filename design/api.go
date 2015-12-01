@@ -23,7 +23,7 @@ var _ = API("congo", func() {
 		URL("https://gopheracademy.com/congo/getting-started.html")
 	})
 	Host("api.gopheracademy.com")
-	Schemes("http")
+	Scheme("http")
 	BasePath("/api")
 
 	ResponseTemplate(Created, func(pattern string) {

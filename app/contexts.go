@@ -3,8 +3,8 @@
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
-// --out=/home/bketelsen/src/github.com/bketelsen/congo
-// --design=github.com/bketelsen/congo/design
+// --out=$(GOPATH)/src/github.com/gopheracademy/congo
+// --design=github.com/gopheracademy/congo/design
 // --pkg=app
 //
 // The content of this file is auto-generated, DO NOT MODIFY
@@ -63,7 +63,7 @@ func NewCreateAccountPayload(raw interface{}) (*CreateAccountPayload, error) {
 			err = goa.MissingAttributeError(`payload`, "name", err)
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
 	}
 	return p, err
 }
@@ -103,6 +103,29 @@ func (ctx *DeleteAccountContext) NoContent() error {
 // NotFound sends a HTTP response with status code 404.
 func (ctx *DeleteAccountContext) NotFound() error {
 	return ctx.Respond(404, nil)
+}
+
+// ListAccountContext provides the account list action context.
+type ListAccountContext struct {
+	*goa.Context
+}
+
+// NewListAccountContext parses the incoming request URL and body, performs validations and creates the
+// context used by the account controller list action.
+func NewListAccountContext(c *goa.Context) (*ListAccountContext, error) {
+	var err error
+	ctx := ListAccountContext{Context: c}
+	return &ctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListAccountContext) OK(resp AccountCollection) error {
+	r, err := resp.Dump()
+	if err != nil {
+		return fmt.Errorf("invalid response: %s", err)
+	}
+	ctx.Header().Set("Content-Type", "application/vnd.congo.api.account+json; type=collection; charset=utf-8")
+	return ctx.JSON(200, r)
 }
 
 // ShowAccountContext provides the account show action context.
@@ -195,7 +218,7 @@ func NewUpdateAccountPayload(raw interface{}) (*UpdateAccountPayload, error) {
 			err = goa.MissingAttributeError(`payload`, "name", err)
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
 	}
 	return p, err
 }
@@ -267,7 +290,7 @@ func NewCreateSeriesPayload(raw interface{}) (*CreateSeriesPayload, error) {
 			err = goa.MissingAttributeError(`payload`, "name", err)
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
 	}
 	return p, err
 }
@@ -275,6 +298,47 @@ func NewCreateSeriesPayload(raw interface{}) (*CreateSeriesPayload, error) {
 // Created sends a HTTP response with status code 201.
 func (ctx *CreateSeriesContext) Created() error {
 	return ctx.Respond(201, nil)
+}
+
+// DeleteSeriesContext provides the series delete action context.
+type DeleteSeriesContext struct {
+	*goa.Context
+	AccountID int
+	SeriesID  int
+}
+
+// NewDeleteSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the series controller delete action.
+func NewDeleteSeriesContext(c *goa.Context) (*DeleteSeriesContext, error) {
+	var err error
+	ctx := DeleteSeriesContext{Context: c}
+	rawAccountID, ok := c.Get("accountID")
+	if ok {
+		if accountID, err2 := strconv.Atoi(rawAccountID); err2 == nil {
+			ctx.AccountID = int(accountID)
+		} else {
+			err = goa.InvalidParamTypeError("accountID", rawAccountID, "integer", err)
+		}
+	}
+	rawSeriesID, ok := c.Get("seriesID")
+	if ok {
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			ctx.SeriesID = int(seriesID)
+		} else {
+			err = goa.InvalidParamTypeError("seriesID", rawSeriesID, "integer", err)
+		}
+	}
+	return &ctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteSeriesContext) NoContent() error {
+	return ctx.Respond(204, nil)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteSeriesContext) NotFound() error {
+	return ctx.Respond(404, nil)
 }
 
 // ListSeriesContext provides the series list action context.
@@ -419,7 +483,7 @@ func NewUpdateSeriesPayload(raw interface{}) (*UpdateSeriesPayload, error) {
 			p.Name = tmp4
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
 	}
 	return p, err
 }
@@ -521,7 +585,7 @@ func NewCreateUserPayload(raw interface{}) (*CreateUserPayload, error) {
 			p.LastName = tmp7
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
 	}
 	return p, err
 }
@@ -529,6 +593,47 @@ func NewCreateUserPayload(raw interface{}) (*CreateUserPayload, error) {
 // Created sends a HTTP response with status code 201.
 func (ctx *CreateUserContext) Created() error {
 	return ctx.Respond(201, nil)
+}
+
+// DeleteUserContext provides the user delete action context.
+type DeleteUserContext struct {
+	*goa.Context
+	AccountID int
+	UserID    int
+}
+
+// NewDeleteUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller delete action.
+func NewDeleteUserContext(c *goa.Context) (*DeleteUserContext, error) {
+	var err error
+	ctx := DeleteUserContext{Context: c}
+	rawAccountID, ok := c.Get("accountID")
+	if ok {
+		if accountID, err2 := strconv.Atoi(rawAccountID); err2 == nil {
+			ctx.AccountID = int(accountID)
+		} else {
+			err = goa.InvalidParamTypeError("accountID", rawAccountID, "integer", err)
+		}
+	}
+	rawUserID, ok := c.Get("userID")
+	if ok {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
+	}
+	return &ctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteUserContext) NoContent() error {
+	return ctx.Respond(204, nil)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteUserContext) NotFound() error {
+	return ctx.Respond(404, nil)
 }
 
 // ListUserContext provides the user list action context.
@@ -703,7 +808,7 @@ func NewUpdateUserPayload(raw interface{}) (*UpdateUserPayload, error) {
 			p.LastName = tmp10
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "map[string]interface{}", err)
+		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
 	}
 	return p, err
 }

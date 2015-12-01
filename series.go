@@ -2,14 +2,17 @@ package main
 
 import (
 	"github.com/gopheracademy/congo/app"
+	"github.com/raphael/goa"
 )
 
 // SeriesController implements the series resource.
-type SeriesController struct{}
+type SeriesController struct {
+	goa.Controller
+}
 
 // NewSeriesController creates a series controller.
-func NewSeriesController() *SeriesController {
-	return &SeriesController{}
+func NewSeriesController(service goa.Service) app.SeriesController {
+	return &SeriesController{Controller: service.NewController("SeriesController")}
 }
 
 // Create runs the create action.
@@ -31,5 +34,10 @@ func (c *SeriesController) Show(ctx *app.ShowSeriesContext) error {
 
 // Update runs the update action.
 func (c *SeriesController) Update(ctx *app.UpdateSeriesContext) error {
+	return nil
+}
+
+// Delete runs the delete action.
+func (c *SeriesController) Delete(ctx *app.DeleteSeriesContext) error {
 	return nil
 }

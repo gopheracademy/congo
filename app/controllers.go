@@ -3,8 +3,8 @@
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
-// --out=/home/bketelsen/src/github.com/bketelsen/congo
-// --design=github.com/bketelsen/congo/design
+// --out=$(GOPATH)/src/github.com/gopheracademy/congo
+// --design=github.com/gopheracademy/congo/design
 // --pkg=app
 //
 // The content of this file is auto-generated, DO NOT MODIFY
@@ -19,8 +19,10 @@ import (
 
 // AccountController is the controller interface for the Account actions.
 type AccountController interface {
+	goa.Controller
 	Create(*CreateAccountContext) error
 	Delete(*DeleteAccountContext) error
+	List(*ListAccountContext) error
 	Show(*ShowAccountContext) error
 	Update(*UpdateAccountContext) error
 }
@@ -36,7 +38,7 @@ func MountAccountController(service goa.Service, ctrl AccountController) {
 		}
 		return ctrl.Create(ctx)
 	}
-	router.Handle("POST", "/api/accounts", goa.NewHTTPRouterHandle(service, "Account", "Create", h))
+	router.Handle("POST", "/api/accounts", ctrl.NewHTTPRouterHandle("Create", h))
 	service.Info("mount", "ctrl", "Account", "action", "Create", "route", "POST /api/accounts")
 	h = func(c *goa.Context) error {
 		ctx, err := NewDeleteAccountContext(c)
@@ -45,8 +47,17 @@ func MountAccountController(service goa.Service, ctrl AccountController) {
 		}
 		return ctrl.Delete(ctx)
 	}
-	router.Handle("DELETE", "/api/accounts/:accountID", goa.NewHTTPRouterHandle(service, "Account", "Delete", h))
+	router.Handle("DELETE", "/api/accounts/:accountID", ctrl.NewHTTPRouterHandle("Delete", h))
 	service.Info("mount", "ctrl", "Account", "action", "Delete", "route", "DELETE /api/accounts/:accountID")
+	h = func(c *goa.Context) error {
+		ctx, err := NewListAccountContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.List(ctx)
+	}
+	router.Handle("GET", "/api/accounts", ctrl.NewHTTPRouterHandle("List", h))
+	service.Info("mount", "ctrl", "Account", "action", "List", "route", "GET /api/accounts")
 	h = func(c *goa.Context) error {
 		ctx, err := NewShowAccountContext(c)
 		if err != nil {
@@ -54,7 +65,7 @@ func MountAccountController(service goa.Service, ctrl AccountController) {
 		}
 		return ctrl.Show(ctx)
 	}
-	router.Handle("GET", "/api/accounts/:accountID", goa.NewHTTPRouterHandle(service, "Account", "Show", h))
+	router.Handle("GET", "/api/accounts/:accountID", ctrl.NewHTTPRouterHandle("Show", h))
 	service.Info("mount", "ctrl", "Account", "action", "Show", "route", "GET /api/accounts/:accountID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewUpdateAccountContext(c)
@@ -63,13 +74,15 @@ func MountAccountController(service goa.Service, ctrl AccountController) {
 		}
 		return ctrl.Update(ctx)
 	}
-	router.Handle("PUT", "/api/accounts/:accountID", goa.NewHTTPRouterHandle(service, "Account", "Update", h))
+	router.Handle("PUT", "/api/accounts/:accountID", ctrl.NewHTTPRouterHandle("Update", h))
 	service.Info("mount", "ctrl", "Account", "action", "Update", "route", "PUT /api/accounts/:accountID")
 }
 
 // SeriesController is the controller interface for the Series actions.
 type SeriesController interface {
+	goa.Controller
 	Create(*CreateSeriesContext) error
+	Delete(*DeleteSeriesContext) error
 	List(*ListSeriesContext) error
 	Show(*ShowSeriesContext) error
 	Update(*UpdateSeriesContext) error
@@ -86,8 +99,17 @@ func MountSeriesController(service goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.Create(ctx)
 	}
-	router.Handle("POST", "/api/accounts/:accountID/series", goa.NewHTTPRouterHandle(service, "Series", "Create", h))
+	router.Handle("POST", "/api/accounts/:accountID/series", ctrl.NewHTTPRouterHandle("Create", h))
 	service.Info("mount", "ctrl", "Series", "action", "Create", "route", "POST /api/accounts/:accountID/series")
+	h = func(c *goa.Context) error {
+		ctx, err := NewDeleteSeriesContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Delete(ctx)
+	}
+	router.Handle("DELETE", "/api/accounts/:accountID/series/:seriesID", ctrl.NewHTTPRouterHandle("Delete", h))
+	service.Info("mount", "ctrl", "Series", "action", "Delete", "route", "DELETE /api/accounts/:accountID/series/:seriesID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewListSeriesContext(c)
 		if err != nil {
@@ -95,7 +117,7 @@ func MountSeriesController(service goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.List(ctx)
 	}
-	router.Handle("GET", "/api/accounts/:accountID/series", goa.NewHTTPRouterHandle(service, "Series", "List", h))
+	router.Handle("GET", "/api/accounts/:accountID/series", ctrl.NewHTTPRouterHandle("List", h))
 	service.Info("mount", "ctrl", "Series", "action", "List", "route", "GET /api/accounts/:accountID/series")
 	h = func(c *goa.Context) error {
 		ctx, err := NewShowSeriesContext(c)
@@ -104,7 +126,7 @@ func MountSeriesController(service goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.Show(ctx)
 	}
-	router.Handle("GET", "/api/accounts/:accountID/series/:seriesID", goa.NewHTTPRouterHandle(service, "Series", "Show", h))
+	router.Handle("GET", "/api/accounts/:accountID/series/:seriesID", ctrl.NewHTTPRouterHandle("Show", h))
 	service.Info("mount", "ctrl", "Series", "action", "Show", "route", "GET /api/accounts/:accountID/series/:seriesID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewUpdateSeriesContext(c)
@@ -113,13 +135,15 @@ func MountSeriesController(service goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.Update(ctx)
 	}
-	router.Handle("PATCH", "/api/accounts/:accountID/series/:seriesID", goa.NewHTTPRouterHandle(service, "Series", "Update", h))
+	router.Handle("PATCH", "/api/accounts/:accountID/series/:seriesID", ctrl.NewHTTPRouterHandle("Update", h))
 	service.Info("mount", "ctrl", "Series", "action", "Update", "route", "PATCH /api/accounts/:accountID/series/:seriesID")
 }
 
 // UserController is the controller interface for the User actions.
 type UserController interface {
+	goa.Controller
 	Create(*CreateUserContext) error
+	Delete(*DeleteUserContext) error
 	List(*ListUserContext) error
 	Show(*ShowUserContext) error
 	Update(*UpdateUserContext) error
@@ -136,8 +160,17 @@ func MountUserController(service goa.Service, ctrl UserController) {
 		}
 		return ctrl.Create(ctx)
 	}
-	router.Handle("POST", "/api/accounts/:accountID/users", goa.NewHTTPRouterHandle(service, "User", "Create", h))
+	router.Handle("POST", "/api/accounts/:accountID/users", ctrl.NewHTTPRouterHandle("Create", h))
 	service.Info("mount", "ctrl", "User", "action", "Create", "route", "POST /api/accounts/:accountID/users")
+	h = func(c *goa.Context) error {
+		ctx, err := NewDeleteUserContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Delete(ctx)
+	}
+	router.Handle("DELETE", "/api/accounts/:accountID/users/:userID", ctrl.NewHTTPRouterHandle("Delete", h))
+	service.Info("mount", "ctrl", "User", "action", "Delete", "route", "DELETE /api/accounts/:accountID/users/:userID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewListUserContext(c)
 		if err != nil {
@@ -145,7 +178,7 @@ func MountUserController(service goa.Service, ctrl UserController) {
 		}
 		return ctrl.List(ctx)
 	}
-	router.Handle("GET", "/api/accounts/:accountID/users", goa.NewHTTPRouterHandle(service, "User", "List", h))
+	router.Handle("GET", "/api/accounts/:accountID/users", ctrl.NewHTTPRouterHandle("List", h))
 	service.Info("mount", "ctrl", "User", "action", "List", "route", "GET /api/accounts/:accountID/users")
 	h = func(c *goa.Context) error {
 		ctx, err := NewShowUserContext(c)
@@ -154,7 +187,7 @@ func MountUserController(service goa.Service, ctrl UserController) {
 		}
 		return ctrl.Show(ctx)
 	}
-	router.Handle("GET", "/api/accounts/:accountID/users/:userID", goa.NewHTTPRouterHandle(service, "User", "Show", h))
+	router.Handle("GET", "/api/accounts/:accountID/users/:userID", ctrl.NewHTTPRouterHandle("Show", h))
 	service.Info("mount", "ctrl", "User", "action", "Show", "route", "GET /api/accounts/:accountID/users/:userID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewUpdateUserContext(c)
@@ -163,6 +196,6 @@ func MountUserController(service goa.Service, ctrl UserController) {
 		}
 		return ctrl.Update(ctx)
 	}
-	router.Handle("PATCH", "/api/accounts/:accountID/users/:userID", goa.NewHTTPRouterHandle(service, "User", "Update", h))
+	router.Handle("PATCH", "/api/accounts/:accountID/users/:userID", ctrl.NewHTTPRouterHandle("Update", h))
 	service.Info("mount", "ctrl", "User", "action", "Update", "route", "PATCH /api/accounts/:accountID/users/:userID")
 }
