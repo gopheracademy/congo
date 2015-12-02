@@ -4,18 +4,26 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
-// SeriesPayload defines the data structure used in the create series request body.
+// SeriesModel defines the data structure used in the create series request body.
 // It is also the base type for the series media type used to render series.
-var SeriesPayload = Type("SeriesPayload", func() {
+var SeriesModel = Type("SeriesModel", func() {
 	Attribute("name", func() {
 		MinLength(2)
 	})
 
 })
 
-// UserPayload defines the data structure used in the create user request body.
+// AccountModel defines the data structure used in the create account request body.
+// It is also the base type for the account media type used to render accounts.
+var AccountModel = Type("AccountModel", func() {
+	Attribute("name", func() {
+		MinLength(2)
+	})
+})
+
+// UserModel defines the data structure used in the create user request body.
 // It is also the base type for the user media type used to render users.
-var UserPayload = Type("UserPayload", func() {
+var UserModel = Type("UserModel", func() {
 	Attribute("first_name", func() {
 		MinLength(2)
 	})

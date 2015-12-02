@@ -40,7 +40,7 @@ func main() {
 	service.Use(goa.Recover())
 
 	// Mount "account" controller
-	c := NewAccountController(service, models.NewMockAccountStorage())
+	c := NewAccountController(service, models.NewMockAccountModelStorage())
 	app.MountAccountController(service, c)
 	// Mount "series" controller
 	c2 := NewSeriesController(service)

@@ -105,6 +105,11 @@ func LoadAccount(raw interface{}) (*Account, error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`.Name`, v, "string", err)
 			}
+			if err == nil {
+				if len(tmp15) < 2 {
+					err = goa.InvalidLengthError(`.Name`, tmp15, 2, true, err)
+				}
+			}
 			res.Name = tmp15
 		}
 	} else {
@@ -129,6 +134,9 @@ func (mt *Account) Dump(view AccountViewEnum) (map[string]interface{}, error) {
 				err = goa.InvalidFormatError(`default view.created_by`, mt.CreatedBy, goa.FormatEmail, err2, err)
 			}
 		}
+		if len(mt.Name) < 2 {
+			err = goa.InvalidLengthError(`default view.name`, mt.Name, 2, true, err)
+		}
 		tmp16 := map[string]interface{}{
 			"created_at": mt.CreatedAt,
 			"created_by": mt.CreatedBy,
@@ -139,6 +147,9 @@ func (mt *Account) Dump(view AccountViewEnum) (map[string]interface{}, error) {
 		res = tmp16
 	}
 	if view == AccountLinkView {
+		if len(mt.Name) < 2 {
+			err = goa.InvalidLengthError(`link view.name`, mt.Name, 2, true, err)
+		}
 		tmp17 := map[string]interface{}{
 			"href": mt.Href,
 			"id":   mt.ID,
@@ -160,6 +171,9 @@ func (mt *Account) Validate() (err error) {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.CreatedBy); err2 != nil {
 			err = goa.InvalidFormatError(`response.created_by`, mt.CreatedBy, goa.FormatEmail, err2, err)
 		}
+	}
+	if len(mt.Name) < 2 {
+		err = goa.InvalidLengthError(`response.name`, mt.Name, 2, true, err)
 	}
 	return
 }
@@ -238,6 +252,11 @@ func LoadAccountCollection(raw interface{}) (AccountCollection, error) {
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].Name`, v, "string", err)
 					}
+					if err == nil {
+						if len(tmp23) < 2 {
+							err = goa.InvalidLengthError(`[*].Name`, tmp23, 2, true, err)
+						}
+					}
 					tmp18.Name = tmp23
 				}
 			} else {
@@ -268,6 +287,9 @@ func (mt AccountCollection) Dump() ([]map[string]interface{}, error) {
 				err = goa.InvalidFormatError(`default view[*].created_by`, tmp24.CreatedBy, goa.FormatEmail, err2, err)
 			}
 		}
+		if len(tmp24.Name) < 2 {
+			err = goa.InvalidLengthError(`default view[*].name`, tmp24.Name, 2, true, err)
+		}
 		tmp25 := map[string]interface{}{
 			"created_at": tmp24.CreatedAt,
 			"created_by": tmp24.CreatedBy,
@@ -292,6 +314,9 @@ func (mt AccountCollection) Validate() (err error) {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, e.CreatedBy); err2 != nil {
 				err = goa.InvalidFormatError(`response[*].created_by`, e.CreatedBy, goa.FormatEmail, err2, err)
 			}
+		}
+		if len(e.Name) < 2 {
+			err = goa.InvalidLengthError(`response[*].name`, e.Name, 2, true, err)
 		}
 	}
 	return
@@ -395,6 +420,11 @@ func LoadSeries(raw interface{}) (*Series, error) {
 					} else {
 						err = goa.InvalidAttributeTypeError(`.Account.Name`, v, "string", err)
 					}
+					if err == nil {
+						if len(tmp31) < 2 {
+							err = goa.InvalidLengthError(`.Account.Name`, tmp31, 2, true, err)
+						}
+					}
 					tmp26.Name = tmp31
 				}
 			} else {
@@ -489,6 +519,9 @@ func (mt *Series) Dump(view SeriesViewEnum) (map[string]interface{}, error) {
 		res = tmp38
 		if err == nil {
 			links := make(map[string]interface{})
+			if len(mt.Account.Name) < 2 {
+				err = goa.InvalidLengthError(`link account.name`, mt.Account.Name, 2, true, err)
+			}
 			tmp37 := map[string]interface{}{
 				"href": mt.Account.Href,
 				"id":   mt.Account.ID,
@@ -530,6 +563,9 @@ func (mt *Series) Dump(view SeriesViewEnum) (map[string]interface{}, error) {
 					err = goa.InvalidFormatError(`full view.Account.created_by`, mt.Account.CreatedBy, goa.FormatEmail, err2, err)
 				}
 			}
+			if len(mt.Account.Name) < 2 {
+				err = goa.InvalidLengthError(`full view.Account.name`, mt.Account.Name, 2, true, err)
+			}
 			tmp41 := map[string]interface{}{
 				"created_at": mt.Account.CreatedAt,
 				"created_by": mt.Account.CreatedBy,
@@ -542,6 +578,9 @@ func (mt *Series) Dump(view SeriesViewEnum) (map[string]interface{}, error) {
 		res = tmp40
 		if err == nil {
 			links := make(map[string]interface{})
+			if len(mt.Account.Name) < 2 {
+				err = goa.InvalidLengthError(`link account.name`, mt.Account.Name, 2, true, err)
+			}
 			tmp39 := map[string]interface{}{
 				"href": mt.Account.Href,
 				"id":   mt.Account.ID,
@@ -563,6 +602,9 @@ func (mt *Series) Dump(view SeriesViewEnum) (map[string]interface{}, error) {
 		res = tmp43
 		if err == nil {
 			links := make(map[string]interface{})
+			if len(mt.Account.Name) < 2 {
+				err = goa.InvalidLengthError(`link account.name`, mt.Account.Name, 2, true, err)
+			}
 			tmp42 := map[string]interface{}{
 				"href": mt.Account.Href,
 				"id":   mt.Account.ID,
@@ -586,6 +628,9 @@ func (mt *Series) Validate() (err error) {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Account.CreatedBy); err2 != nil {
 			err = goa.InvalidFormatError(`response.account.created_by`, mt.Account.CreatedBy, goa.FormatEmail, err2, err)
 		}
+	}
+	if len(mt.Account.Name) < 2 {
+		err = goa.InvalidLengthError(`response.account.name`, mt.Account.Name, 2, true, err)
 	}
 	if mt.CreatedAt != "" {
 		if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.CreatedAt); err2 != nil {
@@ -691,6 +736,11 @@ func LoadSeriesCollection(raw interface{}) (SeriesCollection, error) {
 							} else {
 								err = goa.InvalidAttributeTypeError(`[*].Account.Name`, v, "string", err)
 							}
+							if err == nil {
+								if len(tmp50) < 2 {
+									err = goa.InvalidLengthError(`[*].Account.Name`, tmp50, 2, true, err)
+								}
+							}
 							tmp45.Name = tmp50
 						}
 					} else {
@@ -792,6 +842,9 @@ func (mt SeriesCollection) Dump(view SeriesCollectionViewEnum) ([]map[string]int
 			res[i] = tmp58
 			if err == nil {
 				links := make(map[string]interface{})
+				if len(tmp56.Account.Name) < 2 {
+					err = goa.InvalidLengthError(`link account.name`, tmp56.Account.Name, 2, true, err)
+				}
 				tmp57 := map[string]interface{}{
 					"href": tmp56.Account.Href,
 					"id":   tmp56.Account.ID,
@@ -816,6 +869,9 @@ func (mt SeriesCollection) Dump(view SeriesCollectionViewEnum) ([]map[string]int
 			res[i] = tmp61
 			if err == nil {
 				links := make(map[string]interface{})
+				if len(tmp59.Account.Name) < 2 {
+					err = goa.InvalidLengthError(`link account.name`, tmp59.Account.Name, 2, true, err)
+				}
 				tmp60 := map[string]interface{}{
 					"href": tmp59.Account.Href,
 					"id":   tmp59.Account.ID,
@@ -841,6 +897,9 @@ func (mt SeriesCollection) Validate() (err error) {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Account.CreatedBy); err2 != nil {
 				err = goa.InvalidFormatError(`response[*].account.created_by`, e.Account.CreatedBy, goa.FormatEmail, err2, err)
 			}
+		}
+		if len(e.Account.Name) < 2 {
+			err = goa.InvalidLengthError(`response[*].account.name`, e.Account.Name, 2, true, err)
 		}
 		if e.CreatedAt != "" {
 			if err2 := goa.ValidateFormat(goa.FormatDateTime, e.CreatedAt); err2 != nil {

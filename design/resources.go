@@ -37,10 +37,10 @@ var _ = Resource("account", func() {
 			POST(""),
 		)
 		Description("Create new account")
-		Payload(func() {
-			Member("name")
+		Payload(AccountModel, func() {
 			Required("name")
 		})
+
 		Response(Created, "/accounts/[0-9]+")
 	})
 
@@ -52,8 +52,7 @@ var _ = Resource("account", func() {
 		Params(func() {
 			Param("accountID", Integer, "Account ID")
 		})
-		Payload(func() {
-			Member("name")
+		Payload(AccountModel, func() {
 			Required("name")
 		})
 		Response(NoContent)
@@ -106,7 +105,7 @@ var _ = Resource("user", func() {
 			POST(""),
 		)
 		Description("Record new user")
-		Payload(UserPayload, func() {
+		Payload(UserModel, func() {
 			Required("first_name")
 			Required("last_name")
 			Required("email")
@@ -121,7 +120,7 @@ var _ = Resource("user", func() {
 		Params(func() {
 			Param("userID", Integer)
 		})
-		Payload(UserPayload)
+		Payload(UserModel)
 		Response(NoContent)
 		Response(NotFound)
 	})
@@ -172,7 +171,7 @@ var _ = Resource("series", func() {
 			POST(""),
 		)
 		Description("Record new series")
-		Payload(SeriesPayload, func() {
+		Payload(SeriesModel, func() {
 			Required("name")
 		})
 		Response(Created, "^/accounts/[0-9]+/series/[0-9]+$")
@@ -185,7 +184,7 @@ var _ = Resource("series", func() {
 		Params(func() {
 			Param("seriesID", Integer)
 		})
-		Payload(SeriesPayload)
+		Payload(SeriesModel)
 		Response(NoContent)
 		Response(NotFound)
 	})

@@ -8,6 +8,7 @@ import (
 // Account is the account resource media type.
 var Account = MediaType("application/vnd.congo.api.account+json", func() {
 	Description("A tenant account")
+	Reference(AccountModel)
 	Attributes(func() {
 		Attribute("id", Integer, "ID of account")
 		Attribute("href", String, "API href of account")
@@ -70,7 +71,7 @@ var User = MediaType("application/vnd.congo.api.user+json", func() {
 // Series represents a recurring conference (GopherCon)
 var Series = MediaType("application/vnd.congo.api.series+json", func() {
 	Description("A recurring event or conference")
-	Reference(SeriesPayload)
+	Reference(SeriesModel)
 	Attributes(func() {
 		Attribute("id", Integer, "ID of series")
 		Attribute("href", String, "API href of series")

@@ -12,13 +12,18 @@
 
 package app
 
-// SeriesPayload type
-type SeriesPayload struct {
+// AccountModel type
+type AccountModel struct {
 	Name string
 }
 
-// UserPayload type
-type UserPayload struct {
+// SeriesModel type
+type SeriesModel struct {
+	Name string
+}
+
+// UserModel type
+type UserModel struct {
 	Email     string
 	FirstName string
 	LastName  string

@@ -20,59 +20,58 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// A tenant account
-// Identifier: application/vnd.congo.api.account+json
-type Account struct {
-	// Date of creation
-	CreatedAt string `json:"created_at,omitempty"`
-	// Email of account owner
-	CreatedBy string `json:"created_by,omitempty"`
-	// API href of account
-	Href string `json:"href,omitempty"`
-	// ID of account
-	ID int `json:"id,omitempty"`
-	// Name of account
+// AccountModel media type
+// Identifier:
+type AccountModel struct {
+	gorm.Model
 	Name string `json:"name,omitempty"`
 }
 
-func AccountFromCreatePayload(ctx *app.CreateAccountContext) Account {
+func AccountModelFromCreatePayload(ctx *app.CreateAccountContext) AccountModel {
 	payload := ctx.Payload
-	m := Account{}
+	m := AccountModel{}
 	copier.Copy(&m, payload)
 	return m
 }
-func (m Account) ToApp() *app.Account {
+
+func AccountModelFromUpdatePayload(ctx *app.UpdateAccountContext) AccountModel {
+	payload := ctx.Payload
+	m := AccountModel{}
+	copier.Copy(&m, payload)
+	return m
+}
+func (m AccountModel) ToApp() *app.Account {
 	target := app.Account{}
 	copier.Copy(&target, &m)
 	return &target
 }
 
-type AccountStorage interface {
-	List(ctx *app.ListAccountContext) []Account
-	Get(ctx *app.ShowAccountContext) (Account, error)
-	Add(ctx *app.CreateAccountContext) (Account, error)
-	Update(ctx *app.UpdateAccountContext, m Account) (Account, error)
-	Delete(ctx *app.DeleteAccountContext, id int) (bool, error)
+type AccountModelStorage interface {
+	List(ctx *app.ListAccountContext) []AccountModel
+	Get(ctx *app.ShowAccountContext) (AccountModel, error)
+	Add(ctx *app.CreateAccountContext) (AccountModel, error)
+	Update(ctx *app.UpdateAccountContext) (AccountModel, error)
+	Delete(ctx *app.DeleteAccountContext) (bool, error)
 }
 
-type AccountDB struct {
+type AccountModelDB struct {
 	DB gorm.DB
 }
 
-func NewAccountDB(db gorm.DB) *AccountDB {
-	return &AccountDB{DB: db}
+func NewAccountModelDB(db gorm.DB) *AccountModelDB {
+	return &AccountModelDB{DB: db}
 }
 
-func (m *AccountDB) List(ctx *app.ListAccountContext) []Account {
+func (m *AccountModelDB) List(ctx *app.ListAccountContext) []AccountModel {
 
-	var objs []Account
+	var objs []AccountModel
 	m.DB.Find(&objs)
 	return objs
 }
 
-func (m *AccountDB) Get(ctx *app.ShowAccountContext) (Account, error) {
+func (m *AccountModelDB) Get(ctx *app.ShowAccountContext) (AccountModel, error) {
 
-	var obj Account
+	var obj AccountModel
 
 	err := m.DB.Find(&obj, ctx.AccountID).Error
 	if err != nil {
@@ -81,29 +80,29 @@ func (m *AccountDB) Get(ctx *app.ShowAccountContext) (Account, error) {
 	return obj, err
 }
 
-func (m *AccountDB) Add(ctx *app.CreateAccountContext) (Account, error) {
-	model := AccountFromCreatePayload(ctx)
+func (m *AccountModelDB) Add(ctx *app.CreateAccountContext) (AccountModel, error) {
+	model := AccountModelFromCreatePayload(ctx)
 	err := m.DB.Create(&model).Error
 	return model, err
 }
-func (m *AccountDB) Update(ctx *app.UpdateAccountContext, model Account) (Account, error) {
+func (m *AccountModelDB) Update(ctx *app.UpdateAccountContext) (AccountModel, error) {
 	getCtx, err := app.NewShowAccountContext(ctx.Context)
 	if err != nil {
-		return Account{}, err
+		return AccountModel{}, err
 	}
 	obj, err := m.Get(getCtx)
 	if err != nil {
-		return model, err
+		return obj, err
 	}
-	err = m.DB.Model(&obj).Updates(model).Error
+	err = m.DB.Model(&obj).Updates(AccountModelFromUpdatePayload(ctx)).Error
 	if err != nil {
 		ctx.Error(err.Error())
 	}
 	return obj, err
 }
-func (m *AccountDB) Delete(ctx *app.DeleteAccountContext, id int) (bool, error) {
-	var obj Account
-	err := m.DB.Delete(&obj, id).Error
+func (m *AccountModelDB) Delete(ctx *app.DeleteAccountContext) (bool, error) {
+	var obj AccountModel
+	err := m.DB.Delete(&obj, ctx.AccountID).Error
 	if err != nil {
 		ctx.Logger.Error(err.Error())
 		return false, err
@@ -111,123 +110,121 @@ func (m *AccountDB) Delete(ctx *app.DeleteAccountContext, id int) (bool, error) 
 	return true, nil
 }
 
-type MockAccountStorage struct {
-	AccountList map[int]Account
-	nextID      int
-	mut         sync.Mutex
+type MockAccountModelStorage struct {
+	AccountModelList map[uint]AccountModel
+	nextID           uint
+	mut              sync.Mutex
 }
 
-func NewMockAccountStorage() *MockAccountStorage {
-	ml := make(map[int]Account, 0)
-	return &MockAccountStorage{AccountList: ml}
+func NewMockAccountModelStorage() *MockAccountModelStorage {
+	ml := make(map[uint]AccountModel, 0)
+	return &MockAccountModelStorage{AccountModelList: ml}
 }
 
-func (db *MockAccountStorage) List(ctx *app.ListAccountContext) []Account {
-	var list []Account = make([]Account, 0)
-	for _, v := range db.AccountList {
+func (db *MockAccountModelStorage) List(ctx *app.ListAccountContext) []AccountModel {
+	var list []AccountModel = make([]AccountModel, 0)
+	for _, v := range db.AccountModelList {
 		list = append(list, v)
 	}
 	return list
 }
 
-func (db *MockAccountStorage) Get(ctx *app.ShowAccountContext) (Account, error) {
+func (db *MockAccountModelStorage) Get(ctx *app.ShowAccountContext) (AccountModel, error) {
 
-	var obj Account
+	var obj AccountModel
 
-	obj, ok := db.AccountList[ctx.AccountID]
+	obj, ok := db.AccountModelList[uint(ctx.AccountID)]
 	if ok {
 		return obj, nil
 	} else {
-		return obj, errors.New("Account does not exist")
+		return obj, errors.New("AccountModel does not exist")
 	}
 }
 
-func (db *MockAccountStorage) Add(ctx *app.CreateAccountContext) (Account, error) {
-	u := AccountFromCreatePayload(ctx)
+func (db *MockAccountModelStorage) Add(ctx *app.CreateAccountContext) (AccountModel, error) {
+	u := AccountModelFromCreatePayload(ctx)
 	db.mut.Lock()
 	db.nextID = db.nextID + 1
 	u.ID = db.nextID
 	db.mut.Unlock()
 
-	db.AccountList[u.ID] = u
+	db.AccountModelList[u.ID] = u
 	return u, nil
 }
 
-func (db *MockAccountStorage) Update(ctx *app.UpdateAccountContext, u Account) (Account, error) {
-	id := u.ID
-	_, ok := db.AccountList[id]
+func (db *MockAccountModelStorage) Update(ctx *app.UpdateAccountContext) (AccountModel, error) {
+	id := uint(ctx.AccountID)
+	_, ok := db.AccountModelList[id]
 	if ok {
-		db.AccountList[id] = u
-		return db.AccountList[id], nil
+		db.AccountModelList[id] = AccountModelFromUpdatePayload(ctx)
+		return db.AccountModelList[id], nil
 	} else {
-		return u, errors.New("Account does not exist")
+		return db.AccountModelList[id], errors.New("AccountModel does not exist")
 	}
 }
 
-func (db *MockAccountStorage) Delete(ctx *app.DeleteAccountContext, id int) (bool, error) {
-	_, ok := db.AccountList[id]
+func (db *MockAccountModelStorage) Delete(ctx *app.DeleteAccountContext) (bool, error) {
+	_, ok := db.AccountModelList[uint(ctx.AccountID)]
 	if ok {
-		delete(db.AccountList, id)
+		delete(db.AccountModelList, uint(ctx.AccountID))
 		return true, nil
 	} else {
 		return false, errors.New("Could not delete this user")
 	}
 }
 
-// A recurring event or conference
-// Identifier: application/vnd.congo.api.series+json
-type Series struct {
-	// Account that owns bottle
-	Account *Account `json:"account,omitempty"`
-	// Date of creation
-	CreatedAt string `json:"created_at,omitempty"`
-	// API href of series
-	Href string `json:"href,omitempty"`
-	// ID of series
-	ID   int    `json:"id,omitempty"`
+// SeriesModel media type
+// Identifier:
+type SeriesModel struct {
+	gorm.Model
 	Name string `json:"name,omitempty"`
-	// Date of last update
-	UpdatedAt string `json:"updated_at,omitempty"`
 }
 
-func SeriesFromCreatePayload(ctx *app.CreateSeriesContext) Series {
+func SeriesModelFromCreatePayload(ctx *app.CreateSeriesContext) SeriesModel {
 	payload := ctx.Payload
-	m := Series{}
+	m := SeriesModel{}
 	copier.Copy(&m, payload)
 	return m
 }
-func (m Series) ToApp() *app.Series {
+
+func SeriesModelFromUpdatePayload(ctx *app.UpdateSeriesContext) SeriesModel {
+	payload := ctx.Payload
+	m := SeriesModel{}
+	copier.Copy(&m, payload)
+	return m
+}
+func (m SeriesModel) ToApp() *app.Series {
 	target := app.Series{}
 	copier.Copy(&target, &m)
 	return &target
 }
 
-type SeriesStorage interface {
-	List(ctx *app.ListSeriesContext) []Series
-	Get(ctx *app.ShowSeriesContext) (Series, error)
-	Add(ctx *app.CreateSeriesContext) (Series, error)
-	Update(ctx *app.UpdateSeriesContext, m Series) (Series, error)
-	Delete(ctx *app.DeleteSeriesContext, id int) (bool, error)
+type SeriesModelStorage interface {
+	List(ctx *app.ListSeriesContext) []SeriesModel
+	Get(ctx *app.ShowSeriesContext) (SeriesModel, error)
+	Add(ctx *app.CreateSeriesContext) (SeriesModel, error)
+	Update(ctx *app.UpdateSeriesContext) (SeriesModel, error)
+	Delete(ctx *app.DeleteSeriesContext) (bool, error)
 }
 
-type SeriesDB struct {
+type SeriesModelDB struct {
 	DB gorm.DB
 }
 
-func NewSeriesDB(db gorm.DB) *SeriesDB {
-	return &SeriesDB{DB: db}
+func NewSeriesModelDB(db gorm.DB) *SeriesModelDB {
+	return &SeriesModelDB{DB: db}
 }
 
-func (m *SeriesDB) List(ctx *app.ListSeriesContext) []Series {
+func (m *SeriesModelDB) List(ctx *app.ListSeriesContext) []SeriesModel {
 
-	var objs []Series
+	var objs []SeriesModel
 	m.DB.Find(&objs)
 	return objs
 }
 
-func (m *SeriesDB) Get(ctx *app.ShowSeriesContext) (Series, error) {
+func (m *SeriesModelDB) Get(ctx *app.ShowSeriesContext) (SeriesModel, error) {
 
-	var obj Series
+	var obj SeriesModel
 
 	err := m.DB.Find(&obj, ctx.SeriesID).Error
 	if err != nil {
@@ -236,29 +233,29 @@ func (m *SeriesDB) Get(ctx *app.ShowSeriesContext) (Series, error) {
 	return obj, err
 }
 
-func (m *SeriesDB) Add(ctx *app.CreateSeriesContext) (Series, error) {
-	model := SeriesFromCreatePayload(ctx)
+func (m *SeriesModelDB) Add(ctx *app.CreateSeriesContext) (SeriesModel, error) {
+	model := SeriesModelFromCreatePayload(ctx)
 	err := m.DB.Create(&model).Error
 	return model, err
 }
-func (m *SeriesDB) Update(ctx *app.UpdateSeriesContext, model Series) (Series, error) {
+func (m *SeriesModelDB) Update(ctx *app.UpdateSeriesContext) (SeriesModel, error) {
 	getCtx, err := app.NewShowSeriesContext(ctx.Context)
 	if err != nil {
-		return Series{}, err
+		return SeriesModel{}, err
 	}
 	obj, err := m.Get(getCtx)
 	if err != nil {
-		return model, err
+		return obj, err
 	}
-	err = m.DB.Model(&obj).Updates(model).Error
+	err = m.DB.Model(&obj).Updates(SeriesModelFromUpdatePayload(ctx)).Error
 	if err != nil {
 		ctx.Error(err.Error())
 	}
 	return obj, err
 }
-func (m *SeriesDB) Delete(ctx *app.DeleteSeriesContext, id int) (bool, error) {
-	var obj Series
-	err := m.DB.Delete(&obj, id).Error
+func (m *SeriesModelDB) Delete(ctx *app.DeleteSeriesContext) (bool, error) {
+	var obj SeriesModel
+	err := m.DB.Delete(&obj, ctx.SeriesID).Error
 	if err != nil {
 		ctx.Logger.Error(err.Error())
 		return false, err
@@ -266,124 +263,123 @@ func (m *SeriesDB) Delete(ctx *app.DeleteSeriesContext, id int) (bool, error) {
 	return true, nil
 }
 
-type MockSeriesStorage struct {
-	SeriesList map[int]Series
-	nextID     int
-	mut        sync.Mutex
+type MockSeriesModelStorage struct {
+	SeriesModelList map[uint]SeriesModel
+	nextID          uint
+	mut             sync.Mutex
 }
 
-func NewMockSeriesStorage() *MockSeriesStorage {
-	ml := make(map[int]Series, 0)
-	return &MockSeriesStorage{SeriesList: ml}
+func NewMockSeriesModelStorage() *MockSeriesModelStorage {
+	ml := make(map[uint]SeriesModel, 0)
+	return &MockSeriesModelStorage{SeriesModelList: ml}
 }
 
-func (db *MockSeriesStorage) List(ctx *app.ListSeriesContext) []Series {
-	var list []Series = make([]Series, 0)
-	for _, v := range db.SeriesList {
+func (db *MockSeriesModelStorage) List(ctx *app.ListSeriesContext) []SeriesModel {
+	var list []SeriesModel = make([]SeriesModel, 0)
+	for _, v := range db.SeriesModelList {
 		list = append(list, v)
 	}
 	return list
 }
 
-func (db *MockSeriesStorage) Get(ctx *app.ShowSeriesContext) (Series, error) {
+func (db *MockSeriesModelStorage) Get(ctx *app.ShowSeriesContext) (SeriesModel, error) {
 
-	var obj Series
+	var obj SeriesModel
 
-	obj, ok := db.SeriesList[ctx.SeriesID]
+	obj, ok := db.SeriesModelList[uint(ctx.SeriesID)]
 	if ok {
 		return obj, nil
 	} else {
-		return obj, errors.New("Series does not exist")
+		return obj, errors.New("SeriesModel does not exist")
 	}
 }
 
-func (db *MockSeriesStorage) Add(ctx *app.CreateSeriesContext) (Series, error) {
-	u := SeriesFromCreatePayload(ctx)
+func (db *MockSeriesModelStorage) Add(ctx *app.CreateSeriesContext) (SeriesModel, error) {
+	u := SeriesModelFromCreatePayload(ctx)
 	db.mut.Lock()
 	db.nextID = db.nextID + 1
 	u.ID = db.nextID
 	db.mut.Unlock()
 
-	db.SeriesList[u.ID] = u
+	db.SeriesModelList[u.ID] = u
 	return u, nil
 }
 
-func (db *MockSeriesStorage) Update(ctx *app.UpdateSeriesContext, u Series) (Series, error) {
-	id := u.ID
-	_, ok := db.SeriesList[id]
+func (db *MockSeriesModelStorage) Update(ctx *app.UpdateSeriesContext) (SeriesModel, error) {
+	id := uint(ctx.SeriesID)
+	_, ok := db.SeriesModelList[id]
 	if ok {
-		db.SeriesList[id] = u
-		return db.SeriesList[id], nil
+		db.SeriesModelList[id] = SeriesModelFromUpdatePayload(ctx)
+		return db.SeriesModelList[id], nil
 	} else {
-		return u, errors.New("Series does not exist")
+		return db.SeriesModelList[id], errors.New("SeriesModel does not exist")
 	}
 }
 
-func (db *MockSeriesStorage) Delete(ctx *app.DeleteSeriesContext, id int) (bool, error) {
-	_, ok := db.SeriesList[id]
+func (db *MockSeriesModelStorage) Delete(ctx *app.DeleteSeriesContext) (bool, error) {
+	_, ok := db.SeriesModelList[uint(ctx.SeriesID)]
 	if ok {
-		delete(db.SeriesList, id)
+		delete(db.SeriesModelList, uint(ctx.SeriesID))
 		return true, nil
 	} else {
 		return false, errors.New("Could not delete this user")
 	}
 }
 
-// A user belonging to a tenant account
-// Identifier: application/vnd.congo.api.user+json
-type User struct {
-	// Date of creation
-	CreatedAt string `json:"created_at,omitempty"`
-	// Email address of user
-	Email string `json:"email,omitempty"`
-	// First name of user
+// UserModel media type
+// Identifier:
+type UserModel struct {
+	gorm.Model
+	Email     string `json:"email,omitempty"`
 	FirstName string `json:"first_name,omitempty"`
-	// API href of user
-	Href string `json:"href,omitempty"`
-	// ID of user
-	ID int `json:"id,omitempty"`
-	// Last name of user
-	LastName string `json:"last_name,omitempty"`
+	LastName  string `json:"last_name,omitempty"`
 }
 
-func UserFromCreatePayload(ctx *app.CreateUserContext) User {
+func UserModelFromCreatePayload(ctx *app.CreateUserContext) UserModel {
 	payload := ctx.Payload
-	m := User{}
+	m := UserModel{}
 	copier.Copy(&m, payload)
 	return m
 }
-func (m User) ToApp() *app.User {
+
+func UserModelFromUpdatePayload(ctx *app.UpdateUserContext) UserModel {
+	payload := ctx.Payload
+	m := UserModel{}
+	copier.Copy(&m, payload)
+	return m
+}
+func (m UserModel) ToApp() *app.User {
 	target := app.User{}
 	copier.Copy(&target, &m)
 	return &target
 }
 
-type UserStorage interface {
-	List(ctx *app.ListUserContext) []User
-	Get(ctx *app.ShowUserContext) (User, error)
-	Add(ctx *app.CreateUserContext) (User, error)
-	Update(ctx *app.UpdateUserContext, m User) (User, error)
-	Delete(ctx *app.DeleteUserContext, id int) (bool, error)
+type UserModelStorage interface {
+	List(ctx *app.ListUserContext) []UserModel
+	Get(ctx *app.ShowUserContext) (UserModel, error)
+	Add(ctx *app.CreateUserContext) (UserModel, error)
+	Update(ctx *app.UpdateUserContext) (UserModel, error)
+	Delete(ctx *app.DeleteUserContext) (bool, error)
 }
 
-type UserDB struct {
+type UserModelDB struct {
 	DB gorm.DB
 }
 
-func NewUserDB(db gorm.DB) *UserDB {
-	return &UserDB{DB: db}
+func NewUserModelDB(db gorm.DB) *UserModelDB {
+	return &UserModelDB{DB: db}
 }
 
-func (m *UserDB) List(ctx *app.ListUserContext) []User {
+func (m *UserModelDB) List(ctx *app.ListUserContext) []UserModel {
 
-	var objs []User
+	var objs []UserModel
 	m.DB.Find(&objs)
 	return objs
 }
 
-func (m *UserDB) Get(ctx *app.ShowUserContext) (User, error) {
+func (m *UserModelDB) Get(ctx *app.ShowUserContext) (UserModel, error) {
 
-	var obj User
+	var obj UserModel
 
 	err := m.DB.Find(&obj, ctx.UserID).Error
 	if err != nil {
@@ -392,29 +388,29 @@ func (m *UserDB) Get(ctx *app.ShowUserContext) (User, error) {
 	return obj, err
 }
 
-func (m *UserDB) Add(ctx *app.CreateUserContext) (User, error) {
-	model := UserFromCreatePayload(ctx)
+func (m *UserModelDB) Add(ctx *app.CreateUserContext) (UserModel, error) {
+	model := UserModelFromCreatePayload(ctx)
 	err := m.DB.Create(&model).Error
 	return model, err
 }
-func (m *UserDB) Update(ctx *app.UpdateUserContext, model User) (User, error) {
+func (m *UserModelDB) Update(ctx *app.UpdateUserContext) (UserModel, error) {
 	getCtx, err := app.NewShowUserContext(ctx.Context)
 	if err != nil {
-		return User{}, err
+		return UserModel{}, err
 	}
 	obj, err := m.Get(getCtx)
 	if err != nil {
-		return model, err
+		return obj, err
 	}
-	err = m.DB.Model(&obj).Updates(model).Error
+	err = m.DB.Model(&obj).Updates(UserModelFromUpdatePayload(ctx)).Error
 	if err != nil {
 		ctx.Error(err.Error())
 	}
 	return obj, err
 }
-func (m *UserDB) Delete(ctx *app.DeleteUserContext, id int) (bool, error) {
-	var obj User
-	err := m.DB.Delete(&obj, id).Error
+func (m *UserModelDB) Delete(ctx *app.DeleteUserContext) (bool, error) {
+	var obj UserModel
+	err := m.DB.Delete(&obj, ctx.UserID).Error
 	if err != nil {
 		ctx.Logger.Error(err.Error())
 		return false, err
@@ -422,63 +418,63 @@ func (m *UserDB) Delete(ctx *app.DeleteUserContext, id int) (bool, error) {
 	return true, nil
 }
 
-type MockUserStorage struct {
-	UserList map[int]User
-	nextID   int
-	mut      sync.Mutex
+type MockUserModelStorage struct {
+	UserModelList map[uint]UserModel
+	nextID        uint
+	mut           sync.Mutex
 }
 
-func NewMockUserStorage() *MockUserStorage {
-	ml := make(map[int]User, 0)
-	return &MockUserStorage{UserList: ml}
+func NewMockUserModelStorage() *MockUserModelStorage {
+	ml := make(map[uint]UserModel, 0)
+	return &MockUserModelStorage{UserModelList: ml}
 }
 
-func (db *MockUserStorage) List(ctx *app.ListUserContext) []User {
-	var list []User = make([]User, 0)
-	for _, v := range db.UserList {
+func (db *MockUserModelStorage) List(ctx *app.ListUserContext) []UserModel {
+	var list []UserModel = make([]UserModel, 0)
+	for _, v := range db.UserModelList {
 		list = append(list, v)
 	}
 	return list
 }
 
-func (db *MockUserStorage) Get(ctx *app.ShowUserContext) (User, error) {
+func (db *MockUserModelStorage) Get(ctx *app.ShowUserContext) (UserModel, error) {
 
-	var obj User
+	var obj UserModel
 
-	obj, ok := db.UserList[ctx.UserID]
+	obj, ok := db.UserModelList[uint(ctx.UserID)]
 	if ok {
 		return obj, nil
 	} else {
-		return obj, errors.New("User does not exist")
+		return obj, errors.New("UserModel does not exist")
 	}
 }
 
-func (db *MockUserStorage) Add(ctx *app.CreateUserContext) (User, error) {
-	u := UserFromCreatePayload(ctx)
+func (db *MockUserModelStorage) Add(ctx *app.CreateUserContext) (UserModel, error) {
+	u := UserModelFromCreatePayload(ctx)
 	db.mut.Lock()
 	db.nextID = db.nextID + 1
 	u.ID = db.nextID
 	db.mut.Unlock()
 
-	db.UserList[u.ID] = u
+	db.UserModelList[u.ID] = u
 	return u, nil
 }
 
-func (db *MockUserStorage) Update(ctx *app.UpdateUserContext, u User) (User, error) {
-	id := u.ID
-	_, ok := db.UserList[id]
+func (db *MockUserModelStorage) Update(ctx *app.UpdateUserContext) (UserModel, error) {
+	id := uint(ctx.UserID)
+	_, ok := db.UserModelList[id]
 	if ok {
-		db.UserList[id] = u
-		return db.UserList[id], nil
+		db.UserModelList[id] = UserModelFromUpdatePayload(ctx)
+		return db.UserModelList[id], nil
 	} else {
-		return u, errors.New("User does not exist")
+		return db.UserModelList[id], errors.New("UserModel does not exist")
 	}
 }
 
-func (db *MockUserStorage) Delete(ctx *app.DeleteUserContext, id int) (bool, error) {
-	_, ok := db.UserList[id]
+func (db *MockUserModelStorage) Delete(ctx *app.DeleteUserContext) (bool, error) {
+	_, ok := db.UserModelList[uint(ctx.UserID)]
 	if ok {
-		delete(db.UserList, id)
+		delete(db.UserModelList, uint(ctx.UserID))
 		return true, nil
 	} else {
 		return false, errors.New("Could not delete this user")

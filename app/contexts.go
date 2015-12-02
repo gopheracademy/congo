@@ -40,7 +40,6 @@ func NewCreateAccountContext(c *goa.Context) (*CreateAccountContext, error) {
 
 // CreateAccountPayload is the account create action payload.
 type CreateAccountPayload struct {
-	// Name of account
 	Name string
 }
 
@@ -57,6 +56,11 @@ func NewCreateAccountPayload(raw interface{}) (*CreateAccountPayload, error) {
 				tmp1 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Name`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp1) < 2 {
+					err = goa.InvalidLengthError(`payload.Name`, tmp1, 2, true, err)
+				}
 			}
 			p.Name = tmp1
 		} else {
@@ -195,7 +199,6 @@ func NewUpdateAccountContext(c *goa.Context) (*UpdateAccountContext, error) {
 
 // UpdateAccountPayload is the account update action payload.
 type UpdateAccountPayload struct {
-	// Name of account
 	Name string
 }
 
@@ -212,6 +215,11 @@ func NewUpdateAccountPayload(raw interface{}) (*UpdateAccountPayload, error) {
 				tmp2 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Name`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp2) < 2 {
+					err = goa.InvalidLengthError(`payload.Name`, tmp2, 2, true, err)
+				}
 			}
 			p.Name = tmp2
 		} else {
