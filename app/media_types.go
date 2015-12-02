@@ -17,10 +17,6 @@ import "github.com/raphael/goa"
 // A tenant account
 // Identifier: application/vnd.congo.api.account+json
 type Account struct {
-	// Date of creation
-	CreatedAt string
-	// Email of account owner
-	CreatedBy string
 	// API href of account
 	Href string
 	// ID of account
@@ -48,69 +44,37 @@ func LoadAccount(raw interface{}) (*Account, error) {
 	var res *Account
 	if val, ok := raw.(map[string]interface{}); ok {
 		res = new(Account)
-		if v, ok := val["created_at"]; ok {
+		if v, ok := val["href"]; ok {
 			var tmp11 string
 			if val, ok := v.(string); ok {
 				tmp11 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`.CreatedAt`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`.Href`, v, "string", err)
 			}
-			if err == nil {
-				if tmp11 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp11); err2 != nil {
-						err = goa.InvalidFormatError(`.CreatedAt`, tmp11, goa.FormatDateTime, err2, err)
-					}
-				}
-			}
-			res.CreatedAt = tmp11
+			res.Href = tmp11
 		}
-		if v, ok := val["created_by"]; ok {
-			var tmp12 string
-			if val, ok := v.(string); ok {
-				tmp12 = val
+		if v, ok := val["id"]; ok {
+			var tmp12 int
+			if f, ok := v.(float64); ok {
+				tmp12 = int(f)
 			} else {
-				err = goa.InvalidAttributeTypeError(`.CreatedBy`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`.ID`, v, "int", err)
 			}
-			if err == nil {
-				if tmp12 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp12); err2 != nil {
-						err = goa.InvalidFormatError(`.CreatedBy`, tmp12, goa.FormatEmail, err2, err)
-					}
-				}
-			}
-			res.CreatedBy = tmp12
+			res.ID = tmp12
 		}
-		if v, ok := val["href"]; ok {
+		if v, ok := val["name"]; ok {
 			var tmp13 string
 			if val, ok := v.(string); ok {
 				tmp13 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`.Href`, v, "string", err)
-			}
-			res.Href = tmp13
-		}
-		if v, ok := val["id"]; ok {
-			var tmp14 int
-			if f, ok := v.(float64); ok {
-				tmp14 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`.ID`, v, "int", err)
-			}
-			res.ID = tmp14
-		}
-		if v, ok := val["name"]; ok {
-			var tmp15 string
-			if val, ok := v.(string); ok {
-				tmp15 = val
-			} else {
 				err = goa.InvalidAttributeTypeError(`.Name`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp15) < 2 {
-					err = goa.InvalidLengthError(`.Name`, tmp15, 2, true, err)
+				if len(tmp13) < 2 {
+					err = goa.InvalidLengthError(`.Name`, tmp13, 2, true, err)
 				}
 			}
-			res.Name = tmp15
+			res.Name = tmp13
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(``, raw, "dictionary", err)
@@ -124,54 +88,32 @@ func (mt *Account) Dump(view AccountViewEnum) (map[string]interface{}, error) {
 	var err error
 	var res map[string]interface{}
 	if view == AccountDefaultView {
-		if mt.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`default view.created_at`, mt.CreatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
-		if mt.CreatedBy != "" {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, mt.CreatedBy); err2 != nil {
-				err = goa.InvalidFormatError(`default view.created_by`, mt.CreatedBy, goa.FormatEmail, err2, err)
-			}
-		}
 		if len(mt.Name) < 2 {
 			err = goa.InvalidLengthError(`default view.name`, mt.Name, 2, true, err)
 		}
-		tmp16 := map[string]interface{}{
-			"created_at": mt.CreatedAt,
-			"created_by": mt.CreatedBy,
-			"href":       mt.Href,
-			"id":         mt.ID,
-			"name":       mt.Name,
+		tmp14 := map[string]interface{}{
+			"href": mt.Href,
+			"id":   mt.ID,
+			"name": mt.Name,
 		}
-		res = tmp16
+		res = tmp14
 	}
 	if view == AccountLinkView {
 		if len(mt.Name) < 2 {
 			err = goa.InvalidLengthError(`link view.name`, mt.Name, 2, true, err)
 		}
-		tmp17 := map[string]interface{}{
+		tmp15 := map[string]interface{}{
 			"href": mt.Href,
 			"id":   mt.ID,
 			"name": mt.Name,
 		}
-		res = tmp17
+		res = tmp15
 	}
 	return res, err
 }
 
 // Validate validates the media type instance.
 func (mt *Account) Validate() (err error) {
-	if mt.CreatedAt != "" {
-		if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.CreatedAt); err2 != nil {
-			err = goa.InvalidFormatError(`response.created_at`, mt.CreatedAt, goa.FormatDateTime, err2, err)
-		}
-	}
-	if mt.CreatedBy != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.CreatedBy); err2 != nil {
-			err = goa.InvalidFormatError(`response.created_by`, mt.CreatedBy, goa.FormatEmail, err2, err)
-		}
-	}
 	if len(mt.Name) < 2 {
 		err = goa.InvalidLengthError(`response.name`, mt.Name, 2, true, err)
 	}
@@ -192,77 +134,45 @@ func LoadAccountCollection(raw interface{}) (AccountCollection, error) {
 	if val, ok := raw.([]interface{}); ok {
 		res = make([]*Account, len(val))
 		for i, v := range val {
-			var tmp18 *Account
+			var tmp16 *Account
 			if val, ok := v.(map[string]interface{}); ok {
-				tmp18 = new(Account)
-				if v, ok := val["created_at"]; ok {
+				tmp16 = new(Account)
+				if v, ok := val["href"]; ok {
+					var tmp17 string
+					if val, ok := v.(string); ok {
+						tmp17 = val
+					} else {
+						err = goa.InvalidAttributeTypeError(`[*].Href`, v, "string", err)
+					}
+					tmp16.Href = tmp17
+				}
+				if v, ok := val["id"]; ok {
+					var tmp18 int
+					if f, ok := v.(float64); ok {
+						tmp18 = int(f)
+					} else {
+						err = goa.InvalidAttributeTypeError(`[*].ID`, v, "int", err)
+					}
+					tmp16.ID = tmp18
+				}
+				if v, ok := val["name"]; ok {
 					var tmp19 string
 					if val, ok := v.(string); ok {
 						tmp19 = val
 					} else {
-						err = goa.InvalidAttributeTypeError(`[*].CreatedAt`, v, "string", err)
-					}
-					if err == nil {
-						if tmp19 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp19); err2 != nil {
-								err = goa.InvalidFormatError(`[*].CreatedAt`, tmp19, goa.FormatDateTime, err2, err)
-							}
-						}
-					}
-					tmp18.CreatedAt = tmp19
-				}
-				if v, ok := val["created_by"]; ok {
-					var tmp20 string
-					if val, ok := v.(string); ok {
-						tmp20 = val
-					} else {
-						err = goa.InvalidAttributeTypeError(`[*].CreatedBy`, v, "string", err)
-					}
-					if err == nil {
-						if tmp20 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatEmail, tmp20); err2 != nil {
-								err = goa.InvalidFormatError(`[*].CreatedBy`, tmp20, goa.FormatEmail, err2, err)
-							}
-						}
-					}
-					tmp18.CreatedBy = tmp20
-				}
-				if v, ok := val["href"]; ok {
-					var tmp21 string
-					if val, ok := v.(string); ok {
-						tmp21 = val
-					} else {
-						err = goa.InvalidAttributeTypeError(`[*].Href`, v, "string", err)
-					}
-					tmp18.Href = tmp21
-				}
-				if v, ok := val["id"]; ok {
-					var tmp22 int
-					if f, ok := v.(float64); ok {
-						tmp22 = int(f)
-					} else {
-						err = goa.InvalidAttributeTypeError(`[*].ID`, v, "int", err)
-					}
-					tmp18.ID = tmp22
-				}
-				if v, ok := val["name"]; ok {
-					var tmp23 string
-					if val, ok := v.(string); ok {
-						tmp23 = val
-					} else {
 						err = goa.InvalidAttributeTypeError(`[*].Name`, v, "string", err)
 					}
 					if err == nil {
-						if len(tmp23) < 2 {
-							err = goa.InvalidLengthError(`[*].Name`, tmp23, 2, true, err)
+						if len(tmp19) < 2 {
+							err = goa.InvalidLengthError(`[*].Name`, tmp19, 2, true, err)
 						}
 					}
-					tmp18.Name = tmp23
+					tmp16.Name = tmp19
 				}
 			} else {
 				err = goa.InvalidAttributeTypeError(`[*]`, v, "dictionary", err)
 			}
-			res[i] = tmp18
+			res[i] = tmp16
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(``, raw, "array", err)
@@ -276,28 +186,16 @@ func (mt AccountCollection) Dump() ([]map[string]interface{}, error) {
 	var err error
 	var res []map[string]interface{}
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp24 := range mt {
-		if tmp24.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp24.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`default view[*].created_at`, tmp24.CreatedAt, goa.FormatDateTime, err2, err)
-			}
+	for i, tmp20 := range mt {
+		if len(tmp20.Name) < 2 {
+			err = goa.InvalidLengthError(`default view[*].name`, tmp20.Name, 2, true, err)
 		}
-		if tmp24.CreatedBy != "" {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, tmp24.CreatedBy); err2 != nil {
-				err = goa.InvalidFormatError(`default view[*].created_by`, tmp24.CreatedBy, goa.FormatEmail, err2, err)
-			}
+		tmp21 := map[string]interface{}{
+			"href": tmp20.Href,
+			"id":   tmp20.ID,
+			"name": tmp20.Name,
 		}
-		if len(tmp24.Name) < 2 {
-			err = goa.InvalidLengthError(`default view[*].name`, tmp24.Name, 2, true, err)
-		}
-		tmp25 := map[string]interface{}{
-			"created_at": tmp24.CreatedAt,
-			"created_by": tmp24.CreatedBy,
-			"href":       tmp24.Href,
-			"id":         tmp24.ID,
-			"name":       tmp24.Name,
-		}
-		res[i] = tmp25
+		res[i] = tmp21
 	}
 	return res, err
 }
@@ -305,16 +203,6 @@ func (mt AccountCollection) Dump() ([]map[string]interface{}, error) {
 // Validate validates the media type instance.
 func (mt AccountCollection) Validate() (err error) {
 	for _, e := range mt {
-		if e.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, e.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].created_at`, e.CreatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
-		if e.CreatedBy != "" {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, e.CreatedBy); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].created_by`, e.CreatedBy, goa.FormatEmail, err2, err)
-			}
-		}
 		if len(e.Name) < 2 {
 			err = goa.InvalidLengthError(`response[*].name`, e.Name, 2, true, err)
 		}
@@ -327,15 +215,11 @@ func (mt AccountCollection) Validate() (err error) {
 type Series struct {
 	// Account that owns bottle
 	Account *Account
-	// Date of creation
-	CreatedAt string
 	// API href of series
 	Href string
 	// ID of series
 	ID   int
 	Name string
-	// Date of last update
-	UpdatedAt string
 }
 
 // Series views
@@ -360,141 +244,77 @@ func LoadSeries(raw interface{}) (*Series, error) {
 	if val, ok := raw.(map[string]interface{}); ok {
 		res = new(Series)
 		if v, ok := val["account"]; ok {
-			var tmp26 *Account
+			var tmp22 *Account
 			if val, ok := v.(map[string]interface{}); ok {
-				tmp26 = new(Account)
-				if v, ok := val["created_at"]; ok {
-					var tmp27 string
-					if val, ok := v.(string); ok {
-						tmp27 = val
-					} else {
-						err = goa.InvalidAttributeTypeError(`.Account.CreatedAt`, v, "string", err)
-					}
-					if err == nil {
-						if tmp27 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp27); err2 != nil {
-								err = goa.InvalidFormatError(`.Account.CreatedAt`, tmp27, goa.FormatDateTime, err2, err)
-							}
-						}
-					}
-					tmp26.CreatedAt = tmp27
-				}
-				if v, ok := val["created_by"]; ok {
-					var tmp28 string
-					if val, ok := v.(string); ok {
-						tmp28 = val
-					} else {
-						err = goa.InvalidAttributeTypeError(`.Account.CreatedBy`, v, "string", err)
-					}
-					if err == nil {
-						if tmp28 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatEmail, tmp28); err2 != nil {
-								err = goa.InvalidFormatError(`.Account.CreatedBy`, tmp28, goa.FormatEmail, err2, err)
-							}
-						}
-					}
-					tmp26.CreatedBy = tmp28
-				}
+				tmp22 = new(Account)
 				if v, ok := val["href"]; ok {
-					var tmp29 string
+					var tmp23 string
 					if val, ok := v.(string); ok {
-						tmp29 = val
+						tmp23 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`.Account.Href`, v, "string", err)
 					}
-					tmp26.Href = tmp29
+					tmp22.Href = tmp23
 				}
 				if v, ok := val["id"]; ok {
-					var tmp30 int
+					var tmp24 int
 					if f, ok := v.(float64); ok {
-						tmp30 = int(f)
+						tmp24 = int(f)
 					} else {
 						err = goa.InvalidAttributeTypeError(`.Account.ID`, v, "int", err)
 					}
-					tmp26.ID = tmp30
+					tmp22.ID = tmp24
 				}
 				if v, ok := val["name"]; ok {
-					var tmp31 string
+					var tmp25 string
 					if val, ok := v.(string); ok {
-						tmp31 = val
+						tmp25 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`.Account.Name`, v, "string", err)
 					}
 					if err == nil {
-						if len(tmp31) < 2 {
-							err = goa.InvalidLengthError(`.Account.Name`, tmp31, 2, true, err)
+						if len(tmp25) < 2 {
+							err = goa.InvalidLengthError(`.Account.Name`, tmp25, 2, true, err)
 						}
 					}
-					tmp26.Name = tmp31
+					tmp22.Name = tmp25
 				}
 			} else {
 				err = goa.InvalidAttributeTypeError(`.Account`, v, "dictionary", err)
 			}
-			res.Account = tmp26
-		}
-		if v, ok := val["created_at"]; ok {
-			var tmp32 string
-			if val, ok := v.(string); ok {
-				tmp32 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`.CreatedAt`, v, "string", err)
-			}
-			if err == nil {
-				if tmp32 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp32); err2 != nil {
-						err = goa.InvalidFormatError(`.CreatedAt`, tmp32, goa.FormatDateTime, err2, err)
-					}
-				}
-			}
-			res.CreatedAt = tmp32
+			res.Account = tmp22
 		}
 		if v, ok := val["href"]; ok {
-			var tmp33 string
+			var tmp26 string
 			if val, ok := v.(string); ok {
-				tmp33 = val
+				tmp26 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`.Href`, v, "string", err)
 			}
-			res.Href = tmp33
+			res.Href = tmp26
 		}
 		if v, ok := val["id"]; ok {
-			var tmp34 int
+			var tmp27 int
 			if f, ok := v.(float64); ok {
-				tmp34 = int(f)
+				tmp27 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`.ID`, v, "int", err)
 			}
-			res.ID = tmp34
+			res.ID = tmp27
 		}
 		if v, ok := val["name"]; ok {
-			var tmp35 string
+			var tmp28 string
 			if val, ok := v.(string); ok {
-				tmp35 = val
+				tmp28 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`.Name`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp35) < 2 {
-					err = goa.InvalidLengthError(`.Name`, tmp35, 2, true, err)
+				if len(tmp28) < 2 {
+					err = goa.InvalidLengthError(`.Name`, tmp28, 2, true, err)
 				}
 			}
-			res.Name = tmp35
-		}
-		if v, ok := val["updated_at"]; ok {
-			var tmp36 string
-			if val, ok := v.(string); ok {
-				tmp36 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`.UpdatedAt`, v, "string", err)
-			}
-			if err == nil {
-				if tmp36 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp36); err2 != nil {
-						err = goa.InvalidFormatError(`.UpdatedAt`, tmp36, goa.FormatDateTime, err2, err)
-					}
-				}
-			}
-			res.UpdatedAt = tmp36
+			res.Name = tmp28
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(``, raw, "dictionary", err)
@@ -511,82 +331,58 @@ func (mt *Series) Dump(view SeriesViewEnum) (map[string]interface{}, error) {
 		if len(mt.Name) < 2 {
 			err = goa.InvalidLengthError(`default view.name`, mt.Name, 2, true, err)
 		}
-		tmp38 := map[string]interface{}{
+		tmp30 := map[string]interface{}{
 			"href": mt.Href,
 			"id":   mt.ID,
 			"name": mt.Name,
 		}
-		res = tmp38
+		res = tmp30
 		if err == nil {
 			links := make(map[string]interface{})
 			if len(mt.Account.Name) < 2 {
 				err = goa.InvalidLengthError(`link account.name`, mt.Account.Name, 2, true, err)
 			}
-			tmp37 := map[string]interface{}{
+			tmp29 := map[string]interface{}{
 				"href": mt.Account.Href,
 				"id":   mt.Account.ID,
 				"name": mt.Account.Name,
 			}
-			links["account"] = tmp37
+			links["account"] = tmp29
 			res["links"] = links
 		}
 	}
 	if view == SeriesFullView {
-		if mt.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`full view.created_at`, mt.CreatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
 		if len(mt.Name) < 2 {
 			err = goa.InvalidLengthError(`full view.name`, mt.Name, 2, true, err)
 		}
-		if mt.UpdatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.UpdatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`full view.updated_at`, mt.UpdatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
-		tmp40 := map[string]interface{}{
-			"created_at": mt.CreatedAt,
-			"href":       mt.Href,
-			"id":         mt.ID,
-			"name":       mt.Name,
-			"updated_at": mt.UpdatedAt,
+		tmp32 := map[string]interface{}{
+			"href": mt.Href,
+			"id":   mt.ID,
+			"name": mt.Name,
 		}
 		if mt.Account != nil {
-			if mt.Account.CreatedAt != "" {
-				if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.Account.CreatedAt); err2 != nil {
-					err = goa.InvalidFormatError(`full view.Account.created_at`, mt.Account.CreatedAt, goa.FormatDateTime, err2, err)
-				}
-			}
-			if mt.Account.CreatedBy != "" {
-				if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Account.CreatedBy); err2 != nil {
-					err = goa.InvalidFormatError(`full view.Account.created_by`, mt.Account.CreatedBy, goa.FormatEmail, err2, err)
-				}
-			}
 			if len(mt.Account.Name) < 2 {
 				err = goa.InvalidLengthError(`full view.Account.name`, mt.Account.Name, 2, true, err)
 			}
-			tmp41 := map[string]interface{}{
-				"created_at": mt.Account.CreatedAt,
-				"created_by": mt.Account.CreatedBy,
-				"href":       mt.Account.Href,
-				"id":         mt.Account.ID,
-				"name":       mt.Account.Name,
+			tmp33 := map[string]interface{}{
+				"href": mt.Account.Href,
+				"id":   mt.Account.ID,
+				"name": mt.Account.Name,
 			}
-			tmp40["account"] = tmp41
+			tmp32["account"] = tmp33
 		}
-		res = tmp40
+		res = tmp32
 		if err == nil {
 			links := make(map[string]interface{})
 			if len(mt.Account.Name) < 2 {
 				err = goa.InvalidLengthError(`link account.name`, mt.Account.Name, 2, true, err)
 			}
-			tmp39 := map[string]interface{}{
+			tmp31 := map[string]interface{}{
 				"href": mt.Account.Href,
 				"id":   mt.Account.ID,
 				"name": mt.Account.Name,
 			}
-			links["account"] = tmp39
+			links["account"] = tmp31
 			res["links"] = links
 		}
 	}
@@ -594,23 +390,23 @@ func (mt *Series) Dump(view SeriesViewEnum) (map[string]interface{}, error) {
 		if len(mt.Name) < 2 {
 			err = goa.InvalidLengthError(`tiny view.name`, mt.Name, 2, true, err)
 		}
-		tmp43 := map[string]interface{}{
+		tmp35 := map[string]interface{}{
 			"href": mt.Href,
 			"id":   mt.ID,
 			"name": mt.Name,
 		}
-		res = tmp43
+		res = tmp35
 		if err == nil {
 			links := make(map[string]interface{})
 			if len(mt.Account.Name) < 2 {
 				err = goa.InvalidLengthError(`link account.name`, mt.Account.Name, 2, true, err)
 			}
-			tmp42 := map[string]interface{}{
+			tmp34 := map[string]interface{}{
 				"href": mt.Account.Href,
 				"id":   mt.Account.ID,
 				"name": mt.Account.Name,
 			}
-			links["account"] = tmp42
+			links["account"] = tmp34
 			res["links"] = links
 		}
 	}
@@ -619,31 +415,11 @@ func (mt *Series) Dump(view SeriesViewEnum) (map[string]interface{}, error) {
 
 // Validate validates the media type instance.
 func (mt *Series) Validate() (err error) {
-	if mt.Account.CreatedAt != "" {
-		if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.Account.CreatedAt); err2 != nil {
-			err = goa.InvalidFormatError(`response.account.created_at`, mt.Account.CreatedAt, goa.FormatDateTime, err2, err)
-		}
-	}
-	if mt.Account.CreatedBy != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Account.CreatedBy); err2 != nil {
-			err = goa.InvalidFormatError(`response.account.created_by`, mt.Account.CreatedBy, goa.FormatEmail, err2, err)
-		}
-	}
 	if len(mt.Account.Name) < 2 {
 		err = goa.InvalidLengthError(`response.account.name`, mt.Account.Name, 2, true, err)
 	}
-	if mt.CreatedAt != "" {
-		if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.CreatedAt); err2 != nil {
-			err = goa.InvalidFormatError(`response.created_at`, mt.CreatedAt, goa.FormatDateTime, err2, err)
-		}
-	}
 	if len(mt.Name) < 2 {
 		err = goa.InvalidLengthError(`response.name`, mt.Name, 2, true, err)
-	}
-	if mt.UpdatedAt != "" {
-		if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.UpdatedAt); err2 != nil {
-			err = goa.InvalidFormatError(`response.updated_at`, mt.UpdatedAt, goa.FormatDateTime, err2, err)
-		}
 	}
 	return
 }
@@ -672,150 +448,86 @@ func LoadSeriesCollection(raw interface{}) (SeriesCollection, error) {
 	if val, ok := raw.([]interface{}); ok {
 		res = make([]*Series, len(val))
 		for i, v := range val {
-			var tmp44 *Series
+			var tmp36 *Series
 			if val, ok := v.(map[string]interface{}); ok {
-				tmp44 = new(Series)
+				tmp36 = new(Series)
 				if v, ok := val["account"]; ok {
-					var tmp45 *Account
+					var tmp37 *Account
 					if val, ok := v.(map[string]interface{}); ok {
-						tmp45 = new(Account)
-						if v, ok := val["created_at"]; ok {
-							var tmp46 string
-							if val, ok := v.(string); ok {
-								tmp46 = val
-							} else {
-								err = goa.InvalidAttributeTypeError(`[*].Account.CreatedAt`, v, "string", err)
-							}
-							if err == nil {
-								if tmp46 != "" {
-									if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp46); err2 != nil {
-										err = goa.InvalidFormatError(`[*].Account.CreatedAt`, tmp46, goa.FormatDateTime, err2, err)
-									}
-								}
-							}
-							tmp45.CreatedAt = tmp46
-						}
-						if v, ok := val["created_by"]; ok {
-							var tmp47 string
-							if val, ok := v.(string); ok {
-								tmp47 = val
-							} else {
-								err = goa.InvalidAttributeTypeError(`[*].Account.CreatedBy`, v, "string", err)
-							}
-							if err == nil {
-								if tmp47 != "" {
-									if err2 := goa.ValidateFormat(goa.FormatEmail, tmp47); err2 != nil {
-										err = goa.InvalidFormatError(`[*].Account.CreatedBy`, tmp47, goa.FormatEmail, err2, err)
-									}
-								}
-							}
-							tmp45.CreatedBy = tmp47
-						}
+						tmp37 = new(Account)
 						if v, ok := val["href"]; ok {
-							var tmp48 string
+							var tmp38 string
 							if val, ok := v.(string); ok {
-								tmp48 = val
+								tmp38 = val
 							} else {
 								err = goa.InvalidAttributeTypeError(`[*].Account.Href`, v, "string", err)
 							}
-							tmp45.Href = tmp48
+							tmp37.Href = tmp38
 						}
 						if v, ok := val["id"]; ok {
-							var tmp49 int
+							var tmp39 int
 							if f, ok := v.(float64); ok {
-								tmp49 = int(f)
+								tmp39 = int(f)
 							} else {
 								err = goa.InvalidAttributeTypeError(`[*].Account.ID`, v, "int", err)
 							}
-							tmp45.ID = tmp49
+							tmp37.ID = tmp39
 						}
 						if v, ok := val["name"]; ok {
-							var tmp50 string
+							var tmp40 string
 							if val, ok := v.(string); ok {
-								tmp50 = val
+								tmp40 = val
 							} else {
 								err = goa.InvalidAttributeTypeError(`[*].Account.Name`, v, "string", err)
 							}
 							if err == nil {
-								if len(tmp50) < 2 {
-									err = goa.InvalidLengthError(`[*].Account.Name`, tmp50, 2, true, err)
+								if len(tmp40) < 2 {
+									err = goa.InvalidLengthError(`[*].Account.Name`, tmp40, 2, true, err)
 								}
 							}
-							tmp45.Name = tmp50
+							tmp37.Name = tmp40
 						}
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].Account`, v, "dictionary", err)
 					}
-					tmp44.Account = tmp45
-				}
-				if v, ok := val["created_at"]; ok {
-					var tmp51 string
-					if val, ok := v.(string); ok {
-						tmp51 = val
-					} else {
-						err = goa.InvalidAttributeTypeError(`[*].CreatedAt`, v, "string", err)
-					}
-					if err == nil {
-						if tmp51 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp51); err2 != nil {
-								err = goa.InvalidFormatError(`[*].CreatedAt`, tmp51, goa.FormatDateTime, err2, err)
-							}
-						}
-					}
-					tmp44.CreatedAt = tmp51
+					tmp36.Account = tmp37
 				}
 				if v, ok := val["href"]; ok {
-					var tmp52 string
+					var tmp41 string
 					if val, ok := v.(string); ok {
-						tmp52 = val
+						tmp41 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].Href`, v, "string", err)
 					}
-					tmp44.Href = tmp52
+					tmp36.Href = tmp41
 				}
 				if v, ok := val["id"]; ok {
-					var tmp53 int
+					var tmp42 int
 					if f, ok := v.(float64); ok {
-						tmp53 = int(f)
+						tmp42 = int(f)
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].ID`, v, "int", err)
 					}
-					tmp44.ID = tmp53
+					tmp36.ID = tmp42
 				}
 				if v, ok := val["name"]; ok {
-					var tmp54 string
+					var tmp43 string
 					if val, ok := v.(string); ok {
-						tmp54 = val
+						tmp43 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].Name`, v, "string", err)
 					}
 					if err == nil {
-						if len(tmp54) < 2 {
-							err = goa.InvalidLengthError(`[*].Name`, tmp54, 2, true, err)
+						if len(tmp43) < 2 {
+							err = goa.InvalidLengthError(`[*].Name`, tmp43, 2, true, err)
 						}
 					}
-					tmp44.Name = tmp54
-				}
-				if v, ok := val["updated_at"]; ok {
-					var tmp55 string
-					if val, ok := v.(string); ok {
-						tmp55 = val
-					} else {
-						err = goa.InvalidAttributeTypeError(`[*].UpdatedAt`, v, "string", err)
-					}
-					if err == nil {
-						if tmp55 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp55); err2 != nil {
-								err = goa.InvalidFormatError(`[*].UpdatedAt`, tmp55, goa.FormatDateTime, err2, err)
-							}
-						}
-					}
-					tmp44.UpdatedAt = tmp55
+					tmp36.Name = tmp43
 				}
 			} else {
 				err = goa.InvalidAttributeTypeError(`[*]`, v, "dictionary", err)
 			}
-			res[i] = tmp44
+			res[i] = tmp36
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(``, raw, "array", err)
@@ -830,54 +542,54 @@ func (mt SeriesCollection) Dump(view SeriesCollectionViewEnum) ([]map[string]int
 	var res []map[string]interface{}
 	if view == SeriesCollectionDefaultView {
 		res = make([]map[string]interface{}, len(mt))
-		for i, tmp56 := range mt {
-			if len(tmp56.Name) < 2 {
-				err = goa.InvalidLengthError(`default view[*].name`, tmp56.Name, 2, true, err)
+		for i, tmp44 := range mt {
+			if len(tmp44.Name) < 2 {
+				err = goa.InvalidLengthError(`default view[*].name`, tmp44.Name, 2, true, err)
 			}
-			tmp58 := map[string]interface{}{
-				"href": tmp56.Href,
-				"id":   tmp56.ID,
-				"name": tmp56.Name,
+			tmp46 := map[string]interface{}{
+				"href": tmp44.Href,
+				"id":   tmp44.ID,
+				"name": tmp44.Name,
 			}
-			res[i] = tmp58
+			res[i] = tmp46
 			if err == nil {
 				links := make(map[string]interface{})
-				if len(tmp56.Account.Name) < 2 {
-					err = goa.InvalidLengthError(`link account.name`, tmp56.Account.Name, 2, true, err)
+				if len(tmp44.Account.Name) < 2 {
+					err = goa.InvalidLengthError(`link account.name`, tmp44.Account.Name, 2, true, err)
 				}
-				tmp57 := map[string]interface{}{
-					"href": tmp56.Account.Href,
-					"id":   tmp56.Account.ID,
-					"name": tmp56.Account.Name,
+				tmp45 := map[string]interface{}{
+					"href": tmp44.Account.Href,
+					"id":   tmp44.Account.ID,
+					"name": tmp44.Account.Name,
 				}
-				links["account"] = tmp57
+				links["account"] = tmp45
 				res[i]["links"] = links
 			}
 		}
 	}
 	if view == SeriesCollectionTinyView {
 		res = make([]map[string]interface{}, len(mt))
-		for i, tmp59 := range mt {
-			if len(tmp59.Name) < 2 {
-				err = goa.InvalidLengthError(`tiny view[*].name`, tmp59.Name, 2, true, err)
+		for i, tmp47 := range mt {
+			if len(tmp47.Name) < 2 {
+				err = goa.InvalidLengthError(`tiny view[*].name`, tmp47.Name, 2, true, err)
 			}
-			tmp61 := map[string]interface{}{
-				"href": tmp59.Href,
-				"id":   tmp59.ID,
-				"name": tmp59.Name,
+			tmp49 := map[string]interface{}{
+				"href": tmp47.Href,
+				"id":   tmp47.ID,
+				"name": tmp47.Name,
 			}
-			res[i] = tmp61
+			res[i] = tmp49
 			if err == nil {
 				links := make(map[string]interface{})
-				if len(tmp59.Account.Name) < 2 {
-					err = goa.InvalidLengthError(`link account.name`, tmp59.Account.Name, 2, true, err)
+				if len(tmp47.Account.Name) < 2 {
+					err = goa.InvalidLengthError(`link account.name`, tmp47.Account.Name, 2, true, err)
 				}
-				tmp60 := map[string]interface{}{
-					"href": tmp59.Account.Href,
-					"id":   tmp59.Account.ID,
-					"name": tmp59.Account.Name,
+				tmp48 := map[string]interface{}{
+					"href": tmp47.Account.Href,
+					"id":   tmp47.Account.ID,
+					"name": tmp47.Account.Name,
 				}
-				links["account"] = tmp60
+				links["account"] = tmp48
 				res[i]["links"] = links
 			}
 		}
@@ -888,31 +600,11 @@ func (mt SeriesCollection) Dump(view SeriesCollectionViewEnum) ([]map[string]int
 // Validate validates the media type instance.
 func (mt SeriesCollection) Validate() (err error) {
 	for _, e := range mt {
-		if e.Account.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, e.Account.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].account.created_at`, e.Account.CreatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
-		if e.Account.CreatedBy != "" {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Account.CreatedBy); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].account.created_by`, e.Account.CreatedBy, goa.FormatEmail, err2, err)
-			}
-		}
 		if len(e.Account.Name) < 2 {
 			err = goa.InvalidLengthError(`response[*].account.name`, e.Account.Name, 2, true, err)
 		}
-		if e.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, e.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].created_at`, e.CreatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
 		if len(e.Name) < 2 {
 			err = goa.InvalidLengthError(`response[*].name`, e.Name, 2, true, err)
-		}
-		if e.UpdatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, e.UpdatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].updated_at`, e.UpdatedAt, goa.FormatDateTime, err2, err)
-			}
 		}
 	}
 	return
@@ -921,8 +613,6 @@ func (mt SeriesCollection) Validate() (err error) {
 // A user belonging to a tenant account
 // Identifier: application/vnd.congo.api.user+json
 type User struct {
-	// Date of creation
-	CreatedAt string
 	// Email address of user
 	Email string
 	// First name of user
@@ -954,73 +644,57 @@ func LoadUser(raw interface{}) (*User, error) {
 	var res *User
 	if val, ok := raw.(map[string]interface{}); ok {
 		res = new(User)
-		if v, ok := val["created_at"]; ok {
-			var tmp62 string
-			if val, ok := v.(string); ok {
-				tmp62 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`.CreatedAt`, v, "string", err)
-			}
-			if err == nil {
-				if tmp62 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp62); err2 != nil {
-						err = goa.InvalidFormatError(`.CreatedAt`, tmp62, goa.FormatDateTime, err2, err)
-					}
-				}
-			}
-			res.CreatedAt = tmp62
-		}
 		if v, ok := val["email"]; ok {
-			var tmp63 string
+			var tmp50 string
 			if val, ok := v.(string); ok {
-				tmp63 = val
+				tmp50 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`.Email`, v, "string", err)
 			}
 			if err == nil {
-				if tmp63 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp63); err2 != nil {
-						err = goa.InvalidFormatError(`.Email`, tmp63, goa.FormatEmail, err2, err)
+				if tmp50 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp50); err2 != nil {
+						err = goa.InvalidFormatError(`.Email`, tmp50, goa.FormatEmail, err2, err)
 					}
 				}
 			}
-			res.Email = tmp63
+			res.Email = tmp50
 		}
 		if v, ok := val["first_name"]; ok {
-			var tmp64 string
+			var tmp51 string
 			if val, ok := v.(string); ok {
-				tmp64 = val
+				tmp51 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`.FirstName`, v, "string", err)
 			}
-			res.FirstName = tmp64
+			res.FirstName = tmp51
 		}
 		if v, ok := val["href"]; ok {
-			var tmp65 string
+			var tmp52 string
 			if val, ok := v.(string); ok {
-				tmp65 = val
+				tmp52 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`.Href`, v, "string", err)
 			}
-			res.Href = tmp65
+			res.Href = tmp52
 		}
 		if v, ok := val["id"]; ok {
-			var tmp66 int
+			var tmp53 int
 			if f, ok := v.(float64); ok {
-				tmp66 = int(f)
+				tmp53 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`.ID`, v, "int", err)
 			}
-			res.ID = tmp66
+			res.ID = tmp53
 		}
 		if v, ok := val["last_name"]; ok {
-			var tmp67 string
+			var tmp54 string
 			if val, ok := v.(string); ok {
-				tmp67 = val
+				tmp54 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`.LastName`, v, "string", err)
 			}
-			res.LastName = tmp67
+			res.LastName = tmp54
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(``, raw, "dictionary", err)
@@ -1034,25 +708,19 @@ func (mt *User) Dump(view UserViewEnum) (map[string]interface{}, error) {
 	var err error
 	var res map[string]interface{}
 	if view == UserDefaultView {
-		if mt.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`default view.created_at`, mt.CreatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
 		if mt.Email != "" {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
 				err = goa.InvalidFormatError(`default view.email`, mt.Email, goa.FormatEmail, err2, err)
 			}
 		}
-		tmp68 := map[string]interface{}{
-			"created_at": mt.CreatedAt,
+		tmp55 := map[string]interface{}{
 			"email":      mt.Email,
 			"first_name": mt.FirstName,
 			"href":       mt.Href,
 			"id":         mt.ID,
 			"last_name":  mt.LastName,
 		}
-		res = tmp68
+		res = tmp55
 	}
 	if view == UserLinkView {
 		if mt.Email != "" {
@@ -1060,23 +728,18 @@ func (mt *User) Dump(view UserViewEnum) (map[string]interface{}, error) {
 				err = goa.InvalidFormatError(`link view.email`, mt.Email, goa.FormatEmail, err2, err)
 			}
 		}
-		tmp69 := map[string]interface{}{
+		tmp56 := map[string]interface{}{
 			"email": mt.Email,
 			"href":  mt.Href,
 			"id":    mt.ID,
 		}
-		res = tmp69
+		res = tmp56
 	}
 	return res, err
 }
 
 // Validate validates the media type instance.
 func (mt *User) Validate() (err error) {
-	if mt.CreatedAt != "" {
-		if err2 := goa.ValidateFormat(goa.FormatDateTime, mt.CreatedAt); err2 != nil {
-			err = goa.InvalidFormatError(`response.created_at`, mt.CreatedAt, goa.FormatDateTime, err2, err)
-		}
-	}
 	if mt.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
 			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
@@ -1099,81 +762,65 @@ func LoadUserCollection(raw interface{}) (UserCollection, error) {
 	if val, ok := raw.([]interface{}); ok {
 		res = make([]*User, len(val))
 		for i, v := range val {
-			var tmp70 *User
+			var tmp57 *User
 			if val, ok := v.(map[string]interface{}); ok {
-				tmp70 = new(User)
-				if v, ok := val["created_at"]; ok {
-					var tmp71 string
-					if val, ok := v.(string); ok {
-						tmp71 = val
-					} else {
-						err = goa.InvalidAttributeTypeError(`[*].CreatedAt`, v, "string", err)
-					}
-					if err == nil {
-						if tmp71 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp71); err2 != nil {
-								err = goa.InvalidFormatError(`[*].CreatedAt`, tmp71, goa.FormatDateTime, err2, err)
-							}
-						}
-					}
-					tmp70.CreatedAt = tmp71
-				}
+				tmp57 = new(User)
 				if v, ok := val["email"]; ok {
-					var tmp72 string
+					var tmp58 string
 					if val, ok := v.(string); ok {
-						tmp72 = val
+						tmp58 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].Email`, v, "string", err)
 					}
 					if err == nil {
-						if tmp72 != "" {
-							if err2 := goa.ValidateFormat(goa.FormatEmail, tmp72); err2 != nil {
-								err = goa.InvalidFormatError(`[*].Email`, tmp72, goa.FormatEmail, err2, err)
+						if tmp58 != "" {
+							if err2 := goa.ValidateFormat(goa.FormatEmail, tmp58); err2 != nil {
+								err = goa.InvalidFormatError(`[*].Email`, tmp58, goa.FormatEmail, err2, err)
 							}
 						}
 					}
-					tmp70.Email = tmp72
+					tmp57.Email = tmp58
 				}
 				if v, ok := val["first_name"]; ok {
-					var tmp73 string
+					var tmp59 string
 					if val, ok := v.(string); ok {
-						tmp73 = val
+						tmp59 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].FirstName`, v, "string", err)
 					}
-					tmp70.FirstName = tmp73
+					tmp57.FirstName = tmp59
 				}
 				if v, ok := val["href"]; ok {
-					var tmp74 string
+					var tmp60 string
 					if val, ok := v.(string); ok {
-						tmp74 = val
+						tmp60 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].Href`, v, "string", err)
 					}
-					tmp70.Href = tmp74
+					tmp57.Href = tmp60
 				}
 				if v, ok := val["id"]; ok {
-					var tmp75 int
+					var tmp61 int
 					if f, ok := v.(float64); ok {
-						tmp75 = int(f)
+						tmp61 = int(f)
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].ID`, v, "int", err)
 					}
-					tmp70.ID = tmp75
+					tmp57.ID = tmp61
 				}
 				if v, ok := val["last_name"]; ok {
-					var tmp76 string
+					var tmp62 string
 					if val, ok := v.(string); ok {
-						tmp76 = val
+						tmp62 = val
 					} else {
 						err = goa.InvalidAttributeTypeError(`[*].LastName`, v, "string", err)
 					}
-					tmp70.LastName = tmp76
+					tmp57.LastName = tmp62
 				}
 			} else {
 				err = goa.InvalidAttributeTypeError(`[*]`, v, "dictionary", err)
 			}
-			res[i] = tmp70
+			res[i] = tmp57
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(``, raw, "array", err)
@@ -1187,26 +834,20 @@ func (mt UserCollection) Dump() ([]map[string]interface{}, error) {
 	var err error
 	var res []map[string]interface{}
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp77 := range mt {
-		if tmp77.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, tmp77.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`default view[*].created_at`, tmp77.CreatedAt, goa.FormatDateTime, err2, err)
+	for i, tmp63 := range mt {
+		if tmp63.Email != "" {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, tmp63.Email); err2 != nil {
+				err = goa.InvalidFormatError(`default view[*].email`, tmp63.Email, goa.FormatEmail, err2, err)
 			}
 		}
-		if tmp77.Email != "" {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, tmp77.Email); err2 != nil {
-				err = goa.InvalidFormatError(`default view[*].email`, tmp77.Email, goa.FormatEmail, err2, err)
-			}
+		tmp64 := map[string]interface{}{
+			"email":      tmp63.Email,
+			"first_name": tmp63.FirstName,
+			"href":       tmp63.Href,
+			"id":         tmp63.ID,
+			"last_name":  tmp63.LastName,
 		}
-		tmp78 := map[string]interface{}{
-			"created_at": tmp77.CreatedAt,
-			"email":      tmp77.Email,
-			"first_name": tmp77.FirstName,
-			"href":       tmp77.Href,
-			"id":         tmp77.ID,
-			"last_name":  tmp77.LastName,
-		}
-		res[i] = tmp78
+		res[i] = tmp64
 	}
 	return res, err
 }
@@ -1214,11 +855,6 @@ func (mt UserCollection) Dump() ([]map[string]interface{}, error) {
 // Validate validates the media type instance.
 func (mt UserCollection) Validate() (err error) {
 	for _, e := range mt {
-		if e.CreatedAt != "" {
-			if err2 := goa.ValidateFormat(goa.FormatDateTime, e.CreatedAt); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].created_at`, e.CreatedAt, goa.FormatDateTime, err2, err)
-			}
-		}
 		if e.Email != "" {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {
 				err = goa.InvalidFormatError(`response[*].email`, e.Email, goa.FormatEmail, err2, err)

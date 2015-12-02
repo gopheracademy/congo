@@ -19,16 +19,21 @@ func NewAccountController(service goa.Service, storage models.AccountModelStorag
 
 // Create runs the create action.
 func (c *AccountController) Create(ctx *app.CreateAccountContext) error {
-	_, err := c.storage.Add(ctx)
+	m, err := c.storage.Add(ctx)
 	if err != nil {
 		return ctx.Err()
 	}
+	ctx.Header().Set("Location", app.AccountHref(m.ID))
 	return ctx.Created()
 }
 
 // Delete runs the delete action.
 func (c *AccountController) Delete(ctx *app.DeleteAccountContext) error {
-	return nil
+	err := c.storage.Delete(ctx)
+	if err != nil {
+		return ctx.Err()
+	}
+	return ctx.NoContent()
 }
 
 // List runs the list action.
@@ -36,8 +41,10 @@ func (c *AccountController) List(ctx *app.ListAccountContext) error {
 	res := c.storage.List(ctx)
 	list := app.AccountCollection{}
 	for _, m := range res {
-
-		list = append(list, m.ToApp())
+		a := m.ToApp()
+		a.ID = int(m.ID)
+		a.Href = app.AccountHref(a.ID)
+		list = append(list, a)
 	}
 	return ctx.OK(list)
 }
@@ -45,11 +52,18 @@ func (c *AccountController) List(ctx *app.ListAccountContext) error {
 // Show runs the show action.
 func (c *AccountController) Show(ctx *app.ShowAccountContext) error {
 	res, _ := c.storage.Get(ctx)
+	m := res.ToApp()
+	m.ID = int(res.ID)
+	m.Href = app.AccountHref(res.ID)
 
-	return ctx.OK(res.ToApp(), "default")
+	return ctx.OK(m, "default")
 }
 
 // Update runs the update action.
 func (c *AccountController) Update(ctx *app.UpdateAccountContext) error {
-	return nil
+	err := c.storage.Update(ctx)
+	if err != nil {
+		return ctx.Err()
+	}
+	return ctx.NoContent()
 }

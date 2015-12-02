@@ -43,10 +43,10 @@ func main() {
 	c := NewAccountController(service, models.NewMockAccountModelStorage())
 	app.MountAccountController(service, c)
 	// Mount "series" controller
-	c2 := NewSeriesController(service)
+	c2 := NewSeriesController(service, models.NewMockSeriesModelStorage())
 	app.MountSeriesController(service, c2)
 	// Mount "user" controller
-	c3 := NewUserController(service)
+	c3 := NewUserController(service, models.NewMockUserModelStorage())
 	app.MountUserController(service, c3)
 
 	// Mount Swagger spec provider controller
@@ -57,7 +57,9 @@ func main() {
 	renderer := handlers.NewRenderRenderer("templates", []string{".html"}, handlers.Funcs, dev)
 	r := mux.NewRouter()
 	r.Handle("/", handlers.Index(renderer)).Methods("GET")
+	r.Handle("/accounts/{accountID}/users", handlers.Users(renderer)).Methods("GET")
 	r.Handle("/accounts", handlers.Accounts(renderer)).Methods("GET")
+
 	r.Handle("/api/{_dummy:.*}", goarouter)
 	n := negroni.Classic()
 

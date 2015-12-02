@@ -20,9 +20,10 @@ var Root = React.createClass({
       url: "/api/accounts",
       data: JSON.stringify({"name": this.state.formAccountName}),
       method: "POST",
-      success: function() {
-        var newNames = this.state.accounts;
-        newNames.push(this.state.formAccountName);
+      success: function(data, textStatus, request) {
+		  var newNames = this.state.accounts;
+		  var href = request.getResponseHeader('Location');
+		   newNames.push({"href": href, "id": href.substr(href.length -1), "name": this.state.formAccountName});
         this.setState({
           formAccountName: "",
           accounts: newNames
@@ -33,8 +34,9 @@ var Root = React.createClass({
   render: function() {
     var listElts = [];
     for(var i = 0; i < this.state.accounts.length; i++) {
-      var acct = this.state.accounts[i];
-      listElts.push(<li key={acct.id} className="list-group-item">{acct.name}</li>);
+		var acct = this.state.accounts[i];
+		var usersUrl = "/accounts/" + acct.id + "/users";
+	  listElts.push(<li key={acct.id} className="list-group-item">{acct.href} - {acct.name} <a href={usersUrl}>Show Users</a></li>);
     }
     return (
       <div className="container accounts">

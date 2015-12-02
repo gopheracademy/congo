@@ -50,8 +50,8 @@ type AccountModelStorage interface {
 	List(ctx *app.ListAccountContext) []AccountModel
 	Get(ctx *app.ShowAccountContext) (AccountModel, error)
 	Add(ctx *app.CreateAccountContext) (AccountModel, error)
-	Update(ctx *app.UpdateAccountContext) (AccountModel, error)
-	Delete(ctx *app.DeleteAccountContext) (bool, error)
+	Update(ctx *app.UpdateAccountContext) error
+	Delete(ctx *app.DeleteAccountContext) error
 }
 
 type AccountModelDB struct {
@@ -85,29 +85,29 @@ func (m *AccountModelDB) Add(ctx *app.CreateAccountContext) (AccountModel, error
 	err := m.DB.Create(&model).Error
 	return model, err
 }
-func (m *AccountModelDB) Update(ctx *app.UpdateAccountContext) (AccountModel, error) {
+func (m *AccountModelDB) Update(ctx *app.UpdateAccountContext) error {
 	getCtx, err := app.NewShowAccountContext(ctx.Context)
 	if err != nil {
-		return AccountModel{}, err
+		return err
 	}
 	obj, err := m.Get(getCtx)
 	if err != nil {
-		return obj, err
+		return err
 	}
 	err = m.DB.Model(&obj).Updates(AccountModelFromUpdatePayload(ctx)).Error
 	if err != nil {
 		ctx.Error(err.Error())
 	}
-	return obj, err
+	return err
 }
-func (m *AccountModelDB) Delete(ctx *app.DeleteAccountContext) (bool, error) {
+func (m *AccountModelDB) Delete(ctx *app.DeleteAccountContext) error {
 	var obj AccountModel
 	err := m.DB.Delete(&obj, ctx.AccountID).Error
 	if err != nil {
 		ctx.Logger.Error(err.Error())
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 type MockAccountModelStorage struct {
@@ -152,24 +152,24 @@ func (db *MockAccountModelStorage) Add(ctx *app.CreateAccountContext) (AccountMo
 	return u, nil
 }
 
-func (db *MockAccountModelStorage) Update(ctx *app.UpdateAccountContext) (AccountModel, error) {
+func (db *MockAccountModelStorage) Update(ctx *app.UpdateAccountContext) error {
 	id := uint(ctx.AccountID)
 	_, ok := db.AccountModelList[id]
 	if ok {
 		db.AccountModelList[id] = AccountModelFromUpdatePayload(ctx)
-		return db.AccountModelList[id], nil
+		return nil
 	} else {
-		return db.AccountModelList[id], errors.New("AccountModel does not exist")
+		return errors.New("AccountModel does not exist")
 	}
 }
 
-func (db *MockAccountModelStorage) Delete(ctx *app.DeleteAccountContext) (bool, error) {
+func (db *MockAccountModelStorage) Delete(ctx *app.DeleteAccountContext) error {
 	_, ok := db.AccountModelList[uint(ctx.AccountID)]
 	if ok {
 		delete(db.AccountModelList, uint(ctx.AccountID))
-		return true, nil
+		return nil
 	} else {
-		return false, errors.New("Could not delete this user")
+		return errors.New("Could not delete this user")
 	}
 }
 
@@ -203,8 +203,8 @@ type SeriesModelStorage interface {
 	List(ctx *app.ListSeriesContext) []SeriesModel
 	Get(ctx *app.ShowSeriesContext) (SeriesModel, error)
 	Add(ctx *app.CreateSeriesContext) (SeriesModel, error)
-	Update(ctx *app.UpdateSeriesContext) (SeriesModel, error)
-	Delete(ctx *app.DeleteSeriesContext) (bool, error)
+	Update(ctx *app.UpdateSeriesContext) error
+	Delete(ctx *app.DeleteSeriesContext) error
 }
 
 type SeriesModelDB struct {
@@ -238,29 +238,29 @@ func (m *SeriesModelDB) Add(ctx *app.CreateSeriesContext) (SeriesModel, error) {
 	err := m.DB.Create(&model).Error
 	return model, err
 }
-func (m *SeriesModelDB) Update(ctx *app.UpdateSeriesContext) (SeriesModel, error) {
+func (m *SeriesModelDB) Update(ctx *app.UpdateSeriesContext) error {
 	getCtx, err := app.NewShowSeriesContext(ctx.Context)
 	if err != nil {
-		return SeriesModel{}, err
+		return err
 	}
 	obj, err := m.Get(getCtx)
 	if err != nil {
-		return obj, err
+		return err
 	}
 	err = m.DB.Model(&obj).Updates(SeriesModelFromUpdatePayload(ctx)).Error
 	if err != nil {
 		ctx.Error(err.Error())
 	}
-	return obj, err
+	return err
 }
-func (m *SeriesModelDB) Delete(ctx *app.DeleteSeriesContext) (bool, error) {
+func (m *SeriesModelDB) Delete(ctx *app.DeleteSeriesContext) error {
 	var obj SeriesModel
 	err := m.DB.Delete(&obj, ctx.SeriesID).Error
 	if err != nil {
 		ctx.Logger.Error(err.Error())
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 type MockSeriesModelStorage struct {
@@ -305,24 +305,24 @@ func (db *MockSeriesModelStorage) Add(ctx *app.CreateSeriesContext) (SeriesModel
 	return u, nil
 }
 
-func (db *MockSeriesModelStorage) Update(ctx *app.UpdateSeriesContext) (SeriesModel, error) {
+func (db *MockSeriesModelStorage) Update(ctx *app.UpdateSeriesContext) error {
 	id := uint(ctx.SeriesID)
 	_, ok := db.SeriesModelList[id]
 	if ok {
 		db.SeriesModelList[id] = SeriesModelFromUpdatePayload(ctx)
-		return db.SeriesModelList[id], nil
+		return nil
 	} else {
-		return db.SeriesModelList[id], errors.New("SeriesModel does not exist")
+		return errors.New("SeriesModel does not exist")
 	}
 }
 
-func (db *MockSeriesModelStorage) Delete(ctx *app.DeleteSeriesContext) (bool, error) {
+func (db *MockSeriesModelStorage) Delete(ctx *app.DeleteSeriesContext) error {
 	_, ok := db.SeriesModelList[uint(ctx.SeriesID)]
 	if ok {
 		delete(db.SeriesModelList, uint(ctx.SeriesID))
-		return true, nil
+		return nil
 	} else {
-		return false, errors.New("Could not delete this user")
+		return errors.New("Could not delete this user")
 	}
 }
 
@@ -358,8 +358,8 @@ type UserModelStorage interface {
 	List(ctx *app.ListUserContext) []UserModel
 	Get(ctx *app.ShowUserContext) (UserModel, error)
 	Add(ctx *app.CreateUserContext) (UserModel, error)
-	Update(ctx *app.UpdateUserContext) (UserModel, error)
-	Delete(ctx *app.DeleteUserContext) (bool, error)
+	Update(ctx *app.UpdateUserContext) error
+	Delete(ctx *app.DeleteUserContext) error
 }
 
 type UserModelDB struct {
@@ -393,29 +393,29 @@ func (m *UserModelDB) Add(ctx *app.CreateUserContext) (UserModel, error) {
 	err := m.DB.Create(&model).Error
 	return model, err
 }
-func (m *UserModelDB) Update(ctx *app.UpdateUserContext) (UserModel, error) {
+func (m *UserModelDB) Update(ctx *app.UpdateUserContext) error {
 	getCtx, err := app.NewShowUserContext(ctx.Context)
 	if err != nil {
-		return UserModel{}, err
+		return err
 	}
 	obj, err := m.Get(getCtx)
 	if err != nil {
-		return obj, err
+		return err
 	}
 	err = m.DB.Model(&obj).Updates(UserModelFromUpdatePayload(ctx)).Error
 	if err != nil {
 		ctx.Error(err.Error())
 	}
-	return obj, err
+	return err
 }
-func (m *UserModelDB) Delete(ctx *app.DeleteUserContext) (bool, error) {
+func (m *UserModelDB) Delete(ctx *app.DeleteUserContext) error {
 	var obj UserModel
 	err := m.DB.Delete(&obj, ctx.UserID).Error
 	if err != nil {
 		ctx.Logger.Error(err.Error())
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 type MockUserModelStorage struct {
@@ -460,23 +460,23 @@ func (db *MockUserModelStorage) Add(ctx *app.CreateUserContext) (UserModel, erro
 	return u, nil
 }
 
-func (db *MockUserModelStorage) Update(ctx *app.UpdateUserContext) (UserModel, error) {
+func (db *MockUserModelStorage) Update(ctx *app.UpdateUserContext) error {
 	id := uint(ctx.UserID)
 	_, ok := db.UserModelList[id]
 	if ok {
 		db.UserModelList[id] = UserModelFromUpdatePayload(ctx)
-		return db.UserModelList[id], nil
+		return nil
 	} else {
-		return db.UserModelList[id], errors.New("UserModel does not exist")
+		return errors.New("UserModel does not exist")
 	}
 }
 
-func (db *MockUserModelStorage) Delete(ctx *app.DeleteUserContext) (bool, error) {
+func (db *MockUserModelStorage) Delete(ctx *app.DeleteUserContext) error {
 	_, ok := db.UserModelList[uint(ctx.UserID)]
 	if ok {
 		delete(db.UserModelList, uint(ctx.UserID))
-		return true, nil
+		return nil
 	} else {
-		return false, errors.New("Could not delete this user")
+		return errors.New("Could not delete this user")
 	}
 }
