@@ -31,6 +31,7 @@ func AccountModelFromCreatePayload(ctx *app.CreateAccountContext) AccountModel {
 	payload := ctx.Payload
 	m := AccountModel{}
 	copier.Copy(&m, payload)
+
 	return m
 }
 
@@ -184,6 +185,7 @@ func SeriesModelFromCreatePayload(ctx *app.CreateSeriesContext) SeriesModel {
 	payload := ctx.Payload
 	m := SeriesModel{}
 	copier.Copy(&m, payload)
+
 	return m
 }
 
@@ -340,6 +342,7 @@ func UserModelFromCreatePayload(ctx *app.CreateUserContext) UserModel {
 	payload := ctx.Payload
 	m := UserModel{}
 	copier.Copy(&m, payload)
+	m.AccountID = ctx.AccountID
 	return m
 }
 
