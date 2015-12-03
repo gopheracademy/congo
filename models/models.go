@@ -332,17 +332,17 @@ func (db *MockSeriesModelStorage) Delete(ctx *app.DeleteSeriesContext) error {
 // Identifier:
 type UserModel struct {
 	gorm.Model
-	AccountID uint
-	Email     string `json:"email,omitempty"`
-	FirstName string `json:"first_name,omitempty"`
-	LastName  string `json:"last_name,omitempty"`
+	AccountModelID uint
+	Email          string `json:"email,omitempty"`
+	FirstName      string `json:"first_name,omitempty"`
+	LastName       string `json:"last_name,omitempty"`
 }
 
 func UserModelFromCreatePayload(ctx *app.CreateUserContext) UserModel {
 	payload := ctx.Payload
 	m := UserModel{}
 	copier.Copy(&m, payload)
-	m.AccountID = ctx.AccountID
+	m.AccountModelID = uint(ctx.AccountID)
 	return m
 }
 
@@ -373,7 +373,7 @@ type UserModelDB struct {
 func UserModelFilter(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	if parentid > 0 {
 		return func(db *gorm.DB) *gorm.DB {
-			return db.Where("account_id = ?", parentid)
+			return db.Where("account_model_id = ?", parentid)
 		}
 	} else {
 		return func(db *gorm.DB) *gorm.DB {
