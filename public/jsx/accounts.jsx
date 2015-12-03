@@ -36,7 +36,8 @@ var Root = React.createClass({
     for(var i = 0; i < this.state.accounts.length; i++) {
 		var acct = this.state.accounts[i];
 		var usersUrl = "/accounts/" + acct.id + "/users";
-	  listElts.push(<li key={acct.id} className="list-group-item">{acct.href} - {acct.name} <a href={usersUrl}>Show Users</a></li>);
+		var seriesUrl = "/accounts/" + acct.id + "/series";
+	  listElts.push(<li key={acct.id} className="list-group-item">{acct.href} - {acct.name} <a href={usersUrl}>Show Users</a> <a href={seriesUrl}>Show Series</a></li>);
     }
     return (
       <div className="container accounts">
