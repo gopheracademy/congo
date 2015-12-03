@@ -49,6 +49,9 @@ func main() {
 	c3 := NewUserController(service, models.NewMockUserStorage())
 	app.MountUserController(service, c3)
 
+	// Mount "user" controller
+	c4 := NewInstanceController(service, models.NewMockInstanceStorage())
+	app.MountInstanceController(service, c4)
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
@@ -58,6 +61,8 @@ func main() {
 	r := mux.NewRouter()
 	r.Handle("/", handlers.Index(renderer)).Methods("GET")
 	r.Handle("/accounts/{accountID}/users", handlers.Users(renderer)).Methods("GET")
+	r.Handle("/accounts/{accountID}/series/{seriesID}/instances", handlers.Instances(renderer)).Methods("GET")
+	r.Handle("/accounts/{accountID}/series", handlers.Series(renderer)).Methods("GET")
 	r.Handle("/accounts", handlers.Accounts(renderer)).Methods("GET")
 
 	r.Handle("/api/{_dummy:.*}", goarouter)

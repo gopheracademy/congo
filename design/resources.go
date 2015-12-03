@@ -200,3 +200,67 @@ var _ = Resource("series", func() {
 		Response(NotFound)
 	})
 })
+var _ = Resource("instance", func() {
+
+	DefaultMedia(Instance)
+	BasePath("instances")
+	Parent("series")
+
+	Action("list", func() {
+		Routing(
+			GET(""),
+		)
+		Description("List all instances of a series")
+		Response(OK, func() {
+			Media(CollectionOf(Instance, func() {
+				View("default")
+				View("tiny")
+			}))
+		})
+	})
+
+	Action("show", func() {
+		Routing(
+			GET("/:instanceID"),
+		)
+		Description("Retrieve instance with given id")
+		Params(func() {
+			Param("instanceID", Integer)
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
+	Action("create", func() {
+		Routing(
+			POST(""),
+		)
+		Description("Record new instance")
+		Payload(InstanceModel, func() {
+			Required("name")
+		})
+		Response(Created, "^/accounts/[0-9]+/series/[0-9]+/instances/[0-9]+$")
+	})
+
+	Action("update", func() {
+		Routing(
+			PATCH("/:instanceID"),
+		)
+		Params(func() {
+			Param("instanceID", Integer)
+		})
+		Payload(InstanceModel)
+		Response(NoContent)
+		Response(NotFound)
+	})
+	Action("delete", func() {
+		Routing(
+			DELETE("/:instanceID"),
+		)
+		Params(func() {
+			Param("instanceID", Integer, "Instance ID")
+		})
+		Response(NoContent)
+		Response(NotFound)
+	})
+})

@@ -19,6 +19,11 @@ func AccountHref(accountID interface{}) string {
 	return fmt.Sprintf("/api/accounts/%v", accountID)
 }
 
+// InstanceHref returns the resource href.
+func InstanceHref(accountID, seriesID, instanceID interface{}) string {
+	return fmt.Sprintf("/api/accounts/%v/series/%v/instances/%v", accountID, seriesID, instanceID)
+}
+
 // SeriesHref returns the resource href.
 func SeriesHref(accountID, seriesID interface{}) string {
 	return fmt.Sprintf("/api/accounts/%v/series/%v", accountID, seriesID)

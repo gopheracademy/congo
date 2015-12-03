@@ -78,6 +78,67 @@ func MountAccountController(service goa.Service, ctrl AccountController) {
 	service.Info("mount", "ctrl", "Account", "action", "Update", "route", "PUT /api/accounts/:accountID")
 }
 
+// InstanceController is the controller interface for the Instance actions.
+type InstanceController interface {
+	goa.Controller
+	Create(*CreateInstanceContext) error
+	Delete(*DeleteInstanceContext) error
+	List(*ListInstanceContext) error
+	Show(*ShowInstanceContext) error
+	Update(*UpdateInstanceContext) error
+}
+
+// MountInstanceController "mounts" a Instance resource controller on the given service.
+func MountInstanceController(service goa.Service, ctrl InstanceController) {
+	router := service.HTTPHandler().(*httprouter.Router)
+	var h goa.Handler
+	h = func(c *goa.Context) error {
+		ctx, err := NewCreateInstanceContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Create(ctx)
+	}
+	router.Handle("POST", "/api/accounts/:accountID/series/:seriesID/instances", ctrl.NewHTTPRouterHandle("Create", h))
+	service.Info("mount", "ctrl", "Instance", "action", "Create", "route", "POST /api/accounts/:accountID/series/:seriesID/instances")
+	h = func(c *goa.Context) error {
+		ctx, err := NewDeleteInstanceContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Delete(ctx)
+	}
+	router.Handle("DELETE", "/api/accounts/:accountID/series/:seriesID/instances/:instanceID", ctrl.NewHTTPRouterHandle("Delete", h))
+	service.Info("mount", "ctrl", "Instance", "action", "Delete", "route", "DELETE /api/accounts/:accountID/series/:seriesID/instances/:instanceID")
+	h = func(c *goa.Context) error {
+		ctx, err := NewListInstanceContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.List(ctx)
+	}
+	router.Handle("GET", "/api/accounts/:accountID/series/:seriesID/instances", ctrl.NewHTTPRouterHandle("List", h))
+	service.Info("mount", "ctrl", "Instance", "action", "List", "route", "GET /api/accounts/:accountID/series/:seriesID/instances")
+	h = func(c *goa.Context) error {
+		ctx, err := NewShowInstanceContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Show(ctx)
+	}
+	router.Handle("GET", "/api/accounts/:accountID/series/:seriesID/instances/:instanceID", ctrl.NewHTTPRouterHandle("Show", h))
+	service.Info("mount", "ctrl", "Instance", "action", "Show", "route", "GET /api/accounts/:accountID/series/:seriesID/instances/:instanceID")
+	h = func(c *goa.Context) error {
+		ctx, err := NewUpdateInstanceContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Update(ctx)
+	}
+	router.Handle("PATCH", "/api/accounts/:accountID/series/:seriesID/instances/:instanceID", ctrl.NewHTTPRouterHandle("Update", h))
+	service.Info("mount", "ctrl", "Instance", "action", "Update", "route", "PATCH /api/accounts/:accountID/series/:seriesID/instances/:instanceID")
+}
+
 // SeriesController is the controller interface for the Series actions.
 type SeriesController interface {
 	goa.Controller

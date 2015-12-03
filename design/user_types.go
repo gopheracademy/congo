@@ -8,6 +8,18 @@ import (
 // It is also the base type for the series media type used to render series.
 var SeriesModel = Type("SeriesModel", func() {
 	Metadata("github.com/bketelsen/gorma", "Model")
+	Metadata("github.com/bketelsen/gorma#belongsto", "Account")
+	Attribute("name", func() {
+		MinLength(2)
+	})
+
+})
+
+// InstanceModel defines the data structure used in the create instance request body.
+// It is also the base type for the instance media type used to render instances.
+var InstanceModel = Type("InstanceModel", func() {
+	Metadata("github.com/bketelsen/gorma", "Model")
+	Metadata("github.com/bketelsen/gorma#belongsto", "Series")
 	Attribute("name", func() {
 		MinLength(2)
 	})
@@ -18,7 +30,7 @@ var SeriesModel = Type("SeriesModel", func() {
 // It is also the base type for the account media type used to render accounts.
 var AccountModel = Type("AccountModel", func() {
 	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#hasmany", "User")
+	Metadata("github.com/bketelsen/gorma#hasmany", "User,Account")
 	Attribute("name", func() {
 		MinLength(2)
 	})

@@ -17,6 +17,11 @@ type AccountModel struct {
 	Name string
 }
 
+// InstanceModel type
+type InstanceModel struct {
+	Name string
+}
+
 // SeriesModel type
 type SeriesModel struct {
 	Name string

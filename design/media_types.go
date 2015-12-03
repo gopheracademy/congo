@@ -14,13 +14,11 @@ var Account = MediaType("application/vnd.congo.api.account+json", func() {
 		Attribute("href", String, "API href of account")
 		Attribute("name", String, "Name of account")
 	})
-
 	View("default", func() {
 		Attribute("id")
 		Attribute("href")
 		Attribute("name")
 	})
-
 	View("link", func() {
 		Attribute("id")
 		Attribute("href")
@@ -42,7 +40,6 @@ var User = MediaType("application/vnd.congo.api.user+json", func() {
 			Format("email")
 		})
 	})
-
 	View("default", func() {
 		Attribute("id")
 		Attribute("href")
@@ -50,7 +47,6 @@ var User = MediaType("application/vnd.congo.api.user+json", func() {
 		Attribute("last_name")
 		Attribute("email")
 	})
-
 	View("link", func() {
 		Attribute("id")
 		Attribute("href")
@@ -69,9 +65,45 @@ var Series = MediaType("application/vnd.congo.api.series+json", func() {
 		// Attributes below inherit from the base type
 		Attribute("name")
 
-		Links(func() {
-			Link("account")
+		View("default", func() {
+			Attribute("id")
+			Attribute("href")
+			Attribute("name")
+			Attribute("links")
 		})
+		View("tiny", func() {
+			Attribute("id")
+			Attribute("href")
+			Attribute("name")
+			Attribute("links")
+		})
+		View("full", func() {
+			Attribute("id")
+			Attribute("href")
+			Attribute("name")
+			Attribute("account", func() {
+				View("full")
+			})
+			Attribute("links")
+		})
+		View("link", func() {
+			Attribute("id")
+			Attribute("href")
+			Attribute("name")
+		})
+	})
+})
+
+// Instance represents a specific occurence of a series (GopherCon 2016)
+var Instance = MediaType("application/vnd.congo.api.instance+json", func() {
+	Description("An instance of an event or conference")
+	Reference(InstanceModel)
+	Attributes(func() {
+		Attribute("id", Integer, "ID of Instance")
+		Attribute("href", String, "API href of instance")
+		Attribute("series", Series, "Series that this instance belongs to")
+		// Attributes below inherit from the base type
+		Attribute("name")
 
 		View("default", func() {
 			Attribute("id")
@@ -79,19 +111,17 @@ var Series = MediaType("application/vnd.congo.api.series+json", func() {
 			Attribute("name")
 			Attribute("links")
 		})
-
 		View("tiny", func() {
 			Attribute("id")
 			Attribute("href")
 			Attribute("name")
 			Attribute("links")
 		})
-
 		View("full", func() {
 			Attribute("id")
 			Attribute("href")
 			Attribute("name")
-			Attribute("account", func() {
+			Attribute("series", func() {
 				View("full")
 			})
 			Attribute("links")
