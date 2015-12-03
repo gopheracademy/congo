@@ -330,6 +330,7 @@ func (db *MockSeriesModelStorage) Delete(ctx *app.DeleteSeriesContext) error {
 // Identifier:
 type UserModel struct {
 	gorm.Model
+	AccountID uint
 	Email     string `json:"email,omitempty"`
 	FirstName string `json:"first_name,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
@@ -366,6 +367,17 @@ type UserModelDB struct {
 	DB gorm.DB
 }
 
+func UserModelFilter(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	if parentid > 0 {
+		return func(db *gorm.DB) *gorm.DB {
+			return db.Where("account_id = ?", parentid)
+		}
+	} else {
+		return func(db *gorm.DB) *gorm.DB {
+			return db
+		}
+	}
+}
 func NewUserModelDB(db gorm.DB) *UserModelDB {
 	return &UserModelDB{DB: db}
 }
@@ -373,7 +385,7 @@ func NewUserModelDB(db gorm.DB) *UserModelDB {
 func (m *UserModelDB) List(ctx *app.ListUserContext) []UserModel {
 
 	var objs []UserModel
-	m.DB.Find(&objs)
+	m.DB.Scopes(UserModelFilter(ctx.AccountID, &m.DB)).Find(&objs)
 	return objs
 }
 
