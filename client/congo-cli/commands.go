@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/alecthomas/kingpin"
 	"github.com/gopheracademy/congo/client"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type (
@@ -33,6 +33,33 @@ type (
 	}
 	// UpdateAccountCommand is the command line data structure for the update action of account
 	UpdateAccountCommand struct {
+		// Path is the HTTP request path.
+		Path    string
+		Payload string
+	}
+	// CreateInstanceCommand is the command line data structure for the create action of instance
+	CreateInstanceCommand struct {
+		// Path is the HTTP request path.
+		Path    string
+		Payload string
+	}
+	// DeleteInstanceCommand is the command line data structure for the delete action of instance
+	DeleteInstanceCommand struct {
+		// Path is the HTTP request path.
+		Path string
+	}
+	// ListInstanceCommand is the command line data structure for the list action of instance
+	ListInstanceCommand struct {
+		// Path is the HTTP request path.
+		Path string
+	}
+	// ShowInstanceCommand is the command line data structure for the show action of instance
+	ShowInstanceCommand struct {
+		// Path is the HTTP request path.
+		Path string
+	}
+	// UpdateInstanceCommand is the command line data structure for the update action of instance
+	UpdateInstanceCommand struct {
 		// Path is the HTTP request path.
 		Path    string
 		Payload string
@@ -156,6 +183,72 @@ func (cmd *UpdateAccountCommand) Run(c *client.Client) (*http.Response, error) {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateAccountCommand) RegisterFlags(cc *kingpin.CmdClause) {
 	cc.Arg("path", `Request path, format is /api/accounts/:accountID`).Required().StringVar(&cmd.Path)
+	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
+}
+
+// Run makes the HTTP request corresponding to the CreateInstanceCommand command.
+func (cmd *CreateInstanceCommand) Run(c *client.Client) (*http.Response, error) {
+	var payload client.CreateInstancePayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return nil, fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	return c.CreateInstance(cmd.Path, &payload)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CreateInstanceCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, format is /api/accounts/:accountID/series/:seriesID/instances`).Required().StringVar(&cmd.Path)
+	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
+}
+
+// Run makes the HTTP request corresponding to the DeleteInstanceCommand command.
+func (cmd *DeleteInstanceCommand) Run(c *client.Client) (*http.Response, error) {
+	return c.DeleteInstance(cmd.Path)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *DeleteInstanceCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, format is /api/accounts/:accountID/series/:seriesID/instances/:instanceID`).Required().StringVar(&cmd.Path)
+}
+
+// Run makes the HTTP request corresponding to the ListInstanceCommand command.
+func (cmd *ListInstanceCommand) Run(c *client.Client) (*http.Response, error) {
+	return c.ListInstance(cmd.Path)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListInstanceCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, format is /api/accounts/:accountID/series/:seriesID/instances`).Required().StringVar(&cmd.Path)
+}
+
+// Run makes the HTTP request corresponding to the ShowInstanceCommand command.
+func (cmd *ShowInstanceCommand) Run(c *client.Client) (*http.Response, error) {
+	return c.ShowInstance(cmd.Path)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowInstanceCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, format is /api/accounts/:accountID/series/:seriesID/instances/:instanceID`).Required().StringVar(&cmd.Path)
+}
+
+// Run makes the HTTP request corresponding to the UpdateInstanceCommand command.
+func (cmd *UpdateInstanceCommand) Run(c *client.Client) (*http.Response, error) {
+	var payload client.UpdateInstancePayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return nil, fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	return c.UpdateInstance(cmd.Path, &payload)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateInstanceCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, format is /api/accounts/:accountID/series/:seriesID/instances/:instanceID`).Required().StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 

@@ -3,8 +3,8 @@ package client
 import (
 	"net/http"
 
-	"github.com/alecthomas/kingpin"
 	"github.com/raphael/goa"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type (

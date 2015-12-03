@@ -9,13 +9,13 @@ import (
 	"net/url"
 )
 
-// CreateAccountPayload is the data structure used to initialize the account create request body.
-type CreateAccountPayload struct {
+// CreateInstancePayload is the data structure used to initialize the instance create request body.
+type CreateInstancePayload struct {
 	Name string `json:"name"`
 }
 
-// Create new account
-func (c *Client) CreateAccount(path string, payload *CreateAccountPayload) (*http.Response, error) {
+// Record new instance
+func (c *Client) CreateInstance(path string, payload *CreateInstancePayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -32,8 +32,8 @@ func (c *Client) CreateAccount(path string, payload *CreateAccountPayload) (*htt
 	return c.Client.Do(req)
 }
 
-// DeleteAccount makes a request to the delete action endpoint of the account resource
-func (c *Client) DeleteAccount(path string) (*http.Response, error) {
+// DeleteInstance makes a request to the delete action endpoint of the instance resource
+func (c *Client) DeleteInstance(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("DELETE", u.String(), body)
@@ -45,8 +45,8 @@ func (c *Client) DeleteAccount(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// List all accounts
-func (c *Client) ListAccount(path string) (*http.Response, error) {
+// List all instances of a series
+func (c *Client) ListInstance(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), body)
@@ -58,8 +58,8 @@ func (c *Client) ListAccount(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// Retrieve account with given id
-func (c *Client) ShowAccount(path string) (*http.Response, error) {
+// Retrieve instance with given id
+func (c *Client) ShowInstance(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), body)
@@ -71,13 +71,13 @@ func (c *Client) ShowAccount(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// UpdateAccountPayload is the data structure used to initialize the account update request body.
-type UpdateAccountPayload struct {
-	Name string `json:"name"`
+// UpdateInstancePayload is the data structure used to initialize the instance update request body.
+type UpdateInstancePayload struct {
+	Name string `json:"name,omitempty"`
 }
 
-// Change account name
-func (c *Client) UpdateAccount(path string, payload *UpdateAccountPayload) (*http.Response, error) {
+// UpdateInstance makes a request to the update action endpoint of the instance resource
+func (c *Client) UpdateInstance(path string, payload *UpdateInstancePayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -85,7 +85,7 @@ func (c *Client) UpdateAccount(path string, payload *UpdateAccountPayload) (*htt
 	}
 	body = bytes.NewBuffer(b)
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
-	req, err := http.NewRequest("PUT", u.String(), body)
+	req, err := http.NewRequest("PATCH", u.String(), body)
 	if err != nil {
 		return nil, err
 	}
