@@ -31,7 +31,9 @@ var Account = MediaType("application/vnd.congo.api.account+json", func() {
 // User is the user resource media type.
 var User = MediaType("application/vnd.congo.api.user+json", func() {
 	Description("A user belonging to a tenant account")
+	Metadata("mediatype", "123")
 	Attributes(func() {
+		Metadata("test", "123")
 		Attribute("id", Integer, "ID of user")
 		Attribute("href", String, "API href of user")
 		Attribute("first_name", String, "First name of user")

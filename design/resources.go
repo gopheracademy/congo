@@ -75,7 +75,7 @@ var _ = Resource("user", func() {
 	DefaultMedia(User)
 	BasePath("users")
 	Parent("account")
-
+	Metadata("resource", "123")
 	Action("list", func() {
 		Routing(
 			GET(""),
@@ -96,6 +96,7 @@ var _ = Resource("user", func() {
 		Params(func() {
 			Param("userID", Integer)
 		})
+		Metadata("action", "123")
 		Response(OK)
 		Response(NotFound)
 	})
