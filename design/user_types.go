@@ -7,6 +7,7 @@ import (
 // SeriesModel defines the data structure used in the create series request body.
 // It is also the base type for the series media type used to render series.
 var SeriesModel = Type("SeriesModel", func() {
+	Metadata("github.com/bketelsen/gorma", "Model")
 	Attribute("name", func() {
 		MinLength(2)
 	})
@@ -16,7 +17,8 @@ var SeriesModel = Type("SeriesModel", func() {
 // AccountModel defines the data structure used in the create account request body.
 // It is also the base type for the account media type used to render accounts.
 var AccountModel = Type("AccountModel", func() {
-	Metadata("github.com/bketelsen/gorma#onetomany", "UserModel")
+	Metadata("github.com/bketelsen/gorma", "Model")
+	Metadata("github.com/bketelsen/gorma#hasmany", "User")
 	Attribute("name", func() {
 		MinLength(2)
 	})
@@ -25,7 +27,8 @@ var AccountModel = Type("AccountModel", func() {
 // UserModel defines the data structure used in the create user request body.
 // It is also the base type for the user media type used to render users.
 var UserModel = Type("UserModel", func() {
-	Metadata("github.com/bketelsen/gorma#belongsto", "AccountModelID")
+	Metadata("github.com/bketelsen/gorma", "Model")
+	Metadata("github.com/bketelsen/gorma#belongsto", "Account")
 	Attribute("first_name", func() {
 		MinLength(2)
 	})

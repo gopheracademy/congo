@@ -9,11 +9,11 @@ import (
 // UserController implements the account resource.
 type UserController struct {
 	goa.Controller
-	storage models.UserModelStorage
+	storage models.UserStorage
 }
 
 // NewUserController creates a account controller.
-func NewUserController(service goa.Service, storage models.UserModelStorage) app.UserController {
+func NewUserController(service goa.Service, storage models.UserStorage) app.UserController {
 	return &UserController{storage: storage, Controller: service.NewController("UserController")}
 }
 

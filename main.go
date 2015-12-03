@@ -40,13 +40,13 @@ func main() {
 	service.Use(goa.Recover())
 
 	// Mount "account" controller
-	c := NewAccountController(service, models.NewMockAccountModelStorage())
+	c := NewAccountController(service, models.NewMockAccountStorage())
 	app.MountAccountController(service, c)
 	// Mount "series" controller
-	c2 := NewSeriesController(service, models.NewMockSeriesModelStorage())
+	c2 := NewSeriesController(service, models.NewMockSeriesStorage())
 	app.MountSeriesController(service, c2)
 	// Mount "user" controller
-	c3 := NewUserController(service, models.NewMockUserModelStorage())
+	c3 := NewUserController(service, models.NewMockUserStorage())
 	app.MountUserController(service, c3)
 
 	// Mount Swagger spec provider controller

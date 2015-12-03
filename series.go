@@ -9,11 +9,11 @@ import (
 // SeriesController implements the account resource.
 type SeriesController struct {
 	goa.Controller
-	storage models.SeriesModelStorage
+	storage models.SeriesStorage
 }
 
 // NewSeriesController creates a account controller.
-func NewSeriesController(service goa.Service, storage models.SeriesModelStorage) app.SeriesController {
+func NewSeriesController(service goa.Service, storage models.SeriesStorage) app.SeriesController {
 	return &SeriesController{storage: storage, Controller: service.NewController("SeriesController")}
 } // Create runs the create action.
 func (c *SeriesController) Create(ctx *app.CreateSeriesContext) error {
