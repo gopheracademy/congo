@@ -16,6 +16,8 @@ var SeriesModel = Type("SeriesModel", func() {
 // AccountModel defines the data structure used in the create account request body.
 // It is also the base type for the account media type used to render accounts.
 var AccountModel = Type("AccountModel", func() {
+	Metadata("model", "123")
+	Metadata("model2", "234")
 	Attribute("name", func() {
 		MinLength(2)
 	})

@@ -8,15 +8,32 @@ var Root = React.createClass({
     };
   },
   componentDidMount: function() {
-	  $.getJSON("/api/accounts/1/users", function(data) {
+      var path = this.getPath();
+      var account = this.getAccount(path);
+      console.log(account);
+    var u = "/api/accounts/" + account + "/users"
+	  $.getJSON(u, function(data) {
       this.setState({users: data});
     }.bind(this));
   },
-
+ getUrl: function() {
+    return '' + window.location;
+  },
+  getPath: function() {
+    return window.location.pathname + window.location.search;
+  },
+  getAccount: function(path) {
+    var urlPieces = path.split("/");
+    var account = (urlPieces[2]) ? urlPieces[2] : "";
+    return account;
+  },
   handleSubmit: function(e) {
-	 e.preventDefault();
+	e.preventDefault();
+      var path = this.getPath();
+      var account = this.getAccount(path);
+    var u = "/api/accounts/" + account + "/users"
     $.ajax({
-	url: "/api/accounts/1/users",
+	url: u,
       data: JSON.stringify({"first_name": this.state.firstName, "last_name": this.state.lastName}),
       method: "POST",
       success: function(data, textStatus, request) {

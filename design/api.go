@@ -9,6 +9,7 @@ import (
 var _ = API("congo", func() {
 	Title("Congo - Conference Management Made Easy")
 	Description("Multi-tenant conference management application")
+	Metadata("api", "123")
 	Contact(func() {
 		Name("Gopher Academy")
 		Email("social@gopheracademy.com")
