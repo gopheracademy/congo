@@ -45,11 +45,11 @@ var RBAC *gorbac.RBAC
 // which returns a string value representing the role to which a user
 // belongs.
 type Roler interface {
-	Role() string
+	GetRole() string
 }
 
 func Authorize(r Roler, perm string) bool {
-	return RBAC.IsGranted(r.Role(), perm, nil)
+	return RBAC.IsGranted(r.GetRole(), perm, nil)
 }
 
 // These are provided as a template.  Edit to suit as required by your applicaton

@@ -563,6 +563,7 @@ type User struct {
 	Email              string `json:"email,omitempty"`
 	FirstName          string `json:"first_name,omitempty"`
 	LastName           string `json:"last_name,omitempty"`
+	Role               string `json:"role,omitempty"`
 }
 
 func UserFromCreatePayload(ctx *app.CreateUserContext) User {
@@ -583,6 +584,10 @@ func (m User) ToApp() *app.User {
 	target := app.User{}
 	copier.Copy(&target, &m)
 	return &target
+}
+
+func (m User) GetRole() string {
+	return m.Role
 }
 
 type UserStorage interface {

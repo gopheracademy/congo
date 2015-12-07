@@ -43,6 +43,7 @@ var UserModel = Type("UserModel", func() {
 	Metadata("github.com/bketelsen/gorma", "Model")
 	Metadata("github.com/bketelsen/gorma#belongsto", "Account")
 	Metadata("github.com/bketelsen/gorma#authboss", "All")
+	Metadata("github.com/bketelsen/gorma#roler", "xxx")
 	Attribute("id", Integer, func() {
 	})
 	Attribute("first_name", func() {
@@ -53,6 +54,8 @@ var UserModel = Type("UserModel", func() {
 	})
 	Attribute("email", func() {
 		MinLength(2)
+	})
+	Attribute("role", func() {
 	})
 
 })
