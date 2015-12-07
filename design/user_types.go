@@ -43,7 +43,7 @@ var UserModel = Type("UserModel", func() {
 	Metadata("github.com/bketelsen/gorma", "Model")
 	Metadata("github.com/bketelsen/gorma#belongsto", "Account")
 	Metadata("github.com/bketelsen/gorma#authboss", "All")
-	Metadata("github.com/bketelsen/gorma#roler", "xxx")
+	Metadata("github.com/bketelsen/gorma#roler", "true")
 	Attribute("id", Integer, func() {
 	})
 	Attribute("first_name", func() {
