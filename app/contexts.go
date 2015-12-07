@@ -880,6 +880,7 @@ type CreateUserPayload struct {
 	FirstName string
 	ID        int
 	LastName  string
+	Role      string
 }
 
 // NewCreateUserPayload instantiates a CreateUserPayload from a raw request body.
@@ -946,6 +947,15 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 				}
 			}
 			target.LastName = tmp10
+		}
+		if v, ok := val["role"]; ok {
+			var tmp11 string
+			if val, ok := v.(string); ok {
+				tmp11 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.Role`, v, "string", err)
+			}
+			target.Role = tmp11
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -1120,6 +1130,7 @@ type UpdateUserPayload struct {
 	FirstName string
 	ID        int
 	LastName  string
+	Role      string
 }
 
 // NewUpdateUserPayload instantiates a UpdateUserPayload from a raw request body.
@@ -1135,55 +1146,64 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UpdateUserPayload)
 		if v, ok := val["email"]; ok {
-			var tmp11 string
-			if val, ok := v.(string); ok {
-				tmp11 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp11) < 2 {
-					err = goa.InvalidLengthError(`payload.Email`, tmp11, 2, true, err)
-				}
-			}
-			target.Email = tmp11
-		}
-		if v, ok := val["first_name"]; ok {
 			var tmp12 string
 			if val, ok := v.(string); ok {
 				tmp12 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`payload.FirstName`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
 			if err == nil {
 				if len(tmp12) < 2 {
-					err = goa.InvalidLengthError(`payload.FirstName`, tmp12, 2, true, err)
+					err = goa.InvalidLengthError(`payload.Email`, tmp12, 2, true, err)
 				}
 			}
-			target.FirstName = tmp12
+			target.Email = tmp12
+		}
+		if v, ok := val["first_name"]; ok {
+			var tmp13 string
+			if val, ok := v.(string); ok {
+				tmp13 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.FirstName`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp13) < 2 {
+					err = goa.InvalidLengthError(`payload.FirstName`, tmp13, 2, true, err)
+				}
+			}
+			target.FirstName = tmp13
 		}
 		if v, ok := val["id"]; ok {
-			var tmp13 int
+			var tmp14 int
 			if f, ok := v.(float64); ok {
-				tmp13 = int(f)
+				tmp14 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.ID`, v, "int", err)
 			}
-			target.ID = tmp13
+			target.ID = tmp14
 		}
 		if v, ok := val["last_name"]; ok {
-			var tmp14 string
+			var tmp15 string
 			if val, ok := v.(string); ok {
-				tmp14 = val
+				tmp15 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.LastName`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp14) < 2 {
-					err = goa.InvalidLengthError(`payload.LastName`, tmp14, 2, true, err)
+				if len(tmp15) < 2 {
+					err = goa.InvalidLengthError(`payload.LastName`, tmp15, 2, true, err)
 				}
 			}
-			target.LastName = tmp14
+			target.LastName = tmp15
+		}
+		if v, ok := val["role"]; ok {
+			var tmp16 string
+			if val, ok := v.(string); ok {
+				tmp16 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.Role`, v, "string", err)
+			}
+			target.Role = tmp16
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)

@@ -15,6 +15,7 @@ type CreateUserPayload struct {
 	FirstName string `json:"first_name"`
 	ID        int    `json:"id,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
+	Role      string `json:"role,omitempty"`
 }
 
 // Record new user
@@ -80,6 +81,7 @@ type UpdateUserPayload struct {
 	FirstName string `json:"first_name,omitempty"`
 	ID        int    `json:"id,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
+	Role      string `json:"role,omitempty"`
 }
 
 // UpdateUser makes a request to the update action endpoint of the user resource

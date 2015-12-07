@@ -71,12 +71,12 @@ func MarshalAccount(source *Account, inErr error) (target map[string]interface{}
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp15 := map[string]interface{}{
+	tmp17 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
-	target = tmp15
+	target = tmp17
 	return
 }
 
@@ -87,12 +87,12 @@ func MarshalAccountLink(source *Account, inErr error) (target map[string]interfa
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp16 := map[string]interface{}{
+	tmp18 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
-	target = tmp16
+	target = tmp18
 	return
 }
 
@@ -102,36 +102,36 @@ func UnmarshalAccount(source interface{}, inErr error) (target *Account, err err
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(Account)
 		if v, ok := val["href"]; ok {
-			var tmp17 string
-			if val, ok := v.(string); ok {
-				tmp17 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
-			}
-			target.Href = tmp17
-		}
-		if v, ok := val["id"]; ok {
-			var tmp18 int
-			if f, ok := v.(float64); ok {
-				tmp18 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = tmp18
-		}
-		if v, ok := val["name"]; ok {
 			var tmp19 string
 			if val, ok := v.(string); ok {
 				tmp19 = val
 			} else {
+				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
+			}
+			target.Href = tmp19
+		}
+		if v, ok := val["id"]; ok {
+			var tmp20 int
+			if f, ok := v.(float64); ok {
+				tmp20 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
+			}
+			target.ID = tmp20
+		}
+		if v, ok := val["name"]; ok {
+			var tmp21 string
+			if val, ok := v.(string); ok {
+				tmp21 = val
+			} else {
 				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp19) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp19, 2, true, err)
+				if len(tmp21) < 2 {
+					err = goa.InvalidLengthError(`load.Name`, tmp21, 2, true, err)
 				}
 			}
-			target.Name = tmp19
+			target.Name = tmp21
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -156,10 +156,10 @@ func LoadAccountCollection(raw interface{}) (res AccountCollection, err error) {
 // validations. See LoadAccountCollection for the definition of raw data.
 func (mt AccountCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp20 := range mt {
-		var tmp21 map[string]interface{}
-		tmp21, err = MarshalAccount(tmp20, err)
-		res[i] = tmp21
+	for i, tmp22 := range mt {
+		var tmp23 map[string]interface{}
+		tmp23, err = MarshalAccount(tmp22, err)
+		res[i] = tmp23
 	}
 	return
 }
@@ -268,12 +268,12 @@ func MarshalInstance(source *Instance, inErr error) (target map[string]interface
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp22 := map[string]interface{}{
+	tmp24 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
-	target = tmp22
+	target = tmp24
 	return
 }
 
@@ -284,15 +284,15 @@ func MarshalInstanceFull(source *Instance, inErr error) (target map[string]inter
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp23 := map[string]interface{}{
+	tmp25 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
 	if source.Series != nil {
-		tmp23["series"], err = MarshalSeries(source.Series, err)
+		tmp25["series"], err = MarshalSeries(source.Series, err)
 	}
-	target = tmp23
+	target = tmp25
 	return
 }
 
@@ -303,12 +303,12 @@ func MarshalInstanceTiny(source *Instance, inErr error) (target map[string]inter
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp24 := map[string]interface{}{
+	tmp26 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
-	target = tmp24
+	target = tmp26
 	return
 }
 
@@ -318,41 +318,41 @@ func UnmarshalInstance(source interface{}, inErr error) (target *Instance, err e
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(Instance)
 		if v, ok := val["href"]; ok {
-			var tmp25 string
-			if val, ok := v.(string); ok {
-				tmp25 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
-			}
-			target.Href = tmp25
-		}
-		if v, ok := val["id"]; ok {
-			var tmp26 int
-			if f, ok := v.(float64); ok {
-				tmp26 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = tmp26
-		}
-		if v, ok := val["name"]; ok {
 			var tmp27 string
 			if val, ok := v.(string); ok {
 				tmp27 = val
 			} else {
+				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
+			}
+			target.Href = tmp27
+		}
+		if v, ok := val["id"]; ok {
+			var tmp28 int
+			if f, ok := v.(float64); ok {
+				tmp28 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
+			}
+			target.ID = tmp28
+		}
+		if v, ok := val["name"]; ok {
+			var tmp29 string
+			if val, ok := v.(string); ok {
+				tmp29 = val
+			} else {
 				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp27) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp27, 2, true, err)
+				if len(tmp29) < 2 {
+					err = goa.InvalidLengthError(`load.Name`, tmp29, 2, true, err)
 				}
 			}
-			target.Name = tmp27
+			target.Name = tmp29
 		}
 		if v, ok := val["series"]; ok {
-			var tmp28 *Series
-			tmp28, err = UnmarshalSeries(v, err)
-			target.Series = tmp28
+			var tmp30 *Series
+			tmp30, err = UnmarshalSeries(v, err)
+			target.Series = tmp30
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -388,18 +388,18 @@ func LoadInstanceCollection(raw interface{}) (res InstanceCollection, err error)
 func (mt InstanceCollection) Dump(view InstanceCollectionViewEnum) (res []map[string]interface{}, err error) {
 	if view == InstanceCollectionDefaultView {
 		res = make([]map[string]interface{}, len(mt))
-		for i, tmp29 := range mt {
-			var tmp30 map[string]interface{}
-			tmp30, err = MarshalInstance(tmp29, err)
-			res[i] = tmp30
+		for i, tmp31 := range mt {
+			var tmp32 map[string]interface{}
+			tmp32, err = MarshalInstance(tmp31, err)
+			res[i] = tmp32
 		}
 	}
 	if view == InstanceCollectionTinyView {
 		res = make([]map[string]interface{}, len(mt))
-		for i, tmp31 := range mt {
-			var tmp32 map[string]interface{}
-			tmp32, err = MarshalInstanceTiny(tmp31, err)
-			res[i] = tmp32
+		for i, tmp33 := range mt {
+			var tmp34 map[string]interface{}
+			tmp34, err = MarshalInstanceTiny(tmp33, err)
+			res[i] = tmp34
 		}
 	}
 	return
@@ -528,12 +528,12 @@ func MarshalSeries(source *Series, inErr error) (target map[string]interface{}, 
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp33 := map[string]interface{}{
+	tmp35 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
-	target = tmp33
+	target = tmp35
 	return
 }
 
@@ -544,15 +544,15 @@ func MarshalSeriesFull(source *Series, inErr error) (target map[string]interface
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp34 := map[string]interface{}{
+	tmp36 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
 	if source.Account != nil {
-		tmp34["account"], err = MarshalAccount(source.Account, err)
+		tmp36["account"], err = MarshalAccount(source.Account, err)
 	}
-	target = tmp34
+	target = tmp36
 	return
 }
 
@@ -563,12 +563,12 @@ func MarshalSeriesLink(source *Series, inErr error) (target map[string]interface
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp35 := map[string]interface{}{
+	tmp37 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
-	target = tmp35
+	target = tmp37
 	return
 }
 
@@ -579,12 +579,12 @@ func MarshalSeriesTiny(source *Series, inErr error) (target map[string]interface
 	if len(source.Name) < 2 {
 		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
 	}
-	tmp36 := map[string]interface{}{
+	tmp38 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 		"name": source.Name,
 	}
-	target = tmp36
+	target = tmp38
 	return
 }
 
@@ -594,41 +594,41 @@ func UnmarshalSeries(source interface{}, inErr error) (target *Series, err error
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(Series)
 		if v, ok := val["account"]; ok {
-			var tmp37 *Account
-			tmp37, err = UnmarshalAccount(v, err)
-			target.Account = tmp37
+			var tmp39 *Account
+			tmp39, err = UnmarshalAccount(v, err)
+			target.Account = tmp39
 		}
 		if v, ok := val["href"]; ok {
-			var tmp38 string
-			if val, ok := v.(string); ok {
-				tmp38 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
-			}
-			target.Href = tmp38
-		}
-		if v, ok := val["id"]; ok {
-			var tmp39 int
-			if f, ok := v.(float64); ok {
-				tmp39 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = tmp39
-		}
-		if v, ok := val["name"]; ok {
 			var tmp40 string
 			if val, ok := v.(string); ok {
 				tmp40 = val
 			} else {
+				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
+			}
+			target.Href = tmp40
+		}
+		if v, ok := val["id"]; ok {
+			var tmp41 int
+			if f, ok := v.(float64); ok {
+				tmp41 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
+			}
+			target.ID = tmp41
+		}
+		if v, ok := val["name"]; ok {
+			var tmp42 string
+			if val, ok := v.(string); ok {
+				tmp42 = val
+			} else {
 				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp40) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp40, 2, true, err)
+				if len(tmp42) < 2 {
+					err = goa.InvalidLengthError(`load.Name`, tmp42, 2, true, err)
 				}
 			}
-			target.Name = tmp40
+			target.Name = tmp42
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -664,18 +664,18 @@ func LoadSeriesCollection(raw interface{}) (res SeriesCollection, err error) {
 func (mt SeriesCollection) Dump(view SeriesCollectionViewEnum) (res []map[string]interface{}, err error) {
 	if view == SeriesCollectionDefaultView {
 		res = make([]map[string]interface{}, len(mt))
-		for i, tmp41 := range mt {
-			var tmp42 map[string]interface{}
-			tmp42, err = MarshalSeries(tmp41, err)
-			res[i] = tmp42
+		for i, tmp43 := range mt {
+			var tmp44 map[string]interface{}
+			tmp44, err = MarshalSeries(tmp43, err)
+			res[i] = tmp44
 		}
 	}
 	if view == SeriesCollectionTinyView {
 		res = make([]map[string]interface{}, len(mt))
-		for i, tmp43 := range mt {
-			var tmp44 map[string]interface{}
-			tmp44, err = MarshalSeriesTiny(tmp43, err)
-			res[i] = tmp44
+		for i, tmp45 := range mt {
+			var tmp46 map[string]interface{}
+			tmp46, err = MarshalSeriesTiny(tmp45, err)
+			res[i] = tmp46
 		}
 	}
 	return
@@ -813,14 +813,14 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 	if len(source.LastName) < 2 {
 		err = goa.InvalidLengthError(`.last_name`, source.LastName, 2, true, err)
 	}
-	tmp45 := map[string]interface{}{
+	tmp47 := map[string]interface{}{
 		"email":      source.Email,
 		"first_name": source.FirstName,
 		"href":       source.Href,
 		"id":         source.ID,
 		"last_name":  source.LastName,
 	}
-	target = tmp45
+	target = tmp47
 	return
 }
 
@@ -836,12 +836,12 @@ func MarshalUserLink(source *User, inErr error) (target map[string]interface{}, 
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
 		}
 	}
-	tmp46 := map[string]interface{}{
+	tmp48 := map[string]interface{}{
 		"email": source.Email,
 		"href":  source.Href,
 		"id":    source.ID,
 	}
-	target = tmp46
+	target = tmp48
 	return
 }
 
@@ -851,69 +851,69 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(User)
 		if v, ok := val["email"]; ok {
-			var tmp47 string
-			if val, ok := v.(string); ok {
-				tmp47 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp47) < 2 {
-					err = goa.InvalidLengthError(`load.Email`, tmp47, 2, true, err)
-				}
-				if tmp47 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp47); err2 != nil {
-						err = goa.InvalidFormatError(`load.Email`, tmp47, goa.FormatEmail, err2, err)
-					}
-				}
-			}
-			target.Email = tmp47
-		}
-		if v, ok := val["first_name"]; ok {
-			var tmp48 string
-			if val, ok := v.(string); ok {
-				tmp48 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.FirstName`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp48) < 2 {
-					err = goa.InvalidLengthError(`load.FirstName`, tmp48, 2, true, err)
-				}
-			}
-			target.FirstName = tmp48
-		}
-		if v, ok := val["href"]; ok {
 			var tmp49 string
 			if val, ok := v.(string); ok {
 				tmp49 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
-			target.Href = tmp49
+			if err == nil {
+				if len(tmp49) < 2 {
+					err = goa.InvalidLengthError(`load.Email`, tmp49, 2, true, err)
+				}
+				if tmp49 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp49); err2 != nil {
+						err = goa.InvalidFormatError(`load.Email`, tmp49, goa.FormatEmail, err2, err)
+					}
+				}
+			}
+			target.Email = tmp49
 		}
-		if v, ok := val["id"]; ok {
-			var tmp50 int
-			if f, ok := v.(float64); ok {
-				tmp50 = int(f)
+		if v, ok := val["first_name"]; ok {
+			var tmp50 string
+			if val, ok := v.(string); ok {
+				tmp50 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
+				err = goa.InvalidAttributeTypeError(`load.FirstName`, v, "string", err)
 			}
-			target.ID = tmp50
+			if err == nil {
+				if len(tmp50) < 2 {
+					err = goa.InvalidLengthError(`load.FirstName`, tmp50, 2, true, err)
+				}
+			}
+			target.FirstName = tmp50
 		}
-		if v, ok := val["last_name"]; ok {
+		if v, ok := val["href"]; ok {
 			var tmp51 string
 			if val, ok := v.(string); ok {
 				tmp51 = val
 			} else {
+				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
+			}
+			target.Href = tmp51
+		}
+		if v, ok := val["id"]; ok {
+			var tmp52 int
+			if f, ok := v.(float64); ok {
+				tmp52 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
+			}
+			target.ID = tmp52
+		}
+		if v, ok := val["last_name"]; ok {
+			var tmp53 string
+			if val, ok := v.(string); ok {
+				tmp53 = val
+			} else {
 				err = goa.InvalidAttributeTypeError(`load.LastName`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp51) < 2 {
-					err = goa.InvalidLengthError(`load.LastName`, tmp51, 2, true, err)
+				if len(tmp53) < 2 {
+					err = goa.InvalidLengthError(`load.LastName`, tmp53, 2, true, err)
 				}
 			}
-			target.LastName = tmp51
+			target.LastName = tmp53
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -938,10 +938,10 @@ func LoadUserCollection(raw interface{}) (res UserCollection, err error) {
 // validations. See LoadUserCollection for the definition of raw data.
 func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp52 := range mt {
-		var tmp53 map[string]interface{}
-		tmp53, err = MarshalUser(tmp52, err)
-		res[i] = tmp53
+	for i, tmp54 := range mt {
+		var tmp55 map[string]interface{}
+		tmp55, err = MarshalUser(tmp54, err)
+		res[i] = tmp55
 	}
 	return
 }
