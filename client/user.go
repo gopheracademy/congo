@@ -13,6 +13,7 @@ import (
 type CreateUserPayload struct {
 	Email     string `json:"email,omitempty"`
 	FirstName string `json:"first_name"`
+	ID        int    `json:"id,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
 }
 
@@ -77,6 +78,7 @@ func (c *Client) ShowUser(path string) (*http.Response, error) {
 type UpdateUserPayload struct {
 	Email     string `json:"email,omitempty"`
 	FirstName string `json:"first_name,omitempty"`
+	ID        int    `json:"id,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
 }
 

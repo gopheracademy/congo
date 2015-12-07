@@ -45,11 +45,16 @@ type CreateAccountPayload struct {
 
 // NewCreateAccountPayload instantiates a CreateAccountPayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewCreateAccountPayload(raw interface{}) (*CreateAccountPayload, error) {
-	var err error
-	var p *CreateAccountPayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(CreateAccountPayload)
+func NewCreateAccountPayload(raw interface{}) (p *CreateAccountPayload, err error) {
+	p, err = UnmarshalCreateAccountPayload(raw, err)
+	return
+}
+
+// UnmarshalCreateAccountPayload unmarshals and validates a raw interface{} into an instance of CreateAccountPayload
+func UnmarshalCreateAccountPayload(source interface{}, inErr error) (target *CreateAccountPayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(CreateAccountPayload)
 		if v, ok := val["name"]; ok {
 			var tmp1 string
 			if val, ok := v.(string); ok {
@@ -62,14 +67,14 @@ func NewCreateAccountPayload(raw interface{}) (*CreateAccountPayload, error) {
 					err = goa.InvalidLengthError(`payload.Name`, tmp1, 2, true, err)
 				}
 			}
-			p.Name = tmp1
+			target.Name = tmp1
 		} else {
 			err = goa.MissingAttributeError(`payload`, "name", err)
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // Created sends a HTTP response with status code 201.
@@ -128,7 +133,7 @@ func (ctx *ListAccountContext) OK(resp AccountCollection) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.account+json; type=collection; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.account+json; type=collection; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -165,7 +170,7 @@ func (ctx *ShowAccountContext) OK(resp *Account, view AccountViewEnum) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.account+json; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.account+json; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -204,11 +209,16 @@ type UpdateAccountPayload struct {
 
 // NewUpdateAccountPayload instantiates a UpdateAccountPayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewUpdateAccountPayload(raw interface{}) (*UpdateAccountPayload, error) {
-	var err error
-	var p *UpdateAccountPayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(UpdateAccountPayload)
+func NewUpdateAccountPayload(raw interface{}) (p *UpdateAccountPayload, err error) {
+	p, err = UnmarshalUpdateAccountPayload(raw, err)
+	return
+}
+
+// UnmarshalUpdateAccountPayload unmarshals and validates a raw interface{} into an instance of UpdateAccountPayload
+func UnmarshalUpdateAccountPayload(source interface{}, inErr error) (target *UpdateAccountPayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(UpdateAccountPayload)
 		if v, ok := val["name"]; ok {
 			var tmp2 string
 			if val, ok := v.(string); ok {
@@ -221,14 +231,14 @@ func NewUpdateAccountPayload(raw interface{}) (*UpdateAccountPayload, error) {
 					err = goa.InvalidLengthError(`payload.Name`, tmp2, 2, true, err)
 				}
 			}
-			p.Name = tmp2
+			target.Name = tmp2
 		} else {
 			err = goa.MissingAttributeError(`payload`, "name", err)
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // NoContent sends a HTTP response with status code 204.
@@ -285,11 +295,16 @@ type CreateInstancePayload struct {
 
 // NewCreateInstancePayload instantiates a CreateInstancePayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewCreateInstancePayload(raw interface{}) (*CreateInstancePayload, error) {
-	var err error
-	var p *CreateInstancePayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(CreateInstancePayload)
+func NewCreateInstancePayload(raw interface{}) (p *CreateInstancePayload, err error) {
+	p, err = UnmarshalCreateInstancePayload(raw, err)
+	return
+}
+
+// UnmarshalCreateInstancePayload unmarshals and validates a raw interface{} into an instance of CreateInstancePayload
+func UnmarshalCreateInstancePayload(source interface{}, inErr error) (target *CreateInstancePayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(CreateInstancePayload)
 		if v, ok := val["name"]; ok {
 			var tmp3 string
 			if val, ok := v.(string); ok {
@@ -302,14 +317,14 @@ func NewCreateInstancePayload(raw interface{}) (*CreateInstancePayload, error) {
 					err = goa.InvalidLengthError(`payload.Name`, tmp3, 2, true, err)
 				}
 			}
-			p.Name = tmp3
+			target.Name = tmp3
 		} else {
 			err = goa.MissingAttributeError(`payload`, "name", err)
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // Created sends a HTTP response with status code 201.
@@ -404,7 +419,7 @@ func (ctx *ListInstanceContext) OK(resp InstanceCollection, view InstanceCollect
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.instance+json; type=collection; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.instance+json; type=collection; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -459,7 +474,7 @@ func (ctx *ShowInstanceContext) OK(resp *Instance, view InstanceViewEnum) error 
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.instance+json; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.instance+json; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -516,11 +531,16 @@ type UpdateInstancePayload struct {
 
 // NewUpdateInstancePayload instantiates a UpdateInstancePayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewUpdateInstancePayload(raw interface{}) (*UpdateInstancePayload, error) {
-	var err error
-	var p *UpdateInstancePayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(UpdateInstancePayload)
+func NewUpdateInstancePayload(raw interface{}) (p *UpdateInstancePayload, err error) {
+	p, err = UnmarshalUpdateInstancePayload(raw, err)
+	return
+}
+
+// UnmarshalUpdateInstancePayload unmarshals and validates a raw interface{} into an instance of UpdateInstancePayload
+func UnmarshalUpdateInstancePayload(source interface{}, inErr error) (target *UpdateInstancePayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(UpdateInstancePayload)
 		if v, ok := val["name"]; ok {
 			var tmp4 string
 			if val, ok := v.(string); ok {
@@ -533,12 +553,12 @@ func NewUpdateInstancePayload(raw interface{}) (*UpdateInstancePayload, error) {
 					err = goa.InvalidLengthError(`payload.Name`, tmp4, 2, true, err)
 				}
 			}
-			p.Name = tmp4
+			target.Name = tmp4
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // NoContent sends a HTTP response with status code 204.
@@ -586,11 +606,16 @@ type CreateSeriesPayload struct {
 
 // NewCreateSeriesPayload instantiates a CreateSeriesPayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewCreateSeriesPayload(raw interface{}) (*CreateSeriesPayload, error) {
-	var err error
-	var p *CreateSeriesPayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(CreateSeriesPayload)
+func NewCreateSeriesPayload(raw interface{}) (p *CreateSeriesPayload, err error) {
+	p, err = UnmarshalCreateSeriesPayload(raw, err)
+	return
+}
+
+// UnmarshalCreateSeriesPayload unmarshals and validates a raw interface{} into an instance of CreateSeriesPayload
+func UnmarshalCreateSeriesPayload(source interface{}, inErr error) (target *CreateSeriesPayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(CreateSeriesPayload)
 		if v, ok := val["name"]; ok {
 			var tmp5 string
 			if val, ok := v.(string); ok {
@@ -603,14 +628,14 @@ func NewCreateSeriesPayload(raw interface{}) (*CreateSeriesPayload, error) {
 					err = goa.InvalidLengthError(`payload.Name`, tmp5, 2, true, err)
 				}
 			}
-			p.Name = tmp5
+			target.Name = tmp5
 		} else {
 			err = goa.MissingAttributeError(`payload`, "name", err)
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // Created sends a HTTP response with status code 201.
@@ -687,7 +712,7 @@ func (ctx *ListSeriesContext) OK(resp SeriesCollection, view SeriesCollectionVie
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.series+json; type=collection; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.series+json; type=collection; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -733,7 +758,7 @@ func (ctx *ShowSeriesContext) OK(resp *Series, view SeriesViewEnum) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.series+json; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.series+json; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -781,11 +806,16 @@ type UpdateSeriesPayload struct {
 
 // NewUpdateSeriesPayload instantiates a UpdateSeriesPayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewUpdateSeriesPayload(raw interface{}) (*UpdateSeriesPayload, error) {
-	var err error
-	var p *UpdateSeriesPayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(UpdateSeriesPayload)
+func NewUpdateSeriesPayload(raw interface{}) (p *UpdateSeriesPayload, err error) {
+	p, err = UnmarshalUpdateSeriesPayload(raw, err)
+	return
+}
+
+// UnmarshalUpdateSeriesPayload unmarshals and validates a raw interface{} into an instance of UpdateSeriesPayload
+func UnmarshalUpdateSeriesPayload(source interface{}, inErr error) (target *UpdateSeriesPayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(UpdateSeriesPayload)
 		if v, ok := val["name"]; ok {
 			var tmp6 string
 			if val, ok := v.(string); ok {
@@ -798,12 +828,12 @@ func NewUpdateSeriesPayload(raw interface{}) (*UpdateSeriesPayload, error) {
 					err = goa.InvalidLengthError(`payload.Name`, tmp6, 2, true, err)
 				}
 			}
-			p.Name = tmp6
+			target.Name = tmp6
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // NoContent sends a HTTP response with status code 204.
@@ -848,16 +878,22 @@ func NewCreateUserContext(c *goa.Context) (*CreateUserContext, error) {
 type CreateUserPayload struct {
 	Email     string
 	FirstName string
+	ID        int
 	LastName  string
 }
 
 // NewCreateUserPayload instantiates a CreateUserPayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewCreateUserPayload(raw interface{}) (*CreateUserPayload, error) {
-	var err error
-	var p *CreateUserPayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(CreateUserPayload)
+func NewCreateUserPayload(raw interface{}) (p *CreateUserPayload, err error) {
+	p, err = UnmarshalCreateUserPayload(raw, err)
+	return
+}
+
+// UnmarshalCreateUserPayload unmarshals and validates a raw interface{} into an instance of CreateUserPayload
+func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *CreateUserPayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(CreateUserPayload)
 		if v, ok := val["email"]; ok {
 			var tmp7 string
 			if val, ok := v.(string); ok {
@@ -870,7 +906,7 @@ func NewCreateUserPayload(raw interface{}) (*CreateUserPayload, error) {
 					err = goa.InvalidLengthError(`payload.Email`, tmp7, 2, true, err)
 				}
 			}
-			p.Email = tmp7
+			target.Email = tmp7
 		}
 		if v, ok := val["first_name"]; ok {
 			var tmp8 string
@@ -884,28 +920,37 @@ func NewCreateUserPayload(raw interface{}) (*CreateUserPayload, error) {
 					err = goa.InvalidLengthError(`payload.FirstName`, tmp8, 2, true, err)
 				}
 			}
-			p.FirstName = tmp8
+			target.FirstName = tmp8
 		} else {
 			err = goa.MissingAttributeError(`payload`, "first_name", err)
 		}
+		if v, ok := val["id"]; ok {
+			var tmp9 int
+			if f, ok := v.(float64); ok {
+				tmp9 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.ID`, v, "int", err)
+			}
+			target.ID = tmp9
+		}
 		if v, ok := val["last_name"]; ok {
-			var tmp9 string
+			var tmp10 string
 			if val, ok := v.(string); ok {
-				tmp9 = val
+				tmp10 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.LastName`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp9) < 2 {
-					err = goa.InvalidLengthError(`payload.LastName`, tmp9, 2, true, err)
+				if len(tmp10) < 2 {
+					err = goa.InvalidLengthError(`payload.LastName`, tmp10, 2, true, err)
 				}
 			}
-			p.LastName = tmp9
+			target.LastName = tmp10
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // Created sends a HTTP response with status code 201.
@@ -982,7 +1027,7 @@ func (ctx *ListUserContext) OK(resp UserCollection) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user+json; type=collection; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.user+json; type=collection; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -1028,7 +1073,7 @@ func (ctx *ShowUserContext) OK(resp *User, view UserViewEnum) error {
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
-	ctx.Header().Set("Content-Type", "application/vnd.congo.api.user+json; charset=utf-8")
+	ctx.Header().Set("Content-Type", "application/vnd.user+json; charset=utf-8")
 	return ctx.JSON(200, r)
 }
 
@@ -1073,62 +1118,77 @@ func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 type UpdateUserPayload struct {
 	Email     string
 	FirstName string
+	ID        int
 	LastName  string
 }
 
 // NewUpdateUserPayload instantiates a UpdateUserPayload from a raw request body.
 // It validates each field and returns an error if any validation fails.
-func NewUpdateUserPayload(raw interface{}) (*UpdateUserPayload, error) {
-	var err error
-	var p *UpdateUserPayload
-	if val, ok := raw.(map[string]interface{}); ok {
-		p = new(UpdateUserPayload)
+func NewUpdateUserPayload(raw interface{}) (p *UpdateUserPayload, err error) {
+	p, err = UnmarshalUpdateUserPayload(raw, err)
+	return
+}
+
+// UnmarshalUpdateUserPayload unmarshals and validates a raw interface{} into an instance of UpdateUserPayload
+func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *UpdateUserPayload, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(UpdateUserPayload)
 		if v, ok := val["email"]; ok {
-			var tmp10 string
-			if val, ok := v.(string); ok {
-				tmp10 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp10) < 2 {
-					err = goa.InvalidLengthError(`payload.Email`, tmp10, 2, true, err)
-				}
-			}
-			p.Email = tmp10
-		}
-		if v, ok := val["first_name"]; ok {
 			var tmp11 string
 			if val, ok := v.(string); ok {
 				tmp11 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`payload.FirstName`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
 			if err == nil {
 				if len(tmp11) < 2 {
-					err = goa.InvalidLengthError(`payload.FirstName`, tmp11, 2, true, err)
+					err = goa.InvalidLengthError(`payload.Email`, tmp11, 2, true, err)
 				}
 			}
-			p.FirstName = tmp11
+			target.Email = tmp11
 		}
-		if v, ok := val["last_name"]; ok {
+		if v, ok := val["first_name"]; ok {
 			var tmp12 string
 			if val, ok := v.(string); ok {
 				tmp12 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`payload.LastName`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`payload.FirstName`, v, "string", err)
 			}
 			if err == nil {
 				if len(tmp12) < 2 {
-					err = goa.InvalidLengthError(`payload.LastName`, tmp12, 2, true, err)
+					err = goa.InvalidLengthError(`payload.FirstName`, tmp12, 2, true, err)
 				}
 			}
-			p.LastName = tmp12
+			target.FirstName = tmp12
+		}
+		if v, ok := val["id"]; ok {
+			var tmp13 int
+			if f, ok := v.(float64); ok {
+				tmp13 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.ID`, v, "int", err)
+			}
+			target.ID = tmp13
+		}
+		if v, ok := val["last_name"]; ok {
+			var tmp14 string
+			if val, ok := v.(string); ok {
+				tmp14 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`payload.LastName`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp14) < 2 {
+					err = goa.InvalidLengthError(`payload.LastName`, tmp14, 2, true, err)
+				}
+			}
+			target.LastName = tmp14
 		}
 	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, raw, "dictionary", err)
+		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
 	}
-	return p, err
+	return
 }
 
 // NoContent sends a HTTP response with status code 204.

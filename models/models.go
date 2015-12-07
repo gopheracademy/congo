@@ -14,6 +14,7 @@ package models
 import (
 	"errors"
 	"sync"
+	"time"
 
 	"github.com/gopheracademy/congo/app"
 	"github.com/jinzhu/copier"
@@ -537,9 +538,31 @@ func (db *MockSeriesStorage) Delete(ctx *app.DeleteSeriesContext) error {
 type User struct {
 	gorm.Model
 	AccountID uint
-	Email     string `json:"email,omitempty"`
-	FirstName string `json:"first_name,omitempty"`
-	LastName  string `json:"last_name,omitempty"`
+	// Auth
+	Password string
+
+	// OAuth2
+	Oauth2Uid      string
+	Oauth2Provider string
+	Oauth2Token    string
+	Oauth2Refresh  string
+	Oauth2Expiry   time.Time
+
+	// Confirm
+	ConfirmToken string
+	Confirmed    bool
+
+	// Lock
+	AttemptNumber int64
+	AttemptTime   time.Time
+	Locked        time.Time
+
+	// Recover
+	RecoverToken       string
+	RecoverTokenExpiry time.Time
+	Email              string `json:"email,omitempty"`
+	FirstName          string `json:"first_name,omitempty"`
+	LastName           string `json:"last_name,omitempty"`
 }
 
 func UserFromCreatePayload(ctx *app.CreateUserContext) User {

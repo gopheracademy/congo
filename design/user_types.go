@@ -1,6 +1,7 @@
 package design
 
 import (
+	. "github.com/raphael/goa/design"
 	. "github.com/raphael/goa/design/dsl"
 )
 
@@ -41,6 +42,9 @@ var AccountModel = Type("AccountModel", func() {
 var UserModel = Type("UserModel", func() {
 	Metadata("github.com/bketelsen/gorma", "Model")
 	Metadata("github.com/bketelsen/gorma#belongsto", "Account")
+	Metadata("github.com/bketelsen/gorma#authboss", "All")
+	Attribute("id", Integer, func() {
+	})
 	Attribute("first_name", func() {
 		MinLength(2)
 	})
