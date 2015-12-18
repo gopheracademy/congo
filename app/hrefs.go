@@ -14,22 +14,17 @@ package app
 
 import "fmt"
 
-// AccountHref returns the resource href.
-func AccountHref(accountID interface{}) string {
-	return fmt.Sprintf("/api/accounts/%v", accountID)
+// ProposalHref returns the resource href.
+func ProposalHref(userID, proposalID interface{}) string {
+	return fmt.Sprintf("/api/users/%v/proposals/%v", userID, proposalID)
 }
 
-// InstanceHref returns the resource href.
-func InstanceHref(accountID, seriesID, instanceID interface{}) string {
-	return fmt.Sprintf("/api/accounts/%v/series/%v/instances/%v", accountID, seriesID, instanceID)
-}
-
-// SeriesHref returns the resource href.
-func SeriesHref(accountID, seriesID interface{}) string {
-	return fmt.Sprintf("/api/accounts/%v/series/%v", accountID, seriesID)
+// ReviewHref returns the resource href.
+func ReviewHref(userID, proposalID, reviewID interface{}) string {
+	return fmt.Sprintf("/api/users/%v/proposals/%v/review/%v", userID, proposalID, reviewID)
 }
 
 // UserHref returns the resource href.
-func UserHref(accountID, userID interface{}) string {
-	return fmt.Sprintf("/api/accounts/%v/users/%v", accountID, userID)
+func UserHref(userID interface{}) string {
+	return fmt.Sprintf("/api/users/%v", userID)
 }

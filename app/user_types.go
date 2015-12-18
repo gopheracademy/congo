@@ -12,44 +12,132 @@
 
 package app
 
-import "github.com/raphael/goa"
+import (
+	"github.com/raphael/goa"
+)
 
-// AccountModel type
-type AccountModel struct {
-	Name string
+// ProposalModel type
+type ProposalModel struct {
+	Abstract  string
+	Detail    string
+	Firstname string
+	Title     string
+	Withdrawn bool
 }
 
-// MarshalAccountModel validates and renders an instance of AccountModel into a interface{}
-func MarshalAccountModel(source *AccountModel, inErr error) (target map[string]interface{}, err error) {
+// MarshalProposalModel validates and renders an instance of ProposalModel into a interface{}
+func MarshalProposalModel(source *ProposalModel, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
+	if len(source.Abstract) < 50 {
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 50, true, err)
 	}
-	tmp56 := map[string]interface{}{
-		"name": source.Name,
+	if len(source.Abstract) > 500 {
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 500, false, err)
 	}
-	target = tmp56
+	if len(source.Detail) < 100 {
+		err = goa.InvalidLengthError(`.detail`, source.Detail, 100, true, err)
+	}
+	if len(source.Detail) > 2000 {
+		err = goa.InvalidLengthError(`.detail`, source.Detail, 2000, false, err)
+	}
+	if len(source.Firstname) < 2 {
+		err = goa.InvalidLengthError(`.firstname`, source.Firstname, 2, true, err)
+	}
+	if len(source.Title) < 10 {
+		err = goa.InvalidLengthError(`.title`, source.Title, 10, true, err)
+	}
+	if len(source.Title) > 200 {
+		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
+	}
+	tmp64 := map[string]interface{}{
+		"abstract":  source.Abstract,
+		"detail":    source.Detail,
+		"firstname": source.Firstname,
+		"title":     source.Title,
+		"withdrawn": source.Withdrawn,
+	}
+	target = tmp64
 	return
 }
 
-// UnmarshalAccountModel unmarshals and validates a raw interface{} into an instance of AccountModel
-func UnmarshalAccountModel(source interface{}, inErr error) (target *AccountModel, err error) {
+// UnmarshalProposalModel unmarshals and validates a raw interface{} into an instance of ProposalModel
+func UnmarshalProposalModel(source interface{}, inErr error) (target *ProposalModel, err error) {
 	err = inErr
 	if val, ok := source.(map[string]interface{}); ok {
-		target = new(AccountModel)
-		if v, ok := val["name"]; ok {
-			var tmp57 string
+		target = new(ProposalModel)
+		if v, ok := val["abstract"]; ok {
+			var tmp65 string
 			if val, ok := v.(string); ok {
-				tmp57 = val
+				tmp65 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Abstract`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp57) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp57, 2, true, err)
+				if len(tmp65) < 50 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp65, 50, true, err)
+				}
+				if len(tmp65) > 500 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp65, 500, false, err)
 				}
 			}
-			target.Name = tmp57
+			target.Abstract = tmp65
+		}
+		if v, ok := val["detail"]; ok {
+			var tmp66 string
+			if val, ok := v.(string); ok {
+				tmp66 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Detail`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp66) < 100 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp66, 100, true, err)
+				}
+				if len(tmp66) > 2000 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp66, 2000, false, err)
+				}
+			}
+			target.Detail = tmp66
+		}
+		if v, ok := val["firstname"]; ok {
+			var tmp67 string
+			if val, ok := v.(string); ok {
+				tmp67 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp67) < 2 {
+					err = goa.InvalidLengthError(`load.Firstname`, tmp67, 2, true, err)
+				}
+			}
+			target.Firstname = tmp67
+		}
+		if v, ok := val["title"]; ok {
+			var tmp68 string
+			if val, ok := v.(string); ok {
+				tmp68 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Title`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp68) < 10 {
+					err = goa.InvalidLengthError(`load.Title`, tmp68, 10, true, err)
+				}
+				if len(tmp68) > 200 {
+					err = goa.InvalidLengthError(`load.Title`, tmp68, 200, false, err)
+				}
+			}
+			target.Title = tmp68
+		}
+		if v, ok := val["withdrawn"]; ok {
+			var tmp69 bool
+			if val, ok := v.(bool); ok {
+				tmp69 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Withdrawn`, v, "bool", err)
+			}
+			target.Withdrawn = tmp69
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -57,85 +145,73 @@ func UnmarshalAccountModel(source interface{}, inErr error) (target *AccountMode
 	return
 }
 
-// InstanceModel type
-type InstanceModel struct {
-	Name string
+// ReviewModel type
+type ReviewModel struct {
+	Comment string
+	Rating  int
 }
 
-// MarshalInstanceModel validates and renders an instance of InstanceModel into a interface{}
-func MarshalInstanceModel(source *InstanceModel, inErr error) (target map[string]interface{}, err error) {
+// MarshalReviewModel validates and renders an instance of ReviewModel into a interface{}
+func MarshalReviewModel(source *ReviewModel, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
+	if len(source.Comment) < 10 {
+		err = goa.InvalidLengthError(`.comment`, source.Comment, 10, true, err)
 	}
-	tmp58 := map[string]interface{}{
-		"name": source.Name,
+	if len(source.Comment) > 200 {
+		err = goa.InvalidLengthError(`.comment`, source.Comment, 200, false, err)
 	}
-	target = tmp58
+	if source.Rating < 1 {
+		err = goa.InvalidRangeError(`.rating`, source.Rating, 1, true, err)
+	}
+	if source.Rating > 5 {
+		err = goa.InvalidRangeError(`.rating`, source.Rating, 5, false, err)
+	}
+	tmp70 := map[string]interface{}{
+		"comment": source.Comment,
+		"rating":  source.Rating,
+	}
+	target = tmp70
 	return
 }
 
-// UnmarshalInstanceModel unmarshals and validates a raw interface{} into an instance of InstanceModel
-func UnmarshalInstanceModel(source interface{}, inErr error) (target *InstanceModel, err error) {
+// UnmarshalReviewModel unmarshals and validates a raw interface{} into an instance of ReviewModel
+func UnmarshalReviewModel(source interface{}, inErr error) (target *ReviewModel, err error) {
 	err = inErr
 	if val, ok := source.(map[string]interface{}); ok {
-		target = new(InstanceModel)
-		if v, ok := val["name"]; ok {
-			var tmp59 string
+		target = new(ReviewModel)
+		if v, ok := val["comment"]; ok {
+			var tmp71 string
 			if val, ok := v.(string); ok {
-				tmp59 = val
+				tmp71 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Comment`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp59) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp59, 2, true, err)
+				if len(tmp71) < 10 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp71, 10, true, err)
+				}
+				if len(tmp71) > 200 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp71, 200, false, err)
 				}
 			}
-			target.Name = tmp59
+			target.Comment = tmp71
 		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
-	}
-	return
-}
-
-// SeriesModel type
-type SeriesModel struct {
-	Name string
-}
-
-// MarshalSeriesModel validates and renders an instance of SeriesModel into a interface{}
-func MarshalSeriesModel(source *SeriesModel, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
-	}
-	tmp60 := map[string]interface{}{
-		"name": source.Name,
-	}
-	target = tmp60
-	return
-}
-
-// UnmarshalSeriesModel unmarshals and validates a raw interface{} into an instance of SeriesModel
-func UnmarshalSeriesModel(source interface{}, inErr error) (target *SeriesModel, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(SeriesModel)
-		if v, ok := val["name"]; ok {
-			var tmp61 string
-			if val, ok := v.(string); ok {
-				tmp61 = val
+		if v, ok := val["rating"]; ok {
+			var tmp72 int
+			if f, ok := v.(float64); ok {
+				tmp72 = int(f)
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if len(tmp61) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp61, 2, true, err)
+				if tmp72 < 1 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp72, 1, true, err)
+				}
+				if tmp72 > 5 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp72, 5, false, err)
 				}
 			}
-			target.Name = tmp61
+			target.Rating = tmp72
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -145,33 +221,51 @@ func UnmarshalSeriesModel(source interface{}, inErr error) (target *SeriesModel,
 
 // UserModel type
 type UserModel struct {
+	Bio       string
+	City      string
+	Country   string
 	Email     string
-	FirstName string
-	ID        int
-	LastName  string
+	Firstname string
+	Lastname  string
 	Role      string
+	State     string
 }
 
 // MarshalUserModel validates and renders an instance of UserModel into a interface{}
 func MarshalUserModel(source *UserModel, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
+	if len(source.Bio) > 500 {
+		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
+	}
+	if len(source.City) < 2 {
+		err = goa.InvalidLengthError(`.city`, source.City, 2, true, err)
+	}
+	if len(source.Country) < 2 {
+		err = goa.InvalidLengthError(`.country`, source.Country, 2, true, err)
+	}
 	if len(source.Email) < 2 {
 		err = goa.InvalidLengthError(`.email`, source.Email, 2, true, err)
 	}
-	if len(source.FirstName) < 2 {
-		err = goa.InvalidLengthError(`.first_name`, source.FirstName, 2, true, err)
+	if len(source.Firstname) < 2 {
+		err = goa.InvalidLengthError(`.firstname`, source.Firstname, 2, true, err)
 	}
-	if len(source.LastName) < 2 {
-		err = goa.InvalidLengthError(`.last_name`, source.LastName, 2, true, err)
+	if len(source.Lastname) < 2 {
+		err = goa.InvalidLengthError(`.lastname`, source.Lastname, 2, true, err)
 	}
-	tmp62 := map[string]interface{}{
-		"email":      source.Email,
-		"first_name": source.FirstName,
-		"id":         source.ID,
-		"last_name":  source.LastName,
-		"role":       source.Role,
+	if len(source.State) < 2 {
+		err = goa.InvalidLengthError(`.state`, source.State, 2, true, err)
 	}
-	target = tmp62
+	tmp73 := map[string]interface{}{
+		"bio":       source.Bio,
+		"city":      source.City,
+		"country":   source.Country,
+		"email":     source.Email,
+		"firstname": source.Firstname,
+		"lastname":  source.Lastname,
+		"role":      source.Role,
+		"state":     source.State,
+	}
+	target = tmp73
 	return
 }
 
@@ -180,65 +274,112 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 	err = inErr
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UserModel)
-		if v, ok := val["email"]; ok {
-			var tmp63 string
+		if v, ok := val["bio"]; ok {
+			var tmp74 string
 			if val, ok := v.(string); ok {
-				tmp63 = val
+				tmp74 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Bio`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp74) > 500 {
+					err = goa.InvalidLengthError(`load.Bio`, tmp74, 500, false, err)
+				}
+			}
+			target.Bio = tmp74
+		}
+		if v, ok := val["city"]; ok {
+			var tmp75 string
+			if val, ok := v.(string); ok {
+				tmp75 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp75) < 2 {
+					err = goa.InvalidLengthError(`load.City`, tmp75, 2, true, err)
+				}
+			}
+			target.City = tmp75
+		}
+		if v, ok := val["country"]; ok {
+			var tmp76 string
+			if val, ok := v.(string); ok {
+				tmp76 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp76) < 2 {
+					err = goa.InvalidLengthError(`load.Country`, tmp76, 2, true, err)
+				}
+			}
+			target.Country = tmp76
+		}
+		if v, ok := val["email"]; ok {
+			var tmp77 string
+			if val, ok := v.(string); ok {
+				tmp77 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp63) < 2 {
-					err = goa.InvalidLengthError(`load.Email`, tmp63, 2, true, err)
+				if len(tmp77) < 2 {
+					err = goa.InvalidLengthError(`load.Email`, tmp77, 2, true, err)
 				}
 			}
-			target.Email = tmp63
+			target.Email = tmp77
 		}
-		if v, ok := val["first_name"]; ok {
-			var tmp64 string
+		if v, ok := val["firstname"]; ok {
+			var tmp78 string
 			if val, ok := v.(string); ok {
-				tmp64 = val
+				tmp78 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.FirstName`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp64) < 2 {
-					err = goa.InvalidLengthError(`load.FirstName`, tmp64, 2, true, err)
+				if len(tmp78) < 2 {
+					err = goa.InvalidLengthError(`load.Firstname`, tmp78, 2, true, err)
 				}
 			}
-			target.FirstName = tmp64
+			target.Firstname = tmp78
 		}
-		if v, ok := val["id"]; ok {
-			var tmp65 int
-			if f, ok := v.(float64); ok {
-				tmp65 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = tmp65
-		}
-		if v, ok := val["last_name"]; ok {
-			var tmp66 string
+		if v, ok := val["lastname"]; ok {
+			var tmp79 string
 			if val, ok := v.(string); ok {
-				tmp66 = val
+				tmp79 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.LastName`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp66) < 2 {
-					err = goa.InvalidLengthError(`load.LastName`, tmp66, 2, true, err)
+				if len(tmp79) < 2 {
+					err = goa.InvalidLengthError(`load.Lastname`, tmp79, 2, true, err)
 				}
 			}
-			target.LastName = tmp66
+			target.Lastname = tmp79
 		}
 		if v, ok := val["role"]; ok {
-			var tmp67 string
+			var tmp80 string
 			if val, ok := v.(string); ok {
-				tmp67 = val
+				tmp80 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Role`, v, "string", err)
 			}
-			target.Role = tmp67
+			target.Role = tmp80
+		}
+		if v, ok := val["state"]; ok {
+			var tmp81 string
+			if val, ok := v.(string); ok {
+				tmp81 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp81) < 2 {
+					err = goa.InvalidLengthError(`load.State`, tmp81, 2, true, err)
+				}
+			}
+			target.State = tmp81
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)

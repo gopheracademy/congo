@@ -97,91 +97,31 @@ func main() {
 func RegisterCommands(app *kingpin.Application) map[string]client.ActionCommand {
 	res := make(map[string]client.ActionCommand)
 	var command, sub *kingpin.CmdClause
-	command = app.Command("create", "create action")
-	tmp1 := new(CreateAccountCommand)
-	sub = command.Command("account", "Create new account")
-	tmp1.RegisterFlags(sub)
-	res["create account"] = tmp1
-	tmp2 := new(CreateInstanceCommand)
-	sub = command.Command("instance", "Record new instance")
-	tmp2.RegisterFlags(sub)
-	res["create instance"] = tmp2
-	tmp3 := new(CreateSeriesCommand)
-	sub = command.Command("series", "Record new series")
-	tmp3.RegisterFlags(sub)
-	res["create series"] = tmp3
-	tmp4 := new(CreateUserCommand)
+	command = app.Command("create", "Record new user")
+	tmp1 := new(CreateUserCommand)
 	sub = command.Command("user", "Record new user")
-	tmp4.RegisterFlags(sub)
-	res["create user"] = tmp4
-	command = app.Command("delete", "delete action")
-	tmp5 := new(DeleteAccountCommand)
-	sub = command.Command("account", "")
-	tmp5.RegisterFlags(sub)
-	res["delete account"] = tmp5
-	tmp6 := new(DeleteInstanceCommand)
-	sub = command.Command("instance", "")
-	tmp6.RegisterFlags(sub)
-	res["delete instance"] = tmp6
-	tmp7 := new(DeleteSeriesCommand)
-	sub = command.Command("series", "")
-	tmp7.RegisterFlags(sub)
-	res["delete series"] = tmp7
-	tmp8 := new(DeleteUserCommand)
+	tmp1.RegisterFlags(sub)
+	res["create user"] = tmp1
+	command = app.Command("delete", "")
+	tmp2 := new(DeleteUserCommand)
 	sub = command.Command("user", "")
-	tmp8.RegisterFlags(sub)
-	res["delete user"] = tmp8
-	command = app.Command("list", "list action")
-	tmp9 := new(ListAccountCommand)
-	sub = command.Command("account", "List all accounts")
-	tmp9.RegisterFlags(sub)
-	res["list account"] = tmp9
-	tmp10 := new(ListInstanceCommand)
-	sub = command.Command("instance", "List all instances of a series")
-	tmp10.RegisterFlags(sub)
-	res["list instance"] = tmp10
-	tmp11 := new(ListSeriesCommand)
-	sub = command.Command("series", "List all series in account")
-	tmp11.RegisterFlags(sub)
-	res["list series"] = tmp11
-	tmp12 := new(ListUserCommand)
+	tmp2.RegisterFlags(sub)
+	res["delete user"] = tmp2
+	command = app.Command("list", "List all users in account")
+	tmp3 := new(ListUserCommand)
 	sub = command.Command("user", "List all users in account")
-	tmp12.RegisterFlags(sub)
-	res["list user"] = tmp12
-	command = app.Command("show", "show action")
-	tmp13 := new(ShowAccountCommand)
-	sub = command.Command("account", "Retrieve account with given id")
-	tmp13.RegisterFlags(sub)
-	res["show account"] = tmp13
-	tmp14 := new(ShowInstanceCommand)
-	sub = command.Command("instance", "Retrieve instance with given id")
-	tmp14.RegisterFlags(sub)
-	res["show instance"] = tmp14
-	tmp15 := new(ShowSeriesCommand)
-	sub = command.Command("series", "Retrieve series with given id")
-	tmp15.RegisterFlags(sub)
-	res["show series"] = tmp15
-	tmp16 := new(ShowUserCommand)
+	tmp3.RegisterFlags(sub)
+	res["list user"] = tmp3
+	command = app.Command("show", "Retrieve user with given id")
+	tmp4 := new(ShowUserCommand)
 	sub = command.Command("user", "Retrieve user with given id")
-	tmp16.RegisterFlags(sub)
-	res["show user"] = tmp16
-	command = app.Command("update", "update action")
-	tmp17 := new(UpdateAccountCommand)
-	sub = command.Command("account", "Change account name")
-	tmp17.RegisterFlags(sub)
-	res["update account"] = tmp17
-	tmp18 := new(UpdateInstanceCommand)
-	sub = command.Command("instance", "")
-	tmp18.RegisterFlags(sub)
-	res["update instance"] = tmp18
-	tmp19 := new(UpdateSeriesCommand)
-	sub = command.Command("series", "")
-	tmp19.RegisterFlags(sub)
-	res["update series"] = tmp19
-	tmp20 := new(UpdateUserCommand)
+	tmp4.RegisterFlags(sub)
+	res["show user"] = tmp4
+	command = app.Command("update", "")
+	tmp5 := new(UpdateUserCommand)
 	sub = command.Command("user", "")
-	tmp20.RegisterFlags(sub)
-	res["update user"] = tmp20
+	tmp5.RegisterFlags(sub)
+	res["update user"] = tmp5
 
 	return res
 }

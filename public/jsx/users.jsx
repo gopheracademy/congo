@@ -4,14 +4,15 @@ var Root = React.createClass({
     return {
       users: [],
 	  firstName: "",
-	  lastName: ""
+	  lastName: "",
+	  email: "",
     };
   },
   componentDidMount: function() {
+	var cookies = document.cookie;
+	console.log(cookies)
       var path = this.getPath();
-      var account = this.getAccount(path);
-      console.log(account);
-    var u = "/api/accounts/" + account + "/users"
+    var u = "/api/users"
 	  $.getJSON(u, function(data) {
       this.setState({users: data});
     }.bind(this));
@@ -22,27 +23,22 @@ var Root = React.createClass({
   getPath: function() {
     return window.location.pathname + window.location.search;
   },
-  getAccount: function(path) {
-    var urlPieces = path.split("/");
-    var account = (urlPieces[2]) ? urlPieces[2] : "";
-    return account;
-  },
   handleSubmit: function(e) {
 	e.preventDefault();
       var path = this.getPath();
-      var account = this.getAccount(path);
-    var u = "/api/accounts/" + account + "/users"
+    var u = "/api/users"
     $.ajax({
 	url: u,
-      data: JSON.stringify({"first_name": this.state.firstName, "last_name": this.state.lastName}),
+      data: JSON.stringify({"firstname": this.state.firstName, "lastname": this.state.lastName, "email": this.state.email}),
       method: "POST",
       success: function(data, textStatus, request) {
 		  var newNames = this.state.users;
 		  var href = request.getResponseHeader('Location');
-		   newNames.push({"href": href, "id": href.substr(href.length -1), "first_name": this.state.firstName, "last_name": this.state.lastName});
+		   newNames.push({"href": href, "id": href.substr(href.length -1),"email": this.state.email,  "firstname": this.state.firstName, "lastname": this.state.lastName});
         this.setState({
 			firstName: "",
 			lastName: "",
+			email: "",
           users: newNames
 		});
 	  }.bind(this),
@@ -57,7 +53,7 @@ var Root = React.createClass({
     var listElts = [];
     for(var i = 0; i < this.state.users.length; i++) {
       var user = this.state.users[i];
-      listElts.push(<li key={user.id} className="list-group-item">{user.href} - {user.first_name} {user.last_name}</li>);
+      listElts.push(<li key={user.id} className="list-group-item">{user.href} - {user.firstname} {user.lastname}</li>);
     }
     return (
       <div className="container users">
@@ -73,7 +69,7 @@ var Root = React.createClass({
               <label htmlFor="accountName">User Name</label>
 			  <input type="text" className="form-control" id="firstName" placeholder="First Name" valueLink={this.linkState('firstName')}/> 
 			  <input type="text" className="form-control" id="lastName" placeholder="Last Name"  valueLink={this.linkState('lastName')}/>
-
+			  <input type="text" className="form-control" id="email" placeholder="email"  valueLink={this.linkState('email')}/>
             </div>
             <button className="btn btn-default">Create</button>
           </form>

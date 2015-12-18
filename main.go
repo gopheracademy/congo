@@ -3,24 +3,30 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
+	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/aarondl/tpl"
 	"github.com/codegangsta/negroni"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/handlers"
 	"github.com/gopheracademy/congo/models"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/gopheracademy/congo/util"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/nosurf"
 	"github.com/kelseyhightower/envconfig"
+	_ "github.com/lib/pq"
 	"github.com/raphael/goa"
 	"gopkg.in/authboss.v0"
 	_ "gopkg.in/authboss.v0/auth"
@@ -28,8 +34,32 @@ import (
 	_ "gopkg.in/authboss.v0/lock"
 	_ "gopkg.in/authboss.v0/recover"
 	_ "gopkg.in/authboss.v0/register"
-	_ "gopkg.in/authboss.v0/remember"
+	//	_ "gopkg.in/authboss.v0/remember"
 )
+
+var (
+	Ab        = authboss.New()
+	templates = tpl.Must(tpl.Load("views", "views/partials", "layout.html.tpl", funcs))
+	schemaDec = schema.NewDecoder()
+)
+
+func LayoutData(w http.ResponseWriter, r *http.Request) authboss.HTMLData {
+	currentUserName := ""
+	userInter, err := Ab.CurrentUser(w, r)
+	if userInter != nil && err == nil {
+		currentUserName = userInter.(*models.User).Firstname
+	}
+
+	return authboss.HTMLData{
+		"loggedin":               userInter != nil,
+		"username":               "",
+		"firstname":              "",
+		"lastname":               "",
+		authboss.FlashSuccessKey: Ab.FlashSuccess(w, r),
+		authboss.FlashErrorKey:   Ab.FlashError(w, r),
+		"current_user_name":      currentUserName,
+	}
+}
 
 func main() {
 
@@ -52,42 +82,45 @@ func main() {
 	service.Use(goa.RequestID())
 	service.Use(goa.LogRequest())
 	service.Use(goa.Recover())
+	db, err := connectDB()
+	if err != nil {
+		panic(err)
+	}
 
-	// Mount "account" controller
-	c := NewAccountController(service, models.NewMockAccountStorage())
-	app.MountAccountController(service, c)
-	// Mount "series" controller
-	c2 := NewSeriesController(service, models.NewMockSeriesStorage())
-	app.MountSeriesController(service, c2)
 	// Mount "user" controller
-	c3 := NewUserController(service, models.NewMockUserStorage())
+	c3 := NewUserController(service, models.NewUserDB(db))
 	app.MountUserController(service, c3)
 
-	// Mount "user" controller
-	c4 := NewInstanceController(service, models.NewMockInstanceStorage())
-	app.MountInstanceController(service, c4)
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
 	goarouter := service.HTTPHandler().(*httprouter.Router)
 
 	renderer := handlers.NewRenderRenderer("templates", []string{".html"}, handlers.Funcs, dev)
-	database := NewMemStorer()
 	cookieStoreKey, _ := base64.StdEncoding.DecodeString(`NpEPi8pEjKVjLGJ6kYCS+VTCzi6BUuDzU0wrwXyf5uDPArtlofn2AG6aTMiPmN3C909rsEWMNqJqhIVPGP3Exg==`)
-	sessionStoreKey, _ := base64.StdEncoding.DecodeString(`AbfYwmmt8UCwUuhd9qvfNA9UCuN1cVcKJN1ofbiky6xCyyBj20whe40rJa3Su0WOWLWcPpO1taqJdsEI/65+JA==`)
+	sessionStoreKey, _ := base64.StdEncoding.DecodeString(`Ab.Ywmmt8UCwUuhd9qvfNA9UCuN1cVcKJN1ofbiky6xCyyBj20whe40rJa3Su0WOWLWcPpO1taqJdsEI/65+JA==`)
 	cookieStore = securecookie.New(cookieStoreKey, nil)
 	sessionStore = sessions.NewCookieStore(sessionStoreKey)
-	ab := authboss.New() // Usually store this globally
-	ab.MountPath = "/auth"
-	ab.LogWriter = os.Stdout
-	ab.Storer = database
-	ab.CookieStoreMaker = NewCookieStorer
-	ab.SessionStoreMaker = NewSessionStorer
-	ab.XSRFName = "csrf_token"
-	ab.XSRFMaker = func(_ http.ResponseWriter, r *http.Request) string {
+
+	Ab.MountPath = "/auth"
+	Ab.LogWriter = os.Stdout
+	Ab.Mailer = authboss.LogMailer(os.Stdout)
+	Ab.Storer = models.NewUserDB(db)
+	Ab.ViewsPath = "ab_views"
+	Ab.LayoutDataMaker = LayoutData
+	b, err := ioutil.ReadFile(filepath.Join("views", "layout.html.tpl"))
+	if err != nil {
+		panic(err)
+	}
+	Ab.Layout = template.Must(template.New("layout").Funcs(funcs).Parse(string(b)))
+	Ab.RootURL = `http://localhost:8080`
+	Ab.CookieStoreMaker = NewCookieStorer
+	Ab.SessionStoreMaker = NewSessionStorer
+	Ab.XSRFName = "csrf_token"
+	Ab.XSRFMaker = func(_ http.ResponseWriter, r *http.Request) string {
 		return nosurf.Token(r)
 	}
-	if err := ab.Init(); err != nil {
+	if err := Ab.Init(); err != nil {
 		// Handle error, don't let program continue to run
 		log.Fatalln(err)
 	}
@@ -95,14 +128,11 @@ func main() {
 	// Make sure to put authboss's router somewhere
 	r := mux.NewRouter()
 	// Make sure to put authboss's router somewhere
-	r.Handle("/", handlers.Index(renderer)).Methods("GET")
-	r.Handle("/accounts/{accountID}/users", handlers.Users(renderer)).Methods("GET")
-	r.Handle("/accounts/{accountID}/series/{seriesID}/instances", handlers.Instances(renderer)).Methods("GET")
-	r.Handle("/accounts/{accountID}/series", handlers.Series(renderer)).Methods("GET")
-	r.Handle("/accounts", handlers.Accounts(renderer)).Methods("GET")
+	r.Handle("/", handlers.Index(renderer, LayoutData)).Methods("GET")
+	r.Handle("/users", handlers.Users(renderer, LayoutData)).Methods("GET")
 
 	r.PathPrefix("/api").Handler(goarouter)
-	r.PathPrefix("/auth").Handler(ab.NewRouter())
+	r.PathPrefix("/auth").Handler(Ab.NewRouter())
 
 	n := negroni.Classic()
 	n.UseHandler(r)
@@ -110,112 +140,18 @@ func main() {
 	n.Run(hostStr)
 }
 
+after := func(ctx *authboss.Context) error () {
+
+	pretty.Print(ctx)
+	return nil
+}
+
 var nextUserID uint
-
-type MemStorer struct {
-	Users  map[string]models.User
-	Tokens map[string][]string
-}
-
-func NewMemStorer() *MemStorer {
-	return &MemStorer{
-		Users:  map[string]models.User{},
-		Tokens: make(map[string][]string),
-	}
-}
-
-func (s MemStorer) Create(key string, attr authboss.Attributes) error {
-	var user models.User
-	if err := attr.Bind(&user, true); err != nil {
-		return err
-	}
-
-	user.ID = nextUserID
-	nextUserID++
-
-	s.Users[key] = user
-	fmt.Println("Create")
-	spew.Dump(s.Users)
-	return nil
-}
-
-func (s MemStorer) Put(key string, attr authboss.Attributes) error {
-	return s.Create(key, attr)
-}
-
-func (s MemStorer) Get(key string) (result interface{}, err error) {
-	user, ok := s.Users[key]
-	if !ok {
-		return nil, authboss.ErrUserNotFound
-	}
-
-	return &user, nil
-}
-
-func (s MemStorer) PutOAuth(uid, provider string, attr authboss.Attributes) error {
-	return s.Create(uid+provider, attr)
-}
-
-func (s MemStorer) GetOAuth(uid, provider string) (result interface{}, err error) {
-	user, ok := s.Users[uid+provider]
-	if !ok {
-		return nil, authboss.ErrUserNotFound
-	}
-
-	return &user, nil
-}
-
-func (s MemStorer) AddToken(key, token string) error {
-	s.Tokens[key] = append(s.Tokens[key], token)
-	fmt.Println("AddToken")
-	spew.Dump(s.Tokens)
-	return nil
-}
-
-func (s MemStorer) DelTokens(key string) error {
-	delete(s.Tokens, key)
-	fmt.Println("DelTokens")
-	spew.Dump(s.Tokens)
-	return nil
-}
-
-func (s MemStorer) UseToken(givenKey, token string) error {
-	toks, ok := s.Tokens[givenKey]
-	if !ok {
-		return authboss.ErrTokenNotFound
-	}
-
-	for i, tok := range toks {
-		if tok == token {
-			toks[i], toks[len(toks)-1] = toks[len(toks)-1], toks[i]
-			s.Tokens[givenKey] = toks[:len(toks)-1]
-			return nil
-		}
-	}
-
-	return authboss.ErrTokenNotFound
-}
-
-func (s MemStorer) ConfirmUser(tok string) (result interface{}, err error) {
-	fmt.Println("==============", tok)
-
-	for _, u := range s.Users {
-		if u.ConfirmToken == tok {
-			return &u, nil
-		}
-	}
-
-	return nil, authboss.ErrUserNotFound
-}
-
-func (s MemStorer) RecoverUser(rec string) (result interface{}, err error) {
-	for _, u := range s.Users {
-		if u.RecoverToken == rec {
-			return &u, nil
-		}
-	}
-
-	return nil, authboss.ErrUserNotFound
+var funcs = template.FuncMap{
+	"formatDate": func(date time.Time) string {
+		return date.Format("2006/01/02 03:04pm")
+	},
+	"yield": func() string { return "" },
 }
 
 var cookieStore *securecookie.SecureCookie
@@ -268,7 +204,7 @@ func (s CookieStorer) Del(key string) {
 	http.SetCookie(s.w, cookie)
 }
 
-const sessionCookieName = "ab_blog"
+const sessionCookieName = "Ab.blog"
 
 var sessionStore *sessions.CookieStore
 
@@ -321,4 +257,22 @@ func (s SessionStorer) Del(key string) {
 
 	delete(session.Values, key)
 	session.Save(s.r, s.w)
+}
+
+func connectDB() (gorm.DB, error) {
+	var db gorm.DB
+	constr := fmt.Sprintf("user=%s host=%s port=%d dbname=%s password=%s sslmode=disable",
+		"postgres",
+		"127.0.0.1",
+		5433,
+		"postgres",
+		"postgres")
+
+	var err error
+	db, err = gorm.Open("postgres", constr)
+	if err == nil {
+		db.AutoMigrate(&models.User{})
+	}
+	db.LogMode(true)
+	return db, err
 }

@@ -1,9 +1,14 @@
 package handlers
 
-import "net/http"
+import (
+	"net/http"
 
-func Users(ren Renderer) http.Handler {
+	"gopkg.in/authboss.v0"
+)
+
+func Users(ren Renderer, ld func(w http.ResponseWriter, r *http.Request) authboss.HTMLData) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ren.Render(w, http.StatusOK, "users", struct{}{}, "layout")
+		data := ld(w, r)
+		ren.Render(w, http.StatusOK, "users", data, "layout")
 	})
 }

@@ -12,9 +12,8 @@ import (
 // CreateUserPayload is the data structure used to initialize the user create request body.
 type CreateUserPayload struct {
 	Email     string `json:"email,omitempty"`
-	FirstName string `json:"first_name"`
-	ID        int    `json:"id,omitempty"`
-	LastName  string `json:"last_name,omitempty"`
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname,omitempty"`
 	Role      string `json:"role,omitempty"`
 }
 
@@ -78,9 +77,8 @@ func (c *Client) ShowUser(path string) (*http.Response, error) {
 // UpdateUserPayload is the data structure used to initialize the user update request body.
 type UpdateUserPayload struct {
 	Email     string `json:"email,omitempty"`
-	FirstName string `json:"first_name,omitempty"`
-	ID        int    `json:"id,omitempty"`
-	LastName  string `json:"last_name,omitempty"`
+	Firstname string `json:"firstname,omitempty"`
+	Lastname  string `json:"lastname,omitempty"`
 	Role      string `json:"role,omitempty"`
 }
 

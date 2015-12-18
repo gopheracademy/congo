@@ -5,38 +5,20 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
-// Account is the account resource media type.
-var Account = MediaType("application/vnd.account+json", func() {
-	Description("A tenant account")
-	Reference(AccountModel)
-	Attributes(func() {
-		Attribute("id", Integer, "ID of account")
-		Attribute("href", String, "API href of account")
-		Attribute("name", String, "Name of account")
-	})
-	View("default", func() {
-		Attribute("id")
-		Attribute("href")
-		Attribute("name")
-	})
-	View("link", func() {
-		Attribute("id")
-		Attribute("href")
-		Attribute("name")
-	})
-})
-
 // User is the user resource media type.
 var User = MediaType("application/vnd.user+json", func() {
 	Description("A user belonging to a tenant account")
 	Metadata("mediatype", "123")
 	Reference(UserModel)
 	Attributes(func() {
-		Metadata("test", "123")
 		Attribute("id", Integer, "ID of user")
 		Attribute("href", String, "API href of user")
-		Attribute("first_name", String, "First name of user")
-		Attribute("last_name", String, "Last name of user")
+		Attribute("firstname", String, "First name of user")
+		Attribute("lastname", String, "Last name of user")
+		Attribute("city", String, "City of residence")
+		Attribute("state", String, "State of residence")
+		Attribute("country", String, "Country of residence")
+		Attribute("bio", String, "Biography of user")
 		Attribute("email", String, "Email address of user", func() {
 			Format("email")
 		})
@@ -44,8 +26,8 @@ var User = MediaType("application/vnd.user+json", func() {
 	View("default", func() {
 		Attribute("id")
 		Attribute("href")
-		Attribute("first_name")
-		Attribute("last_name")
+		Attribute("firstname")
+		Attribute("lastname")
 		Attribute("email")
 	})
 	View("link", func() {
@@ -55,77 +37,49 @@ var User = MediaType("application/vnd.user+json", func() {
 	})
 })
 
-// Series represents a recurring conference (GopherCon)
-var Series = MediaType("application/vnd.series+json", func() {
-	Description("A recurring event or conference")
-	Reference(SeriesModel)
+// Review is the review resource mediatype
+var Review = MediaType("application/vnd.review+json", func() {
+	Description("A review is submitted by a reviewer")
+	Reference(ReviewModel)
 	Attributes(func() {
-		Attribute("id", Integer, "ID of series")
-		Attribute("href", String, "API href of series")
-		Attribute("account", Account, "Account that owns bottle")
-		// Attributes below inherit from the base type
-		Attribute("name")
-
-		View("default", func() {
-			Attribute("id")
-			Attribute("href")
-			Attribute("name")
-			Attribute("links")
-		})
-		View("tiny", func() {
-			Attribute("id")
-			Attribute("href")
-			Attribute("name")
-			Attribute("links")
-		})
-		View("full", func() {
-			Attribute("id")
-			Attribute("href")
-			Attribute("name")
-			Attribute("account", func() {
-				View("full")
-			})
-			Attribute("links")
-		})
-		View("link", func() {
-			Attribute("id")
-			Attribute("href")
-			Attribute("name")
-		})
+		Attribute("id", Integer, "ID of user")
+		Attribute("href", String, "API href of user")
+		Attribute("comment", String, "Review comments")
+		Attribute("rating", Integer, "Rating of proposal, from 1-5")
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("href")
+		Attribute("comment")
+		Attribute("rating")
+	})
+	View("link", func() {
+		Attribute("id")
+		Attribute("href")
 	})
 })
 
-// Instance represents a specific occurence of a series (GopherCon 2016)
-var Instance = MediaType("application/vnd.instance+json", func() {
-	Description("An instance of an event or conference")
-	Reference(InstanceModel)
+// Proposal is the proposal resource mediatype
+var Proposal = MediaType("application/vnd.proposal+json", func() {
+	Description("A response to a CFP")
+	Reference(ProposalModel)
 	Attributes(func() {
-		Attribute("id", Integer, "ID of Instance")
-		Attribute("href", String, "API href of instance")
-		Attribute("series", Series, "Series that this instance belongs to")
-		// Attributes below inherit from the base type
-		Attribute("name")
-
-		View("default", func() {
-			Attribute("id")
-			Attribute("href")
-			Attribute("name")
-			Attribute("links")
-		})
-		View("tiny", func() {
-			Attribute("id")
-			Attribute("href")
-			Attribute("name")
-			Attribute("links")
-		})
-		View("full", func() {
-			Attribute("id")
-			Attribute("href")
-			Attribute("name")
-			Attribute("series", func() {
-				View("full")
-			})
-			Attribute("links")
-		})
+		Attribute("id", Integer, "ID of user")
+		Attribute("href", String, "API href of user")
+		Attribute("title", String, "Response title")
+		Attribute("abstract", String, "Response abstract")
+		Attribute("detail", String, "Response detail")
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("href")
+		Attribute("title")
+		Attribute("abstract")
+		Attribute("detail")
+	})
+	View("link", func() {
+		Attribute("id")
+		Attribute("href")
+		Attribute("title")
 	})
 })

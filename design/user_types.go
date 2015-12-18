@@ -5,57 +5,74 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
-// SeriesModel defines the data structure used in the create series request body.
-// It is also the base type for the series media type used to render series.
-var SeriesModel = Type("SeriesModel", func() {
-	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#belongsto", "Account")
-	Attribute("name", func() {
-		MinLength(2)
-	})
-
-})
-
-// InstanceModel defines the data structure used in the create instance request body.
-// It is also the base type for the instance media type used to render instances.
-var InstanceModel = Type("InstanceModel", func() {
-	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#belongsto", "Series")
-	Attribute("name", func() {
-		MinLength(2)
-	})
-
-})
-
-// AccountModel defines the data structure used in the create account request body.
-// It is also the base type for the account media type used to render accounts.
-var AccountModel = Type("AccountModel", func() {
-	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#hasmany", "User,Account")
-	Attribute("name", func() {
-		MinLength(2)
-	})
-})
-
 // UserModel defines the data structure used in the create user request body.
 // It is also the base type for the user media type used to render users.
 var UserModel = Type("UserModel", func() {
 	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#belongsto", "Account")
 	Metadata("github.com/bketelsen/gorma#authboss", "All")
 	Metadata("github.com/bketelsen/gorma#roler", "true")
-	Attribute("id", Integer, func() {
-	})
-	Attribute("first_name", func() {
+	Metadata("github.com/bketelsen/gorma#hasmany", "Proposal,Review")
+	Attribute("firstname", func() {
 		MinLength(2)
 	})
-	Attribute("last_name", func() {
+	Attribute("lastname", func() {
+		MinLength(2)
+	})
+	Attribute("city", func() {
+		MinLength(2)
+	})
+	Attribute("state", func() {
+		MinLength(2)
+	})
+	Attribute("country", func() {
 		MinLength(2)
 	})
 	Attribute("email", func() {
 		MinLength(2)
 	})
+	Attribute("bio", func() {
+		MaxLength(500)
+	})
 	Attribute("role", func() {
 	})
 
+})
+
+// ProposalModel defines the data structure used in the create proposal request body.
+// It is also the base type for the proposal media type used to render users.
+var ProposalModel = Type("ProposalModel", func() {
+	Metadata("github.com/bketelsen/gorma", "Model")
+	Metadata("github.com/bketelsen/gorma#belongsto", "User")
+	Metadata("github.com/bketelsen/gorma#hasmany", "Review")
+	Attribute("firstname", func() {
+		MinLength(2)
+	})
+	Attribute("title", func() {
+		MinLength(10)
+		MaxLength(200)
+	})
+	Attribute("abstract", func() {
+		MinLength(50)
+		MaxLength(500)
+	})
+	Attribute("detail", func() {
+		MinLength(100)
+		MaxLength(2000)
+	})
+	Attribute("withdrawn", Boolean)
+})
+
+// ReviewModel defines the data structure used to create a review request body
+// It is also the base type for the review media type used to render reviews
+var ReviewModel = Type("ReviewModel", func() {
+	Metadata("github.com/bketelsen/gorma", "Model")
+	Metadata("github.com/bketelsen/gorma#belongsto", "Proposal,User")
+	Attribute("comment", func() {
+		MinLength(10)
+		MaxLength(200)
+	})
+	Attribute("rating", Integer, func() {
+		Minimum(1)
+		Maximum(5)
+	})
 })

@@ -14,124 +14,200 @@ package app
 
 import "github.com/raphael/goa"
 
-// A tenant account
-// Identifier: application/vnd.account+json
-type Account struct {
-	// API href of account
+// A response to a CFP
+// Identifier: application/vnd.proposal+json
+type Proposal struct {
+	// Response abstract
+	Abstract string
+	// Response detail
+	Detail string
+	// API href of user
 	Href string
-	// ID of account
+	// ID of user
 	ID int
-	// Name of account
-	Name string
+	// Response title
+	Title string
 }
 
-// Account views
-type AccountViewEnum string
+// Proposal views
+type ProposalViewEnum string
 
 const (
-	// Account default view
-	AccountDefaultView AccountViewEnum = "default"
-	// Account link view
-	AccountLinkView AccountViewEnum = "link"
+	// Proposal default view
+	ProposalDefaultView ProposalViewEnum = "default"
+	// Proposal link view
+	ProposalLinkView ProposalViewEnum = "link"
 )
 
-// LoadAccount loads raw data into an instance of Account running all the
+// LoadProposal loads raw data into an instance of Proposal running all the
 // validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
 // into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
 // complete list of supported data types.
-func LoadAccount(raw interface{}) (res *Account, err error) {
-	res, err = UnmarshalAccount(raw, err)
+func LoadProposal(raw interface{}) (res *Proposal, err error) {
+	res, err = UnmarshalProposal(raw, err)
 	return
 }
 
-// Dump produces raw data from an instance of Account running all the
-// validations. See LoadAccount for the definition of raw data.
-func (mt *Account) Dump(view AccountViewEnum) (res map[string]interface{}, err error) {
-	if view == AccountDefaultView {
-		res, err = MarshalAccount(mt, err)
+// Dump produces raw data from an instance of Proposal running all the
+// validations. See LoadProposal for the definition of raw data.
+func (mt *Proposal) Dump(view ProposalViewEnum) (res map[string]interface{}, err error) {
+	if view == ProposalDefaultView {
+		res, err = MarshalProposal(mt, err)
 	}
-	if view == AccountLinkView {
-		res, err = MarshalAccountLink(mt, err)
+	if view == ProposalLinkView {
+		res, err = MarshalProposalLink(mt, err)
 	}
 	return
 }
 
 // Validate validates the media type instance.
-func (mt *Account) Validate() (err error) {
-	if len(mt.Name) < 2 {
-		err = goa.InvalidLengthError(`response.name`, mt.Name, 2, true, err)
+func (mt *Proposal) Validate() (err error) {
+	if len(mt.Abstract) < 50 {
+		err = goa.InvalidLengthError(`response.abstract`, mt.Abstract, 50, true, err)
+	}
+	if len(mt.Abstract) > 500 {
+		err = goa.InvalidLengthError(`response.abstract`, mt.Abstract, 500, false, err)
+	}
+	if len(mt.Detail) < 100 {
+		err = goa.InvalidLengthError(`response.detail`, mt.Detail, 100, true, err)
+	}
+	if len(mt.Detail) > 2000 {
+		err = goa.InvalidLengthError(`response.detail`, mt.Detail, 2000, false, err)
+	}
+	if len(mt.Title) < 10 {
+		err = goa.InvalidLengthError(`response.title`, mt.Title, 10, true, err)
+	}
+	if len(mt.Title) > 200 {
+		err = goa.InvalidLengthError(`response.title`, mt.Title, 200, false, err)
 	}
 	return
 }
 
-// MarshalAccount validates and renders an instance of Account into a interface{}
+// MarshalProposal validates and renders an instance of Proposal into a interface{}
 // using view "default".
-func MarshalAccount(source *Account, inErr error) (target map[string]interface{}, err error) {
+func MarshalProposal(source *Proposal, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
+	if len(source.Abstract) < 50 {
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 50, true, err)
 	}
-	tmp17 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
+	if len(source.Abstract) > 500 {
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 500, false, err)
 	}
-	target = tmp17
+	if len(source.Detail) < 100 {
+		err = goa.InvalidLengthError(`.detail`, source.Detail, 100, true, err)
+	}
+	if len(source.Detail) > 2000 {
+		err = goa.InvalidLengthError(`.detail`, source.Detail, 2000, false, err)
+	}
+	if len(source.Title) < 10 {
+		err = goa.InvalidLengthError(`.title`, source.Title, 10, true, err)
+	}
+	if len(source.Title) > 200 {
+		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
+	}
+	tmp31 := map[string]interface{}{
+		"abstract": source.Abstract,
+		"detail":   source.Detail,
+		"href":     source.Href,
+		"id":       source.ID,
+		"title":    source.Title,
+	}
+	target = tmp31
 	return
 }
 
-// MarshalAccountLink validates and renders an instance of Account into a interface{}
+// MarshalProposalLink validates and renders an instance of Proposal into a interface{}
 // using view "link".
-func MarshalAccountLink(source *Account, inErr error) (target map[string]interface{}, err error) {
+func MarshalProposalLink(source *Proposal, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
+	if len(source.Title) < 10 {
+		err = goa.InvalidLengthError(`.title`, source.Title, 10, true, err)
 	}
-	tmp18 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
+	if len(source.Title) > 200 {
+		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
 	}
-	target = tmp18
+	tmp32 := map[string]interface{}{
+		"href":  source.Href,
+		"id":    source.ID,
+		"title": source.Title,
+	}
+	target = tmp32
 	return
 }
 
-// UnmarshalAccount unmarshals and validates a raw interface{} into an instance of Account
-func UnmarshalAccount(source interface{}, inErr error) (target *Account, err error) {
+// UnmarshalProposal unmarshals and validates a raw interface{} into an instance of Proposal
+func UnmarshalProposal(source interface{}, inErr error) (target *Proposal, err error) {
 	err = inErr
 	if val, ok := source.(map[string]interface{}); ok {
-		target = new(Account)
-		if v, ok := val["href"]; ok {
-			var tmp19 string
+		target = new(Proposal)
+		if v, ok := val["abstract"]; ok {
+			var tmp33 string
 			if val, ok := v.(string); ok {
-				tmp19 = val
+				tmp33 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Abstract`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp33) < 50 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp33, 50, true, err)
+				}
+				if len(tmp33) > 500 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp33, 500, false, err)
+				}
+			}
+			target.Abstract = tmp33
+		}
+		if v, ok := val["detail"]; ok {
+			var tmp34 string
+			if val, ok := v.(string); ok {
+				tmp34 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Detail`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp34) < 100 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp34, 100, true, err)
+				}
+				if len(tmp34) > 2000 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp34, 2000, false, err)
+				}
+			}
+			target.Detail = tmp34
+		}
+		if v, ok := val["href"]; ok {
+			var tmp35 string
+			if val, ok := v.(string); ok {
+				tmp35 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
 			}
-			target.Href = tmp19
+			target.Href = tmp35
 		}
 		if v, ok := val["id"]; ok {
-			var tmp20 int
+			var tmp36 int
 			if f, ok := v.(float64); ok {
-				tmp20 = int(f)
+				tmp36 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
 			}
-			target.ID = tmp20
+			target.ID = tmp36
 		}
-		if v, ok := val["name"]; ok {
-			var tmp21 string
+		if v, ok := val["title"]; ok {
+			var tmp37 string
 			if val, ok := v.(string); ok {
-				tmp21 = val
+				tmp37 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Title`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp21) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp21, 2, true, err)
+				if len(tmp37) < 10 {
+					err = goa.InvalidLengthError(`load.Title`, tmp37, 10, true, err)
+				}
+				if len(tmp37) > 200 {
+					err = goa.InvalidLengthError(`load.Title`, tmp37, 200, false, err)
 				}
 			}
-			target.Name = tmp21
+			target.Title = tmp37
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -139,59 +215,74 @@ func UnmarshalAccount(source interface{}, inErr error) (target *Account, err err
 	return
 }
 
-// AccountCollection media type
-// Identifier: application/vnd.account+json; type=collection
-type AccountCollection []*Account
+// ProposalCollection media type
+// Identifier: application/vnd.proposal+json; type=collection
+type ProposalCollection []*Proposal
 
-// LoadAccountCollection loads raw data into an instance of AccountCollection running all the
+// LoadProposalCollection loads raw data into an instance of ProposalCollection running all the
 // validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
 // into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
 // complete list of supported data types.
-func LoadAccountCollection(raw interface{}) (res AccountCollection, err error) {
-	res, err = UnmarshalAccountCollection(raw, err)
+func LoadProposalCollection(raw interface{}) (res ProposalCollection, err error) {
+	res, err = UnmarshalProposalCollection(raw, err)
 	return
 }
 
-// Dump produces raw data from an instance of AccountCollection running all the
-// validations. See LoadAccountCollection for the definition of raw data.
-func (mt AccountCollection) Dump() (res []map[string]interface{}, err error) {
+// Dump produces raw data from an instance of ProposalCollection running all the
+// validations. See LoadProposalCollection for the definition of raw data.
+func (mt ProposalCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp22 := range mt {
-		var tmp23 map[string]interface{}
-		tmp23, err = MarshalAccount(tmp22, err)
-		res[i] = tmp23
+	for i, tmp38 := range mt {
+		var tmp39 map[string]interface{}
+		tmp39, err = MarshalProposal(tmp38, err)
+		res[i] = tmp39
 	}
 	return
 }
 
 // Validate validates the media type instance.
-func (mt AccountCollection) Validate() (err error) {
+func (mt ProposalCollection) Validate() (err error) {
 	for _, e := range mt {
-		if len(e.Name) < 2 {
-			err = goa.InvalidLengthError(`response[*].name`, e.Name, 2, true, err)
+		if len(e.Abstract) < 50 {
+			err = goa.InvalidLengthError(`response[*].abstract`, e.Abstract, 50, true, err)
+		}
+		if len(e.Abstract) > 500 {
+			err = goa.InvalidLengthError(`response[*].abstract`, e.Abstract, 500, false, err)
+		}
+		if len(e.Detail) < 100 {
+			err = goa.InvalidLengthError(`response[*].detail`, e.Detail, 100, true, err)
+		}
+		if len(e.Detail) > 2000 {
+			err = goa.InvalidLengthError(`response[*].detail`, e.Detail, 2000, false, err)
+		}
+		if len(e.Title) < 10 {
+			err = goa.InvalidLengthError(`response[*].title`, e.Title, 10, true, err)
+		}
+		if len(e.Title) > 200 {
+			err = goa.InvalidLengthError(`response[*].title`, e.Title, 200, false, err)
 		}
 	}
 	return
 }
 
-// MarshalAccountCollection validates and renders an instance of AccountCollection into a interface{}
+// MarshalProposalCollection validates and renders an instance of ProposalCollection into a interface{}
 // using view "default".
-func MarshalAccountCollection(source AccountCollection, inErr error) (target []map[string]interface{}, err error) {
+func MarshalProposalCollection(source ProposalCollection, inErr error) (target []map[string]interface{}, err error) {
 	err = inErr
 	target = make([]map[string]interface{}, len(source))
 	for i, res := range source {
-		target[i], err = MarshalAccount(res, err)
+		target[i], err = MarshalProposal(res, err)
 	}
 	return
 }
 
-// UnmarshalAccountCollection unmarshals and validates a raw interface{} into an instance of AccountCollection
-func UnmarshalAccountCollection(source interface{}, inErr error) (target AccountCollection, err error) {
+// UnmarshalProposalCollection unmarshals and validates a raw interface{} into an instance of ProposalCollection
+func UnmarshalProposalCollection(source interface{}, inErr error) (target ProposalCollection, err error) {
 	err = inErr
 	if val, ok := source.([]interface{}); ok {
-		target = make([]*Account, len(val))
-		for i, v := range val {
-			target[i], err = UnmarshalAccount(v, err)
+		target = make([]*Proposal, len(val))
+		for tmp40, v := range val {
+			target[tmp40], err = UnmarshalProposal(v, err)
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)
@@ -199,436 +290,161 @@ func UnmarshalAccountCollection(source interface{}, inErr error) (target Account
 	return
 }
 
-// An instance of an event or conference
-// Identifier: application/vnd.instance+json
-type Instance struct {
-	// API href of instance
+// A review is submitted by a reviewer
+// Identifier: application/vnd.review+json
+type Review struct {
+	// Review comments
+	Comment string
+	// API href of user
 	Href string
-	// ID of Instance
-	ID   int
-	Name string
-	// Series that this instance belongs to
-	Series *Series
+	// ID of user
+	ID int
+	// Rating of proposal, from 1-5
+	Rating int
 }
 
-// Instance views
-type InstanceViewEnum string
+// Review views
+type ReviewViewEnum string
 
 const (
-	// Instance default view
-	InstanceDefaultView InstanceViewEnum = "default"
-	// Instance full view
-	InstanceFullView InstanceViewEnum = "full"
-	// Instance tiny view
-	InstanceTinyView InstanceViewEnum = "tiny"
+	// Review default view
+	ReviewDefaultView ReviewViewEnum = "default"
+	// Review link view
+	ReviewLinkView ReviewViewEnum = "link"
 )
 
-// LoadInstance loads raw data into an instance of Instance running all the
+// LoadReview loads raw data into an instance of Review running all the
 // validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
 // into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
 // complete list of supported data types.
-func LoadInstance(raw interface{}) (res *Instance, err error) {
-	res, err = UnmarshalInstance(raw, err)
+func LoadReview(raw interface{}) (res *Review, err error) {
+	res, err = UnmarshalReview(raw, err)
 	return
 }
 
-// Dump produces raw data from an instance of Instance running all the
-// validations. See LoadInstance for the definition of raw data.
-func (mt *Instance) Dump(view InstanceViewEnum) (res map[string]interface{}, err error) {
-	if view == InstanceDefaultView {
-		res, err = MarshalInstance(mt, err)
+// Dump produces raw data from an instance of Review running all the
+// validations. See LoadReview for the definition of raw data.
+func (mt *Review) Dump(view ReviewViewEnum) (res map[string]interface{}, err error) {
+	if view == ReviewDefaultView {
+		res, err = MarshalReview(mt, err)
 	}
-	if view == InstanceFullView {
-		res, err = MarshalInstanceFull(mt, err)
-	}
-	if view == InstanceTinyView {
-		res, err = MarshalInstanceTiny(mt, err)
+	if view == ReviewLinkView {
+		res, err = MarshalReviewLink(mt, err)
 	}
 	return
 }
 
 // Validate validates the media type instance.
-func (mt *Instance) Validate() (err error) {
-	if len(mt.Name) < 2 {
-		err = goa.InvalidLengthError(`response.name`, mt.Name, 2, true, err)
+func (mt *Review) Validate() (err error) {
+	if len(mt.Comment) < 10 {
+		err = goa.InvalidLengthError(`response.comment`, mt.Comment, 10, true, err)
 	}
-	if len(mt.Series.Account.Name) < 2 {
-		err = goa.InvalidLengthError(`response.series.account.name`, mt.Series.Account.Name, 2, true, err)
+	if len(mt.Comment) > 200 {
+		err = goa.InvalidLengthError(`response.comment`, mt.Comment, 200, false, err)
 	}
-	if len(mt.Series.Name) < 2 {
-		err = goa.InvalidLengthError(`response.series.name`, mt.Series.Name, 2, true, err)
+	if mt.Rating < 1 {
+		err = goa.InvalidRangeError(`response.rating`, mt.Rating, 1, true, err)
+	}
+	if mt.Rating > 5 {
+		err = goa.InvalidRangeError(`response.rating`, mt.Rating, 5, false, err)
 	}
 	return
 }
 
-// MarshalInstance validates and renders an instance of Instance into a interface{}
+// MarshalReview validates and renders an instance of Review into a interface{}
 // using view "default".
-func MarshalInstance(source *Instance, inErr error) (target map[string]interface{}, err error) {
+func MarshalReview(source *Review, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
+	if len(source.Comment) < 10 {
+		err = goa.InvalidLengthError(`.comment`, source.Comment, 10, true, err)
 	}
-	tmp24 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
+	if len(source.Comment) > 200 {
+		err = goa.InvalidLengthError(`.comment`, source.Comment, 200, false, err)
 	}
-	target = tmp24
+	if source.Rating < 1 {
+		err = goa.InvalidRangeError(`.rating`, source.Rating, 1, true, err)
+	}
+	if source.Rating > 5 {
+		err = goa.InvalidRangeError(`.rating`, source.Rating, 5, false, err)
+	}
+	tmp41 := map[string]interface{}{
+		"comment": source.Comment,
+		"href":    source.Href,
+		"id":      source.ID,
+		"rating":  source.Rating,
+	}
+	target = tmp41
 	return
 }
 
-// MarshalInstanceFull validates and renders an instance of Instance into a interface{}
-// using view "full".
-func MarshalInstanceFull(source *Instance, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
-	}
-	tmp25 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
-	}
-	if source.Series != nil {
-		tmp25["series"], err = MarshalSeries(source.Series, err)
-	}
-	target = tmp25
-	return
-}
-
-// MarshalInstanceTiny validates and renders an instance of Instance into a interface{}
-// using view "tiny".
-func MarshalInstanceTiny(source *Instance, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
-	}
-	tmp26 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
-	}
-	target = tmp26
-	return
-}
-
-// UnmarshalInstance unmarshals and validates a raw interface{} into an instance of Instance
-func UnmarshalInstance(source interface{}, inErr error) (target *Instance, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(Instance)
-		if v, ok := val["href"]; ok {
-			var tmp27 string
-			if val, ok := v.(string); ok {
-				tmp27 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
-			}
-			target.Href = tmp27
-		}
-		if v, ok := val["id"]; ok {
-			var tmp28 int
-			if f, ok := v.(float64); ok {
-				tmp28 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = tmp28
-		}
-		if v, ok := val["name"]; ok {
-			var tmp29 string
-			if val, ok := v.(string); ok {
-				tmp29 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp29) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp29, 2, true, err)
-				}
-			}
-			target.Name = tmp29
-		}
-		if v, ok := val["series"]; ok {
-			var tmp30 *Series
-			tmp30, err = UnmarshalSeries(v, err)
-			target.Series = tmp30
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
-	}
-	return
-}
-
-// InstanceCollection media type
-// Identifier: application/vnd.instance+json; type=collection
-type InstanceCollection []*Instance
-
-// InstanceCollection views
-type InstanceCollectionViewEnum string
-
-const (
-	// InstanceCollection default view
-	InstanceCollectionDefaultView InstanceCollectionViewEnum = "default"
-	// InstanceCollection tiny view
-	InstanceCollectionTinyView InstanceCollectionViewEnum = "tiny"
-)
-
-// LoadInstanceCollection loads raw data into an instance of InstanceCollection running all the
-// validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
-// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
-// complete list of supported data types.
-func LoadInstanceCollection(raw interface{}) (res InstanceCollection, err error) {
-	res, err = UnmarshalInstanceCollection(raw, err)
-	return
-}
-
-// Dump produces raw data from an instance of InstanceCollection running all the
-// validations. See LoadInstanceCollection for the definition of raw data.
-func (mt InstanceCollection) Dump(view InstanceCollectionViewEnum) (res []map[string]interface{}, err error) {
-	if view == InstanceCollectionDefaultView {
-		res = make([]map[string]interface{}, len(mt))
-		for i, tmp31 := range mt {
-			var tmp32 map[string]interface{}
-			tmp32, err = MarshalInstance(tmp31, err)
-			res[i] = tmp32
-		}
-	}
-	if view == InstanceCollectionTinyView {
-		res = make([]map[string]interface{}, len(mt))
-		for i, tmp33 := range mt {
-			var tmp34 map[string]interface{}
-			tmp34, err = MarshalInstanceTiny(tmp33, err)
-			res[i] = tmp34
-		}
-	}
-	return
-}
-
-// Validate validates the media type instance.
-func (mt InstanceCollection) Validate() (err error) {
-	for _, e := range mt {
-		if len(e.Name) < 2 {
-			err = goa.InvalidLengthError(`response[*].name`, e.Name, 2, true, err)
-		}
-		if len(e.Series.Account.Name) < 2 {
-			err = goa.InvalidLengthError(`response[*].series.account.name`, e.Series.Account.Name, 2, true, err)
-		}
-		if len(e.Series.Name) < 2 {
-			err = goa.InvalidLengthError(`response[*].series.name`, e.Series.Name, 2, true, err)
-		}
-	}
-	return
-}
-
-// MarshalInstanceCollection validates and renders an instance of InstanceCollection into a interface{}
-// using view "default".
-func MarshalInstanceCollection(source InstanceCollection, inErr error) (target []map[string]interface{}, err error) {
-	err = inErr
-	target = make([]map[string]interface{}, len(source))
-	for i, res := range source {
-		target[i], err = MarshalInstance(res, err)
-	}
-	return
-}
-
-// MarshalInstanceCollectionTiny validates and renders an instance of InstanceCollection into a interface{}
-// using view "tiny".
-func MarshalInstanceCollectionTiny(source InstanceCollection, inErr error) (target []map[string]interface{}, err error) {
-	err = inErr
-	target = make([]map[string]interface{}, len(source))
-	for i, res := range source {
-		target[i], err = MarshalInstanceTiny(res, err)
-	}
-	return
-}
-
-// UnmarshalInstanceCollection unmarshals and validates a raw interface{} into an instance of InstanceCollection
-func UnmarshalInstanceCollection(source interface{}, inErr error) (target InstanceCollection, err error) {
-	err = inErr
-	if val, ok := source.([]interface{}); ok {
-		target = make([]*Instance, len(val))
-		for i, v := range val {
-			target[i], err = UnmarshalInstance(v, err)
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)
-	}
-	return
-}
-
-// A recurring event or conference
-// Identifier: application/vnd.series+json
-type Series struct {
-	// Account that owns bottle
-	Account *Account
-	// API href of series
-	Href string
-	// ID of series
-	ID   int
-	Name string
-}
-
-// Series views
-type SeriesViewEnum string
-
-const (
-	// Series default view
-	SeriesDefaultView SeriesViewEnum = "default"
-	// Series full view
-	SeriesFullView SeriesViewEnum = "full"
-	// Series link view
-	SeriesLinkView SeriesViewEnum = "link"
-	// Series tiny view
-	SeriesTinyView SeriesViewEnum = "tiny"
-)
-
-// LoadSeries loads raw data into an instance of Series running all the
-// validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
-// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
-// complete list of supported data types.
-func LoadSeries(raw interface{}) (res *Series, err error) {
-	res, err = UnmarshalSeries(raw, err)
-	return
-}
-
-// Dump produces raw data from an instance of Series running all the
-// validations. See LoadSeries for the definition of raw data.
-func (mt *Series) Dump(view SeriesViewEnum) (res map[string]interface{}, err error) {
-	if view == SeriesDefaultView {
-		res, err = MarshalSeries(mt, err)
-	}
-	if view == SeriesFullView {
-		res, err = MarshalSeriesFull(mt, err)
-	}
-	if view == SeriesLinkView {
-		res, err = MarshalSeriesLink(mt, err)
-	}
-	if view == SeriesTinyView {
-		res, err = MarshalSeriesTiny(mt, err)
-	}
-	return
-}
-
-// Validate validates the media type instance.
-func (mt *Series) Validate() (err error) {
-	if len(mt.Account.Name) < 2 {
-		err = goa.InvalidLengthError(`response.account.name`, mt.Account.Name, 2, true, err)
-	}
-	if len(mt.Name) < 2 {
-		err = goa.InvalidLengthError(`response.name`, mt.Name, 2, true, err)
-	}
-	return
-}
-
-// MarshalSeries validates and renders an instance of Series into a interface{}
-// using view "default".
-func MarshalSeries(source *Series, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
-	}
-	tmp35 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
-	}
-	target = tmp35
-	return
-}
-
-// MarshalSeriesFull validates and renders an instance of Series into a interface{}
-// using view "full".
-func MarshalSeriesFull(source *Series, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
-	}
-	tmp36 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
-	}
-	if source.Account != nil {
-		tmp36["account"], err = MarshalAccount(source.Account, err)
-	}
-	target = tmp36
-	return
-}
-
-// MarshalSeriesLink validates and renders an instance of Series into a interface{}
+// MarshalReviewLink validates and renders an instance of Review into a interface{}
 // using view "link".
-func MarshalSeriesLink(source *Series, inErr error) (target map[string]interface{}, err error) {
+func MarshalReviewLink(source *Review, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
-	}
-	tmp37 := map[string]interface{}{
+	tmp42 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
-		"name": source.Name,
 	}
-	target = tmp37
+	target = tmp42
 	return
 }
 
-// MarshalSeriesTiny validates and renders an instance of Series into a interface{}
-// using view "tiny".
-func MarshalSeriesTiny(source *Series, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Name) < 2 {
-		err = goa.InvalidLengthError(`.name`, source.Name, 2, true, err)
-	}
-	tmp38 := map[string]interface{}{
-		"href": source.Href,
-		"id":   source.ID,
-		"name": source.Name,
-	}
-	target = tmp38
-	return
-}
-
-// UnmarshalSeries unmarshals and validates a raw interface{} into an instance of Series
-func UnmarshalSeries(source interface{}, inErr error) (target *Series, err error) {
+// UnmarshalReview unmarshals and validates a raw interface{} into an instance of Review
+func UnmarshalReview(source interface{}, inErr error) (target *Review, err error) {
 	err = inErr
 	if val, ok := source.(map[string]interface{}); ok {
-		target = new(Series)
-		if v, ok := val["account"]; ok {
-			var tmp39 *Account
-			tmp39, err = UnmarshalAccount(v, err)
-			target.Account = tmp39
+		target = new(Review)
+		if v, ok := val["comment"]; ok {
+			var tmp43 string
+			if val, ok := v.(string); ok {
+				tmp43 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Comment`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp43) < 10 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp43, 10, true, err)
+				}
+				if len(tmp43) > 200 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp43, 200, false, err)
+				}
+			}
+			target.Comment = tmp43
 		}
 		if v, ok := val["href"]; ok {
-			var tmp40 string
+			var tmp44 string
 			if val, ok := v.(string); ok {
-				tmp40 = val
+				tmp44 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
 			}
-			target.Href = tmp40
+			target.Href = tmp44
 		}
 		if v, ok := val["id"]; ok {
-			var tmp41 int
+			var tmp45 int
 			if f, ok := v.(float64); ok {
-				tmp41 = int(f)
+				tmp45 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
 			}
-			target.ID = tmp41
+			target.ID = tmp45
 		}
-		if v, ok := val["name"]; ok {
-			var tmp42 string
-			if val, ok := v.(string); ok {
-				tmp42 = val
+		if v, ok := val["rating"]; ok {
+			var tmp46 int
+			if f, ok := v.(float64); ok {
+				tmp46 = int(f)
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.Name`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if len(tmp42) < 2 {
-					err = goa.InvalidLengthError(`load.Name`, tmp42, 2, true, err)
+				if tmp46 < 1 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp46, 1, true, err)
+				}
+				if tmp46 > 5 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp46, 5, false, err)
 				}
 			}
-			target.Name = tmp42
+			target.Rating = tmp46
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -636,93 +452,68 @@ func UnmarshalSeries(source interface{}, inErr error) (target *Series, err error
 	return
 }
 
-// SeriesCollection media type
-// Identifier: application/vnd.series+json; type=collection
-type SeriesCollection []*Series
+// ReviewCollection media type
+// Identifier: application/vnd.review+json; type=collection
+type ReviewCollection []*Review
 
-// SeriesCollection views
-type SeriesCollectionViewEnum string
-
-const (
-	// SeriesCollection default view
-	SeriesCollectionDefaultView SeriesCollectionViewEnum = "default"
-	// SeriesCollection tiny view
-	SeriesCollectionTinyView SeriesCollectionViewEnum = "tiny"
-)
-
-// LoadSeriesCollection loads raw data into an instance of SeriesCollection running all the
+// LoadReviewCollection loads raw data into an instance of ReviewCollection running all the
 // validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
 // into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
 // complete list of supported data types.
-func LoadSeriesCollection(raw interface{}) (res SeriesCollection, err error) {
-	res, err = UnmarshalSeriesCollection(raw, err)
+func LoadReviewCollection(raw interface{}) (res ReviewCollection, err error) {
+	res, err = UnmarshalReviewCollection(raw, err)
 	return
 }
 
-// Dump produces raw data from an instance of SeriesCollection running all the
-// validations. See LoadSeriesCollection for the definition of raw data.
-func (mt SeriesCollection) Dump(view SeriesCollectionViewEnum) (res []map[string]interface{}, err error) {
-	if view == SeriesCollectionDefaultView {
-		res = make([]map[string]interface{}, len(mt))
-		for i, tmp43 := range mt {
-			var tmp44 map[string]interface{}
-			tmp44, err = MarshalSeries(tmp43, err)
-			res[i] = tmp44
-		}
-	}
-	if view == SeriesCollectionTinyView {
-		res = make([]map[string]interface{}, len(mt))
-		for i, tmp45 := range mt {
-			var tmp46 map[string]interface{}
-			tmp46, err = MarshalSeriesTiny(tmp45, err)
-			res[i] = tmp46
-		}
+// Dump produces raw data from an instance of ReviewCollection running all the
+// validations. See LoadReviewCollection for the definition of raw data.
+func (mt ReviewCollection) Dump() (res []map[string]interface{}, err error) {
+	res = make([]map[string]interface{}, len(mt))
+	for i, tmp47 := range mt {
+		var tmp48 map[string]interface{}
+		tmp48, err = MarshalReview(tmp47, err)
+		res[i] = tmp48
 	}
 	return
 }
 
 // Validate validates the media type instance.
-func (mt SeriesCollection) Validate() (err error) {
+func (mt ReviewCollection) Validate() (err error) {
 	for _, e := range mt {
-		if len(e.Account.Name) < 2 {
-			err = goa.InvalidLengthError(`response[*].account.name`, e.Account.Name, 2, true, err)
+		if len(e.Comment) < 10 {
+			err = goa.InvalidLengthError(`response[*].comment`, e.Comment, 10, true, err)
 		}
-		if len(e.Name) < 2 {
-			err = goa.InvalidLengthError(`response[*].name`, e.Name, 2, true, err)
+		if len(e.Comment) > 200 {
+			err = goa.InvalidLengthError(`response[*].comment`, e.Comment, 200, false, err)
+		}
+		if e.Rating < 1 {
+			err = goa.InvalidRangeError(`response[*].rating`, e.Rating, 1, true, err)
+		}
+		if e.Rating > 5 {
+			err = goa.InvalidRangeError(`response[*].rating`, e.Rating, 5, false, err)
 		}
 	}
 	return
 }
 
-// MarshalSeriesCollection validates and renders an instance of SeriesCollection into a interface{}
+// MarshalReviewCollection validates and renders an instance of ReviewCollection into a interface{}
 // using view "default".
-func MarshalSeriesCollection(source SeriesCollection, inErr error) (target []map[string]interface{}, err error) {
+func MarshalReviewCollection(source ReviewCollection, inErr error) (target []map[string]interface{}, err error) {
 	err = inErr
 	target = make([]map[string]interface{}, len(source))
 	for i, res := range source {
-		target[i], err = MarshalSeries(res, err)
+		target[i], err = MarshalReview(res, err)
 	}
 	return
 }
 
-// MarshalSeriesCollectionTiny validates and renders an instance of SeriesCollection into a interface{}
-// using view "tiny".
-func MarshalSeriesCollectionTiny(source SeriesCollection, inErr error) (target []map[string]interface{}, err error) {
-	err = inErr
-	target = make([]map[string]interface{}, len(source))
-	for i, res := range source {
-		target[i], err = MarshalSeriesTiny(res, err)
-	}
-	return
-}
-
-// UnmarshalSeriesCollection unmarshals and validates a raw interface{} into an instance of SeriesCollection
-func UnmarshalSeriesCollection(source interface{}, inErr error) (target SeriesCollection, err error) {
+// UnmarshalReviewCollection unmarshals and validates a raw interface{} into an instance of ReviewCollection
+func UnmarshalReviewCollection(source interface{}, inErr error) (target ReviewCollection, err error) {
 	err = inErr
 	if val, ok := source.([]interface{}); ok {
-		target = make([]*Series, len(val))
-		for i, v := range val {
-			target[i], err = UnmarshalSeries(v, err)
+		target = make([]*Review, len(val))
+		for tmp49, v := range val {
+			target[tmp49], err = UnmarshalReview(v, err)
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)
@@ -733,16 +524,24 @@ func UnmarshalSeriesCollection(source interface{}, inErr error) (target SeriesCo
 // A user belonging to a tenant account
 // Identifier: application/vnd.user+json
 type User struct {
+	// Biography of user
+	Bio string
+	// City of residence
+	City string
+	// Country of residence
+	Country string
 	// Email address of user
 	Email string
 	// First name of user
-	FirstName string
+	Firstname string
 	// API href of user
 	Href string
 	// ID of user
 	ID int
 	// Last name of user
-	LastName string
+	Lastname string
+	// State of residence
+	State string
 }
 
 // User views
@@ -778,6 +577,15 @@ func (mt *User) Dump(view UserViewEnum) (res map[string]interface{}, err error) 
 
 // Validate validates the media type instance.
 func (mt *User) Validate() (err error) {
+	if len(mt.Bio) > 500 {
+		err = goa.InvalidLengthError(`response.bio`, mt.Bio, 500, false, err)
+	}
+	if len(mt.City) < 2 {
+		err = goa.InvalidLengthError(`response.city`, mt.City, 2, true, err)
+	}
+	if len(mt.Country) < 2 {
+		err = goa.InvalidLengthError(`response.country`, mt.Country, 2, true, err)
+	}
 	if len(mt.Email) < 2 {
 		err = goa.InvalidLengthError(`response.email`, mt.Email, 2, true, err)
 	}
@@ -786,11 +594,14 @@ func (mt *User) Validate() (err error) {
 			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
 		}
 	}
-	if len(mt.FirstName) < 2 {
-		err = goa.InvalidLengthError(`response.first_name`, mt.FirstName, 2, true, err)
+	if len(mt.Firstname) < 2 {
+		err = goa.InvalidLengthError(`response.firstname`, mt.Firstname, 2, true, err)
 	}
-	if len(mt.LastName) < 2 {
-		err = goa.InvalidLengthError(`response.last_name`, mt.LastName, 2, true, err)
+	if len(mt.Lastname) < 2 {
+		err = goa.InvalidLengthError(`response.lastname`, mt.Lastname, 2, true, err)
+	}
+	if len(mt.State) < 2 {
+		err = goa.InvalidLengthError(`response.state`, mt.State, 2, true, err)
 	}
 	return
 }
@@ -807,20 +618,20 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
 		}
 	}
-	if len(source.FirstName) < 2 {
-		err = goa.InvalidLengthError(`.first_name`, source.FirstName, 2, true, err)
+	if len(source.Firstname) < 2 {
+		err = goa.InvalidLengthError(`.firstname`, source.Firstname, 2, true, err)
 	}
-	if len(source.LastName) < 2 {
-		err = goa.InvalidLengthError(`.last_name`, source.LastName, 2, true, err)
+	if len(source.Lastname) < 2 {
+		err = goa.InvalidLengthError(`.lastname`, source.Lastname, 2, true, err)
 	}
-	tmp47 := map[string]interface{}{
-		"email":      source.Email,
-		"first_name": source.FirstName,
-		"href":       source.Href,
-		"id":         source.ID,
-		"last_name":  source.LastName,
+	tmp50 := map[string]interface{}{
+		"email":     source.Email,
+		"firstname": source.Firstname,
+		"href":      source.Href,
+		"id":        source.ID,
+		"lastname":  source.Lastname,
 	}
-	target = tmp47
+	target = tmp50
 	return
 }
 
@@ -836,12 +647,12 @@ func MarshalUserLink(source *User, inErr error) (target map[string]interface{}, 
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
 		}
 	}
-	tmp48 := map[string]interface{}{
+	tmp51 := map[string]interface{}{
 		"email": source.Email,
 		"href":  source.Href,
 		"id":    source.ID,
 	}
-	target = tmp48
+	target = tmp51
 	return
 }
 
@@ -850,70 +661,126 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 	err = inErr
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(User)
-		if v, ok := val["email"]; ok {
-			var tmp49 string
+		if v, ok := val["bio"]; ok {
+			var tmp52 string
 			if val, ok := v.(string); ok {
-				tmp49 = val
+				tmp52 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.Bio`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp49) < 2 {
-					err = goa.InvalidLengthError(`load.Email`, tmp49, 2, true, err)
-				}
-				if tmp49 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp49); err2 != nil {
-						err = goa.InvalidFormatError(`load.Email`, tmp49, goa.FormatEmail, err2, err)
-					}
+				if len(tmp52) > 500 {
+					err = goa.InvalidLengthError(`load.Bio`, tmp52, 500, false, err)
 				}
 			}
-			target.Email = tmp49
+			target.Bio = tmp52
 		}
-		if v, ok := val["first_name"]; ok {
-			var tmp50 string
-			if val, ok := v.(string); ok {
-				tmp50 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.FirstName`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp50) < 2 {
-					err = goa.InvalidLengthError(`load.FirstName`, tmp50, 2, true, err)
-				}
-			}
-			target.FirstName = tmp50
-		}
-		if v, ok := val["href"]; ok {
-			var tmp51 string
-			if val, ok := v.(string); ok {
-				tmp51 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
-			}
-			target.Href = tmp51
-		}
-		if v, ok := val["id"]; ok {
-			var tmp52 int
-			if f, ok := v.(float64); ok {
-				tmp52 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = tmp52
-		}
-		if v, ok := val["last_name"]; ok {
+		if v, ok := val["city"]; ok {
 			var tmp53 string
 			if val, ok := v.(string); ok {
 				tmp53 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`load.LastName`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
 			}
 			if err == nil {
 				if len(tmp53) < 2 {
-					err = goa.InvalidLengthError(`load.LastName`, tmp53, 2, true, err)
+					err = goa.InvalidLengthError(`load.City`, tmp53, 2, true, err)
 				}
 			}
-			target.LastName = tmp53
+			target.City = tmp53
+		}
+		if v, ok := val["country"]; ok {
+			var tmp54 string
+			if val, ok := v.(string); ok {
+				tmp54 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp54) < 2 {
+					err = goa.InvalidLengthError(`load.Country`, tmp54, 2, true, err)
+				}
+			}
+			target.Country = tmp54
+		}
+		if v, ok := val["email"]; ok {
+			var tmp55 string
+			if val, ok := v.(string); ok {
+				tmp55 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp55) < 2 {
+					err = goa.InvalidLengthError(`load.Email`, tmp55, 2, true, err)
+				}
+				if tmp55 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp55); err2 != nil {
+						err = goa.InvalidFormatError(`load.Email`, tmp55, goa.FormatEmail, err2, err)
+					}
+				}
+			}
+			target.Email = tmp55
+		}
+		if v, ok := val["firstname"]; ok {
+			var tmp56 string
+			if val, ok := v.(string); ok {
+				tmp56 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp56) < 2 {
+					err = goa.InvalidLengthError(`load.Firstname`, tmp56, 2, true, err)
+				}
+			}
+			target.Firstname = tmp56
+		}
+		if v, ok := val["href"]; ok {
+			var tmp57 string
+			if val, ok := v.(string); ok {
+				tmp57 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
+			}
+			target.Href = tmp57
+		}
+		if v, ok := val["id"]; ok {
+			var tmp58 int
+			if f, ok := v.(float64); ok {
+				tmp58 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
+			}
+			target.ID = tmp58
+		}
+		if v, ok := val["lastname"]; ok {
+			var tmp59 string
+			if val, ok := v.(string); ok {
+				tmp59 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp59) < 2 {
+					err = goa.InvalidLengthError(`load.Lastname`, tmp59, 2, true, err)
+				}
+			}
+			target.Lastname = tmp59
+		}
+		if v, ok := val["state"]; ok {
+			var tmp60 string
+			if val, ok := v.(string); ok {
+				tmp60 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp60) < 2 {
+					err = goa.InvalidLengthError(`load.State`, tmp60, 2, true, err)
+				}
+			}
+			target.State = tmp60
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -938,10 +805,10 @@ func LoadUserCollection(raw interface{}) (res UserCollection, err error) {
 // validations. See LoadUserCollection for the definition of raw data.
 func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp54 := range mt {
-		var tmp55 map[string]interface{}
-		tmp55, err = MarshalUser(tmp54, err)
-		res[i] = tmp55
+	for i, tmp61 := range mt {
+		var tmp62 map[string]interface{}
+		tmp62, err = MarshalUser(tmp61, err)
+		res[i] = tmp62
 	}
 	return
 }
@@ -949,6 +816,15 @@ func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
 // Validate validates the media type instance.
 func (mt UserCollection) Validate() (err error) {
 	for _, e := range mt {
+		if len(e.Bio) > 500 {
+			err = goa.InvalidLengthError(`response[*].bio`, e.Bio, 500, false, err)
+		}
+		if len(e.City) < 2 {
+			err = goa.InvalidLengthError(`response[*].city`, e.City, 2, true, err)
+		}
+		if len(e.Country) < 2 {
+			err = goa.InvalidLengthError(`response[*].country`, e.Country, 2, true, err)
+		}
 		if len(e.Email) < 2 {
 			err = goa.InvalidLengthError(`response[*].email`, e.Email, 2, true, err)
 		}
@@ -957,11 +833,14 @@ func (mt UserCollection) Validate() (err error) {
 				err = goa.InvalidFormatError(`response[*].email`, e.Email, goa.FormatEmail, err2, err)
 			}
 		}
-		if len(e.FirstName) < 2 {
-			err = goa.InvalidLengthError(`response[*].first_name`, e.FirstName, 2, true, err)
+		if len(e.Firstname) < 2 {
+			err = goa.InvalidLengthError(`response[*].firstname`, e.Firstname, 2, true, err)
 		}
-		if len(e.LastName) < 2 {
-			err = goa.InvalidLengthError(`response[*].last_name`, e.LastName, 2, true, err)
+		if len(e.Lastname) < 2 {
+			err = goa.InvalidLengthError(`response[*].lastname`, e.Lastname, 2, true, err)
+		}
+		if len(e.State) < 2 {
+			err = goa.InvalidLengthError(`response[*].state`, e.State, 2, true, err)
 		}
 	}
 	return
@@ -983,8 +862,8 @@ func UnmarshalUserCollection(source interface{}, inErr error) (target UserCollec
 	err = inErr
 	if val, ok := source.([]interface{}); ok {
 		target = make([]*User, len(val))
-		for i, v := range val {
-			target[i], err = UnmarshalUser(v, err)
+		for tmp63, v := range val {
+			target[tmp63], err = UnmarshalUser(v, err)
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)

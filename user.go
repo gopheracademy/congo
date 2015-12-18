@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/models"
 	"github.com/raphael/goa"
@@ -19,17 +21,17 @@ func NewUserController(service goa.Service, storage models.UserStorage) app.User
 
 // Create runs the create action.
 func (c *UserController) Create(ctx *app.CreateUserContext) error {
-	m, err := c.storage.Add(ctx)
+	m, err := c.storage.Add(ctx, models.UserFromCreatePayload(ctx))
 	if err != nil {
 		return ctx.Err()
 	}
-	ctx.Header().Set("Location", app.UserHref(ctx.AccountID, m.ID))
+	ctx.Header().Set("Location", app.UserHref(m.ID))
 	return ctx.Created()
 }
 
 // Delete runs the delete action.
 func (c *UserController) Delete(ctx *app.DeleteUserContext) error {
-	err := c.storage.Delete(ctx)
+	err := c.storage.Delete(ctx, ctx.UserID)
 	if err != nil {
 		return ctx.Err()
 	}
@@ -40,28 +42,31 @@ func (c *UserController) Delete(ctx *app.DeleteUserContext) error {
 func (c *UserController) List(ctx *app.ListUserContext) error {
 	res := c.storage.List(ctx)
 	list := app.UserCollection{}
-	for _, m := range res {
-		a := m.ToApp()
-		a.ID = int(m.ID)
-		a.Href = app.UserHref(ctx.AccountID, a.ID)
-		list = append(list, a)
+	for _, y := range res {
+		fmt.Println(y)
+		nm := y.ToApp()
+		nm.Href = app.UserHref(y.ID)
+		list = append(list, nm)
 	}
 	return ctx.OK(list)
 }
 
 // Show runs the show action.
 func (c *UserController) Show(ctx *app.ShowUserContext) error {
-	res, _ := c.storage.Get(ctx)
+	res, err := c.storage.One(ctx, ctx.UserID)
+	if err != nil {
+		ctx.Error(err.Error())
+	}
 	m := res.ToApp()
 	m.ID = int(res.ID)
-	m.Href = app.UserHref(ctx.AccountID, res.ID)
+	m.Href = app.UserHref(res.ID)
 
 	return ctx.OK(m, "default")
 }
 
 // Update runs the update action.
 func (c *UserController) Update(ctx *app.UpdateUserContext) error {
-	err := c.storage.Update(ctx)
+	err := c.storage.Update(ctx, models.UserFromUpdatePayload(ctx))
 	if err != nil {
 		return ctx.Err()
 	}

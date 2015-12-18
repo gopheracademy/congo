@@ -5,77 +5,10 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
-var _ = Resource("account", func() {
-
-	DefaultMedia(Account)
-	BasePath("/accounts")
-	Action("list", func() {
-		Routing(
-			GET(""),
-		)
-		Description("List all accounts")
-		Response(OK, func() {
-			Media(CollectionOf(Account, func() {
-				View("default")
-			}))
-		})
-	})
-	Action("show", func() {
-		Routing(
-			GET("/:accountID"),
-		)
-		Description("Retrieve account with given id")
-		Params(func() {
-			Param("accountID", Integer, "Account ID")
-		})
-		Response(OK)
-		Response(NotFound)
-	})
-
-	Action("create", func() {
-		Routing(
-			POST(""),
-		)
-		Description("Create new account")
-		Payload(AccountModel, func() {
-			Required("name")
-		})
-
-		Response(Created, "/accounts/[0-9]+")
-	})
-
-	Action("update", func() {
-		Routing(
-			PUT("/:accountID"),
-		)
-		Description("Change account name")
-		Params(func() {
-			Param("accountID", Integer, "Account ID")
-		})
-		Payload(AccountModel, func() {
-			Required("name")
-		})
-		Response(NoContent)
-		Response(NotFound)
-	})
-
-	Action("delete", func() {
-		Routing(
-			DELETE("/:accountID"),
-		)
-		Params(func() {
-			Param("accountID", Integer, "Account ID")
-		})
-		Response(NoContent)
-		Response(NotFound)
-	})
-})
 var _ = Resource("user", func() {
 
 	DefaultMedia(User)
 	BasePath("users")
-	Parent("account")
-	Metadata("resource", "123")
 	Action("list", func() {
 		Routing(
 			GET(""),
@@ -107,8 +40,8 @@ var _ = Resource("user", func() {
 		)
 		Description("Record new user")
 		Payload(UserModel, func() {
-			Required("first_name")
-			Required("last_name")
+			Required("firstname")
+			Required("lastname")
 			Required("email")
 		})
 		Response(Created, "^/accounts/[0-9]+/users/[0-9]+$")
@@ -136,32 +69,30 @@ var _ = Resource("user", func() {
 		Response(NotFound)
 	})
 })
-var _ = Resource("series", func() {
 
-	DefaultMedia(Series)
-	BasePath("series")
-	Parent("account")
-
+var _ = Resource("proposal", func() {
+	Parent("user")
+	DefaultMedia(Proposal)
+	BasePath("proposals")
 	Action("list", func() {
 		Routing(
 			GET(""),
 		)
-		Description("List all series in account")
+		Description("List all proposals for a user")
 		Response(OK, func() {
-			Media(CollectionOf(Series, func() {
+			Media(CollectionOf(Proposal, func() {
 				View("default")
-				View("tiny")
 			}))
 		})
 	})
 
 	Action("show", func() {
 		Routing(
-			GET("/:seriesID"),
+			GET("/:proposalID"),
 		)
-		Description("Retrieve series with given id")
+		Description("Retrieve proposal with given id")
 		Params(func() {
-			Param("seriesID", Integer)
+			Param("proposalID", Integer)
 		})
 		Response(OK)
 		Response(NotFound)
@@ -171,61 +102,61 @@ var _ = Resource("series", func() {
 		Routing(
 			POST(""),
 		)
-		Description("Record new series")
-		Payload(SeriesModel, func() {
-			Required("name")
+		Description("Create a new proposal")
+		Payload(ProposalModel, func() {
+			Required("title")
+			Required("abstract")
+			Required("detail")
 		})
-		Response(Created, "^/accounts/[0-9]+/series/[0-9]+$")
+		Response(Created, "^/users/[0-9]+/proposals/[0-9]+$")
 	})
 
 	Action("update", func() {
 		Routing(
-			PATCH("/:seriesID"),
+			PATCH("/:proposalID"),
 		)
 		Params(func() {
-			Param("seriesID", Integer)
+			Param("proposalID", Integer)
 		})
-		Payload(SeriesModel)
+		Payload(ProposalModel)
 		Response(NoContent)
 		Response(NotFound)
 	})
 	Action("delete", func() {
 		Routing(
-			DELETE("/:seriesID"),
+			DELETE("/:proposalID"),
 		)
 		Params(func() {
-			Param("seriesID", Integer, "Series ID")
+			Param("proposalID", Integer, "Proposal ID")
 		})
 		Response(NoContent)
 		Response(NotFound)
 	})
 })
-var _ = Resource("instance", func() {
 
-	DefaultMedia(Instance)
-	BasePath("instances")
-	Parent("series")
-
+var _ = Resource("review", func() {
+	Parent("proposal")
+	DefaultMedia(Review)
+	BasePath("review")
 	Action("list", func() {
 		Routing(
 			GET(""),
 		)
-		Description("List all instances of a series")
+		Description("List all reviews for a proposal")
 		Response(OK, func() {
-			Media(CollectionOf(Instance, func() {
+			Media(CollectionOf(Review, func() {
 				View("default")
-				View("tiny")
 			}))
 		})
 	})
 
 	Action("show", func() {
 		Routing(
-			GET("/:instanceID"),
+			GET("/:reviewID"),
 		)
-		Description("Retrieve instance with given id")
+		Description("Retrieve review with given id")
 		Params(func() {
-			Param("instanceID", Integer)
+			Param("reviewID", Integer)
 		})
 		Response(OK)
 		Response(NotFound)
@@ -235,30 +166,30 @@ var _ = Resource("instance", func() {
 		Routing(
 			POST(""),
 		)
-		Description("Record new instance")
-		Payload(InstanceModel, func() {
-			Required("name")
+		Description("Create a new review")
+		Payload(ReviewModel, func() {
+			Required("rating")
 		})
-		Response(Created, "^/accounts/[0-9]+/series/[0-9]+/instances/[0-9]+$")
+		Response(Created, "^/users/[0-9]+/proposals/[0-9]+/reviews/[0-9]+$")
 	})
 
 	Action("update", func() {
 		Routing(
-			PATCH("/:instanceID"),
+			PATCH("/:reviewID"),
 		)
 		Params(func() {
-			Param("instanceID", Integer)
+			Param("reviewID", Integer)
 		})
-		Payload(InstanceModel)
+		Payload(ReviewModel)
 		Response(NoContent)
 		Response(NotFound)
 	})
 	Action("delete", func() {
 		Routing(
-			DELETE("/:instanceID"),
+			DELETE("/:reviewID"),
 		)
 		Params(func() {
-			Param("instanceID", Integer, "Instance ID")
+			Param("reviewID", Integer, "Review ID")
 		})
 		Response(NoContent)
 		Response(NotFound)

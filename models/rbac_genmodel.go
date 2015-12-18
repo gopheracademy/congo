@@ -17,21 +17,16 @@ const (
 	ADMIN = "Admin"
 	USER  = "User"
 
-	ACCOUNTCREATE  = "account.create"
-	ACCOUNTDELETE  = "account.delete"
-	ACCOUNTLIST    = "account.list"
-	ACCOUNTSHOW    = "account.show"
-	ACCOUNTUPDATE  = "account.update"
-	INSTANCECREATE = "instance.create"
-	INSTANCEDELETE = "instance.delete"
-	INSTANCELIST   = "instance.list"
-	INSTANCESHOW   = "instance.show"
-	INSTANCEUPDATE = "instance.update"
-	SERIESCREATE   = "series.create"
-	SERIESDELETE   = "series.delete"
-	SERIESLIST     = "series.list"
-	SERIESSHOW     = "series.show"
-	SERIESUPDATE   = "series.update"
+	PROPOSALCREATE = "proposal.create"
+	PROPOSALDELETE = "proposal.delete"
+	PROPOSALLIST   = "proposal.list"
+	PROPOSALSHOW   = "proposal.show"
+	PROPOSALUPDATE = "proposal.update"
+	REVIEWCREATE   = "review.create"
+	REVIEWDELETE   = "review.delete"
+	REVIEWLIST     = "review.list"
+	REVIEWSHOW     = "review.show"
+	REVIEWUPDATE   = "review.update"
 	USERCREATE     = "user.create"
 	USERDELETE     = "user.delete"
 	USERLIST       = "user.list"
@@ -57,21 +52,16 @@ func Authorize(r Roler, perm string) bool {
 func init() {
 	RBAC = gorbac.New()
 	RBAC.Add(USER, []string{
-		ACCOUNTCREATE,
-		ACCOUNTDELETE,
-		ACCOUNTLIST,
-		ACCOUNTSHOW,
-		ACCOUNTUPDATE,
-		INSTANCECREATE,
-		INSTANCEDELETE,
-		INSTANCELIST,
-		INSTANCESHOW,
-		INSTANCEUPDATE,
-		SERIESCREATE,
-		SERIESDELETE,
-		SERIESLIST,
-		SERIESSHOW,
-		SERIESUPDATE,
+		PROPOSALCREATE,
+		PROPOSALDELETE,
+		PROPOSALLIST,
+		PROPOSALSHOW,
+		PROPOSALUPDATE,
+		REVIEWCREATE,
+		REVIEWDELETE,
+		REVIEWLIST,
+		REVIEWSHOW,
+		REVIEWUPDATE,
 		USERCREATE,
 		USERDELETE,
 		USERLIST,
@@ -79,21 +69,16 @@ func init() {
 		USERUPDATE,
 	}, nil)
 	RBAC.Add(ADMIN, []string{
-		ACCOUNTCREATE,
-		ACCOUNTDELETE,
-		ACCOUNTLIST,
-		ACCOUNTSHOW,
-		ACCOUNTUPDATE,
-		INSTANCECREATE,
-		INSTANCEDELETE,
-		INSTANCELIST,
-		INSTANCESHOW,
-		INSTANCEUPDATE,
-		SERIESCREATE,
-		SERIESDELETE,
-		SERIESLIST,
-		SERIESSHOW,
-		SERIESUPDATE,
+		PROPOSALCREATE,
+		PROPOSALDELETE,
+		PROPOSALLIST,
+		PROPOSALSHOW,
+		PROPOSALUPDATE,
+		REVIEWCREATE,
+		REVIEWDELETE,
+		REVIEWLIST,
+		REVIEWSHOW,
+		REVIEWUPDATE,
 		USERCREATE,
 		USERDELETE,
 		USERLIST,
