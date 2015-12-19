@@ -20,6 +20,14 @@ func (m *UserDB) Get(email string) (interface{}, error) {
 	}
 	return &obj, err
 }
+
+func (m *UserDB) UserByOauth(id, provider string) (User, error) {
+	var obj User
+
+	err := m.DB.Where("oauth2_uid= ? and oauth2_provider= ?", id, provider).First(&obj).Error
+	fmt.Println(obj, err)
+	return obj, err
+}
 func (m *UserDB) ConfirmUser(confirmToken string) (interface{}, error) {
 
 	var obj User

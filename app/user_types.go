@@ -237,24 +237,6 @@ func MarshalUserModel(source *UserModel, inErr error) (target map[string]interfa
 	if len(source.Bio) > 500 {
 		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
 	}
-	if len(source.City) < 2 {
-		err = goa.InvalidLengthError(`.city`, source.City, 2, true, err)
-	}
-	if len(source.Country) < 2 {
-		err = goa.InvalidLengthError(`.country`, source.Country, 2, true, err)
-	}
-	if len(source.Email) < 2 {
-		err = goa.InvalidLengthError(`.email`, source.Email, 2, true, err)
-	}
-	if len(source.Firstname) < 2 {
-		err = goa.InvalidLengthError(`.firstname`, source.Firstname, 2, true, err)
-	}
-	if len(source.Lastname) < 2 {
-		err = goa.InvalidLengthError(`.lastname`, source.Lastname, 2, true, err)
-	}
-	if len(source.State) < 2 {
-		err = goa.InvalidLengthError(`.state`, source.State, 2, true, err)
-	}
 	tmp73 := map[string]interface{}{
 		"bio":       source.Bio,
 		"city":      source.City,
@@ -295,11 +277,6 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp75) < 2 {
-					err = goa.InvalidLengthError(`load.City`, tmp75, 2, true, err)
-				}
-			}
 			target.City = tmp75
 		}
 		if v, ok := val["country"]; ok {
@@ -308,11 +285,6 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 				tmp76 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp76) < 2 {
-					err = goa.InvalidLengthError(`load.Country`, tmp76, 2, true, err)
-				}
 			}
 			target.Country = tmp76
 		}
@@ -323,11 +295,6 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp77) < 2 {
-					err = goa.InvalidLengthError(`load.Email`, tmp77, 2, true, err)
-				}
-			}
 			target.Email = tmp77
 		}
 		if v, ok := val["firstname"]; ok {
@@ -337,11 +304,6 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp78) < 2 {
-					err = goa.InvalidLengthError(`load.Firstname`, tmp78, 2, true, err)
-				}
-			}
 			target.Firstname = tmp78
 		}
 		if v, ok := val["lastname"]; ok {
@@ -350,11 +312,6 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 				tmp79 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp79) < 2 {
-					err = goa.InvalidLengthError(`load.Lastname`, tmp79, 2, true, err)
-				}
 			}
 			target.Lastname = tmp79
 		}
@@ -373,11 +330,6 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 				tmp81 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp81) < 2 {
-					err = goa.InvalidLengthError(`load.State`, tmp81, 2, true, err)
-				}
 			}
 			target.State = tmp81
 		}

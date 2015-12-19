@@ -848,11 +848,6 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.City`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp16) < 2 {
-					err = goa.InvalidLengthError(`payload.City`, tmp16, 2, true, err)
-				}
-			}
 			target.City = tmp16
 		}
 		if v, ok := val["country"]; ok {
@@ -861,11 +856,6 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 				tmp17 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Country`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp17) < 2 {
-					err = goa.InvalidLengthError(`payload.Country`, tmp17, 2, true, err)
-				}
 			}
 			target.Country = tmp17
 		}
@@ -876,11 +866,6 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp18) < 2 {
-					err = goa.InvalidLengthError(`payload.Email`, tmp18, 2, true, err)
-				}
-			}
 			target.Email = tmp18
 		}
 		if v, ok := val["firstname"]; ok {
@@ -889,11 +874,6 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 				tmp19 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp19) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp19, 2, true, err)
-				}
 			}
 			target.Firstname = tmp19
 		} else {
@@ -905,11 +885,6 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 				tmp20 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Lastname`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp20) < 2 {
-					err = goa.InvalidLengthError(`payload.Lastname`, tmp20, 2, true, err)
-				}
 			}
 			target.Lastname = tmp20
 		}
@@ -928,11 +903,6 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 				tmp22 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.State`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp22) < 2 {
-					err = goa.InvalidLengthError(`payload.State`, tmp22, 2, true, err)
-				}
 			}
 			target.State = tmp22
 		}
@@ -1112,11 +1082,6 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.City`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp24) < 2 {
-					err = goa.InvalidLengthError(`payload.City`, tmp24, 2, true, err)
-				}
-			}
 			target.City = tmp24
 		}
 		if v, ok := val["country"]; ok {
@@ -1125,11 +1090,6 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 				tmp25 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Country`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp25) < 2 {
-					err = goa.InvalidLengthError(`payload.Country`, tmp25, 2, true, err)
-				}
 			}
 			target.Country = tmp25
 		}
@@ -1140,11 +1100,6 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp26) < 2 {
-					err = goa.InvalidLengthError(`payload.Email`, tmp26, 2, true, err)
-				}
-			}
 			target.Email = tmp26
 		}
 		if v, ok := val["firstname"]; ok {
@@ -1154,11 +1109,6 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp27) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp27, 2, true, err)
-				}
-			}
 			target.Firstname = tmp27
 		}
 		if v, ok := val["lastname"]; ok {
@@ -1167,11 +1117,6 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 				tmp28 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Lastname`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp28) < 2 {
-					err = goa.InvalidLengthError(`payload.Lastname`, tmp28, 2, true, err)
-				}
 			}
 			target.Lastname = tmp28
 		}
@@ -1190,11 +1135,6 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 				tmp30 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.State`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp30) < 2 {
-					err = goa.InvalidLengthError(`payload.State`, tmp30, 2, true, err)
-				}
 			}
 			target.State = tmp30
 		}

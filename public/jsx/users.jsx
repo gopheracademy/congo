@@ -52,8 +52,8 @@ var Root = React.createClass({
 
     var listElts = [];
     for(var i = 0; i < this.state.users.length; i++) {
-      var user = this.state.users[i];
-      listElts.push(<li key={user.id} className="list-group-item">{user.href} - {user.firstname} {user.lastname}</li>);
+      var u = this.state.users[i];
+      listElts.push(<User key={i} user={u} />);
     }
     return (
       <div className="container users">
@@ -80,3 +80,11 @@ var Root = React.createClass({
 });
 
 ReactDOM.render(<Root/>, document.getElementById("page-content"));
+var User= React.createClass({
+  render: function() {
+	  return (
+      <li key={this.props.user.id} className="list-group-item">{this.props.user.href} - {this.props.user.firstname} {this.props.user.lastname}</li>)
+  }
+});
+
+

@@ -580,28 +580,10 @@ func (mt *User) Validate() (err error) {
 	if len(mt.Bio) > 500 {
 		err = goa.InvalidLengthError(`response.bio`, mt.Bio, 500, false, err)
 	}
-	if len(mt.City) < 2 {
-		err = goa.InvalidLengthError(`response.city`, mt.City, 2, true, err)
-	}
-	if len(mt.Country) < 2 {
-		err = goa.InvalidLengthError(`response.country`, mt.Country, 2, true, err)
-	}
-	if len(mt.Email) < 2 {
-		err = goa.InvalidLengthError(`response.email`, mt.Email, 2, true, err)
-	}
 	if mt.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
 			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
 		}
-	}
-	if len(mt.Firstname) < 2 {
-		err = goa.InvalidLengthError(`response.firstname`, mt.Firstname, 2, true, err)
-	}
-	if len(mt.Lastname) < 2 {
-		err = goa.InvalidLengthError(`response.lastname`, mt.Lastname, 2, true, err)
-	}
-	if len(mt.State) < 2 {
-		err = goa.InvalidLengthError(`response.state`, mt.State, 2, true, err)
 	}
 	return
 }
@@ -610,19 +592,10 @@ func (mt *User) Validate() (err error) {
 // using view "default".
 func MarshalUser(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Email) < 2 {
-		err = goa.InvalidLengthError(`.email`, source.Email, 2, true, err)
-	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
 		}
-	}
-	if len(source.Firstname) < 2 {
-		err = goa.InvalidLengthError(`.firstname`, source.Firstname, 2, true, err)
-	}
-	if len(source.Lastname) < 2 {
-		err = goa.InvalidLengthError(`.lastname`, source.Lastname, 2, true, err)
 	}
 	tmp50 := map[string]interface{}{
 		"email":     source.Email,
@@ -639,9 +612,6 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 // using view "link".
 func MarshalUserLink(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Email) < 2 {
-		err = goa.InvalidLengthError(`.email`, source.Email, 2, true, err)
-	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
@@ -682,11 +652,6 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp53) < 2 {
-					err = goa.InvalidLengthError(`load.City`, tmp53, 2, true, err)
-				}
-			}
 			target.City = tmp53
 		}
 		if v, ok := val["country"]; ok {
@@ -695,11 +660,6 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 				tmp54 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp54) < 2 {
-					err = goa.InvalidLengthError(`load.Country`, tmp54, 2, true, err)
-				}
 			}
 			target.Country = tmp54
 		}
@@ -711,9 +671,6 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp55) < 2 {
-					err = goa.InvalidLengthError(`load.Email`, tmp55, 2, true, err)
-				}
 				if tmp55 != "" {
 					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp55); err2 != nil {
 						err = goa.InvalidFormatError(`load.Email`, tmp55, goa.FormatEmail, err2, err)
@@ -728,11 +685,6 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 				tmp56 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp56) < 2 {
-					err = goa.InvalidLengthError(`load.Firstname`, tmp56, 2, true, err)
-				}
 			}
 			target.Firstname = tmp56
 		}
@@ -761,11 +713,6 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
 			}
-			if err == nil {
-				if len(tmp59) < 2 {
-					err = goa.InvalidLengthError(`load.Lastname`, tmp59, 2, true, err)
-				}
-			}
 			target.Lastname = tmp59
 		}
 		if v, ok := val["state"]; ok {
@@ -774,11 +721,6 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 				tmp60 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp60) < 2 {
-					err = goa.InvalidLengthError(`load.State`, tmp60, 2, true, err)
-				}
 			}
 			target.State = tmp60
 		}
@@ -819,28 +761,10 @@ func (mt UserCollection) Validate() (err error) {
 		if len(e.Bio) > 500 {
 			err = goa.InvalidLengthError(`response[*].bio`, e.Bio, 500, false, err)
 		}
-		if len(e.City) < 2 {
-			err = goa.InvalidLengthError(`response[*].city`, e.City, 2, true, err)
-		}
-		if len(e.Country) < 2 {
-			err = goa.InvalidLengthError(`response[*].country`, e.Country, 2, true, err)
-		}
-		if len(e.Email) < 2 {
-			err = goa.InvalidLengthError(`response[*].email`, e.Email, 2, true, err)
-		}
 		if e.Email != "" {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {
 				err = goa.InvalidFormatError(`response[*].email`, e.Email, goa.FormatEmail, err2, err)
 			}
-		}
-		if len(e.Firstname) < 2 {
-			err = goa.InvalidLengthError(`response[*].firstname`, e.Firstname, 2, true, err)
-		}
-		if len(e.Lastname) < 2 {
-			err = goa.InvalidLengthError(`response[*].lastname`, e.Lastname, 2, true, err)
-		}
-		if len(e.State) < 2 {
-			err = goa.InvalidLengthError(`response[*].state`, e.State, 2, true, err)
 		}
 	}
 	return

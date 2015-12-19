@@ -13,22 +13,16 @@ var UserModel = Type("UserModel", func() {
 	Metadata("github.com/bketelsen/gorma#roler", "true")
 	Metadata("github.com/bketelsen/gorma#hasmany", "Proposal,Review")
 	Attribute("firstname", func() {
-		MinLength(2)
 	})
 	Attribute("lastname", func() {
-		MinLength(2)
 	})
 	Attribute("city", func() {
-		MinLength(2)
 	})
 	Attribute("state", func() {
-		MinLength(2)
 	})
 	Attribute("country", func() {
-		MinLength(2)
 	})
 	Attribute("email", func() {
-		MinLength(2)
 	})
 	Attribute("bio", func() {
 		MaxLength(500)

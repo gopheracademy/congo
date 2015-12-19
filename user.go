@@ -66,8 +66,11 @@ func (c *UserController) Show(ctx *app.ShowUserContext) error {
 
 // Update runs the update action.
 func (c *UserController) Update(ctx *app.UpdateUserContext) error {
-	err := c.storage.Update(ctx, models.UserFromUpdatePayload(ctx))
+	m := models.UserFromUpdatePayload(ctx)
+	m.ID = ctx.UserID
+	err := c.storage.Update(ctx, m)
 	if err != nil {
+		fmt.Println(err)
 		return ctx.Err()
 	}
 	return ctx.NoContent()
