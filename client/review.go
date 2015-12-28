@@ -9,20 +9,14 @@ import (
 	"net/url"
 )
 
-// CreateUserPayload is the data structure used to initialize the user create request body.
-type CreateUserPayload struct {
-	Bio       string `json:"bio,omitempty"`
-	City      string `json:"city,omitempty"`
-	Country   string `json:"country,omitempty"`
-	Email     string `json:"email,omitempty"`
-	Firstname string `json:"firstname"`
-	Lastname  string `json:"lastname,omitempty"`
-	Role      string `json:"role,omitempty"`
-	State     string `json:"state,omitempty"`
+// CreateReviewPayload is the data structure used to initialize the review create request body.
+type CreateReviewPayload struct {
+	Comment string `json:"comment,omitempty"`
+	Rating  int    `json:"rating"`
 }
 
-// Record new user
-func (c *Client) CreateUser(path string, payload *CreateUserPayload) (*http.Response, error) {
+// Create a new review
+func (c *Client) CreateReview(path string, payload *CreateReviewPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -39,8 +33,8 @@ func (c *Client) CreateUser(path string, payload *CreateUserPayload) (*http.Resp
 	return c.Client.Do(req)
 }
 
-// DeleteUser makes a request to the delete action endpoint of the user resource
-func (c *Client) DeleteUser(path string) (*http.Response, error) {
+// DeleteReview makes a request to the delete action endpoint of the review resource
+func (c *Client) DeleteReview(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("DELETE", u.String(), body)
@@ -52,8 +46,8 @@ func (c *Client) DeleteUser(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// List all users in account
-func (c *Client) ListUser(path string) (*http.Response, error) {
+// List all reviews for a proposal
+func (c *Client) ListReview(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), body)
@@ -65,8 +59,8 @@ func (c *Client) ListUser(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// Retrieve user with given id
-func (c *Client) ShowUser(path string) (*http.Response, error) {
+// Retrieve review with given id
+func (c *Client) ShowReview(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), body)
@@ -78,20 +72,14 @@ func (c *Client) ShowUser(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// UpdateUserPayload is the data structure used to initialize the user update request body.
-type UpdateUserPayload struct {
-	Bio       string `json:"bio,omitempty"`
-	City      string `json:"city,omitempty"`
-	Country   string `json:"country,omitempty"`
-	Email     string `json:"email,omitempty"`
-	Firstname string `json:"firstname,omitempty"`
-	Lastname  string `json:"lastname,omitempty"`
-	Role      string `json:"role,omitempty"`
-	State     string `json:"state,omitempty"`
+// UpdateReviewPayload is the data structure used to initialize the review update request body.
+type UpdateReviewPayload struct {
+	Comment string `json:"comment,omitempty"`
+	Rating  int    `json:"rating,omitempty"`
 }
 
-// UpdateUser makes a request to the update action endpoint of the user resource
-func (c *Client) UpdateUser(path string, payload *UpdateUserPayload) (*http.Response, error) {
+// UpdateReview makes a request to the update action endpoint of the review resource
+func (c *Client) UpdateReview(path string, payload *UpdateReviewPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

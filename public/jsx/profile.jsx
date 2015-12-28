@@ -1,4 +1,4 @@
-var Root = React.createClass({
+	var Profile= React.createClass({
   mixins: [React.addons.LinkedStateMixin],
   getInitialState: function() {
     return {
@@ -6,7 +6,7 @@ var Root = React.createClass({
     };
   },
   componentDidMount: function() {
-	var cookies = document.cookie;
+	  console.log(this.props.userid);
 	var u = "/api/users/21";
 	  $.getJSON(u, function(data) {
 		  this.setState({users: [data]});
@@ -41,9 +41,8 @@ var Root = React.createClass({
       </div>
     );
   },
-});
+	});
 
-ReactDOM.render(<Root/>, document.getElementById("page-content"));
 var User= React.createClass({
 	render: function() {
 		return (

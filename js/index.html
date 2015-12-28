@@ -10,16 +10,19 @@
     <script>
       requirejs.config({
         paths: {
-          axios: '/js/axios.min',
-          client: '/js/client'
+          axios: '/api/js/axios.min',
+          client: '/api/js/client'
         }
       });
       requirejs(['client'], function (client) {
-        client().listAccount ("/api/accounts")
-          .then(function (resp) {
-            document.getElementById('response').innerHTML = resp.statusText;
+    cfg = {
+	    url: "http://localhost:8080/api/users"
+    };
+	      client().listUser('/api/users',cfg)
+	      .then(function (resp) {
+            document.getElementById('response').innerHTML = resp.data;
           })
-          .catch(function (resp) {
+	  .catch(function (resp) {
             document.getElementById('response').innerHTML = resp.statusText;
           });
       });

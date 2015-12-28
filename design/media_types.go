@@ -29,6 +29,10 @@ var User = MediaType("application/vnd.user+json", func() {
 		Attribute("firstname")
 		Attribute("lastname")
 		Attribute("email")
+		Attribute("city")
+		Attribute("state")
+		Attribute("country")
+		Attribute("bio")
 	})
 	View("link", func() {
 		Attribute("id")

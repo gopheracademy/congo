@@ -11,6 +11,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/handlers"
+	"github.com/gopheracademy/congo/js"
 	"github.com/gopheracademy/congo/models"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/gopheracademy/congo/util"
@@ -67,6 +68,7 @@ func main() {
 	c3 := NewUserController(service, models.NewUserDB(db))
 	app.MountUserController(service, c3)
 
+	js.MountController(service)
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
@@ -79,12 +81,13 @@ func main() {
 	r.Handle("/auth/{provider}/callback", handlers.Landing(db, renderer)).Methods("GET")
 
 	r.HandleFunc("/auth/{provider}", gothic.BeginAuthHandler)
-	r.Handle("/login", handlers.Login(renderer)).Methods("GET")
+	r.Handle("/login", handlers.Login(db, renderer)).Methods("GET")
+	r.Handle("/logout", handlers.Logout(db, renderer)).Methods("GET")
 	gothic.GetProviderName = provider
 	// Make sure to put authboss's router somewhere
-	r.Handle("/", handlers.Index(renderer)).Methods("GET")
-	r.Handle("/profile", handlers.Profile(renderer)).Methods("GET")
-	r.Handle("/users", handlers.Users(renderer)).Methods("GET")
+	r.Handle("/", handlers.Index(db, renderer)).Methods("GET")
+	r.Handle("/profile", handlers.Profile(db, renderer)).Methods("GET")
+	r.Handle("/users", handlers.Users(db, renderer)).Methods("GET")
 
 	r.PathPrefix("/api").Handler(goarouter)
 

@@ -49,6 +49,7 @@ func ReviewFromUpdatePayload(ctx *app.UpdateReviewContext) Review {
 	copier.Copy(&m, payload)
 	return m
 }
+
 func (m Review) ToApp() *app.Review {
 	target := app.Review{}
 	copier.Copy(&target, &m)
@@ -116,6 +117,7 @@ func (m *ReviewDB) Add(ctx context.Context, model Review) (Review, error) {
 	err := m.DB.Create(&model).Error
 	return model, err
 }
+
 func (m *ReviewDB) Update(ctx context.Context, model Review) error {
 	obj, err := m.One(ctx, model.ID)
 	if err != nil {
@@ -124,6 +126,7 @@ func (m *ReviewDB) Update(ctx context.Context, model Review) error {
 	err = m.DB.Model(&obj).Updates(model).Error
 	return err
 }
+
 func (m *ReviewDB) Delete(ctx context.Context, id int) error {
 	var obj Review
 	err := m.DB.Delete(&obj, id).Error

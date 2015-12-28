@@ -51,6 +51,7 @@ func ProposalFromUpdatePayload(ctx *app.UpdateProposalContext) Proposal {
 	copier.Copy(&m, payload)
 	return m
 }
+
 func (m Proposal) ToApp() *app.Proposal {
 	target := app.Proposal{}
 	copier.Copy(&target, &m)
@@ -105,6 +106,7 @@ func (m *ProposalDB) Add(ctx context.Context, model Proposal) (Proposal, error) 
 	err := m.DB.Create(&model).Error
 	return model, err
 }
+
 func (m *ProposalDB) Update(ctx context.Context, model Proposal) error {
 	obj, err := m.One(ctx, model.ID)
 	if err != nil {
@@ -113,6 +115,7 @@ func (m *ProposalDB) Update(ctx context.Context, model Proposal) error {
 	err = m.DB.Model(&obj).Updates(model).Error
 	return err
 }
+
 func (m *ProposalDB) Delete(ctx context.Context, id int) error {
 	var obj Proposal
 	err := m.DB.Delete(&obj, id).Error

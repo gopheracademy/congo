@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/jinzhu/gorm"
 	"github.com/markbates/goth/gothic"
 )
 
-func Users(ren Renderer) http.Handler {
+func Users(db gorm.DB, ren Renderer) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		data := getPageData(r)
+		data := getPageData(db, r)
 
 		if needsLogin(r) {
 			http.Redirect(w, r, "/login", http.StatusFound)

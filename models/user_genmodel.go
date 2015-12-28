@@ -75,6 +75,7 @@ func UserFromUpdatePayload(ctx *app.UpdateUserContext) User {
 	copier.Copy(&m, payload)
 	return m
 }
+
 func (m User) ToApp() *app.User {
 	target := app.User{}
 	copier.Copy(&target, &m)
@@ -120,6 +121,7 @@ func (m *UserDB) Add(ctx context.Context, model User) (User, error) {
 	err := m.DB.Create(&model).Error
 	return model, err
 }
+
 func (m *UserDB) Update(ctx context.Context, model User) error {
 	obj, err := m.One(ctx, model.ID)
 	if err != nil {
@@ -128,6 +130,7 @@ func (m *UserDB) Update(ctx context.Context, model User) error {
 	err = m.DB.Model(&obj).Updates(model).Error
 	return err
 }
+
 func (m *UserDB) Delete(ctx context.Context, id int) error {
 	var obj User
 	err := m.DB.Delete(&obj, id).Error

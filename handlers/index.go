@@ -16,21 +16,43 @@ import (
 	"github.com/markbates/goth/gothic"
 )
 
-func Index(ren Renderer) http.Handler {
+func Index(db gorm.DB, ren Renderer) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		data := getPageData(r)
+		data := getPageData(db, r)
 		ren.Render(w, http.StatusOK, "index", data, "layout")
 	})
 }
-func Login(ren Renderer) http.Handler {
+func Login(db gorm.DB, ren Renderer) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		data := getPageData(r)
+		data := getPageData(db, r)
 		ren.Render(w, http.StatusOK, "login", data, "layout")
 	})
 }
-func Profile(ren Renderer) http.Handler {
+func Logout(db gorm.DB, ren Renderer) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		data := getPageData(r)
+		value := map[string]string{}
+		if encoded, err := s.Encode("cookie-name", value); err == nil {
+			cookie := &http.Cookie{
+				Name:  "cookie-name",
+				Value: encoded,
+				Path:  "/",
+			}
+			http.SetCookie(w, cookie)
+		}
+		session, _ := gothic.Store.Get(r, gothic.SessionName)
+		session.Options.MaxAge = -1
+		err := session.Save(r, w)
+		if err != nil {
+			fmt.Println("error saving session", err.Error())
+		}
+		data := PageData{}
+		ren.Render(w, http.StatusOK, "index", data, "layout")
+	})
+}
+func Profile(db gorm.DB, ren Renderer) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		data := getPageData(db, r)
+		fmt.Println(data)
 		ren.Render(w, http.StatusOK, "profile", data, "layout")
 	})
 }
@@ -88,9 +110,12 @@ func Landing(db gorm.DB, ren Renderer) http.Handler {
 			}
 			http.SetCookie(w, cookie)
 		}
-		data := getPageData(r)
+		data := getPageData(db, r)
 		data.GUser = user
-		ren.Render(w, http.StatusOK, "landing", data, "layout")
+		data.User = cuser
+		data.CurrentUserName = cuser.Firstname
+		data.UserID = strconv.Itoa(cuser.ID)
+		ren.Render(w, http.StatusOK, "profile", data, "layout")
 	})
 }
 
@@ -113,13 +138,12 @@ func init() {
 
 }
 
-func getPageData(r *http.Request) PageData {
+func getPageData(db gorm.DB, r *http.Request) PageData {
 	data := PageData{}
 	session, err := gothic.Store.Get(r, gothic.SessionName)
 	if err != nil {
 		fmt.Println("Sesson Error: ", err)
 	}
-	fmt.Println(session.IsNew)
 	if !session.IsNew {
 		data.Loggedin = true
 
@@ -127,10 +151,21 @@ func getPageData(r *http.Request) PageData {
 
 	if cookie, err := r.Cookie("cookie-name"); err == nil {
 		value := make(map[string]string)
-		if err = s.Decode("congo", cookie.Value, &value); err == nil {
+		if err = s.Decode("cookie-name", cookie.Value, &value); err == nil {
+			fmt.Println(value)
 			userid, ok := value["userid"]
 			if ok {
+				fmt.Println("Found USER ID: ", userid)
 				data.UserID = userid
+				id, err := strconv.Atoi(userid)
+				if err == nil {
+					udb := models.NewUserDB(db)
+					var cuser models.User
+					cuser, err = udb.One(context.Background(), id)
+					data.User = cuser
+					data.CurrentUserName = cuser.Firstname
+
+				}
 			}
 		}
 	}

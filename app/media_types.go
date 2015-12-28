@@ -592,17 +592,24 @@ func (mt *User) Validate() (err error) {
 // using view "default".
 func MarshalUser(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
+	if len(source.Bio) > 500 {
+		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
+	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
 		}
 	}
 	tmp50 := map[string]interface{}{
+		"bio":       source.Bio,
+		"city":      source.City,
+		"country":   source.Country,
 		"email":     source.Email,
 		"firstname": source.Firstname,
 		"href":      source.Href,
 		"id":        source.ID,
 		"lastname":  source.Lastname,
+		"state":     source.State,
 	}
 	target = tmp50
 	return
