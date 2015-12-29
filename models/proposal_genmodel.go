@@ -64,6 +64,8 @@ type ProposalStorage interface {
 	Add(ctx context.Context, o Proposal) (Proposal, error)
 	Update(ctx context.Context, o Proposal) error
 	Delete(ctx context.Context, id int) error
+
+	ListByUser(ctx context.Context, id int) []Proposal
 }
 
 type ProposalDB struct {
@@ -83,8 +85,17 @@ func ProposalFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *
 	}
 }
 
+func (m *ProposalDB) ListByUser(ctx context.Context, parentid int) []Proposal {
+
+	var objs []Proposal
+	m.DB.Scopes(ProposalFilterByUser(parentid, &m.DB)).Find(&objs)
+	return objs
+}
+
 func NewProposalDB(db gorm.DB) *ProposalDB {
+
 	return &ProposalDB{DB: db}
+
 }
 
 func (m *ProposalDB) List(ctx context.Context) []Proposal {
@@ -99,11 +110,13 @@ func (m *ProposalDB) One(ctx context.Context, id int) (Proposal, error) {
 	var obj Proposal
 
 	err := m.DB.Find(&obj, id).Error
+
 	return obj, err
 }
 
 func (m *ProposalDB) Add(ctx context.Context, model Proposal) (Proposal, error) {
 	err := m.DB.Create(&model).Error
+
 	return model, err
 }
 
@@ -113,6 +126,7 @@ func (m *ProposalDB) Update(ctx context.Context, model Proposal) error {
 		return err
 	}
 	err = m.DB.Model(&obj).Updates(model).Error
+
 	return err
 }
 
@@ -122,6 +136,7 @@ func (m *ProposalDB) Delete(ctx context.Context, id int) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 

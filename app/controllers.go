@@ -17,6 +17,37 @@ import (
 	"github.com/raphael/goa"
 )
 
+// AuthController is the controller interface for the Auth actions.
+type AuthController interface {
+	goa.Controller
+	Refresh(*RefreshAuthContext) error
+	Token(*TokenAuthContext) error
+}
+
+// MountAuthController "mounts" a Auth resource controller on the given service.
+func MountAuthController(service goa.Service, ctrl AuthController) {
+	router := service.HTTPHandler().(*httprouter.Router)
+	var h goa.Handler
+	h = func(c *goa.Context) error {
+		ctx, err := NewRefreshAuthContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Refresh(ctx)
+	}
+	router.Handle("POST", "/api/auth/refresh", ctrl.NewHTTPRouterHandle("Refresh", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Refresh", "route", "POST /api/auth/refresh")
+	h = func(c *goa.Context) error {
+		ctx, err := NewTokenAuthContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Token(ctx)
+	}
+	router.Handle("POST", "/api/auth/token", ctrl.NewHTTPRouterHandle("Token", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Token", "route", "POST /api/auth/token")
+}
+
 // ProposalController is the controller interface for the Proposal actions.
 type ProposalController interface {
 	goa.Controller

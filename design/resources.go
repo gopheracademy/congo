@@ -5,6 +5,32 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
+var _ = Resource("auth", func() {
+
+	DefaultMedia(Authorize)
+	BasePath("/auth")
+
+	Action("token", func() {
+		Routing(
+			POST("/token"),
+		)
+		Description("Obtain an access token")
+		Payload(Login)
+		Response(Created, func() {
+			Media(Authorize)
+		})
+	})
+	Action("refresh", func() {
+		Routing(
+			POST("/refresh"),
+		)
+		Description("Obtain a refreshed access token")
+		Payload(Login)
+		Response(Created, func() {
+			Media(Authorize)
+		})
+	})
+})
 var _ = Resource("user", func() {
 
 	DefaultMedia(User)

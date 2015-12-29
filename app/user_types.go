@@ -49,14 +49,14 @@ func MarshalProposalModel(source *ProposalModel, inErr error) (target map[string
 	if len(source.Title) > 200 {
 		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
 	}
-	tmp64 := map[string]interface{}{
+	tmp81 := map[string]interface{}{
 		"abstract":  source.Abstract,
 		"detail":    source.Detail,
 		"firstname": source.Firstname,
 		"title":     source.Title,
 		"withdrawn": source.Withdrawn,
 	}
-	target = tmp64
+	target = tmp81
 	return
 }
 
@@ -66,78 +66,78 @@ func UnmarshalProposalModel(source interface{}, inErr error) (target *ProposalMo
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(ProposalModel)
 		if v, ok := val["abstract"]; ok {
-			var tmp65 string
+			var tmp82 string
 			if val, ok := v.(string); ok {
-				tmp65 = val
+				tmp82 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Abstract`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp65) < 50 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp65, 50, true, err)
+				if len(tmp82) < 50 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp82, 50, true, err)
 				}
-				if len(tmp65) > 500 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp65, 500, false, err)
+				if len(tmp82) > 500 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp82, 500, false, err)
 				}
 			}
-			target.Abstract = tmp65
+			target.Abstract = tmp82
 		}
 		if v, ok := val["detail"]; ok {
-			var tmp66 string
+			var tmp83 string
 			if val, ok := v.(string); ok {
-				tmp66 = val
+				tmp83 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Detail`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp66) < 100 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp66, 100, true, err)
+				if len(tmp83) < 100 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp83, 100, true, err)
 				}
-				if len(tmp66) > 2000 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp66, 2000, false, err)
+				if len(tmp83) > 2000 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp83, 2000, false, err)
 				}
 			}
-			target.Detail = tmp66
+			target.Detail = tmp83
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp67 string
+			var tmp84 string
 			if val, ok := v.(string); ok {
-				tmp67 = val
+				tmp84 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp67) < 2 {
-					err = goa.InvalidLengthError(`load.Firstname`, tmp67, 2, true, err)
+				if len(tmp84) < 2 {
+					err = goa.InvalidLengthError(`load.Firstname`, tmp84, 2, true, err)
 				}
 			}
-			target.Firstname = tmp67
+			target.Firstname = tmp84
 		}
 		if v, ok := val["title"]; ok {
-			var tmp68 string
+			var tmp85 string
 			if val, ok := v.(string); ok {
-				tmp68 = val
+				tmp85 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Title`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp68) < 10 {
-					err = goa.InvalidLengthError(`load.Title`, tmp68, 10, true, err)
+				if len(tmp85) < 10 {
+					err = goa.InvalidLengthError(`load.Title`, tmp85, 10, true, err)
 				}
-				if len(tmp68) > 200 {
-					err = goa.InvalidLengthError(`load.Title`, tmp68, 200, false, err)
+				if len(tmp85) > 200 {
+					err = goa.InvalidLengthError(`load.Title`, tmp85, 200, false, err)
 				}
 			}
-			target.Title = tmp68
+			target.Title = tmp85
 		}
 		if v, ok := val["withdrawn"]; ok {
-			var tmp69 bool
+			var tmp86 bool
 			if val, ok := v.(bool); ok {
-				tmp69 = val
+				tmp86 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Withdrawn`, v, "bool", err)
 			}
-			target.Withdrawn = tmp69
+			target.Withdrawn = tmp86
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -166,11 +166,11 @@ func MarshalReviewModel(source *ReviewModel, inErr error) (target map[string]int
 	if source.Rating > 5 {
 		err = goa.InvalidRangeError(`.rating`, source.Rating, 5, false, err)
 	}
-	tmp70 := map[string]interface{}{
+	tmp87 := map[string]interface{}{
 		"comment": source.Comment,
 		"rating":  source.Rating,
 	}
-	target = tmp70
+	target = tmp87
 	return
 }
 
@@ -180,38 +180,38 @@ func UnmarshalReviewModel(source interface{}, inErr error) (target *ReviewModel,
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(ReviewModel)
 		if v, ok := val["comment"]; ok {
-			var tmp71 string
+			var tmp88 string
 			if val, ok := v.(string); ok {
-				tmp71 = val
+				tmp88 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Comment`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp71) < 10 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp71, 10, true, err)
+				if len(tmp88) < 10 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp88, 10, true, err)
 				}
-				if len(tmp71) > 200 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp71, 200, false, err)
+				if len(tmp88) > 200 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp88, 200, false, err)
 				}
 			}
-			target.Comment = tmp71
+			target.Comment = tmp88
 		}
 		if v, ok := val["rating"]; ok {
-			var tmp72 int
+			var tmp89 int
 			if f, ok := v.(float64); ok {
-				tmp72 = int(f)
+				tmp89 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if tmp72 < 1 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp72, 1, true, err)
+				if tmp89 < 1 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp89, 1, true, err)
 				}
-				if tmp72 > 5 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp72, 5, false, err)
+				if tmp89 > 5 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp89, 5, false, err)
 				}
 			}
-			target.Rating = tmp72
+			target.Rating = tmp89
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -227,6 +227,7 @@ type UserModel struct {
 	Email     string
 	Firstname string
 	Lastname  string
+	Password  string
 	Role      string
 	State     string
 }
@@ -237,17 +238,24 @@ func MarshalUserModel(source *UserModel, inErr error) (target map[string]interfa
 	if len(source.Bio) > 500 {
 		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
 	}
-	tmp73 := map[string]interface{}{
+	if len(source.Email) < 2 {
+		err = goa.InvalidLengthError(`.email`, source.Email, 2, true, err)
+	}
+	if len(source.Password) < 8 {
+		err = goa.InvalidLengthError(`.password`, source.Password, 8, true, err)
+	}
+	tmp90 := map[string]interface{}{
 		"bio":       source.Bio,
 		"city":      source.City,
 		"country":   source.Country,
 		"email":     source.Email,
 		"firstname": source.Firstname,
 		"lastname":  source.Lastname,
+		"password":  source.Password,
 		"role":      source.Role,
 		"state":     source.State,
 	}
-	target = tmp73
+	target = tmp90
 	return
 }
 
@@ -257,81 +265,100 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UserModel)
 		if v, ok := val["bio"]; ok {
-			var tmp74 string
+			var tmp91 string
 			if val, ok := v.(string); ok {
-				tmp74 = val
+				tmp91 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Bio`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp74) > 500 {
-					err = goa.InvalidLengthError(`load.Bio`, tmp74, 500, false, err)
+				if len(tmp91) > 500 {
+					err = goa.InvalidLengthError(`load.Bio`, tmp91, 500, false, err)
 				}
 			}
-			target.Bio = tmp74
+			target.Bio = tmp91
 		}
 		if v, ok := val["city"]; ok {
-			var tmp75 string
+			var tmp92 string
 			if val, ok := v.(string); ok {
-				tmp75 = val
+				tmp92 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
 			}
-			target.City = tmp75
+			target.City = tmp92
 		}
 		if v, ok := val["country"]; ok {
-			var tmp76 string
+			var tmp93 string
 			if val, ok := v.(string); ok {
-				tmp76 = val
+				tmp93 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
 			}
-			target.Country = tmp76
+			target.Country = tmp93
 		}
 		if v, ok := val["email"]; ok {
-			var tmp77 string
+			var tmp94 string
 			if val, ok := v.(string); ok {
-				tmp77 = val
+				tmp94 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
-			target.Email = tmp77
+			if err == nil {
+				if len(tmp94) < 2 {
+					err = goa.InvalidLengthError(`load.Email`, tmp94, 2, true, err)
+				}
+			}
+			target.Email = tmp94
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp78 string
+			var tmp95 string
 			if val, ok := v.(string); ok {
-				tmp78 = val
+				tmp95 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
 			}
-			target.Firstname = tmp78
+			target.Firstname = tmp95
 		}
 		if v, ok := val["lastname"]; ok {
-			var tmp79 string
+			var tmp96 string
 			if val, ok := v.(string); ok {
-				tmp79 = val
+				tmp96 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
 			}
-			target.Lastname = tmp79
+			target.Lastname = tmp96
+		}
+		if v, ok := val["password"]; ok {
+			var tmp97 string
+			if val, ok := v.(string); ok {
+				tmp97 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Password`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp97) < 8 {
+					err = goa.InvalidLengthError(`load.Password`, tmp97, 8, true, err)
+				}
+			}
+			target.Password = tmp97
 		}
 		if v, ok := val["role"]; ok {
-			var tmp80 string
+			var tmp98 string
 			if val, ok := v.(string); ok {
-				tmp80 = val
+				tmp98 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Role`, v, "string", err)
 			}
-			target.Role = tmp80
+			target.Role = tmp98
 		}
 		if v, ok := val["state"]; ok {
-			var tmp81 string
+			var tmp99 string
 			if val, ok := v.(string); ok {
-				tmp81 = val
+				tmp99 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
 			}
-			target.State = tmp81
+			target.State = tmp99
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)

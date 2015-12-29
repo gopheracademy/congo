@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -14,12 +15,9 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 	"github.com/raphael/goa"
-	_ "gopkg.in/authboss.v0/auth"
-	_ "gopkg.in/authboss.v0/confirm"
-	_ "gopkg.in/authboss.v0/lock"
-	_ "gopkg.in/authboss.v0/recover"
-	_ "gopkg.in/authboss.v0/register"
-	//	_ "gopkg.in/authboss.v0/remember"
+	"github.com/raphael/goa-middleware/jwt"
+
+	jg "github.com/dgrijalva/jwt-go"
 )
 
 func main() {
@@ -41,9 +39,29 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	spec := &jwt.Specification{
+		AllowParam:       false,
+		AuthOptions:      false,
+		TTLMinutes:       60,
+		Issuer:           "api.gopheracademy.com",
+		KeySigningMethod: jwt.RSA256,
+		SigningKeyFunc:   privateKey,
+		ValidationFunc:   pubKey,
+	}
 
+	tm := jwt.NewTokenManager(spec)
+	claims := make(map[string]interface{})
+	claims["sub"] = "1"
+
+	t, err := tm.Create(claims)
+	fmt.Println(t)
+	fmt.Println(err)
+
+	a := NewAuthController(service, &db, tm, spec)
+	app.MountAuthController(service, a)
 	// Mount "user" controller
 	c3 := NewUserController(service, models.NewUserDB(db))
+	c3.Use(jwt.Middleware(spec))
 	app.MountUserController(service, c3)
 
 	js.MountController(service)
@@ -66,7 +84,17 @@ func connectDB() (gorm.DB, error) {
 	db, err = gorm.Open("postgres", constr)
 	if err == nil {
 		db.AutoMigrate(&models.User{})
+		db.AutoMigrate(&models.Proposal{})
+		db.AutoMigrate(&models.Review{})
 	}
 	db.LogMode(true)
 	return db, err
+}
+
+func pubKey(*jg.Token) (interface{}, error) {
+	return ioutil.ReadFile("keys/gc.rsa.pub")
+}
+
+func privateKey() (interface{}, error) {
+	return ioutil.ReadFile("keys/gc.rsa")
 }

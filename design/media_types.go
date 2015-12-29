@@ -5,6 +5,48 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
+// Authorize is the authorize resource media type.
+var Authorize = MediaType("application/vnd.authorize+json", func() {
+	Description("Token authorization response")
+	Attributes(func() {
+		Attribute("access_token", String, "access token", func() {
+		})
+		Attribute("expires_in", Integer, "Time to expiration in seconds", func() {
+		})
+		Attribute("token_type", String, "type of token", func() {
+		})
+
+	})
+
+	View("default", func() {
+		Attribute("access_token")
+		Attribute("expires_in")
+		Attribute("token_type")
+	})
+
+})
+
+// Login is the Login resource media type.
+var Login = MediaType("application/vnd.login+json", func() {
+	Description("")
+	Attributes(func() {
+		Attribute("email", String, "email", func() {
+		})
+		Attribute("password", String, "password", func() {
+		})
+		Attribute("application", String, "UUID of requesting application", func() {
+		})
+
+	})
+
+	View("default", func() {
+		Attribute("email")
+		Attribute("password")
+		Attribute("application")
+	})
+
+})
+
 // User is the user resource media type.
 var User = MediaType("application/vnd.user+json", func() {
 	Description("A user belonging to a tenant account")
@@ -15,6 +57,7 @@ var User = MediaType("application/vnd.user+json", func() {
 		Attribute("href", String, "API href of user")
 		Attribute("firstname", String, "First name of user")
 		Attribute("lastname", String, "Last name of user")
+		Attribute("password", String, "User Password")
 		Attribute("city", String, "City of residence")
 		Attribute("state", String, "State of residence")
 		Attribute("country", String, "Country of residence")

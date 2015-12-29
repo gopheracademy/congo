@@ -14,6 +14,172 @@ package app
 
 import "github.com/raphael/goa"
 
+// Token authorization response
+// Identifier: application/vnd.authorize+json
+type Authorize struct {
+	// access token
+	AccessToken string
+	// Time to expiration in seconds
+	ExpiresIn int
+	// type of token
+	TokenType string
+}
+
+// LoadAuthorize loads raw data into an instance of Authorize running all the
+// validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
+// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
+// complete list of supported data types.
+func LoadAuthorize(raw interface{}) (res *Authorize, err error) {
+	res, err = UnmarshalAuthorize(raw, err)
+	return
+}
+
+// Dump produces raw data from an instance of Authorize running all the
+// validations. See LoadAuthorize for the definition of raw data.
+func (mt *Authorize) Dump() (res map[string]interface{}, err error) {
+	res, err = MarshalAuthorize(mt, err)
+	return
+}
+
+// Validate validates the media type instance.
+func (mt *Authorize) Validate() (err error) {
+	return
+}
+
+// MarshalAuthorize validates and renders an instance of Authorize into a interface{}
+// using view "default".
+func MarshalAuthorize(source *Authorize, inErr error) (target map[string]interface{}, err error) {
+	err = inErr
+	tmp39 := map[string]interface{}{
+		"access_token": source.AccessToken,
+		"expires_in":   source.ExpiresIn,
+		"token_type":   source.TokenType,
+	}
+	target = tmp39
+	return
+}
+
+// UnmarshalAuthorize unmarshals and validates a raw interface{} into an instance of Authorize
+func UnmarshalAuthorize(source interface{}, inErr error) (target *Authorize, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(Authorize)
+		if v, ok := val["access_token"]; ok {
+			var tmp40 string
+			if val, ok := v.(string); ok {
+				tmp40 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.AccessToken`, v, "string", err)
+			}
+			target.AccessToken = tmp40
+		}
+		if v, ok := val["expires_in"]; ok {
+			var tmp41 int
+			if f, ok := v.(float64); ok {
+				tmp41 = int(f)
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.ExpiresIn`, v, "int", err)
+			}
+			target.ExpiresIn = tmp41
+		}
+		if v, ok := val["token_type"]; ok {
+			var tmp42 string
+			if val, ok := v.(string); ok {
+				tmp42 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.TokenType`, v, "string", err)
+			}
+			target.TokenType = tmp42
+		}
+	} else {
+		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
+	}
+	return
+}
+
+// Login media type
+// Identifier: application/vnd.login+json
+type Login struct {
+	// UUID of requesting application
+	Application string
+	// email
+	Email string
+	// password
+	Password string
+}
+
+// LoadLogin loads raw data into an instance of Login running all the
+// validations. Raw data is defined by data that the JSON unmarshaler would create when unmarshaling
+// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
+// complete list of supported data types.
+func LoadLogin(raw interface{}) (res *Login, err error) {
+	res, err = UnmarshalLogin(raw, err)
+	return
+}
+
+// Dump produces raw data from an instance of Login running all the
+// validations. See LoadLogin for the definition of raw data.
+func (mt *Login) Dump() (res map[string]interface{}, err error) {
+	res, err = MarshalLogin(mt, err)
+	return
+}
+
+// Validate validates the media type instance.
+func (mt *Login) Validate() (err error) {
+	return
+}
+
+// MarshalLogin validates and renders an instance of Login into a interface{}
+// using view "default".
+func MarshalLogin(source *Login, inErr error) (target map[string]interface{}, err error) {
+	err = inErr
+	tmp43 := map[string]interface{}{
+		"application": source.Application,
+		"email":       source.Email,
+		"password":    source.Password,
+	}
+	target = tmp43
+	return
+}
+
+// UnmarshalLogin unmarshals and validates a raw interface{} into an instance of Login
+func UnmarshalLogin(source interface{}, inErr error) (target *Login, err error) {
+	err = inErr
+	if val, ok := source.(map[string]interface{}); ok {
+		target = new(Login)
+		if v, ok := val["application"]; ok {
+			var tmp44 string
+			if val, ok := v.(string); ok {
+				tmp44 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Application`, v, "string", err)
+			}
+			target.Application = tmp44
+		}
+		if v, ok := val["email"]; ok {
+			var tmp45 string
+			if val, ok := v.(string); ok {
+				tmp45 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
+			}
+			target.Email = tmp45
+		}
+		if v, ok := val["password"]; ok {
+			var tmp46 string
+			if val, ok := v.(string); ok {
+				tmp46 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Password`, v, "string", err)
+			}
+			target.Password = tmp46
+		}
+	} else {
+		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
+	}
+	return
+}
+
 // A response to a CFP
 // Identifier: application/vnd.proposal+json
 type Proposal struct {
@@ -105,14 +271,14 @@ func MarshalProposal(source *Proposal, inErr error) (target map[string]interface
 	if len(source.Title) > 200 {
 		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
 	}
-	tmp31 := map[string]interface{}{
+	tmp47 := map[string]interface{}{
 		"abstract": source.Abstract,
 		"detail":   source.Detail,
 		"href":     source.Href,
 		"id":       source.ID,
 		"title":    source.Title,
 	}
-	target = tmp31
+	target = tmp47
 	return
 }
 
@@ -126,12 +292,12 @@ func MarshalProposalLink(source *Proposal, inErr error) (target map[string]inter
 	if len(source.Title) > 200 {
 		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
 	}
-	tmp32 := map[string]interface{}{
+	tmp48 := map[string]interface{}{
 		"href":  source.Href,
 		"id":    source.ID,
 		"title": source.Title,
 	}
-	target = tmp32
+	target = tmp48
 	return
 }
 
@@ -141,73 +307,73 @@ func UnmarshalProposal(source interface{}, inErr error) (target *Proposal, err e
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(Proposal)
 		if v, ok := val["abstract"]; ok {
-			var tmp33 string
+			var tmp49 string
 			if val, ok := v.(string); ok {
-				tmp33 = val
+				tmp49 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Abstract`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp33) < 50 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp33, 50, true, err)
+				if len(tmp49) < 50 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp49, 50, true, err)
 				}
-				if len(tmp33) > 500 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp33, 500, false, err)
+				if len(tmp49) > 500 {
+					err = goa.InvalidLengthError(`load.Abstract`, tmp49, 500, false, err)
 				}
 			}
-			target.Abstract = tmp33
+			target.Abstract = tmp49
 		}
 		if v, ok := val["detail"]; ok {
-			var tmp34 string
+			var tmp50 string
 			if val, ok := v.(string); ok {
-				tmp34 = val
+				tmp50 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Detail`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp34) < 100 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp34, 100, true, err)
+				if len(tmp50) < 100 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp50, 100, true, err)
 				}
-				if len(tmp34) > 2000 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp34, 2000, false, err)
+				if len(tmp50) > 2000 {
+					err = goa.InvalidLengthError(`load.Detail`, tmp50, 2000, false, err)
 				}
 			}
-			target.Detail = tmp34
+			target.Detail = tmp50
 		}
 		if v, ok := val["href"]; ok {
-			var tmp35 string
+			var tmp51 string
 			if val, ok := v.(string); ok {
-				tmp35 = val
+				tmp51 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
 			}
-			target.Href = tmp35
+			target.Href = tmp51
 		}
 		if v, ok := val["id"]; ok {
-			var tmp36 int
+			var tmp52 int
 			if f, ok := v.(float64); ok {
-				tmp36 = int(f)
+				tmp52 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
 			}
-			target.ID = tmp36
+			target.ID = tmp52
 		}
 		if v, ok := val["title"]; ok {
-			var tmp37 string
+			var tmp53 string
 			if val, ok := v.(string); ok {
-				tmp37 = val
+				tmp53 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Title`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp37) < 10 {
-					err = goa.InvalidLengthError(`load.Title`, tmp37, 10, true, err)
+				if len(tmp53) < 10 {
+					err = goa.InvalidLengthError(`load.Title`, tmp53, 10, true, err)
 				}
-				if len(tmp37) > 200 {
-					err = goa.InvalidLengthError(`load.Title`, tmp37, 200, false, err)
+				if len(tmp53) > 200 {
+					err = goa.InvalidLengthError(`load.Title`, tmp53, 200, false, err)
 				}
 			}
-			target.Title = tmp37
+			target.Title = tmp53
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -232,10 +398,10 @@ func LoadProposalCollection(raw interface{}) (res ProposalCollection, err error)
 // validations. See LoadProposalCollection for the definition of raw data.
 func (mt ProposalCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp38 := range mt {
-		var tmp39 map[string]interface{}
-		tmp39, err = MarshalProposal(tmp38, err)
-		res[i] = tmp39
+	for i, tmp54 := range mt {
+		var tmp55 map[string]interface{}
+		tmp55, err = MarshalProposal(tmp54, err)
+		res[i] = tmp55
 	}
 	return
 }
@@ -281,8 +447,8 @@ func UnmarshalProposalCollection(source interface{}, inErr error) (target Propos
 	err = inErr
 	if val, ok := source.([]interface{}); ok {
 		target = make([]*Proposal, len(val))
-		for tmp40, v := range val {
-			target[tmp40], err = UnmarshalProposal(v, err)
+		for tmp56, v := range val {
+			target[tmp56], err = UnmarshalProposal(v, err)
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)
@@ -367,13 +533,13 @@ func MarshalReview(source *Review, inErr error) (target map[string]interface{}, 
 	if source.Rating > 5 {
 		err = goa.InvalidRangeError(`.rating`, source.Rating, 5, false, err)
 	}
-	tmp41 := map[string]interface{}{
+	tmp57 := map[string]interface{}{
 		"comment": source.Comment,
 		"href":    source.Href,
 		"id":      source.ID,
 		"rating":  source.Rating,
 	}
-	target = tmp41
+	target = tmp57
 	return
 }
 
@@ -381,11 +547,11 @@ func MarshalReview(source *Review, inErr error) (target map[string]interface{}, 
 // using view "link".
 func MarshalReviewLink(source *Review, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	tmp42 := map[string]interface{}{
+	tmp58 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 	}
-	target = tmp42
+	target = tmp58
 	return
 }
 
@@ -395,56 +561,56 @@ func UnmarshalReview(source interface{}, inErr error) (target *Review, err error
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(Review)
 		if v, ok := val["comment"]; ok {
-			var tmp43 string
+			var tmp59 string
 			if val, ok := v.(string); ok {
-				tmp43 = val
+				tmp59 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Comment`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp43) < 10 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp43, 10, true, err)
+				if len(tmp59) < 10 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp59, 10, true, err)
 				}
-				if len(tmp43) > 200 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp43, 200, false, err)
+				if len(tmp59) > 200 {
+					err = goa.InvalidLengthError(`load.Comment`, tmp59, 200, false, err)
 				}
 			}
-			target.Comment = tmp43
+			target.Comment = tmp59
 		}
 		if v, ok := val["href"]; ok {
-			var tmp44 string
+			var tmp60 string
 			if val, ok := v.(string); ok {
-				tmp44 = val
+				tmp60 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
 			}
-			target.Href = tmp44
+			target.Href = tmp60
 		}
 		if v, ok := val["id"]; ok {
-			var tmp45 int
+			var tmp61 int
 			if f, ok := v.(float64); ok {
-				tmp45 = int(f)
+				tmp61 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
 			}
-			target.ID = tmp45
+			target.ID = tmp61
 		}
 		if v, ok := val["rating"]; ok {
-			var tmp46 int
+			var tmp62 int
 			if f, ok := v.(float64); ok {
-				tmp46 = int(f)
+				tmp62 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if tmp46 < 1 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp46, 1, true, err)
+				if tmp62 < 1 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp62, 1, true, err)
 				}
-				if tmp46 > 5 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp46, 5, false, err)
+				if tmp62 > 5 {
+					err = goa.InvalidRangeError(`load.Rating`, tmp62, 5, false, err)
 				}
 			}
-			target.Rating = tmp46
+			target.Rating = tmp62
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -469,10 +635,10 @@ func LoadReviewCollection(raw interface{}) (res ReviewCollection, err error) {
 // validations. See LoadReviewCollection for the definition of raw data.
 func (mt ReviewCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp47 := range mt {
-		var tmp48 map[string]interface{}
-		tmp48, err = MarshalReview(tmp47, err)
-		res[i] = tmp48
+	for i, tmp63 := range mt {
+		var tmp64 map[string]interface{}
+		tmp64, err = MarshalReview(tmp63, err)
+		res[i] = tmp64
 	}
 	return
 }
@@ -512,8 +678,8 @@ func UnmarshalReviewCollection(source interface{}, inErr error) (target ReviewCo
 	err = inErr
 	if val, ok := source.([]interface{}); ok {
 		target = make([]*Review, len(val))
-		for tmp49, v := range val {
-			target[tmp49], err = UnmarshalReview(v, err)
+		for tmp65, v := range val {
+			target[tmp65], err = UnmarshalReview(v, err)
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)
@@ -540,6 +706,8 @@ type User struct {
 	ID int
 	// Last name of user
 	Lastname string
+	// User Password
+	Password string
 	// State of residence
 	State string
 }
@@ -580,10 +748,16 @@ func (mt *User) Validate() (err error) {
 	if len(mt.Bio) > 500 {
 		err = goa.InvalidLengthError(`response.bio`, mt.Bio, 500, false, err)
 	}
+	if len(mt.Email) < 2 {
+		err = goa.InvalidLengthError(`response.email`, mt.Email, 2, true, err)
+	}
 	if mt.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
 			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
 		}
+	}
+	if len(mt.Password) < 8 {
+		err = goa.InvalidLengthError(`response.password`, mt.Password, 8, true, err)
 	}
 	return
 }
@@ -595,12 +769,15 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 	if len(source.Bio) > 500 {
 		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
 	}
+	if len(source.Email) < 2 {
+		err = goa.InvalidLengthError(`.email`, source.Email, 2, true, err)
+	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
 		}
 	}
-	tmp50 := map[string]interface{}{
+	tmp66 := map[string]interface{}{
 		"bio":       source.Bio,
 		"city":      source.City,
 		"country":   source.Country,
@@ -611,7 +788,7 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 		"lastname":  source.Lastname,
 		"state":     source.State,
 	}
-	target = tmp50
+	target = tmp66
 	return
 }
 
@@ -619,17 +796,20 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 // using view "link".
 func MarshalUserLink(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
+	if len(source.Email) < 2 {
+		err = goa.InvalidLengthError(`.email`, source.Email, 2, true, err)
+	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
 		}
 	}
-	tmp51 := map[string]interface{}{
+	tmp67 := map[string]interface{}{
 		"email": source.Email,
 		"href":  source.Href,
 		"id":    source.ID,
 	}
-	target = tmp51
+	target = tmp67
 	return
 }
 
@@ -639,97 +819,114 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(User)
 		if v, ok := val["bio"]; ok {
-			var tmp52 string
+			var tmp68 string
 			if val, ok := v.(string); ok {
-				tmp52 = val
+				tmp68 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Bio`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp52) > 500 {
-					err = goa.InvalidLengthError(`load.Bio`, tmp52, 500, false, err)
+				if len(tmp68) > 500 {
+					err = goa.InvalidLengthError(`load.Bio`, tmp68, 500, false, err)
 				}
 			}
-			target.Bio = tmp52
+			target.Bio = tmp68
 		}
 		if v, ok := val["city"]; ok {
-			var tmp53 string
+			var tmp69 string
 			if val, ok := v.(string); ok {
-				tmp53 = val
+				tmp69 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
 			}
-			target.City = tmp53
+			target.City = tmp69
 		}
 		if v, ok := val["country"]; ok {
-			var tmp54 string
+			var tmp70 string
 			if val, ok := v.(string); ok {
-				tmp54 = val
+				tmp70 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
 			}
-			target.Country = tmp54
+			target.Country = tmp70
 		}
 		if v, ok := val["email"]; ok {
-			var tmp55 string
+			var tmp71 string
 			if val, ok := v.(string); ok {
-				tmp55 = val
+				tmp71 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
 			if err == nil {
-				if tmp55 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp55); err2 != nil {
-						err = goa.InvalidFormatError(`load.Email`, tmp55, goa.FormatEmail, err2, err)
+				if len(tmp71) < 2 {
+					err = goa.InvalidLengthError(`load.Email`, tmp71, 2, true, err)
+				}
+				if tmp71 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp71); err2 != nil {
+						err = goa.InvalidFormatError(`load.Email`, tmp71, goa.FormatEmail, err2, err)
 					}
 				}
 			}
-			target.Email = tmp55
+			target.Email = tmp71
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp56 string
+			var tmp72 string
 			if val, ok := v.(string); ok {
-				tmp56 = val
+				tmp72 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
 			}
-			target.Firstname = tmp56
+			target.Firstname = tmp72
 		}
 		if v, ok := val["href"]; ok {
-			var tmp57 string
+			var tmp73 string
 			if val, ok := v.(string); ok {
-				tmp57 = val
+				tmp73 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
 			}
-			target.Href = tmp57
+			target.Href = tmp73
 		}
 		if v, ok := val["id"]; ok {
-			var tmp58 int
+			var tmp74 int
 			if f, ok := v.(float64); ok {
-				tmp58 = int(f)
+				tmp74 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
 			}
-			target.ID = tmp58
+			target.ID = tmp74
 		}
 		if v, ok := val["lastname"]; ok {
-			var tmp59 string
+			var tmp75 string
 			if val, ok := v.(string); ok {
-				tmp59 = val
+				tmp75 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
 			}
-			target.Lastname = tmp59
+			target.Lastname = tmp75
+		}
+		if v, ok := val["password"]; ok {
+			var tmp76 string
+			if val, ok := v.(string); ok {
+				tmp76 = val
+			} else {
+				err = goa.InvalidAttributeTypeError(`load.Password`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp76) < 8 {
+					err = goa.InvalidLengthError(`load.Password`, tmp76, 8, true, err)
+				}
+			}
+			target.Password = tmp76
 		}
 		if v, ok := val["state"]; ok {
-			var tmp60 string
+			var tmp77 string
 			if val, ok := v.(string); ok {
-				tmp60 = val
+				tmp77 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
 			}
-			target.State = tmp60
+			target.State = tmp77
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -754,10 +951,10 @@ func LoadUserCollection(raw interface{}) (res UserCollection, err error) {
 // validations. See LoadUserCollection for the definition of raw data.
 func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp61 := range mt {
-		var tmp62 map[string]interface{}
-		tmp62, err = MarshalUser(tmp61, err)
-		res[i] = tmp62
+	for i, tmp78 := range mt {
+		var tmp79 map[string]interface{}
+		tmp79, err = MarshalUser(tmp78, err)
+		res[i] = tmp79
 	}
 	return
 }
@@ -768,10 +965,16 @@ func (mt UserCollection) Validate() (err error) {
 		if len(e.Bio) > 500 {
 			err = goa.InvalidLengthError(`response[*].bio`, e.Bio, 500, false, err)
 		}
+		if len(e.Email) < 2 {
+			err = goa.InvalidLengthError(`response[*].email`, e.Email, 2, true, err)
+		}
 		if e.Email != "" {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {
 				err = goa.InvalidFormatError(`response[*].email`, e.Email, goa.FormatEmail, err2, err)
 			}
+		}
+		if len(e.Password) < 8 {
+			err = goa.InvalidLengthError(`response[*].password`, e.Password, 8, true, err)
 		}
 	}
 	return
@@ -793,8 +996,8 @@ func UnmarshalUserCollection(source interface{}, inErr error) (target UserCollec
 	err = inErr
 	if val, ok := source.([]interface{}); ok {
 		target = make([]*User, len(val))
-		for tmp63, v := range val {
-			target[tmp63], err = UnmarshalUser(v, err)
+		for tmp80, v := range val {
+			target[tmp80], err = UnmarshalUser(v, err)
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)

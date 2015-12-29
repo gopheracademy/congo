@@ -62,6 +62,10 @@ type ReviewStorage interface {
 	Add(ctx context.Context, o Review) (Review, error)
 	Update(ctx context.Context, o Review) error
 	Delete(ctx context.Context, id int) error
+
+	ListByProposal(ctx context.Context, id int) []Review
+
+	ListByUser(ctx context.Context, id int) []Review
 }
 
 type ReviewDB struct {
@@ -81,6 +85,13 @@ func ReviewFilterByProposal(parentid int, originaldb *gorm.DB) func(db *gorm.DB)
 	}
 }
 
+func (m *ReviewDB) ListByProposal(ctx context.Context, parentid int) []Review {
+
+	var objs []Review
+	m.DB.Scopes(ReviewFilterByProposal(parentid, &m.DB)).Find(&objs)
+	return objs
+}
+
 // would prefer to just pass a context in here, but they're all different, so can't
 func ReviewFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	if parentid > 0 {
@@ -94,8 +105,17 @@ func ReviewFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *go
 	}
 }
 
+func (m *ReviewDB) ListByUser(ctx context.Context, parentid int) []Review {
+
+	var objs []Review
+	m.DB.Scopes(ReviewFilterByUser(parentid, &m.DB)).Find(&objs)
+	return objs
+}
+
 func NewReviewDB(db gorm.DB) *ReviewDB {
+
 	return &ReviewDB{DB: db}
+
 }
 
 func (m *ReviewDB) List(ctx context.Context) []Review {
@@ -110,11 +130,13 @@ func (m *ReviewDB) One(ctx context.Context, id int) (Review, error) {
 	var obj Review
 
 	err := m.DB.Find(&obj, id).Error
+
 	return obj, err
 }
 
 func (m *ReviewDB) Add(ctx context.Context, model Review) (Review, error) {
 	err := m.DB.Create(&model).Error
+
 	return model, err
 }
 
@@ -124,6 +146,7 @@ func (m *ReviewDB) Update(ctx context.Context, model Review) error {
 		return err
 	}
 	err = m.DB.Model(&obj).Updates(model).Error
+
 	return err
 }
 
@@ -133,6 +156,7 @@ func (m *ReviewDB) Delete(ctx context.Context, id int) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 

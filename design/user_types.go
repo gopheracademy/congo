@@ -9,8 +9,8 @@ import (
 // It is also the base type for the user media type used to render users.
 var UserModel = Type("UserModel", func() {
 	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#authboss", "All")
 	Metadata("github.com/bketelsen/gorma#roler", "true")
+	Metadata("github.com/bketelsen/gorma#cached", "true")
 	Metadata("github.com/bketelsen/gorma#hasmany", "Proposal,Review")
 	Attribute("firstname", func() {
 	})
@@ -23,6 +23,11 @@ var UserModel = Type("UserModel", func() {
 	Attribute("country", func() {
 	})
 	Attribute("email", func() {
+		Metadata("github.com/bketelsen/gorma#sqltag", "unique")
+		MinLength(2)
+	})
+	Attribute("password", func() {
+		MinLength(8)
 	})
 	Attribute("bio", func() {
 		MaxLength(500)
