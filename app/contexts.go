@@ -19,6 +19,34 @@ import (
 	"github.com/raphael/goa"
 )
 
+// CallbackAuthContext provides the auth callback action context.
+type CallbackAuthContext struct {
+	*goa.Context
+	Provider string
+}
+
+// NewCallbackAuthContext parses the incoming request URL and body, performs validations and creates the
+// context used by the auth controller callback action.
+func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
+	var err error
+	ctx := CallbackAuthContext{Context: c}
+	rawProvider, ok := c.Get("provider")
+	if ok {
+		ctx.Provider = rawProvider
+	}
+	return &ctx, err
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CallbackAuthContext) Created(resp *Authorize) error {
+	r, err := resp.Dump()
+	if err != nil {
+		return fmt.Errorf("invalid response: %s", err)
+	}
+	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
+	return ctx.JSON(201, r)
+}
+
 // RefreshAuthContext provides the auth refresh action context.
 type RefreshAuthContext struct {
 	*goa.Context

@@ -30,6 +30,18 @@ var _ = Resource("auth", func() {
 			Media(Authorize)
 		})
 	})
+	Action("callback", func() {
+		Routing(
+			GET("/:provider/callback"),
+		)
+		Description("OAUTH2 callback endpoint")
+		Params(func() {
+			Param("provider", String)
+		})
+		Response(Created, func() {
+			Media(Authorize)
+		})
+	})
 })
 var _ = Resource("user", func() {
 

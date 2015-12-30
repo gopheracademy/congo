@@ -20,6 +20,7 @@ import (
 // AuthController is the controller interface for the Auth actions.
 type AuthController interface {
 	goa.Controller
+	Callback(*CallbackAuthContext) error
 	Refresh(*RefreshAuthContext) error
 	Token(*TokenAuthContext) error
 }
@@ -28,6 +29,15 @@ type AuthController interface {
 func MountAuthController(service goa.Service, ctrl AuthController) {
 	router := service.HTTPHandler().(*httprouter.Router)
 	var h goa.Handler
+	h = func(c *goa.Context) error {
+		ctx, err := NewCallbackAuthContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Callback(ctx)
+	}
+	router.Handle("GET", "/api/auth/:provider/callback", ctrl.NewHTTPRouterHandle("Callback", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Callback", "route", "GET /api/auth/:provider/callback")
 	h = func(c *goa.Context) error {
 		ctx, err := NewRefreshAuthContext(c)
 		if err != nil {

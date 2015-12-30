@@ -17,6 +17,7 @@ const (
 	ADMIN = "Admin"
 	USER  = "User"
 
+	AUTHCALLBACK   = "auth.callback"
 	AUTHREFRESH    = "auth.refresh"
 	AUTHTOKEN      = "auth.token"
 	PROPOSALCREATE = "proposal.create"
@@ -54,6 +55,7 @@ func Authorize(r Roler, perm string) bool {
 func init() {
 	RBAC = gorbac.New()
 	RBAC.Add(USER, []string{
+		AUTHCALLBACK,
 		AUTHREFRESH,
 		AUTHTOKEN,
 		PROPOSALCREATE,
@@ -73,6 +75,7 @@ func init() {
 		USERUPDATE,
 	}, nil)
 	RBAC.Add(ADMIN, []string{
+		AUTHCALLBACK,
 		AUTHREFRESH,
 		AUTHTOKEN,
 		PROPOSALCREATE,
