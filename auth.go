@@ -8,6 +8,7 @@ import (
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/models"
 	"github.com/jinzhu/gorm"
+	"github.com/markbates/goth/gothic"
 
 	djwt "github.com/dgrijalva/jwt-go"
 	"github.com/raphael/goa"
@@ -33,9 +34,25 @@ func NewAuthController(service goa.Service, db *gorm.DB, tm *jwt.TokenManager, s
 }
 
 func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
+
+	user, err := gothic.CompleteUserAuth(ctx, ctx.Request())
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println(user)
 	return nil
 }
 func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
+	url, err := gothic.GetAuthURL(ctx, ctx.Request())
+	fmt.Println(url)
+	if err != nil {
+		ctx.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(ctx, err)
+		return err
+	}
+
+	http.Redirect(ctx, ctx.Request(), url, http.StatusTemporaryRedirect)
 	return nil
 }
 
