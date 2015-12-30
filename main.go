@@ -22,6 +22,7 @@ import (
 	"github.com/raphael/goa"
 	//	_ "gopkg.in/authboss.v0/remember"
 	jg "github.com/dgrijalva/jwt-go"
+	"github.com/raphael/goa-middleware/cors"
 	"github.com/raphael/goa-middleware/jwt"
 )
 
@@ -46,6 +47,25 @@ func main() {
 	service.Use(goa.RequestID())
 	service.Use(goa.LogRequest())
 	service.Use(goa.Recover())
+
+	// cors specification
+	cspec, err := cors.New(func() {
+		cors.Origin("https://cfp.gophercon.com", func() {
+			cors.Resource("/api", func() {
+				cors.Headers("Authorization")
+				cors.Methods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+				cors.MaxAge(600)
+				cors.Credentials(true)
+				cors.Vary("Http-Origin")
+			})
+		})
+	})
+	if err != nil {
+		panic(err)
+	}
+	// mount the cors controller
+	service.Use(cors.Middleware(cspec))
+
 	db, err := connectDB()
 	if err != nil {
 		panic(err)
@@ -65,14 +85,18 @@ func main() {
 	claims["sub"] = "1"
 
 	t, err := tm.Create(claims)
+	// a token to get in through the backdoor printed to standard out
 	fmt.Println(t)
-	fmt.Println(err)
 
 	a := NewAuthController(service, &db, tm, spec)
 	app.MountAuthController(service, a)
 	// Mount "user" controller
 	c3 := NewUserController(service, models.NewUserDB(db))
 	app.MountUserController(service, c3)
+	c3.Use(jwt.Middleware(spec))
+	c4 := NewProposalController(service, models.NewProposalDB(db))
+	app.MountProposalController(service, c4)
+	c4.Use(jwt.Middleware(spec))
 
 	js.MountController(service)
 	// Mount Swagger spec provider controller

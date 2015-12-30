@@ -10,19 +10,16 @@
     <script>
       requirejs.config({
         paths: {
-          axios: '/api/js/axios.min',
-          client: '/api/js/client'
+          axios: '/js/axios.min',
+          client: '/js/client'
         }
       });
       requirejs(['client'], function (client) {
-    cfg = {
-	    url: "http://localhost:8080/api/users"
-    };
-	      client().listUser('/api/users',cfg)
-	      .then(function (resp) {
-            document.getElementById('response').innerHTML = resp.data;
+        client().callbackAuth ("/api/auth/Aut aspernatur excepturi./callback")
+          .then(function (resp) {
+            document.getElementById('response').innerHTML = resp.statusText;
           })
-	  .catch(function (resp) {
+          .catch(function (resp) {
             document.getElementById('response').innerHTML = resp.statusText;
           });
       });

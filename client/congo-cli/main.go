@@ -97,71 +97,91 @@ func main() {
 func RegisterCommands(app *kingpin.Application) map[string]client.ActionCommand {
 	res := make(map[string]client.ActionCommand)
 	var command, sub *kingpin.CmdClause
-	command = app.Command("create", "create action")
-	tmp1 := new(CreateProposalCommand)
-	sub = command.Command("proposal", "Create a new proposal")
+	command = app.Command("callback", "OAUTH2 callback endpoint")
+	tmp1 := new(CallbackAuthCommand)
+	sub = command.Command("auth", "OAUTH2 callback endpoint")
 	tmp1.RegisterFlags(sub)
-	res["create proposal"] = tmp1
-	tmp2 := new(CreateReviewCommand)
-	sub = command.Command("review", "Create a new review")
+	res["callback auth"] = tmp1
+	command = app.Command("create", "create action")
+	tmp2 := new(CreateProposalCommand)
+	sub = command.Command("proposal", "Create a new proposal")
 	tmp2.RegisterFlags(sub)
-	res["create review"] = tmp2
-	tmp3 := new(CreateUserCommand)
-	sub = command.Command("user", "Record new user")
+	res["create proposal"] = tmp2
+	tmp3 := new(CreateReviewCommand)
+	sub = command.Command("review", "Create a new review")
 	tmp3.RegisterFlags(sub)
-	res["create user"] = tmp3
-	command = app.Command("delete", "delete action")
-	tmp4 := new(DeleteProposalCommand)
-	sub = command.Command("proposal", "")
+	res["create review"] = tmp3
+	tmp4 := new(CreateUserCommand)
+	sub = command.Command("user", "Record new user")
 	tmp4.RegisterFlags(sub)
-	res["delete proposal"] = tmp4
-	tmp5 := new(DeleteReviewCommand)
-	sub = command.Command("review", "")
-	tmp5.RegisterFlags(sub)
-	res["delete review"] = tmp5
-	tmp6 := new(DeleteUserCommand)
-	sub = command.Command("user", "")
-	tmp6.RegisterFlags(sub)
-	res["delete user"] = tmp6
-	command = app.Command("list", "list action")
-	tmp7 := new(ListProposalCommand)
-	sub = command.Command("proposal", "List all proposals for a user")
-	tmp7.RegisterFlags(sub)
-	res["list proposal"] = tmp7
-	tmp8 := new(ListReviewCommand)
-	sub = command.Command("review", "List all reviews for a proposal")
-	tmp8.RegisterFlags(sub)
-	res["list review"] = tmp8
-	tmp9 := new(ListUserCommand)
-	sub = command.Command("user", "List all users in account")
-	tmp9.RegisterFlags(sub)
-	res["list user"] = tmp9
-	command = app.Command("show", "show action")
-	tmp10 := new(ShowProposalCommand)
-	sub = command.Command("proposal", "Retrieve proposal with given id")
-	tmp10.RegisterFlags(sub)
-	res["show proposal"] = tmp10
-	tmp11 := new(ShowReviewCommand)
-	sub = command.Command("review", "Retrieve review with given id")
-	tmp11.RegisterFlags(sub)
-	res["show review"] = tmp11
-	tmp12 := new(ShowUserCommand)
-	sub = command.Command("user", "Retrieve user with given id")
-	tmp12.RegisterFlags(sub)
-	res["show user"] = tmp12
-	command = app.Command("update", "update action")
-	tmp13 := new(UpdateProposalCommand)
+	res["create user"] = tmp4
+	command = app.Command("delete", "delete action")
+	tmp5 := new(DeleteProposalCommand)
 	sub = command.Command("proposal", "")
-	tmp13.RegisterFlags(sub)
-	res["update proposal"] = tmp13
-	tmp14 := new(UpdateReviewCommand)
+	tmp5.RegisterFlags(sub)
+	res["delete proposal"] = tmp5
+	tmp6 := new(DeleteReviewCommand)
 	sub = command.Command("review", "")
-	tmp14.RegisterFlags(sub)
-	res["update review"] = tmp14
-	tmp15 := new(UpdateUserCommand)
+	tmp6.RegisterFlags(sub)
+	res["delete review"] = tmp6
+	tmp7 := new(DeleteUserCommand)
 	sub = command.Command("user", "")
+	tmp7.RegisterFlags(sub)
+	res["delete user"] = tmp7
+	command = app.Command("list", "list action")
+	tmp8 := new(ListProposalCommand)
+	sub = command.Command("proposal", "List all proposals for a user")
+	tmp8.RegisterFlags(sub)
+	res["list proposal"] = tmp8
+	tmp9 := new(ListReviewCommand)
+	sub = command.Command("review", "List all reviews for a proposal")
+	tmp9.RegisterFlags(sub)
+	res["list review"] = tmp9
+	tmp10 := new(ListUserCommand)
+	sub = command.Command("user", "List all users in account")
+	tmp10.RegisterFlags(sub)
+	res["list user"] = tmp10
+	command = app.Command("oauth", "OAUTH2 login endpoint")
+	tmp11 := new(OauthAuthCommand)
+	sub = command.Command("auth", "OAUTH2 login endpoint")
+	tmp11.RegisterFlags(sub)
+	res["oauth auth"] = tmp11
+	command = app.Command("refresh", "Obtain a refreshed access token")
+	tmp12 := new(RefreshAuthCommand)
+	sub = command.Command("auth", "Obtain a refreshed access token")
+	tmp12.RegisterFlags(sub)
+	res["refresh auth"] = tmp12
+	command = app.Command("show", "show action")
+	tmp13 := new(ShowProposalCommand)
+	sub = command.Command("proposal", "Retrieve proposal with given id")
+	tmp13.RegisterFlags(sub)
+	res["show proposal"] = tmp13
+	tmp14 := new(ShowReviewCommand)
+	sub = command.Command("review", "Retrieve review with given id")
+	tmp14.RegisterFlags(sub)
+	res["show review"] = tmp14
+	tmp15 := new(ShowUserCommand)
+	sub = command.Command("user", "Retrieve user with given id")
 	tmp15.RegisterFlags(sub)
-	res["update user"] = tmp15
+	res["show user"] = tmp15
+	command = app.Command("token", "Obtain an access token")
+	tmp16 := new(TokenAuthCommand)
+	sub = command.Command("auth", "Obtain an access token")
+	tmp16.RegisterFlags(sub)
+	res["token auth"] = tmp16
+	command = app.Command("update", "update action")
+	tmp17 := new(UpdateProposalCommand)
+	sub = command.Command("proposal", "")
+	tmp17.RegisterFlags(sub)
+	res["update proposal"] = tmp17
+	tmp18 := new(UpdateReviewCommand)
+	sub = command.Command("review", "")
+	tmp18.RegisterFlags(sub)
+	res["update review"] = tmp18
+	tmp19 := new(UpdateUserCommand)
+	sub = command.Command("user", "")
+	tmp19.RegisterFlags(sub)
+	res["update user"] = tmp19
 
 	return res
 }

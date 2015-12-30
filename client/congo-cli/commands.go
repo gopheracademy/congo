@@ -10,6 +10,28 @@ import (
 )
 
 type (
+	// CallbackAuthCommand is the command line data structure for the callback action of auth
+	CallbackAuthCommand struct {
+		// Path is the HTTP request path.
+		Path string
+	}
+	// OauthAuthCommand is the command line data structure for the oauth action of auth
+	OauthAuthCommand struct {
+		// Path is the HTTP request path.
+		Path string
+	}
+	// RefreshAuthCommand is the command line data structure for the refresh action of auth
+	RefreshAuthCommand struct {
+		// Path is the HTTP request path.
+		Path    string
+		Payload string
+	}
+	// TokenAuthCommand is the command line data structure for the token action of auth
+	TokenAuthCommand struct {
+		// Path is the HTTP request path.
+		Path    string
+		Payload string
+	}
 	// CreateProposalCommand is the command line data structure for the create action of proposal
 	CreateProposalCommand struct {
 		// Path is the HTTP request path.
@@ -92,6 +114,62 @@ type (
 		Payload string
 	}
 )
+
+// Run makes the HTTP request corresponding to the CallbackAuthCommand command.
+func (cmd *CallbackAuthCommand) Run(c *client.Client) (*http.Response, error) {
+	return c.CallbackAuth(cmd.Path)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CallbackAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, format is /api/auth/:provider/callback`).Required().StringVar(&cmd.Path)
+}
+
+// Run makes the HTTP request corresponding to the OauthAuthCommand command.
+func (cmd *OauthAuthCommand) Run(c *client.Client) (*http.Response, error) {
+	return c.OauthAuth(cmd.Path)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *OauthAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, format is /api/auth/:provider`).Required().StringVar(&cmd.Path)
+}
+
+// Run makes the HTTP request corresponding to the RefreshAuthCommand command.
+func (cmd *RefreshAuthCommand) Run(c *client.Client) (*http.Response, error) {
+	var payload client.RefreshAuthPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return nil, fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	return c.RefreshAuth(cmd.Path, &payload)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *RefreshAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, default is "/api/auth/refresh"`).Default("/api/auth/refresh").StringVar(&cmd.Path)
+	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
+}
+
+// Run makes the HTTP request corresponding to the TokenAuthCommand command.
+func (cmd *TokenAuthCommand) Run(c *client.Client) (*http.Response, error) {
+	var payload client.TokenAuthPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return nil, fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	return c.TokenAuth(cmd.Path, &payload)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *TokenAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, default is "/api/auth/token"`).Default("/api/auth/token").StringVar(&cmd.Path)
+	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
+}
 
 // Run makes the HTTP request corresponding to the CreateProposalCommand command.
 func (cmd *CreateProposalCommand) Run(c *client.Client) (*http.Response, error) {
