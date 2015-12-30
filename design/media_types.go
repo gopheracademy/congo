@@ -5,6 +5,42 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
+// User is the user resource media type.
+var User = MediaType("application/vnd.user+json", func() {
+	Description("A user belonging to a tenant account")
+	Metadata("mediatype", "123")
+	Reference(UserModel)
+	Attributes(func() {
+		Attribute("id", Integer, "ID of user")
+		Attribute("href", String, "API href of user")
+		Attribute("firstname", String, "First name of user")
+		Attribute("lastname", String, "Last name of user")
+		Attribute("city", String, "City of residence")
+		Attribute("state", String, "State of residence")
+		Attribute("country", String, "Country of residence")
+		Attribute("bio", String, "Biography of user")
+		Attribute("email", String, "Email address of user", func() {
+			Format("email")
+		})
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("href")
+		Attribute("firstname")
+		Attribute("lastname")
+		Attribute("email")
+		Attribute("city")
+		Attribute("state")
+		Attribute("country")
+		Attribute("bio")
+	})
+	View("link", func() {
+		Attribute("id")
+		Attribute("href")
+		Attribute("email")
+	})
+})
+
 // Authorize is the authorize resource media type.
 var Authorize = MediaType("application/vnd.authorize+json", func() {
 	Description("Token authorization response")
@@ -45,43 +81,6 @@ var Login = MediaType("application/vnd.login+json", func() {
 		Attribute("application")
 	})
 
-})
-
-// User is the user resource media type.
-var User = MediaType("application/vnd.user+json", func() {
-	Description("A user belonging to a tenant account")
-	Metadata("mediatype", "123")
-	Reference(UserModel)
-	Attributes(func() {
-		Attribute("id", Integer, "ID of user")
-		Attribute("href", String, "API href of user")
-		Attribute("firstname", String, "First name of user")
-		Attribute("lastname", String, "Last name of user")
-		Attribute("password", String, "User Password")
-		Attribute("city", String, "City of residence")
-		Attribute("state", String, "State of residence")
-		Attribute("country", String, "Country of residence")
-		Attribute("bio", String, "Biography of user")
-		Attribute("email", String, "Email address of user", func() {
-			Format("email")
-		})
-	})
-	View("default", func() {
-		Attribute("id")
-		Attribute("href")
-		Attribute("firstname")
-		Attribute("lastname")
-		Attribute("email")
-		Attribute("city")
-		Attribute("state")
-		Attribute("country")
-		Attribute("bio")
-	})
-	View("link", func() {
-		Attribute("id")
-		Attribute("href")
-		Attribute("email")
-	})
 })
 
 // Review is the review resource mediatype

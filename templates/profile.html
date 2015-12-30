@@ -1,0 +1,59 @@
+
+<div class="page-header">
+  <h1>Update Your Profile</h1>
+</div>
+<div class="container" id="page-content"></div>
+<script type="text/babel">
+var Profile= React.createClass({
+  mixins: [React.addons.LinkedStateMixin],
+  getInitialState: function() {
+    return {
+	    user: {},
+	  firstName: "",
+	  lastName: "",
+	  email: "",
+	  bio: "",
+    };
+  },
+  componentDidMount: function() {
+	  console.log(this.props.userid);
+	var u = "/api/users/" + this.props.userid;
+	  $.getJSON(u, function(data) {
+		  this.setState({user: data, bio: data.bio, firstName: data.firstname, lastName: data.lastname, email:data.email});
+		  console.log(data)
+    }.bind(this));
+  },
+  handleSubmit: function(e) {
+	e.preventDefault();
+    $.ajax({
+      url: "/api/users/" + this.props.userid,
+      data: JSON.stringify({"id": this.props.userid, "bio": this.state.bio, "firstname": this.state.firstName, "lastname": this.state.lastName, "email": this.state.email}),
+      method: "PATCH",
+      error: function(request, textStatus, response) {
+	  var resp = JSON.parse(request.responseText);
+         alert(resp[0].title +": " +  resp[0].msg);
+        },
+    });
+  },
+  render: function() {
+    return (
+      <div className="container users">
+	      <div className="row">
+          <form onSubmit={this.handleSubmit}>
+	<div className="form-group">
+
+              <label htmlFor="firstName">First Name</label><input type="text" className="form-control" id="firstName" valueLink={this.linkState('firstName')} />
+              <label htmlFor="lastName">Last Name</label> <input type="text" className="form-control" id="lastName" valueLink={this.linkState('lastName')}  />
+              <label htmlFor="email">Email</label><input type="text" className="form-control" id="email" valueLink={this.linkState('email')} />
+              <label htmlFor="bio">Biography</label> <input type="text" className="form-control" id="bio" valueLink={this.linkState('bio')} />
+	</div>
+            <button className="btn btn-default">Update</button>
+          </form>
+        </div>
+      </div>
+    );
+  },
+	});
+
+ReactDOM.render(<Profile userid="{{{.UserID}}}" />, document.getElementById("page-content"));
+</script>

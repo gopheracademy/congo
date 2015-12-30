@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/models"
@@ -24,11 +23,7 @@ func NewUserController(service goa.Service, storage models.UserStorage) app.User
 func (c *UserController) Create(ctx *app.CreateUserContext) error {
 	m, err := c.storage.Add(ctx, models.UserFromCreatePayload(ctx))
 	if err != nil {
-		if strings.Contains(err.Error(), "duplicate") {
-			return ctx.Respond(400, []byte("Duplicate Registration"))
-		} else {
-			return ctx.Err()
-		}
+		return ctx.Err()
 	}
 	ctx.Header().Set("Location", app.UserHref(m.ID))
 	return ctx.Created()
