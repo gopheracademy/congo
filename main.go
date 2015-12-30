@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/js"
@@ -80,6 +81,11 @@ func main() {
 	gothic.GetProviderName = provider
 
 	hostStr := fmt.Sprintf(":%d", cfg.Port)
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	service.ServeFiles("/assets/public/*filepath", http.Dir(filepath.Join(dir, "assets", "public")))
 	service.ListenAndServe(hostStr)
 }
 func provider(r *http.Request) (string, error) {
