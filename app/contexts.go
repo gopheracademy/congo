@@ -37,14 +37,14 @@ func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
 	return &ctx, err
 }
 
-// Created sends a HTTP response with status code 201.
-func (ctx *CallbackAuthContext) Created(resp *Authorize) error {
+// OK sends a HTTP response with status code 200.
+func (ctx *CallbackAuthContext) OK(resp *Authorize) error {
 	r, err := resp.Dump()
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
 	}
 	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.JSON(201, r)
+	return ctx.JSON(200, r)
 }
 
 // OauthAuthContext provides the auth oauth action context.

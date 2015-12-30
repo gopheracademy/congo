@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
+
+	"golang.org/x/net/context"
 
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/models"
@@ -41,7 +44,46 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 		return err
 	}
 	fmt.Println(user)
-	return nil
+
+	udb := models.NewUserDB(*c.db)
+	prov, _ := provider(ctx.Request())
+	var cuser models.User
+	cuser, err = udb.UserByOauth(user.UserID, prov)
+	if err != nil {
+		if err.Error() == "record not found" { // todo: get a real error here?
+			cuser = models.User{
+				// OAuth2
+				Oauth2Uid:      user.UserID,
+				Oauth2Provider: prov,
+				Oauth2Token:    user.AccessToken,
+
+				Email: user.Email,
+				Role:  models.USER,
+			}
+			cuser, err = udb.Add(context.Background(), cuser)
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(cuser.ID)
+		}
+	} else {
+		fmt.Println("updating existing user")
+		cuser.Oauth2Token = user.AccessToken
+		err := udb.Update(context.Background(), cuser)
+		if err != nil {
+			fmt.Println("Update Error: ", err)
+		}
+
+	}
+	claims := make(map[string]interface{})
+	claims["sub"] = strconv.Itoa(cuser.ID)
+	claims["provider"] = prov
+	claims["first_name"] = cuser.Firstname
+	t, err := c.tm.Create(claims)
+	auth := app.Authorize{}
+	auth.AccessToken = t
+
+	return ctx.OK(&auth)
 }
 func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
 	url, err := gothic.GetAuthURL(ctx, ctx.Request())

@@ -38,7 +38,7 @@ var _ = Resource("auth", func() {
 		Params(func() {
 			Param("provider", String)
 		})
-		Response(Created, func() {
+		Response(OK, func() {
 			Media(Authorize)
 		})
 	})
