@@ -35,6 +35,9 @@ func NewAuthController(service goa.Service, db *gorm.DB, tm *jwt.TokenManager, s
 func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	return nil
 }
+func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
+	return nil
+}
 
 // Token runs the token action.
 func (c *AuthController) Token(ctx *app.TokenAuthContext) error {

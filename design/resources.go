@@ -42,6 +42,16 @@ var _ = Resource("auth", func() {
 			Media(Authorize)
 		})
 	})
+	Action("oauth", func() {
+		Routing(
+			GET("/:provider"),
+		)
+		Description("OAUTH2 login endpoint")
+		Params(func() {
+			Param("provider", String)
+		})
+		Response(OK)
+	})
 })
 var _ = Resource("user", func() {
 

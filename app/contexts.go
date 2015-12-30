@@ -47,6 +47,34 @@ func (ctx *CallbackAuthContext) Created(resp *Authorize) error {
 	return ctx.JSON(201, r)
 }
 
+// OauthAuthContext provides the auth oauth action context.
+type OauthAuthContext struct {
+	*goa.Context
+	Provider string
+}
+
+// NewOauthAuthContext parses the incoming request URL and body, performs validations and creates the
+// context used by the auth controller oauth action.
+func NewOauthAuthContext(c *goa.Context) (*OauthAuthContext, error) {
+	var err error
+	ctx := OauthAuthContext{Context: c}
+	rawProvider, ok := c.Get("provider")
+	if ok {
+		ctx.Provider = rawProvider
+	}
+	return &ctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *OauthAuthContext) OK(resp *Authorize) error {
+	r, err := resp.Dump()
+	if err != nil {
+		return fmt.Errorf("invalid response: %s", err)
+	}
+	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
+	return ctx.JSON(200, r)
+}
+
 // RefreshAuthContext provides the auth refresh action context.
 type RefreshAuthContext struct {
 	*goa.Context

@@ -21,6 +21,7 @@ import (
 type AuthController interface {
 	goa.Controller
 	Callback(*CallbackAuthContext) error
+	Oauth(*OauthAuthContext) error
 	Refresh(*RefreshAuthContext) error
 	Token(*TokenAuthContext) error
 }
@@ -38,6 +39,15 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 	}
 	router.Handle("GET", "/api/auth/:provider/callback", ctrl.NewHTTPRouterHandle("Callback", h))
 	service.Info("mount", "ctrl", "Auth", "action", "Callback", "route", "GET /api/auth/:provider/callback")
+	h = func(c *goa.Context) error {
+		ctx, err := NewOauthAuthContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Oauth(ctx)
+	}
+	router.Handle("GET", "/api/auth/:provider", ctrl.NewHTTPRouterHandle("Oauth", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Oauth", "route", "GET /api/auth/:provider")
 	h = func(c *goa.Context) error {
 		ctx, err := NewRefreshAuthContext(c)
 		if err != nil {
