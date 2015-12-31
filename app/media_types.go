@@ -41,6 +41,11 @@ func (mt *Authorize) Dump() (res map[string]interface{}, err error) {
 	return
 }
 
+// Validate validates the media type instance.
+func (mt *Authorize) Validate() (err error) {
+	return
+}
+
 // MarshalAuthorize validates and renders an instance of Authorize into a interface{}
 // using view "default".
 func MarshalAuthorize(source *Authorize, inErr error) (target map[string]interface{}, err error) {
@@ -116,6 +121,11 @@ func LoadLogin(raw interface{}) (res *Login, err error) {
 // validations. See LoadLogin for the definition of raw data.
 func (mt *Login) Dump() (res map[string]interface{}, err error) {
 	res, err = MarshalLogin(mt, err)
+	return
+}
+
+// Validate validates the media type instance.
+func (mt *Login) Validate() (err error) {
 	return
 }
 
@@ -219,22 +229,22 @@ func (mt *Proposal) Dump(view ProposalViewEnum) (res map[string]interface{}, err
 // Validate validates the media type instance.
 func (mt *Proposal) Validate() (err error) {
 	if len(mt.Abstract) < 50 {
-		err = goa.InvalidLengthError(`response.abstract`, mt.Abstract, len(mt.Abstract), 50, true, err)
+		err = goa.InvalidLengthError(`response.abstract`, mt.Abstract, 50, true, err)
 	}
 	if len(mt.Abstract) > 500 {
-		err = goa.InvalidLengthError(`response.abstract`, mt.Abstract, len(mt.Abstract), 500, false, err)
+		err = goa.InvalidLengthError(`response.abstract`, mt.Abstract, 500, false, err)
 	}
 	if len(mt.Detail) < 100 {
-		err = goa.InvalidLengthError(`response.detail`, mt.Detail, len(mt.Detail), 100, true, err)
+		err = goa.InvalidLengthError(`response.detail`, mt.Detail, 100, true, err)
 	}
 	if len(mt.Detail) > 2000 {
-		err = goa.InvalidLengthError(`response.detail`, mt.Detail, len(mt.Detail), 2000, false, err)
+		err = goa.InvalidLengthError(`response.detail`, mt.Detail, 2000, false, err)
 	}
 	if len(mt.Title) < 10 {
-		err = goa.InvalidLengthError(`response.title`, mt.Title, len(mt.Title), 10, true, err)
+		err = goa.InvalidLengthError(`response.title`, mt.Title, 10, true, err)
 	}
 	if len(mt.Title) > 200 {
-		err = goa.InvalidLengthError(`response.title`, mt.Title, len(mt.Title), 200, false, err)
+		err = goa.InvalidLengthError(`response.title`, mt.Title, 200, false, err)
 	}
 	return
 }
@@ -244,22 +254,22 @@ func (mt *Proposal) Validate() (err error) {
 func MarshalProposal(source *Proposal, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if len(source.Abstract) < 50 {
-		err = goa.InvalidLengthError(`.abstract`, source.Abstract, len(source.Abstract), 50, true, err)
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 50, true, err)
 	}
 	if len(source.Abstract) > 500 {
-		err = goa.InvalidLengthError(`.abstract`, source.Abstract, len(source.Abstract), 500, false, err)
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 500, false, err)
 	}
 	if len(source.Detail) < 100 {
-		err = goa.InvalidLengthError(`.detail`, source.Detail, len(source.Detail), 100, true, err)
+		err = goa.InvalidLengthError(`.detail`, source.Detail, 100, true, err)
 	}
 	if len(source.Detail) > 2000 {
-		err = goa.InvalidLengthError(`.detail`, source.Detail, len(source.Detail), 2000, false, err)
+		err = goa.InvalidLengthError(`.detail`, source.Detail, 2000, false, err)
 	}
 	if len(source.Title) < 10 {
-		err = goa.InvalidLengthError(`.title`, source.Title, len(source.Title), 10, true, err)
+		err = goa.InvalidLengthError(`.title`, source.Title, 10, true, err)
 	}
 	if len(source.Title) > 200 {
-		err = goa.InvalidLengthError(`.title`, source.Title, len(source.Title), 200, false, err)
+		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
 	}
 	tmp45 := map[string]interface{}{
 		"abstract": source.Abstract,
@@ -277,10 +287,10 @@ func MarshalProposal(source *Proposal, inErr error) (target map[string]interface
 func MarshalProposalLink(source *Proposal, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if len(source.Title) < 10 {
-		err = goa.InvalidLengthError(`.title`, source.Title, len(source.Title), 10, true, err)
+		err = goa.InvalidLengthError(`.title`, source.Title, 10, true, err)
 	}
 	if len(source.Title) > 200 {
-		err = goa.InvalidLengthError(`.title`, source.Title, len(source.Title), 200, false, err)
+		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
 	}
 	tmp46 := map[string]interface{}{
 		"href":  source.Href,
@@ -305,10 +315,10 @@ func UnmarshalProposal(source interface{}, inErr error) (target *Proposal, err e
 			}
 			if err == nil {
 				if len(tmp47) < 50 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp47, len(tmp47), 50, true, err)
+					err = goa.InvalidLengthError(`load.Abstract`, tmp47, 50, true, err)
 				}
 				if len(tmp47) > 500 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp47, len(tmp47), 500, false, err)
+					err = goa.InvalidLengthError(`load.Abstract`, tmp47, 500, false, err)
 				}
 			}
 			target.Abstract = tmp47
@@ -322,10 +332,10 @@ func UnmarshalProposal(source interface{}, inErr error) (target *Proposal, err e
 			}
 			if err == nil {
 				if len(tmp48) < 100 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp48, len(tmp48), 100, true, err)
+					err = goa.InvalidLengthError(`load.Detail`, tmp48, 100, true, err)
 				}
 				if len(tmp48) > 2000 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp48, len(tmp48), 2000, false, err)
+					err = goa.InvalidLengthError(`load.Detail`, tmp48, 2000, false, err)
 				}
 			}
 			target.Detail = tmp48
@@ -357,10 +367,10 @@ func UnmarshalProposal(source interface{}, inErr error) (target *Proposal, err e
 			}
 			if err == nil {
 				if len(tmp51) < 10 {
-					err = goa.InvalidLengthError(`load.Title`, tmp51, len(tmp51), 10, true, err)
+					err = goa.InvalidLengthError(`load.Title`, tmp51, 10, true, err)
 				}
 				if len(tmp51) > 200 {
-					err = goa.InvalidLengthError(`load.Title`, tmp51, len(tmp51), 200, false, err)
+					err = goa.InvalidLengthError(`load.Title`, tmp51, 200, false, err)
 				}
 			}
 			target.Title = tmp51
@@ -400,22 +410,22 @@ func (mt ProposalCollection) Dump() (res []map[string]interface{}, err error) {
 func (mt ProposalCollection) Validate() (err error) {
 	for _, e := range mt {
 		if len(e.Abstract) < 50 {
-			err = goa.InvalidLengthError(`response[*].abstract`, e.Abstract, len(e.Abstract), 50, true, err)
+			err = goa.InvalidLengthError(`response[*].abstract`, e.Abstract, 50, true, err)
 		}
 		if len(e.Abstract) > 500 {
-			err = goa.InvalidLengthError(`response[*].abstract`, e.Abstract, len(e.Abstract), 500, false, err)
+			err = goa.InvalidLengthError(`response[*].abstract`, e.Abstract, 500, false, err)
 		}
 		if len(e.Detail) < 100 {
-			err = goa.InvalidLengthError(`response[*].detail`, e.Detail, len(e.Detail), 100, true, err)
+			err = goa.InvalidLengthError(`response[*].detail`, e.Detail, 100, true, err)
 		}
 		if len(e.Detail) > 2000 {
-			err = goa.InvalidLengthError(`response[*].detail`, e.Detail, len(e.Detail), 2000, false, err)
+			err = goa.InvalidLengthError(`response[*].detail`, e.Detail, 2000, false, err)
 		}
 		if len(e.Title) < 10 {
-			err = goa.InvalidLengthError(`response[*].title`, e.Title, len(e.Title), 10, true, err)
+			err = goa.InvalidLengthError(`response[*].title`, e.Title, 10, true, err)
 		}
 		if len(e.Title) > 200 {
-			err = goa.InvalidLengthError(`response[*].title`, e.Title, len(e.Title), 200, false, err)
+			err = goa.InvalidLengthError(`response[*].title`, e.Title, 200, false, err)
 		}
 	}
 	return
@@ -493,10 +503,10 @@ func (mt *Review) Dump(view ReviewViewEnum) (res map[string]interface{}, err err
 // Validate validates the media type instance.
 func (mt *Review) Validate() (err error) {
 	if len(mt.Comment) < 10 {
-		err = goa.InvalidLengthError(`response.comment`, mt.Comment, len(mt.Comment), 10, true, err)
+		err = goa.InvalidLengthError(`response.comment`, mt.Comment, 10, true, err)
 	}
 	if len(mt.Comment) > 200 {
-		err = goa.InvalidLengthError(`response.comment`, mt.Comment, len(mt.Comment), 200, false, err)
+		err = goa.InvalidLengthError(`response.comment`, mt.Comment, 200, false, err)
 	}
 	if mt.Rating < 1 {
 		err = goa.InvalidRangeError(`response.rating`, mt.Rating, 1, true, err)
@@ -512,10 +522,10 @@ func (mt *Review) Validate() (err error) {
 func MarshalReview(source *Review, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if len(source.Comment) < 10 {
-		err = goa.InvalidLengthError(`.comment`, source.Comment, len(source.Comment), 10, true, err)
+		err = goa.InvalidLengthError(`.comment`, source.Comment, 10, true, err)
 	}
 	if len(source.Comment) > 200 {
-		err = goa.InvalidLengthError(`.comment`, source.Comment, len(source.Comment), 200, false, err)
+		err = goa.InvalidLengthError(`.comment`, source.Comment, 200, false, err)
 	}
 	if source.Rating < 1 {
 		err = goa.InvalidRangeError(`.rating`, source.Rating, 1, true, err)
@@ -559,10 +569,10 @@ func UnmarshalReview(source interface{}, inErr error) (target *Review, err error
 			}
 			if err == nil {
 				if len(tmp57) < 10 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp57, len(tmp57), 10, true, err)
+					err = goa.InvalidLengthError(`load.Comment`, tmp57, 10, true, err)
 				}
 				if len(tmp57) > 200 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp57, len(tmp57), 200, false, err)
+					err = goa.InvalidLengthError(`load.Comment`, tmp57, 200, false, err)
 				}
 			}
 			target.Comment = tmp57
@@ -637,10 +647,10 @@ func (mt ReviewCollection) Dump() (res []map[string]interface{}, err error) {
 func (mt ReviewCollection) Validate() (err error) {
 	for _, e := range mt {
 		if len(e.Comment) < 10 {
-			err = goa.InvalidLengthError(`response[*].comment`, e.Comment, len(e.Comment), 10, true, err)
+			err = goa.InvalidLengthError(`response[*].comment`, e.Comment, 10, true, err)
 		}
 		if len(e.Comment) > 200 {
-			err = goa.InvalidLengthError(`response[*].comment`, e.Comment, len(e.Comment), 200, false, err)
+			err = goa.InvalidLengthError(`response[*].comment`, e.Comment, 200, false, err)
 		}
 		if e.Rating < 1 {
 			err = goa.InvalidRangeError(`response[*].rating`, e.Rating, 1, true, err)
@@ -734,7 +744,7 @@ func (mt *User) Dump(view UserViewEnum) (res map[string]interface{}, err error) 
 // Validate validates the media type instance.
 func (mt *User) Validate() (err error) {
 	if len(mt.Bio) > 500 {
-		err = goa.InvalidLengthError(`response.bio`, mt.Bio, len(mt.Bio), 500, false, err)
+		err = goa.InvalidLengthError(`response.bio`, mt.Bio, 500, false, err)
 	}
 	if mt.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
@@ -749,7 +759,7 @@ func (mt *User) Validate() (err error) {
 func MarshalUser(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if len(source.Bio) > 500 {
-		err = goa.InvalidLengthError(`.bio`, source.Bio, len(source.Bio), 500, false, err)
+		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
 	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
@@ -803,7 +813,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			}
 			if err == nil {
 				if len(tmp66) > 500 {
-					err = goa.InvalidLengthError(`load.Bio`, tmp66, len(tmp66), 500, false, err)
+					err = goa.InvalidLengthError(`load.Bio`, tmp66, 500, false, err)
 				}
 			}
 			target.Bio = tmp66
@@ -922,7 +932,7 @@ func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
 func (mt UserCollection) Validate() (err error) {
 	for _, e := range mt {
 		if len(e.Bio) > 500 {
-			err = goa.InvalidLengthError(`response[*].bio`, e.Bio, len(e.Bio), 500, false, err)
+			err = goa.InvalidLengthError(`response[*].bio`, e.Bio, 500, false, err)
 		}
 		if e.Email != "" {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {

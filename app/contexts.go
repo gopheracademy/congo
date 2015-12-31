@@ -301,10 +301,10 @@ func UnmarshalCreateProposalPayload(source interface{}, inErr error) (target *Cr
 			}
 			if err == nil {
 				if len(tmp7) < 50 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp7, len(tmp7), 50, true, err)
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp7, 50, true, err)
 				}
 				if len(tmp7) > 500 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp7, len(tmp7), 500, false, err)
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp7, 500, false, err)
 				}
 			}
 			target.Abstract = tmp7
@@ -318,10 +318,10 @@ func UnmarshalCreateProposalPayload(source interface{}, inErr error) (target *Cr
 			}
 			if err == nil {
 				if len(tmp8) < 100 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp8, len(tmp8), 100, true, err)
+					err = goa.InvalidLengthError(`payload.Detail`, tmp8, 100, true, err)
 				}
 				if len(tmp8) > 2000 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp8, len(tmp8), 2000, false, err)
+					err = goa.InvalidLengthError(`payload.Detail`, tmp8, 2000, false, err)
 				}
 			}
 			target.Detail = tmp8
@@ -335,7 +335,7 @@ func UnmarshalCreateProposalPayload(source interface{}, inErr error) (target *Cr
 			}
 			if err == nil {
 				if len(tmp9) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp9, len(tmp9), 2, true, err)
+					err = goa.InvalidLengthError(`payload.Firstname`, tmp9, 2, true, err)
 				}
 			}
 			target.Firstname = tmp9
@@ -349,10 +349,10 @@ func UnmarshalCreateProposalPayload(source interface{}, inErr error) (target *Cr
 			}
 			if err == nil {
 				if len(tmp10) < 10 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp10, len(tmp10), 10, true, err)
+					err = goa.InvalidLengthError(`payload.Title`, tmp10, 10, true, err)
 				}
 				if len(tmp10) > 200 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp10, len(tmp10), 200, false, err)
+					err = goa.InvalidLengthError(`payload.Title`, tmp10, 200, false, err)
 				}
 			}
 			target.Title = tmp10
@@ -565,10 +565,10 @@ func UnmarshalUpdateProposalPayload(source interface{}, inErr error) (target *Up
 			}
 			if err == nil {
 				if len(tmp12) < 50 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp12, len(tmp12), 50, true, err)
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp12, 50, true, err)
 				}
 				if len(tmp12) > 500 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp12, len(tmp12), 500, false, err)
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp12, 500, false, err)
 				}
 			}
 			target.Abstract = tmp12
@@ -582,10 +582,10 @@ func UnmarshalUpdateProposalPayload(source interface{}, inErr error) (target *Up
 			}
 			if err == nil {
 				if len(tmp13) < 100 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp13, len(tmp13), 100, true, err)
+					err = goa.InvalidLengthError(`payload.Detail`, tmp13, 100, true, err)
 				}
 				if len(tmp13) > 2000 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp13, len(tmp13), 2000, false, err)
+					err = goa.InvalidLengthError(`payload.Detail`, tmp13, 2000, false, err)
 				}
 			}
 			target.Detail = tmp13
@@ -599,7 +599,7 @@ func UnmarshalUpdateProposalPayload(source interface{}, inErr error) (target *Up
 			}
 			if err == nil {
 				if len(tmp14) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp14, len(tmp14), 2, true, err)
+					err = goa.InvalidLengthError(`payload.Firstname`, tmp14, 2, true, err)
 				}
 			}
 			target.Firstname = tmp14
@@ -613,10 +613,10 @@ func UnmarshalUpdateProposalPayload(source interface{}, inErr error) (target *Up
 			}
 			if err == nil {
 				if len(tmp15) < 10 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp15, len(tmp15), 10, true, err)
+					err = goa.InvalidLengthError(`payload.Title`, tmp15, 10, true, err)
 				}
 				if len(tmp15) > 200 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp15, len(tmp15), 200, false, err)
+					err = goa.InvalidLengthError(`payload.Title`, tmp15, 200, false, err)
 				}
 			}
 			target.Title = tmp15
@@ -710,10 +710,10 @@ func UnmarshalCreateReviewPayload(source interface{}, inErr error) (target *Crea
 			}
 			if err == nil {
 				if len(tmp17) < 10 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp17, len(tmp17), 10, true, err)
+					err = goa.InvalidLengthError(`payload.Comment`, tmp17, 10, true, err)
 				}
 				if len(tmp17) > 200 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp17, len(tmp17), 200, false, err)
+					err = goa.InvalidLengthError(`payload.Comment`, tmp17, 200, false, err)
 				}
 			}
 			target.Comment = tmp17
@@ -967,10 +967,10 @@ func UnmarshalUpdateReviewPayload(source interface{}, inErr error) (target *Upda
 			}
 			if err == nil {
 				if len(tmp19) < 10 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp19, len(tmp19), 10, true, err)
+					err = goa.InvalidLengthError(`payload.Comment`, tmp19, 10, true, err)
 				}
 				if len(tmp19) > 200 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp19, len(tmp19), 200, false, err)
+					err = goa.InvalidLengthError(`payload.Comment`, tmp19, 200, false, err)
 				}
 			}
 			target.Comment = tmp19
@@ -1060,7 +1060,7 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 			}
 			if err == nil {
 				if len(tmp21) > 500 {
-					err = goa.InvalidLengthError(`payload.Bio`, tmp21, len(tmp21), 500, false, err)
+					err = goa.InvalidLengthError(`payload.Bio`, tmp21, 500, false, err)
 				}
 			}
 			target.Bio = tmp21
@@ -1294,7 +1294,7 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 			}
 			if err == nil {
 				if len(tmp29) > 500 {
-					err = goa.InvalidLengthError(`payload.Bio`, tmp29, len(tmp29), 500, false, err)
+					err = goa.InvalidLengthError(`payload.Bio`, tmp29, 500, false, err)
 				}
 			}
 			target.Bio = tmp29
