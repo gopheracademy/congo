@@ -5,6 +5,11 @@ import Profile from "./Profile"
 import Proposals from "./Proposals"
 import { Router, IndexRoute, Route, browserHistory } from "react-router";
 
+// Rewrite the URL to point to / post oauth redirect
+if (window.location.href.indexOf("callback") > -1) {
+	window.history.pushState({},"", "/");
+ }
+
 var root = document.getElementById("app-container")
 var auth = root.getAttribute("data-auth")
 var AuthedMaster = React.createClass({
