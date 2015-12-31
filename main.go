@@ -133,9 +133,9 @@ func connectDB() (gorm.DB, error) {
 	return db, err
 }
 func pubKey(*jg.Token) (interface{}, error) {
-	return ioutil.ReadFile("keys/gc.rsa.pub")
+	return ioutil.ReadFile("keys/congo.rsa.pub")
 }
 
 func privateKey() (interface{}, error) {
-	return ioutil.ReadFile("keys/gc.rsa")
+	return ioutil.ReadFile("keys/congo.rsa")
 }
