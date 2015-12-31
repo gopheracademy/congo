@@ -35,3 +35,5 @@ test:
 keys: ; @which ssh-keygen > /dev/null
 	mkdir keys
 	ssh-keygen -t rsa -b 4096 -f ./keys/congo.rsa -t rsa -N ''
+	openssl genrsa -out ./keys/congo.key 4096
+	openssl req -new -key ./keys/congo.key -out ./keys/congo.csr
