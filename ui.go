@@ -71,9 +71,9 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 		u, err := userdb.One(ctx, token.Claims["sub"].(int))
 		if err != nil {
 			auth = &app.Authorize{
-				AccessToken: u.Oauth2Token,
+				AccessToken: token.Raw,
 				ExpiresIn:   time.Now().Second() - u.Oauth2Expiry.Second(),
-				TokenType:   "",
+				TokenType:   "Bearer",
 			}
 		}
 	}
