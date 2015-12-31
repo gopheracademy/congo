@@ -89,7 +89,7 @@ const indexT = `
 		<link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
 	</head>
 	<body>
-		<div id="app-container" data-jwt='{{.}}'></div>
+		<div id="app-container" data-auth='{{.}}'></div>
 		<script src="/assets/app.js"></script>
 	</body>
 </html>

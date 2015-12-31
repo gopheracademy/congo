@@ -6,11 +6,14 @@ import Header from './Header';
 
 export default class Master extends React.Component {
         render() {
+                var childrenWithAuth = React.Children.map(this.props.children, function(child) {
+                        return React.cloneElement(child, { auth: this.props.auth });
+                });
                 return (
                         <DocumentTitle title='GopherCon 2016'>
                         <div className='Master'>
                                 <Header />
-                                { this.props.children }
+                                { childrenWithAuth }
                         </div>
                         </DocumentTitle>
                 );
