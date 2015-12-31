@@ -190,6 +190,27 @@ func MountReviewController(service goa.Service, ctrl ReviewController) {
 	service.Info("mount", "ctrl", "Review", "action", "Update", "route", "PATCH /api/users/:userID/proposals/:proposalID/review/:reviewID")
 }
 
+// UiController is the controller interface for the Ui actions.
+type UiController interface {
+	goa.Controller
+	Bootstrap(*BootstrapUiContext) error
+}
+
+// MountUiController "mounts" a Ui resource controller on the given service.
+func MountUiController(service goa.Service, ctrl UiController) {
+	router := service.HTTPHandler().(*httprouter.Router)
+	var h goa.Handler
+	h = func(c *goa.Context) error {
+		ctx, err := NewBootstrapUiContext(c)
+		if err != nil {
+			return goa.NewBadRequestError(err)
+		}
+		return ctrl.Bootstrap(ctx)
+	}
+	router.Handle("GET", "/", ctrl.NewHTTPRouterHandle("Bootstrap", h))
+	service.Info("mount", "ctrl", "Ui", "action", "Bootstrap", "route", "GET /")
+}
+
 // UserController is the controller interface for the User actions.
 type UserController interface {
 	goa.Controller

@@ -36,6 +36,7 @@ func NewAuthController(service goa.Service, db *gorm.DB, tm *jwt.TokenManager, s
 	}
 }
 
+// Callback implements the endpoint called by the service during the oauth flow.
 func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 
 	user, err := gothic.CompleteUserAuth(ctx, ctx.Request())
@@ -82,9 +83,11 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	t, err := c.tm.Create(claims)
 	auth := app.Authorize{}
 	auth.AccessToken = t
+	auth.ExpiresIn = 60 // TBD extract from auth response raw data?
 
-	return ctx.OK(&auth)
+	return RenderBootstrap(ctx, &auth)
 }
+
 func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
 	url, err := gothic.GetAuthURL(ctx, ctx.Request())
 	fmt.Println(url)

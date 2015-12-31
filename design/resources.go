@@ -5,6 +5,20 @@ import (
 	. "github.com/raphael/goa/design/dsl"
 )
 
+var _ = Resource("ui", func() {
+	BasePath("/")
+
+	Action("bootstrap", func() {
+		Routing(
+			GET("//"),
+		)
+		Description("Render single page app HTML")
+		Response(OK, func() {
+			Media("text/html")
+		})
+	})
+})
+
 var _ = Resource("auth", func() {
 
 	DefaultMedia(Authorize)
@@ -39,7 +53,7 @@ var _ = Resource("auth", func() {
 			Param("provider", String)
 		})
 		Response(OK, func() {
-			Media(Authorize)
+			Media("text/html")
 		})
 	})
 	Action("oauth", func() {
@@ -56,7 +70,7 @@ var _ = Resource("auth", func() {
 var _ = Resource("user", func() {
 
 	DefaultMedia(User)
-	BasePath("users")
+	BasePath("/users")
 	Action("list", func() {
 		Routing(
 			GET(""),
@@ -121,7 +135,7 @@ var _ = Resource("user", func() {
 var _ = Resource("proposal", func() {
 	Parent("user")
 	DefaultMedia(Proposal)
-	BasePath("proposals")
+	BasePath("/proposals")
 	Action("list", func() {
 		Routing(
 			GET(""),
@@ -185,7 +199,7 @@ var _ = Resource("proposal", func() {
 var _ = Resource("review", func() {
 	Parent("proposal")
 	DefaultMedia(Review)
-	BasePath("review")
+	BasePath("/review")
 	Action("list", func() {
 		Routing(
 			GET(""),

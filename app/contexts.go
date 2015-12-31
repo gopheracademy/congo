@@ -38,13 +38,8 @@ func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *CallbackAuthContext) OK(resp *Authorize) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.JSON(200, r)
+func (ctx *CallbackAuthContext) OK(resp []byte) error {
+	return ctx.Respond(200, resp)
 }
 
 // OauthAuthContext provides the auth oauth action context.
@@ -1006,6 +1001,24 @@ func (ctx *UpdateReviewContext) NoContent() error {
 // NotFound sends a HTTP response with status code 404.
 func (ctx *UpdateReviewContext) NotFound() error {
 	return ctx.Respond(404, nil)
+}
+
+// BootstrapUiContext provides the ui bootstrap action context.
+type BootstrapUiContext struct {
+	*goa.Context
+}
+
+// NewBootstrapUiContext parses the incoming request URL and body, performs validations and creates the
+// context used by the ui controller bootstrap action.
+func NewBootstrapUiContext(c *goa.Context) (*BootstrapUiContext, error) {
+	var err error
+	ctx := BootstrapUiContext{Context: c}
+	return &ctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *BootstrapUiContext) OK(resp []byte) error {
+	return ctx.Respond(200, resp)
 }
 
 // CreateUserContext provides the user create action context.

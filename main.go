@@ -26,6 +26,17 @@ import (
 	"github.com/raphael/goa-middleware/jwt"
 )
 
+// JWT specification
+var jwtSpec *jwt.Specification = &jwt.Specification{
+	AllowParam:       false,
+	AuthOptions:      false,
+	TTLMinutes:       60,
+	Issuer:           "api.gopheracademy.com",
+	KeySigningMethod: jwt.RSA256,
+	SigningKeyFunc:   privateKey,
+	ValidationFunc:   pubKey,
+}
+
 func main() {
 
 	goth.UseProviders(
@@ -70,17 +81,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	spec := &jwt.Specification{
-		AllowParam:       false,
-		AuthOptions:      false,
-		TTLMinutes:       60,
-		Issuer:           "api.gopheracademy.com",
-		KeySigningMethod: jwt.RSA256,
-		SigningKeyFunc:   privateKey,
-		ValidationFunc:   pubKey,
-	}
 
-	tm := jwt.NewTokenManager(spec)
+	tm := jwt.NewTokenManager(jwtSpec)
 	claims := make(map[string]interface{})
 	claims["sub"] = "1"
 
@@ -88,15 +90,17 @@ func main() {
 	// a token to get in through the backdoor printed to standard out
 	fmt.Println(t)
 
-	a := NewAuthController(service, &db, tm, spec)
+	a := NewAuthController(service, &db, tm, jwtSpec)
 	app.MountAuthController(service, a)
 	// Mount "user" controller
 	c3 := NewUserController(service, models.NewUserDB(db))
 	app.MountUserController(service, c3)
-	c3.Use(jwt.Middleware(spec))
+	c3.Use(jwt.Middleware(jwtSpec))
 	c4 := NewProposalController(service, models.NewProposalDB(db))
 	app.MountProposalController(service, c4)
-	c4.Use(jwt.Middleware(spec))
+	c4.Use(jwt.Middleware(jwtSpec))
+	ui := NewUIController(service, &db)
+	app.MountUiController(service, ui)
 
 	js.MountController(service)
 	// Mount Swagger spec provider controller
@@ -120,7 +124,7 @@ func connectDB() (gorm.DB, error) {
 	constr := fmt.Sprintf("user=%s host=%s port=%d dbname=%s password=%s sslmode=disable",
 		"postgres",
 		"127.0.0.1",
-		5433,
+		5432,
 		"postgres",
 		"postgres")
 
