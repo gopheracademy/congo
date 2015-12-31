@@ -14,6 +14,7 @@
     "bootstrap": "^3.3.6",
     "jsx-loader": "^0.13.2",
     "react": "^0.14.5",
+    "react-document-title": "^2.0.1",
     "react-dom": "^0.14.5",
     "react-router": "^2.0.0-rc4",
     "webpack": "^1.12.9"

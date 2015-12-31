@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title';
 
 import Header from './Header';
 
-export default class is extends React.Component {
+export default class Master extends React.Component {
   render() {
     return (
       <DocumentTitle title='My React App'>
