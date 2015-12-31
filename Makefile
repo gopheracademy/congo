@@ -32,5 +32,6 @@ gen:
 test:
 	gb list -f '{{if .TestGoFiles}}{{.ImportPath}}{{end}}' github.com/gopheracademy/congo/... | awk 'NF'  |  xargs gb test
 
-
-
+keys: ; @which ssh-keygen > /dev/null
+	mkdir keys
+	ssh-keygen -t rsa -b 4096 -f ./keys/congo.rsa -t rsa -N ''
