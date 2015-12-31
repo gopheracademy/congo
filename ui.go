@@ -99,12 +99,12 @@ const indexT = `
         });
 {{end}}
       ReactDOM.render(
-        <Router history={hashHistory}>
-          <Route path="/" component={{if .}}{AuthedMaster}{{else}}{Login}{{end}}>
-            <Route path="/profile" component={Profile} />
-          </Route>
+{{if .}}        <Router history={hashHistory}>
+          <Route path="/" component={AuthedMaster}>
+          <Route path="/profile" component={Profile} />
         </Router>,
-        document.getElementById("app-container")
+{{else}}        {Login},
+{{end}}        document.getElementById("app-container")
       );
     </script>
   </body>

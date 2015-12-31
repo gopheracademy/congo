@@ -25,29 +25,55 @@ type ProposalModel struct {
 	Withdrawn bool
 }
 
+// Validate validates the type instance.
+func (ut *ProposalModel) Validate() (err error) {
+	if len(ut.Abstract) < 50 {
+		err = goa.InvalidLengthError(`response.abstract`, ut.Abstract, len(ut.Abstract), 50, true, err)
+	}
+	if len(ut.Abstract) > 500 {
+		err = goa.InvalidLengthError(`response.abstract`, ut.Abstract, len(ut.Abstract), 500, false, err)
+	}
+	if len(ut.Detail) < 100 {
+		err = goa.InvalidLengthError(`response.detail`, ut.Detail, len(ut.Detail), 100, true, err)
+	}
+	if len(ut.Detail) > 2000 {
+		err = goa.InvalidLengthError(`response.detail`, ut.Detail, len(ut.Detail), 2000, false, err)
+	}
+	if len(ut.Firstname) < 2 {
+		err = goa.InvalidLengthError(`response.firstname`, ut.Firstname, len(ut.Firstname), 2, true, err)
+	}
+	if len(ut.Title) < 10 {
+		err = goa.InvalidLengthError(`response.title`, ut.Title, len(ut.Title), 10, true, err)
+	}
+	if len(ut.Title) > 200 {
+		err = goa.InvalidLengthError(`response.title`, ut.Title, len(ut.Title), 200, false, err)
+	}
+	return
+}
+
 // MarshalProposalModel validates and renders an instance of ProposalModel into a interface{}
 func MarshalProposalModel(source *ProposalModel, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if len(source.Abstract) < 50 {
-		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 50, true, err)
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, len(source.Abstract), 50, true, err)
 	}
 	if len(source.Abstract) > 500 {
-		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 500, false, err)
+		err = goa.InvalidLengthError(`.abstract`, source.Abstract, len(source.Abstract), 500, false, err)
 	}
 	if len(source.Detail) < 100 {
-		err = goa.InvalidLengthError(`.detail`, source.Detail, 100, true, err)
+		err = goa.InvalidLengthError(`.detail`, source.Detail, len(source.Detail), 100, true, err)
 	}
 	if len(source.Detail) > 2000 {
-		err = goa.InvalidLengthError(`.detail`, source.Detail, 2000, false, err)
+		err = goa.InvalidLengthError(`.detail`, source.Detail, len(source.Detail), 2000, false, err)
 	}
 	if len(source.Firstname) < 2 {
-		err = goa.InvalidLengthError(`.firstname`, source.Firstname, 2, true, err)
+		err = goa.InvalidLengthError(`.firstname`, source.Firstname, len(source.Firstname), 2, true, err)
 	}
 	if len(source.Title) < 10 {
-		err = goa.InvalidLengthError(`.title`, source.Title, 10, true, err)
+		err = goa.InvalidLengthError(`.title`, source.Title, len(source.Title), 10, true, err)
 	}
 	if len(source.Title) > 200 {
-		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
+		err = goa.InvalidLengthError(`.title`, source.Title, len(source.Title), 200, false, err)
 	}
 	tmp78 := map[string]interface{}{
 		"abstract":  source.Abstract,
@@ -74,10 +100,10 @@ func UnmarshalProposalModel(source interface{}, inErr error) (target *ProposalMo
 			}
 			if err == nil {
 				if len(tmp79) < 50 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp79, 50, true, err)
+					err = goa.InvalidLengthError(`load.Abstract`, tmp79, len(tmp79), 50, true, err)
 				}
 				if len(tmp79) > 500 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp79, 500, false, err)
+					err = goa.InvalidLengthError(`load.Abstract`, tmp79, len(tmp79), 500, false, err)
 				}
 			}
 			target.Abstract = tmp79
@@ -91,10 +117,10 @@ func UnmarshalProposalModel(source interface{}, inErr error) (target *ProposalMo
 			}
 			if err == nil {
 				if len(tmp80) < 100 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp80, 100, true, err)
+					err = goa.InvalidLengthError(`load.Detail`, tmp80, len(tmp80), 100, true, err)
 				}
 				if len(tmp80) > 2000 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp80, 2000, false, err)
+					err = goa.InvalidLengthError(`load.Detail`, tmp80, len(tmp80), 2000, false, err)
 				}
 			}
 			target.Detail = tmp80
@@ -108,7 +134,7 @@ func UnmarshalProposalModel(source interface{}, inErr error) (target *ProposalMo
 			}
 			if err == nil {
 				if len(tmp81) < 2 {
-					err = goa.InvalidLengthError(`load.Firstname`, tmp81, 2, true, err)
+					err = goa.InvalidLengthError(`load.Firstname`, tmp81, len(tmp81), 2, true, err)
 				}
 			}
 			target.Firstname = tmp81
@@ -122,10 +148,10 @@ func UnmarshalProposalModel(source interface{}, inErr error) (target *ProposalMo
 			}
 			if err == nil {
 				if len(tmp82) < 10 {
-					err = goa.InvalidLengthError(`load.Title`, tmp82, 10, true, err)
+					err = goa.InvalidLengthError(`load.Title`, tmp82, len(tmp82), 10, true, err)
 				}
 				if len(tmp82) > 200 {
-					err = goa.InvalidLengthError(`load.Title`, tmp82, 200, false, err)
+					err = goa.InvalidLengthError(`load.Title`, tmp82, len(tmp82), 200, false, err)
 				}
 			}
 			target.Title = tmp82
@@ -151,14 +177,31 @@ type ReviewModel struct {
 	Rating  int
 }
 
+// Validate validates the type instance.
+func (ut *ReviewModel) Validate() (err error) {
+	if len(ut.Comment) < 10 {
+		err = goa.InvalidLengthError(`response.comment`, ut.Comment, len(ut.Comment), 10, true, err)
+	}
+	if len(ut.Comment) > 200 {
+		err = goa.InvalidLengthError(`response.comment`, ut.Comment, len(ut.Comment), 200, false, err)
+	}
+	if ut.Rating < 1 {
+		err = goa.InvalidRangeError(`response.rating`, ut.Rating, 1, true, err)
+	}
+	if ut.Rating > 5 {
+		err = goa.InvalidRangeError(`response.rating`, ut.Rating, 5, false, err)
+	}
+	return
+}
+
 // MarshalReviewModel validates and renders an instance of ReviewModel into a interface{}
 func MarshalReviewModel(source *ReviewModel, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if len(source.Comment) < 10 {
-		err = goa.InvalidLengthError(`.comment`, source.Comment, 10, true, err)
+		err = goa.InvalidLengthError(`.comment`, source.Comment, len(source.Comment), 10, true, err)
 	}
 	if len(source.Comment) > 200 {
-		err = goa.InvalidLengthError(`.comment`, source.Comment, 200, false, err)
+		err = goa.InvalidLengthError(`.comment`, source.Comment, len(source.Comment), 200, false, err)
 	}
 	if source.Rating < 1 {
 		err = goa.InvalidRangeError(`.rating`, source.Rating, 1, true, err)
@@ -188,10 +231,10 @@ func UnmarshalReviewModel(source interface{}, inErr error) (target *ReviewModel,
 			}
 			if err == nil {
 				if len(tmp85) < 10 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp85, 10, true, err)
+					err = goa.InvalidLengthError(`load.Comment`, tmp85, len(tmp85), 10, true, err)
 				}
 				if len(tmp85) > 200 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp85, 200, false, err)
+					err = goa.InvalidLengthError(`load.Comment`, tmp85, len(tmp85), 200, false, err)
 				}
 			}
 			target.Comment = tmp85
@@ -231,11 +274,19 @@ type UserModel struct {
 	State     string
 }
 
+// Validate validates the type instance.
+func (ut *UserModel) Validate() (err error) {
+	if len(ut.Bio) > 500 {
+		err = goa.InvalidLengthError(`response.bio`, ut.Bio, len(ut.Bio), 500, false, err)
+	}
+	return
+}
+
 // MarshalUserModel validates and renders an instance of UserModel into a interface{}
 func MarshalUserModel(source *UserModel, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if len(source.Bio) > 500 {
-		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
+		err = goa.InvalidLengthError(`.bio`, source.Bio, len(source.Bio), 500, false, err)
 	}
 	tmp87 := map[string]interface{}{
 		"bio":       source.Bio,
@@ -265,7 +316,7 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 			}
 			if err == nil {
 				if len(tmp88) > 500 {
-					err = goa.InvalidLengthError(`load.Bio`, tmp88, 500, false, err)
+					err = goa.InvalidLengthError(`load.Bio`, tmp88, len(tmp88), 500, false, err)
 				}
 			}
 			target.Bio = tmp88

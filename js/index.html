@@ -15,7 +15,7 @@
         }
       });
       requirejs(['client'], function (client) {
-        client().callbackAuth ("/api/auth/Aut aspernatur excepturi./callback")
+        client().bootstrapUi ("/")
           .then(function (resp) {
             document.getElementById('response').innerHTML = resp.statusText;
           })
