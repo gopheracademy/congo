@@ -23,17 +23,23 @@ import (
 // app.ProposalModel storage type
 // Identifier:
 type Proposal struct {
-	ID        int `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-	UserID    int
-	Reviews   []Review
+	ID        int    `json:"ID,omitempty" gorm:"primary_key"`
 	Abstract  string `json:"abstract,omitempty"`
 	Detail    string `json:"detail,omitempty"`
 	Firstname string `json:"firstname,omitempty"`
 	Title     string `json:"title,omitempty"`
 	Withdrawn bool   `json:"withdrawn,omitempty"`
+
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+
+	// Foreign Keys
+	UserID int
+
+	// Children
+	Reviews []Review
 }
 
 func ProposalFromCreatePayload(ctx *app.CreateProposalContext) Proposal {
@@ -65,7 +71,8 @@ type ProposalStorage interface {
 	Update(ctx context.Context, o Proposal) error
 	Delete(ctx context.Context, id int) error
 
-	ListByUser(ctx context.Context, id int) []Proposal
+	ListByUser(ctx context.Context, parentid int) []Proposal
+	OneByUser(ctx context.Context, parentid, id int) (Proposal, error)
 }
 
 type ProposalDB struct {
@@ -90,6 +97,15 @@ func (m *ProposalDB) ListByUser(ctx context.Context, parentid int) []Proposal {
 	var objs []Proposal
 	m.DB.Scopes(ProposalFilterByUser(parentid, &m.DB)).Find(&objs)
 	return objs
+}
+
+func (m *ProposalDB) OneByUser(ctx context.Context, parentid, id int) (Proposal, error) {
+
+	var obj Proposal
+
+	err := m.DB.Scopes(ProposalFilterByUser(parentid, &m.DB)).Find(&obj, id).Error
+
+	return obj, err
 }
 
 func NewProposalDB(db gorm.DB) *ProposalDB {

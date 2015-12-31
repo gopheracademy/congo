@@ -11,7 +11,7 @@ clean:
 	rm -rf app/
 	rm -rf client/
 	rm -rf js/
-	rm -rf models/
+	rm -rf models/*_genmodel.go 
 	rm -rf schema/
 	rm -rf swagger/
 

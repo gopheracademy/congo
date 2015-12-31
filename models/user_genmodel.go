@@ -23,12 +23,27 @@ import (
 // app.UserModel storage type
 // Identifier:
 type User struct {
-	ID        int `gorm:"primary_key"`
+	ID        int    `json:"ID,omitempty" gorm:"primary_key"`
+	Bio       string `json:"bio,omitempty"`
+	City      string `json:"city,omitempty"`
+	Country   string `json:"country,omitempty"`
+	Email     string `json:"email,omitempty"`
+	Firstname string `json:"firstname,omitempty"`
+	Lastname  string `json:"lastname,omitempty"`
+	Role      string `json:"role,omitempty"`
+	State     string `json:"state,omitempty"`
+
+	// Timestamps
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
+
+	// Children
 	Proposals []Proposal
 	Reviews   []Review
+
+	// Authboss
+
 	// Auth
 	Password string
 
@@ -51,14 +66,6 @@ type User struct {
 	// Recover
 	RecoverToken       string
 	RecoverTokenExpiry time.Time
-	Bio                string `json:"bio,omitempty"`
-	City               string `json:"city,omitempty"`
-	Country            string `json:"country,omitempty"`
-	Email              string `json:"email,omitempty"`
-	Firstname          string `json:"firstname,omitempty"`
-	Lastname           string `json:"lastname,omitempty"`
-	Role               string `json:"role,omitempty"`
-	State              string `json:"state,omitempty"`
 }
 
 func UserFromCreatePayload(ctx *app.CreateUserContext) User {

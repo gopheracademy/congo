@@ -23,14 +23,18 @@ import (
 // app.ReviewModel storage type
 // Identifier:
 type Review struct {
-	ID         int `gorm:"primary_key"`
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  *time.Time
+	ID      int    `json:"ID,omitempty" gorm:"primary_key"`
+	Comment string `json:"comment,omitempty"`
+	Rating  int    `json:"rating,omitempty"`
+
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+
+	// Foreign Keys
 	ProposalID int
 	UserID     int
-	Comment    string `json:"comment,omitempty"`
-	Rating     int    `json:"rating,omitempty"`
 }
 
 func ReviewFromCreatePayload(ctx *app.CreateReviewContext) Review {
@@ -63,9 +67,11 @@ type ReviewStorage interface {
 	Update(ctx context.Context, o Review) error
 	Delete(ctx context.Context, id int) error
 
-	ListByProposal(ctx context.Context, id int) []Review
+	ListByProposal(ctx context.Context, parentid int) []Review
+	OneByProposal(ctx context.Context, parentid, id int) (Review, error)
 
-	ListByUser(ctx context.Context, id int) []Review
+	ListByUser(ctx context.Context, parentid int) []Review
+	OneByUser(ctx context.Context, parentid, id int) (Review, error)
 }
 
 type ReviewDB struct {
@@ -92,6 +98,15 @@ func (m *ReviewDB) ListByProposal(ctx context.Context, parentid int) []Review {
 	return objs
 }
 
+func (m *ReviewDB) OneByProposal(ctx context.Context, parentid, id int) (Review, error) {
+
+	var obj Review
+
+	err := m.DB.Scopes(ReviewFilterByProposal(parentid, &m.DB)).Find(&obj, id).Error
+
+	return obj, err
+}
+
 // would prefer to just pass a context in here, but they're all different, so can't
 func ReviewFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	if parentid > 0 {
@@ -110,6 +125,15 @@ func (m *ReviewDB) ListByUser(ctx context.Context, parentid int) []Review {
 	var objs []Review
 	m.DB.Scopes(ReviewFilterByUser(parentid, &m.DB)).Find(&objs)
 	return objs
+}
+
+func (m *ReviewDB) OneByUser(ctx context.Context, parentid, id int) (Review, error) {
+
+	var obj Review
+
+	err := m.DB.Scopes(ReviewFilterByUser(parentid, &m.DB)).Find(&obj, id).Error
+
+	return obj, err
 }
 
 func NewReviewDB(db gorm.DB) *ReviewDB {
