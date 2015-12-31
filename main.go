@@ -133,9 +133,21 @@ func connectDB() (gorm.DB, error) {
 	return db, err
 }
 func pubKey(*jg.Token) (interface{}, error) {
+	//TODO(BJK) make the keys an ENV var
+	f, err := os.Open("keys/gc.rsa.pub")
+	defer f.Close()
+	if err != nil {
+		panic(err)
+	}
 	return ioutil.ReadFile("keys/gc.rsa.pub")
 }
 
 func privateKey() (interface{}, error) {
+	//TODO(BJK) make the keys an ENV var
+	f, err := os.Open("keys/gc.rsa")
+	defer f.Close()
+	if err != nil {
+		panic(err)
+	}
 	return ioutil.ReadFile("keys/gc.rsa")
 }
