@@ -28,3 +28,7 @@ congo-cli
 # UI Cruft
 ui/node_modules/
 public/app.js
+public/app.js.map
+
+# Creds
+keys/
