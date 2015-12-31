@@ -13,8 +13,15 @@ if (window.location.href.indexOf("callback") > -1) {
 var root = document.getElementById("app-container")
 var auth = root.getAttribute("data-auth")
 var AuthedMaster = React.createClass({
-	render() {
-		return <Master auth={auth} />;
+	render: function() {
+                var childrenWithAuth = React.Children.map(this.props.children, function(child) {
+                        return React.cloneElement(child, { auth: auth });
+                });
+		return (
+			<Master auth={auth}>
+				{ childrenWithAuth }
+			</Master>
+		);
 	}
 });
 ReactDOM.render(
