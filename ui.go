@@ -85,8 +85,20 @@ const indexT = `
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8"/>
-		<link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		 <title>Congo - CFP</title>
+
+    <!-- Bootstrap core CSS -->
+		<link href="/assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+		<link href="/assets/css/main.css" rel="stylesheet">
+		<link href="/assets/css/font-awesome.min.css" rel="stylesheet">
 	</head>
 	<body>
 		<div id="app-container" data-auth='{{.}}'></div>
@@ -100,8 +112,21 @@ const loginT = `
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8"/>
-		<link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>Congo - CFP</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="/assets/css/bootstrap.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="/assets/css/main.css" rel="stylesheet">
+		<link href="/assets/css/font-awesome.min.css" rel="stylesheet">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react-dom.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
@@ -114,8 +139,8 @@ const loginT = `
 				return (
 					<div>
 						<h3>Sign In With</h3>
-						<a className="btn btn-twitter" href="/api/auth/twitter"><i className="icon-twitter"></i> | Twitter </a>
-						<a className="btn btn-github" href="/api/auth/github"><i className="icon-github"></i> | GitHub </a>
+						<a className="btn btn-twitter" href="/api/auth/twitter"><i className="fa fa-twitter"></i> | Twitter </a>
+						<a className="btn btn-github" href="/api/auth/github"><i className="fa fa-github"></i> | GitHub </a>
 					</div>
 				);
 			}
