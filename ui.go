@@ -46,16 +46,16 @@ type okCtx interface {
 
 // RenderBootstrap writes the bootstrap HTML for the given user using the context OK function.
 func RenderBootstrap(ctx okCtx, auth *app.Authorize) error {
-	var js string
-	if auth != nil {
-		bs, err := json.Marshal(auth)
-		if err != nil {
-			return err
-		}
-		js = string(bs)
+	if auth == nil {
+		return ctx.OK([]byte(loginT))
 	}
+	bs, err := json.Marshal(auth)
+	if err != nil {
+		return err
+	}
+	js := string(bs)
 	var out bytes.Buffer
-	err := indexTmpl.Execute(&out, js)
+	err = indexTmpl.Execute(&out, js)
 	if err != nil {
 		return err
 	}
@@ -84,29 +84,47 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 const indexT = `
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8"/>
-    <link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
-  </head>
-  <body>
-    <div id="app-container"></div>
-    <script src="/assets/app.js"></script>
-    <script type="text/babel">
-      {{if .}}var AuthedMaster = React.createClass({
-          render() {
-            return <Master auth={{.}} />;
-          }
-        });
-{{end}}
-      ReactDOM.render(
-{{if .}}        <Router history={hashHistory}>
-          <Route path="/" component={AuthedMaster}>
-          <Route path="/profile" component={Profile} />
-        </Router>,
-{{else}}        {Login},
-{{end}}        document.getElementById("app-container")
-      );
-    </script>
-  </body>
+	<head>
+		<meta charset="UTF-8"/>
+		<link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
+	</head>
+	<body>
+		<div id="app-container" data-jwt='{{.}}'></div>
+		<script src="/assets/app.js"></script>
+	</body>
+</html>
+`
+
+// loginT is the template used to render the login page
+const loginT = `
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react-dom.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+	</head>
+	<body>
+		<div id="app-container"></div>
+		<script type="text/babel">
+		var Login = React.createClass({
+			render: function() {
+				return (
+					<div>
+						<h3>Sign In With</h3>
+						<a className="btn btn-twitter" href="/api/auth/twitter"><i className="icon-twitter"></i> | Twitter </a>
+						<a className="btn btn-github" href="/api/auth/github"><i className="icon-github"></i> | GitHub </a>
+					</div>
+				);
+			}
+		});
+		ReactDOM.render(
+			<Login />,
+			document.getElementById("app-container")
+		);
+		</script>
+	</body>
 </html>
 `
