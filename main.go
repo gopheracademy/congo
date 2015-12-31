@@ -109,7 +109,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	service.ServeFiles("/assets/public/*filepath", http.Dir(filepath.Join(dir, "assets", "public")))
+	service.ServeFiles("/assets/*filepath", filepath.Join(dir, "public"))
 	service.ListenAndServe(hostStr)
 }
 func provider(r *http.Request) (string, error) {
