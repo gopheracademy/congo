@@ -77,6 +77,7 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 		}
 
 	}
+	fmt.Println("Role: ", cuser.Role)
 	if cuser.Role == models.ADMIN {
 		admin = true
 	}

@@ -11,7 +11,7 @@ export default class Header extends React.Component {
                 } else {
                         loginButton = "Login"
                 }
-		if (this.props.auth.Admin) {
+		if (this.props.auth.Admin == true) {
 			admin = true
 		} else {
 			admin = false
@@ -25,8 +25,8 @@ export default class Header extends React.Component {
 
                                                 </ul>
                                                 <ul className="nav navbar-nav navbar-right">
+							{admin ? <li><Link to ="Admin">Admin</Link></li> : ""}
                                                         <li><Link to="#">{loginButton}</Link></li>
-							{admin ? <li>Admin</li> : ""}
                                                 </ul>
                                         </div>
                                 </div>
