@@ -153,8 +153,9 @@ const loginT = `
 		var Login = React.createClass({
 			render() {
 				return (
-					<div>
-						<h3>Sign In With</h3>
+					<div className="container">
+						<h2>Welcome to Congo Conference Management</h2>
+						<h3>To Proceed, Please Sign In With</h3>
 						<a className="btn btn-twitter" href="/api/auth/twitter"><i className="fa fa-twitter"></i> | Twitter </a>
 						<a className="btn btn-github" href="/api/auth/github"><i className="fa fa-github"></i> | GitHub </a>
 					</div>

@@ -29,7 +29,7 @@ var Profile = React.createClass({
         render: function() {
                 return (
                         <DocumentTitle title={`Profile`}>
-                        <div>
+                         <div className="container">
                         <h3>Your Profile</h3>
                         <p>
                                 First Name: { this.state.firstname }
