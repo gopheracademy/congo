@@ -85,7 +85,7 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	auth.AccessToken = t
 	auth.ExpiresIn = 60 // TBD extract from auth response raw data?
 
-	return RenderBootstrap(ctx, &auth)
+	return RenderBootstrap(ctx, cuser.ID, &auth)
 }
 
 func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {

@@ -3,7 +3,7 @@
 
 ci: clean prep gen test build
 
-build: 
+build:
 	go build github.com/gopheracademy/congo
 	go build github.com/gopheracademy/congo/client/congo-cli
 
@@ -21,7 +21,7 @@ prep:
 
 gen:
 	goagen --design github.com/gopheracademy/congo/design app
-	goagen --design github.com/gopheracademy/congo/design js
+	goagen --design github.com/gopheracademy/congo/design js -o ui/app/gen
 	goagen --design github.com/gopheracademy/congo/design client
 	goagen --design github.com/gopheracademy/congo/design schema
 	goagen --design github.com/gopheracademy/congo/design swagger
@@ -31,6 +31,3 @@ gen:
 # Test all XOR specific packages, skip packages that don't have tests for performance reasons
 test:
 	gb list -f '{{if .TestGoFiles}}{{.ImportPath}}{{end}}' github.com/gopheracademy/congo/... | awk 'NF'  |  xargs gb test
-
-
-

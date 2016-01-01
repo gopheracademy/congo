@@ -45,11 +45,18 @@ type okCtx interface {
 }
 
 // RenderBootstrap writes the bootstrap HTML for the given user using the context OK function.
-func RenderBootstrap(ctx okCtx, auth *app.Authorize) error {
+func RenderBootstrap(ctx okCtx, userID int, auth *app.Authorize) error {
 	if auth == nil {
 		return ctx.OK([]byte(loginT))
 	}
-	bs, err := json.Marshal(auth)
+	data := struct {
+		UserID int
+		Auth   *app.Authorize
+	}{
+		UserID: userID,
+		Auth:   auth,
+	}
+	bs, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
@@ -64,11 +71,13 @@ func RenderBootstrap(ctx okCtx, auth *app.Authorize) error {
 
 // Bootstrap renders the index.html.
 func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
+	var userID int
 	var auth *app.Authorize
 	token, err := jwt.GetToken(ctx.Context, jwtSpec)
 	if err == nil {
 		userdb := models.NewUserDB(*c.db)
-		u, err := userdb.One(ctx, token.Claims["sub"].(int))
+		userID = token.Claims["sub"].(int)
+		u, err := userdb.One(ctx, userID)
 		if err != nil {
 			auth = &app.Authorize{
 				AccessToken: token.Raw,
@@ -77,7 +86,7 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 			}
 		}
 	}
-	return RenderBootstrap(ctx, auth)
+	return RenderBootstrap(ctx, userID, auth)
 }
 
 // indexT is the template used to render the index page
@@ -130,12 +139,13 @@ const loginT = `
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react-dom.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.16/require.min.js"></script>
 	</head>
 	<body>
 		<div id="app-container"></div>
 		<script type="text/babel">
 		var Login = React.createClass({
-			render: function() {
+			render() {
 				return (
 					<div>
 						<h3>Sign In With</h3>

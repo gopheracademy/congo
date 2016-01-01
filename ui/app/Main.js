@@ -11,9 +11,9 @@ if (window.location.href.indexOf("callback") > -1) {
  }
 
 var root = document.getElementById("app-container")
-var auth = root.getAttribute("data-auth")
+var auth = JSON.parse(root.getAttribute("data-auth"))
 var AuthedMaster = React.createClass({
-	render: function() {
+	render() {
                 var childrenWithAuth = React.Children.map(this.props.children, function(child) {
                         return React.cloneElement(child, { auth: auth });
                 });

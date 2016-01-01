@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 
 	"github.com/gopheracademy/congo/app"
-	"github.com/gopheracademy/congo/js"
 	"github.com/gopheracademy/congo/models"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/gopheracademy/congo/util"
@@ -27,7 +26,7 @@ import (
 )
 
 // JWT specification
-var jwtSpec *jwt.Specification = &jwt.Specification{
+var jwtSpec = &jwt.Specification{
 	AllowParam:       false,
 	AuthOptions:      false,
 	TTLMinutes:       60,
@@ -102,7 +101,6 @@ func main() {
 	ui := NewUIController(service, &db)
 	app.MountUiController(service, ui)
 
-	js.MountController(service)
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
@@ -116,9 +114,11 @@ func main() {
 	service.ServeFiles("/assets/*filepath", filepath.Join(dir, "public"))
 	service.ListenAndServe(hostStr)
 }
+
 func provider(r *http.Request) (string, error) {
 	return "twitter", nil
 }
+
 func connectDB() (gorm.DB, error) {
 	var db gorm.DB
 	constr := fmt.Sprintf("user=%s host=%s port=%d dbname=%s password=%s sslmode=disable",
@@ -136,6 +136,7 @@ func connectDB() (gorm.DB, error) {
 	db.LogMode(true)
 	return db, err
 }
+
 func pubKey(*jg.Token) (interface{}, error) {
 	//TODO(BJK) make the keys an ENV var
 	f, err := os.Open("keys/gc.rsa.pub")
