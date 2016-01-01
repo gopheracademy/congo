@@ -60,9 +60,9 @@ func main() {
 
 	// cors specification
 	cspec, err := cors.New(func() {
-		cors.Origin("https://cfp.gophercon.com", func() {
+		cors.Origin("*", func() {
 			cors.Resource("/api", func() {
-				cors.Headers("Authorization")
+				cors.Headers("Accept", "Content-Type", "Origin", "Authorization")
 				cors.Methods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 				cors.MaxAge(600)
 				cors.Credentials(true)
@@ -75,6 +75,7 @@ func main() {
 	}
 	// mount the cors controller
 	service.Use(cors.Middleware(cspec))
+	cors.MountPreflightController(service, cspec)
 
 	db, err := connectDB()
 	if err != nil {

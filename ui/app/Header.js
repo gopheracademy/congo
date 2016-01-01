@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import 'jwt-decode';
+import jwt from 'jwt-decode';
 
 export default class Header extends React.Component {
         render() {
@@ -8,7 +8,8 @@ export default class Header extends React.Component {
 		var admin;
                 if (this.props.auth) {
                         loginButton = "Logout"
-			decoded = jwt_decode(this.props.auth.Accesstoken)
+			var jwtDecode = require('jwt-decode');
+			var decoded = jwtDecode(this.props.auth.AuthToken);
 			console.log(decoded)
                 } else {
                         loginButton = "Login"
