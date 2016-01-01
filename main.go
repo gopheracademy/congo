@@ -125,7 +125,7 @@ func connectDB() (gorm.DB, error) {
 	constr := fmt.Sprintf("user=%s host=%s port=%d dbname=%s password=%s sslmode=disable",
 		"postgres",
 		"127.0.0.1",
-		5432,
+		5433,
 		"postgres",
 		"postgres")
 

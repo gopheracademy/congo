@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { Link } from 'react-router';
 import jwt from 'jwt-decode';
 
@@ -16,21 +17,27 @@ export default class Header extends React.Component {
 		} else {
 			admin = false
 		}
-                return (
-                        <nav className="navbar navbar-default navbar-static-top">
-                                <div className="container">
-                                        <div id="navbar-collapse" className="collapse navbar-collapse">
-                                                <ul className="nav navbar-nav">
-                                                        <li><Link to="/">Home</Link></li>
 
-                                                </ul>
-                                                <ul className="nav navbar-nav navbar-right">
-							{admin ? <li><Link to ="Admin">Admin</Link></li> : ""}
-                                                        <li><Link to="#">{loginButton}</Link></li>
-                                                </ul>
-                                        </div>
-                                </div>
-                        </nav>
-                );
+		return (
+   <Navbar>
+    <Navbar.Header>
+      <Navbar.Brand>
+        <a href="#">Congo</a>
+      </Navbar.Brand>
+    </Navbar.Header>
+    <Nav pullRight>
+      <NavItem eventKey={1} href="#">Link</NavItem>
+      <NavItem eventKey={2} href="#">Link</NavItem>
+      <NavDropdown eventKey={3} title="Menu" id="basic-nav-dropdown">
+        <MenuItem eventKey={3.1}>{loginButton}</MenuItem>
+        <MenuItem eventKey={3.2}>Another action</MenuItem>
+        <MenuItem eventKey={3.3}>Something else here</MenuItem>
+        <MenuItem divider />
+        <MenuItem eventKey={3.3}>Separated link</MenuItem>
+      </NavDropdown>
+    </Nav>
+  </Navbar>
+		);
+
         }
 }
