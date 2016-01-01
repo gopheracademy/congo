@@ -8,12 +8,14 @@ export default class Header extends React.Component {
 		var admin;
                 if (this.props.auth) {
                         loginButton = "Logout"
-			var jwtDecode = require('jwt-decode');
-			var decoded = jwtDecode(this.props.auth.AuthToken);
-			console.log(decoded)
                 } else {
                         loginButton = "Login"
                 }
+		if (this.props.auth.Admin) {
+			admin = true
+		} else {
+			admin = false
+		}
                 return (
                         <nav className="navbar navbar-default navbar-static-top">
                                 <div className="container">
@@ -24,6 +26,7 @@ export default class Header extends React.Component {
                                                 </ul>
                                                 <ul className="nav navbar-nav navbar-right">
                                                         <li><Link to="#">{loginButton}</Link></li>
+							{admin ? <li>Admin</li> : ""}
                                                 </ul>
                                         </div>
                                 </div>

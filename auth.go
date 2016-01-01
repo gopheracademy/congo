@@ -49,6 +49,7 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	udb := models.NewUserDB(*c.db)
 	prov, _ := provider(ctx.Request())
 	var cuser models.User
+	var admin bool
 	cuser, err = udb.UserByOauth(user.UserID, prov)
 	if err != nil {
 		if err.Error() == "record not found" { // todo: get a real error here?
@@ -76,6 +77,9 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 		}
 
 	}
+	if cuser.Role == models.ADMIN {
+		admin = true
+	}
 	claims := make(map[string]interface{})
 	claims["sub"] = strconv.Itoa(cuser.ID)
 	claims["provider"] = prov
@@ -85,7 +89,7 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	auth.AccessToken = t
 	auth.ExpiresIn = 60 // TBD extract from auth response raw data?
 
-	return RenderBootstrap(ctx, cuser.ID, &auth)
+	return RenderBootstrap(ctx, cuser.ID, admin, &auth)
 }
 
 func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {

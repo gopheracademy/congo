@@ -45,15 +45,17 @@ type okCtx interface {
 }
 
 // RenderBootstrap writes the bootstrap HTML for the given user using the context OK function.
-func RenderBootstrap(ctx okCtx, userID int, auth *app.Authorize) error {
+func RenderBootstrap(ctx okCtx, userID int, admin bool, auth *app.Authorize) error {
 	if auth == nil {
 		return ctx.OK([]byte(loginT))
 	}
 	data := struct {
 		UserID int
+		Admin  bool
 		Auth   *app.Authorize
 	}{
 		UserID: userID,
+		Admin:  admin,
 		Auth:   auth,
 	}
 	bs, err := json.Marshal(data)
@@ -72,13 +74,17 @@ func RenderBootstrap(ctx okCtx, userID int, auth *app.Authorize) error {
 // Bootstrap renders the index.html.
 func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 	var userID int
+	var admin bool
 	var auth *app.Authorize
 	token, err := jwt.GetToken(ctx.Context, jwtSpec)
 	if err == nil {
 		userdb := models.NewUserDB(*c.db)
 		userID = token.Claims["sub"].(int)
 		u, err := userdb.One(ctx, userID)
-		if err != nil {
+		if err == nil {
+			if u.Role == models.ADMIN {
+				admin = true
+			}
 			auth = &app.Authorize{
 				AccessToken: token.Raw,
 				ExpiresIn:   time.Now().Second() - u.Oauth2Expiry.Second(),
@@ -86,7 +92,7 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 			}
 		}
 	}
-	return RenderBootstrap(ctx, userID, auth)
+	return RenderBootstrap(ctx, userID, admin, auth)
 }
 
 // indexT is the template used to render the index page
