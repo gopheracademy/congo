@@ -696,6 +696,8 @@ type User struct {
 	ID int
 	// Last name of user
 	Lastname string
+	// Role of user
+	Role string
 	// State of residence
 	State string
 }
@@ -765,6 +767,7 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 		"href":      source.Href,
 		"id":        source.ID,
 		"lastname":  source.Lastname,
+		"role":      source.Role,
 		"state":     source.State,
 	}
 	target = tmp64
@@ -878,14 +881,23 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			}
 			target.Lastname = tmp73
 		}
-		if v, ok := val["state"]; ok {
+		if v, ok := val["role"]; ok {
 			var tmp74 string
 			if val, ok := v.(string); ok {
 				tmp74 = val
 			} else {
+				err = goa.InvalidAttributeTypeError(`load.Role`, v, "string", err)
+			}
+			target.Role = tmp74
+		}
+		if v, ok := val["state"]; ok {
+			var tmp75 string
+			if val, ok := v.(string); ok {
+				tmp75 = val
+			} else {
 				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
 			}
-			target.State = tmp74
+			target.State = tmp75
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -910,10 +922,10 @@ func LoadUserCollection(raw interface{}) (res UserCollection, err error) {
 // validations. See LoadUserCollection for the definition of raw data.
 func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp75 := range mt {
-		var tmp76 map[string]interface{}
-		tmp76, err = MarshalUser(tmp75, err)
-		res[i] = tmp76
+	for i, tmp76 := range mt {
+		var tmp77 map[string]interface{}
+		tmp77, err = MarshalUser(tmp76, err)
+		res[i] = tmp77
 	}
 	return
 }
@@ -949,8 +961,8 @@ func UnmarshalUserCollection(source interface{}, inErr error) (target UserCollec
 	err = inErr
 	if val, ok := source.([]interface{}); ok {
 		target = make([]*User, len(val))
-		for tmp77, v := range val {
-			target[tmp77], err = UnmarshalUser(v, err)
+		for tmp78, v := range val {
+			target[tmp78], err = UnmarshalUser(v, err)
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)

@@ -9,7 +9,7 @@ export default class Master extends React.Component {
                 return (
                         <DocumentTitle title='GopherCon 2016'>
                         <div className='Master'>
-                                <Header />
+                                <Header auth={this.props.auth} />
                                 { this.props.children }
                         </div>
                         </DocumentTitle>

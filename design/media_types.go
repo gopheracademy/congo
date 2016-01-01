@@ -19,6 +19,7 @@ var User = MediaType("application/vnd.user+json", func() {
 		Attribute("state", String, "State of residence")
 		Attribute("country", String, "Country of residence")
 		Attribute("bio", String, "Biography of user")
+		Attribute("role", String, "Role of user")
 		Attribute("email", String, "Email address of user", func() {
 			Format("email")
 		})
@@ -33,6 +34,7 @@ var User = MediaType("application/vnd.user+json", func() {
 		Attribute("state")
 		Attribute("country")
 		Attribute("bio")
+		Attribute("role")
 	})
 	View("link", func() {
 		Attribute("id")

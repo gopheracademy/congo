@@ -32,33 +32,36 @@ var Profile = React.createClass({
                         <div>
                         <h3>Your Profile</h3>
                         <p>
-                                bio: { this.state.bio }
+                                First Name: { this.state.firstname }
                         </p>
                         <p>
+                                Last Name: { this.state.lastname }
+                        </p>
+ 		        <p>
                                 city: { this.state.city }
                         </p>
-                        <p>
+			 <p>
+                                state: { this.state.state }
+                        </p>
+                      
+			<p>
                                 country: { this.state.country }
                         </p>
+                       
                         <p>
+                                bio: { this.state.bio }
+                        </p>
+                       <p>
                                 email: { this.state.email }
                         </p>
-                        <p>
-                                firstname: { this.state.firstname }
-                        </p>
+
                         <p>
                                 href: { this.state.href }
                         </p>
                         <p>
                                 id: { this.state.id }
                         </p>
-                        <p>
-                                lastname: { this.state.lastname }
-                        </p>
-                        <p>
-                                state: { this.state.state }
-                        </p>
-                        </div>
+                       </div>
                         </DocumentTitle>
                 );
         }

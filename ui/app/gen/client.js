@@ -10,7 +10,7 @@ define(['axios'] , function (axios) {
 
   return function (scheme, host, timeout) {
     scheme = scheme || 'http';
-    host = host || 'api.gopheracademy.com';
+    host = host || 'arrakis:8080';
     timeout = timeout || 20000;
 
     // Client is the object returned by this module.
