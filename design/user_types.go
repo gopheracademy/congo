@@ -23,6 +23,7 @@ var UserModel = Type("UserModel", func() {
 	Attribute("country", func() {
 	})
 	Attribute("email", func() {
+		Format("email")
 	})
 	Attribute("bio", func() {
 		MaxLength(500)

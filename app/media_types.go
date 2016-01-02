@@ -743,6 +743,11 @@ func (mt *User) Validate() (err error) {
 			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
 		}
 	}
+	if mt.Email != "" {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
+		}
+	}
 	return
 }
 
@@ -752,6 +757,11 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 	err = inErr
 	if len(source.Bio) > 500 {
 		err = goa.InvalidLengthError(`.bio`, source.Bio, len(source.Bio), 500, false, err)
+	}
+	if source.Email != "" {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
+			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
+		}
 	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
@@ -778,6 +788,11 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 // using view "link".
 func MarshalUserLink(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
+	if source.Email != "" {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
+			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
+		}
+	}
 	if source.Email != "" {
 		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
 			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
@@ -837,6 +852,11 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
 			if err == nil {
+				if tmp69 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp69); err2 != nil {
+						err = goa.InvalidFormatError(`load.Email`, tmp69, goa.FormatEmail, err2, err)
+					}
+				}
 				if tmp69 != "" {
 					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp69); err2 != nil {
 						err = goa.InvalidFormatError(`load.Email`, tmp69, goa.FormatEmail, err2, err)
@@ -935,6 +955,11 @@ func (mt UserCollection) Validate() (err error) {
 	for _, e := range mt {
 		if len(e.Bio) > 500 {
 			err = goa.InvalidLengthError(`response[*].bio`, e.Bio, len(e.Bio), 500, false, err)
+		}
+		if e.Email != "" {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {
+				err = goa.InvalidFormatError(`response[*].email`, e.Email, goa.FormatEmail, err2, err)
+			}
 		}
 		if e.Email != "" {
 			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {

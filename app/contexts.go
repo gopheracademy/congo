@@ -1103,6 +1103,13 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
+			if err == nil {
+				if tmp24 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp24); err2 != nil {
+						err = goa.InvalidFormatError(`payload.Email`, tmp24, goa.FormatEmail, err2, err)
+					}
+				}
+			}
 			target.Email = tmp24
 		}
 		if v, ok := val["firstname"]; ok {
@@ -1337,7 +1344,16 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
+			if err == nil {
+				if tmp32 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp32); err2 != nil {
+						err = goa.InvalidFormatError(`payload.Email`, tmp32, goa.FormatEmail, err2, err)
+					}
+				}
+			}
 			target.Email = tmp32
+		} else {
+			err = goa.MissingAttributeError(`payload`, "email", err)
 		}
 		if v, ok := val["firstname"]; ok {
 			var tmp33 string

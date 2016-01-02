@@ -279,6 +279,11 @@ func (ut *UserModel) Validate() (err error) {
 	if len(ut.Bio) > 500 {
 		err = goa.InvalidLengthError(`response.bio`, ut.Bio, len(ut.Bio), 500, false, err)
 	}
+	if ut.Email != "" {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, ut.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, ut.Email, goa.FormatEmail, err2, err)
+		}
+	}
 	return
 }
 
@@ -287,6 +292,11 @@ func MarshalUserModel(source *UserModel, inErr error) (target map[string]interfa
 	err = inErr
 	if len(source.Bio) > 500 {
 		err = goa.InvalidLengthError(`.bio`, source.Bio, len(source.Bio), 500, false, err)
+	}
+	if source.Email != "" {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
+			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
+		}
 	}
 	tmp88 := map[string]interface{}{
 		"bio":       source.Bio,
@@ -345,6 +355,13 @@ func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err
 				tmp92 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
+			}
+			if err == nil {
+				if tmp92 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp92); err2 != nil {
+						err = goa.InvalidFormatError(`load.Email`, tmp92, goa.FormatEmail, err2, err)
+					}
+				}
 			}
 			target.Email = tmp92
 		}

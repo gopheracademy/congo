@@ -116,7 +116,9 @@ var _ = Resource("user", func() {
 		Params(func() {
 			Param("userID", Integer)
 		})
-		Payload(UserModel)
+		Payload(UserModel, func() {
+			Required("email")
+		})
 		Response(NoContent)
 		Response(NotFound)
 	})
