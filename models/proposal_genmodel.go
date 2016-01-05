@@ -23,17 +23,23 @@ import (
 // app.ProposalModel storage type
 // Identifier:
 type Proposal struct {
-	ID        int `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-	UserID    int
-	Reviews   []Review
+	ID        int    `json:"ID,omitempty" gorm:"primary_key"`
 	Abstract  string `json:"abstract,omitempty"`
 	Detail    string `json:"detail,omitempty"`
 	Firstname string `json:"firstname,omitempty"`
 	Title     string `json:"title,omitempty"`
 	Withdrawn bool   `json:"withdrawn,omitempty"`
+
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+
+	// Foreign Keys
+	UserID int
+
+	// Children
+	Reviews []Review
 }
 
 func ProposalFromCreatePayload(ctx *app.CreateProposalContext) Proposal {
@@ -65,7 +71,8 @@ type ProposalStorage interface {
 	Update(ctx context.Context, o Proposal) error
 	Delete(ctx context.Context, id int) error
 
-	ListByUser(ctx context.Context, id int) []Proposal
+	ListByUser(ctx context.Context, parentid int) []Proposal
+	OneByUser(ctx context.Context, parentid, id int) (Proposal, error)
 }
 
 type ProposalDB struct {
@@ -92,6 +99,15 @@ func (m *ProposalDB) ListByUser(ctx context.Context, parentid int) []Proposal {
 	return objs
 }
 
+func (m *ProposalDB) OneByUser(ctx context.Context, parentid, id int) (Proposal, error) {
+
+	var obj Proposal
+
+	err := m.DB.Scopes(ProposalFilterByUser(parentid, &m.DB)).Find(&obj, id).Error
+
+	return obj, err
+}
+
 func NewProposalDB(db gorm.DB) *ProposalDB {
 
 	return &ProposalDB{DB: db}
@@ -102,6 +118,84 @@ func (m *ProposalDB) List(ctx context.Context) []Proposal {
 
 	var objs []Proposal
 	m.DB.Find(&objs)
+	return objs
+}
+
+func (m *ProposalDB) ListByIDEqual(ctx context.Context, id int) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("id = ?", id).Find(&objs)
+	return objs
+}
+func (m *ProposalDB) ListByIDLike(ctx context.Context, id int) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("id like ?", id).Find(&objs)
+	return objs
+}
+
+func (m *ProposalDB) ListByAbstractEqual(ctx context.Context, abstract string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("abstract = ?", abstract).Find(&objs)
+	return objs
+}
+func (m *ProposalDB) ListByAbstractLike(ctx context.Context, abstract string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("abstract like ?", abstract).Find(&objs)
+	return objs
+}
+
+func (m *ProposalDB) ListByDetailEqual(ctx context.Context, detail string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("detail = ?", detail).Find(&objs)
+	return objs
+}
+func (m *ProposalDB) ListByDetailLike(ctx context.Context, detail string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("detail like ?", detail).Find(&objs)
+	return objs
+}
+
+func (m *ProposalDB) ListByFirstnameEqual(ctx context.Context, firstname string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("firstname = ?", firstname).Find(&objs)
+	return objs
+}
+func (m *ProposalDB) ListByFirstnameLike(ctx context.Context, firstname string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("firstname like ?", firstname).Find(&objs)
+	return objs
+}
+
+func (m *ProposalDB) ListByTitleEqual(ctx context.Context, title string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("title = ?", title).Find(&objs)
+	return objs
+}
+func (m *ProposalDB) ListByTitleLike(ctx context.Context, title string) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("title like ?", title).Find(&objs)
+	return objs
+}
+
+func (m *ProposalDB) ListByWithdrawnEqual(ctx context.Context, withdrawn bool) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("withdrawn = ?", withdrawn).Find(&objs)
+	return objs
+}
+func (m *ProposalDB) ListByWithdrawnLike(ctx context.Context, withdrawn bool) []Proposal {
+
+	var objs []Proposal
+	m.DB.Where("withdrawn like ?", withdrawn).Find(&objs)
 	return objs
 }
 

@@ -23,12 +23,27 @@ import (
 // app.UserModel storage type
 // Identifier:
 type User struct {
-	ID        int `gorm:"primary_key"`
+	ID        int    `json:"ID,omitempty" gorm:"primary_key"`
+	Bio       string `json:"bio,omitempty"`
+	City      string `json:"city,omitempty"`
+	Country   string `json:"country,omitempty"`
+	Email     string `json:"email,omitempty"`
+	Firstname string `json:"firstname,omitempty"`
+	Lastname  string `json:"lastname,omitempty"`
+	Role      string `json:"role,omitempty"`
+	State     string `json:"state,omitempty"`
+
+	// Timestamps
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
+
+	// Children
 	Proposals []Proposal
 	Reviews   []Review
+
+	// Authboss
+
 	// Auth
 	Password string
 
@@ -51,14 +66,6 @@ type User struct {
 	// Recover
 	RecoverToken       string
 	RecoverTokenExpiry time.Time
-	Bio                string `json:"bio,omitempty"`
-	City               string `json:"city,omitempty"`
-	Country            string `json:"country,omitempty"`
-	Email              string `json:"email,omitempty"`
-	Firstname          string `json:"firstname,omitempty"`
-	Lastname           string `json:"lastname,omitempty"`
-	Role               string `json:"role,omitempty"`
-	State              string `json:"state,omitempty"`
 }
 
 func UserFromCreatePayload(ctx *app.CreateUserContext) User {
@@ -108,6 +115,123 @@ func (m *UserDB) List(ctx context.Context) []User {
 
 	var objs []User
 	m.DB.Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByIDEqual(ctx context.Context, id int) []User {
+
+	var objs []User
+	m.DB.Where("id = ?", id).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByIDLike(ctx context.Context, id int) []User {
+
+	var objs []User
+	m.DB.Where("id like ?", id).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByBioEqual(ctx context.Context, bio string) []User {
+
+	var objs []User
+	m.DB.Where("bio = ?", bio).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByBioLike(ctx context.Context, bio string) []User {
+
+	var objs []User
+	m.DB.Where("bio like ?", bio).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByCityEqual(ctx context.Context, city string) []User {
+
+	var objs []User
+	m.DB.Where("city = ?", city).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByCityLike(ctx context.Context, city string) []User {
+
+	var objs []User
+	m.DB.Where("city like ?", city).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByCountryEqual(ctx context.Context, country string) []User {
+
+	var objs []User
+	m.DB.Where("country = ?", country).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByCountryLike(ctx context.Context, country string) []User {
+
+	var objs []User
+	m.DB.Where("country like ?", country).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByEmailEqual(ctx context.Context, email string) []User {
+
+	var objs []User
+	m.DB.Where("email = ?", email).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByEmailLike(ctx context.Context, email string) []User {
+
+	var objs []User
+	m.DB.Where("email like ?", email).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByFirstnameEqual(ctx context.Context, firstname string) []User {
+
+	var objs []User
+	m.DB.Where("firstname = ?", firstname).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByFirstnameLike(ctx context.Context, firstname string) []User {
+
+	var objs []User
+	m.DB.Where("firstname like ?", firstname).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByLastnameEqual(ctx context.Context, lastname string) []User {
+
+	var objs []User
+	m.DB.Where("lastname = ?", lastname).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByLastnameLike(ctx context.Context, lastname string) []User {
+
+	var objs []User
+	m.DB.Where("lastname like ?", lastname).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByRoleEqual(ctx context.Context, role string) []User {
+
+	var objs []User
+	m.DB.Where("role = ?", role).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByRoleLike(ctx context.Context, role string) []User {
+
+	var objs []User
+	m.DB.Where("role like ?", role).Find(&objs)
+	return objs
+}
+
+func (m *UserDB) ListByStateEqual(ctx context.Context, state string) []User {
+
+	var objs []User
+	m.DB.Where("state = ?", state).Find(&objs)
+	return objs
+}
+func (m *UserDB) ListByStateLike(ctx context.Context, state string) []User {
+
+	var objs []User
+	m.DB.Where("state like ?", state).Find(&objs)
 	return objs
 }
 
