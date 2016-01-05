@@ -5,6 +5,9 @@ ci: clean prep gen test build
 
 build:
 	go build github.com/gopheracademy/congo
+	cd ui && npm run build && cd ..
+
+build-cli:
 	go build github.com/gopheracademy/congo/client/congo-cli
 
 clean:
@@ -28,6 +31,10 @@ gen:
 	goagen --design github.com/gopheracademy/congo/design gen --pkg-path=github.com/bketelsen/gorma
 
 
-# Test all XOR specific packages, skip packages that don't have tests for performance reasons
+
 test:
 	gb list -f '{{if .TestGoFiles}}{{.ImportPath}}{{end}}' github.com/gopheracademy/congo/... | awk 'NF'  |  xargs gb test
+
+run:
+	SESSION_SECRET=ASDF1234ASDFLKAJSDF  TWITTER_KEY=q7ZO1zxazOpAUT06aiTrF83Up  TWITTER_SECRET=uogbiWtHHQQ1nl3OfPOe92vZkt7YtgYgQWlaxGXSj3tqrhnSNC CONGO_ENVIRONMENT=dev CONGO_PORT=8080 ./congo
+ 

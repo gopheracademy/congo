@@ -1,5 +1,5 @@
 //************************************************************************//
-// congo: Application Media Types
+// API "congo": Application Media Types
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen

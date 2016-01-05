@@ -23,7 +23,6 @@ var _ = Resource("auth", func() {
 
 	DefaultMedia(Authorize)
 	BasePath("/auth")
-
 	Action("token", func() {
 		Routing(
 			POST("/token"),
@@ -68,7 +67,7 @@ var _ = Resource("auth", func() {
 	})
 })
 var _ = Resource("user", func() {
-
+	APIVersion("1.0.0")
 	DefaultMedia(User)
 	BasePath("/users")
 	Action("list", func() {
@@ -138,6 +137,7 @@ var _ = Resource("proposal", func() {
 	Parent("user")
 	DefaultMedia(Proposal)
 	BasePath("/proposals")
+	APIVersion("1.0.0")
 	Action("list", func() {
 		Routing(
 			GET(""),
@@ -201,6 +201,7 @@ var _ = Resource("proposal", func() {
 var _ = Resource("review", func() {
 	Parent("proposal")
 	DefaultMedia(Review)
+	APIVersion("1.0.0")
 	BasePath("/review")
 	Action("list", func() {
 		Routing(

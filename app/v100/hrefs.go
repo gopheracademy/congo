@@ -1,5 +1,5 @@
 //************************************************************************//
-// congo: Application Resource Href Factories
+// API "congo" version 1.0.0: Application Resource Href Factories
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -10,7 +10,7 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package app
+package v100
 
 import "fmt"
 

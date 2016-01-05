@@ -1,5 +1,5 @@
 //************************************************************************//
-// congo: Application Contexts
+// API "congo" version 1.0.0: Application Contexts
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -10,233 +10,15 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package app
+package v100
 
 import (
 	"fmt"
 	"strconv"
 
+	"github.com/gopheracademy/congo/app"
 	"github.com/raphael/goa"
 )
-
-// CallbackAuthContext provides the auth callback action context.
-type CallbackAuthContext struct {
-	*goa.Context
-	Provider string
-}
-
-// NewCallbackAuthContext parses the incoming request URL and body, performs validations and creates the
-// context used by the auth controller callback action.
-func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
-	var err error
-	ctx := CallbackAuthContext{Context: c}
-	rawProvider, ok := c.Get("provider")
-	if ok {
-		ctx.Provider = rawProvider
-	}
-	return &ctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *CallbackAuthContext) OK(resp []byte) error {
-	return ctx.Respond(200, resp)
-}
-
-// OauthAuthContext provides the auth oauth action context.
-type OauthAuthContext struct {
-	*goa.Context
-	Provider string
-}
-
-// NewOauthAuthContext parses the incoming request URL and body, performs validations and creates the
-// context used by the auth controller oauth action.
-func NewOauthAuthContext(c *goa.Context) (*OauthAuthContext, error) {
-	var err error
-	ctx := OauthAuthContext{Context: c}
-	rawProvider, ok := c.Get("provider")
-	if ok {
-		ctx.Provider = rawProvider
-	}
-	return &ctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *OauthAuthContext) OK(resp *Authorize) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.JSON(200, r)
-}
-
-// RefreshAuthContext provides the auth refresh action context.
-type RefreshAuthContext struct {
-	*goa.Context
-	Payload *RefreshAuthPayload
-}
-
-// NewRefreshAuthContext parses the incoming request URL and body, performs validations and creates the
-// context used by the auth controller refresh action.
-func NewRefreshAuthContext(c *goa.Context) (*RefreshAuthContext, error) {
-	var err error
-	ctx := RefreshAuthContext{Context: c}
-	p, err := NewRefreshAuthPayload(c.Payload())
-	if err != nil {
-		return nil, err
-	}
-	ctx.Payload = p
-	return &ctx, err
-}
-
-// RefreshAuthPayload is the auth refresh action payload.
-type RefreshAuthPayload struct {
-	// UUID of requesting application
-	Application string
-	// email
-	Email string
-	// password
-	Password string
-}
-
-// NewRefreshAuthPayload instantiates a RefreshAuthPayload from a raw request body.
-// It validates each field and returns an error if any validation fails.
-func NewRefreshAuthPayload(raw interface{}) (p *RefreshAuthPayload, err error) {
-	p, err = UnmarshalRefreshAuthPayload(raw, err)
-	return
-}
-
-// UnmarshalRefreshAuthPayload unmarshals and validates a raw interface{} into an instance of RefreshAuthPayload
-func UnmarshalRefreshAuthPayload(source interface{}, inErr error) (target *RefreshAuthPayload, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(RefreshAuthPayload)
-		if v, ok := val["application"]; ok {
-			var tmp1 string
-			if val, ok := v.(string); ok {
-				tmp1 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Application`, v, "string", err)
-			}
-			target.Application = tmp1
-		}
-		if v, ok := val["email"]; ok {
-			var tmp2 string
-			if val, ok := v.(string); ok {
-				tmp2 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
-			}
-			target.Email = tmp2
-		}
-		if v, ok := val["password"]; ok {
-			var tmp3 string
-			if val, ok := v.(string); ok {
-				tmp3 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Password`, v, "string", err)
-			}
-			target.Password = tmp3
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
-	}
-	return
-}
-
-// Created sends a HTTP response with status code 201.
-func (ctx *RefreshAuthContext) Created(resp *Authorize) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.JSON(201, r)
-}
-
-// TokenAuthContext provides the auth token action context.
-type TokenAuthContext struct {
-	*goa.Context
-	Payload *TokenAuthPayload
-}
-
-// NewTokenAuthContext parses the incoming request URL and body, performs validations and creates the
-// context used by the auth controller token action.
-func NewTokenAuthContext(c *goa.Context) (*TokenAuthContext, error) {
-	var err error
-	ctx := TokenAuthContext{Context: c}
-	p, err := NewTokenAuthPayload(c.Payload())
-	if err != nil {
-		return nil, err
-	}
-	ctx.Payload = p
-	return &ctx, err
-}
-
-// TokenAuthPayload is the auth token action payload.
-type TokenAuthPayload struct {
-	// UUID of requesting application
-	Application string
-	// email
-	Email string
-	// password
-	Password string
-}
-
-// NewTokenAuthPayload instantiates a TokenAuthPayload from a raw request body.
-// It validates each field and returns an error if any validation fails.
-func NewTokenAuthPayload(raw interface{}) (p *TokenAuthPayload, err error) {
-	p, err = UnmarshalTokenAuthPayload(raw, err)
-	return
-}
-
-// UnmarshalTokenAuthPayload unmarshals and validates a raw interface{} into an instance of TokenAuthPayload
-func UnmarshalTokenAuthPayload(source interface{}, inErr error) (target *TokenAuthPayload, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(TokenAuthPayload)
-		if v, ok := val["application"]; ok {
-			var tmp4 string
-			if val, ok := v.(string); ok {
-				tmp4 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Application`, v, "string", err)
-			}
-			target.Application = tmp4
-		}
-		if v, ok := val["email"]; ok {
-			var tmp5 string
-			if val, ok := v.(string); ok {
-				tmp5 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
-			}
-			target.Email = tmp5
-		}
-		if v, ok := val["password"]; ok {
-			var tmp6 string
-			if val, ok := v.(string); ok {
-				tmp6 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Password`, v, "string", err)
-			}
-			target.Password = tmp6
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
-	}
-	return
-}
-
-// Created sends a HTTP response with status code 201.
-func (ctx *TokenAuthContext) Created(resp *Authorize) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.JSON(201, r)
-}
 
 // CreateProposalContext provides the proposal create action context.
 type CreateProposalContext struct {
@@ -250,13 +32,11 @@ type CreateProposalContext struct {
 func NewCreateProposalContext(c *goa.Context) (*CreateProposalContext, error) {
 	var err error
 	ctx := CreateProposalContext{Context: c}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	p, err := NewCreateProposalPayload(c.Payload())
 	if err != nil {
@@ -386,21 +166,17 @@ type DeleteProposalContext struct {
 func NewDeleteProposalContext(c *goa.Context) (*DeleteProposalContext, error) {
 	var err error
 	ctx := DeleteProposalContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
@@ -426,19 +202,17 @@ type ListProposalContext struct {
 func NewListProposalContext(c *goa.Context) (*ListProposalContext, error) {
 	var err error
 	ctx := ListProposalContext{Context: c}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListProposalContext) OK(resp ProposalCollection) error {
+func (ctx *ListProposalContext) OK(resp app.ProposalCollection) error {
 	r, err := resp.Dump()
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -459,21 +233,17 @@ type ShowProposalContext struct {
 func NewShowProposalContext(c *goa.Context) (*ShowProposalContext, error) {
 	var err error
 	ctx := ShowProposalContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
@@ -484,7 +254,7 @@ func (ctx *ShowProposalContext) NotFound() error {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowProposalContext) OK(resp *Proposal, view ProposalViewEnum) error {
+func (ctx *ShowProposalContext) OK(resp *app.Proposal, view app.ProposalViewEnum) error {
 	r, err := resp.Dump(view)
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -506,21 +276,17 @@ type UpdateProposalContext struct {
 func NewUpdateProposalContext(c *goa.Context) (*UpdateProposalContext, error) {
 	var err error
 	ctx := UpdateProposalContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	p, err := NewUpdateProposalPayload(c.Payload())
 	if err != nil {
@@ -654,21 +420,17 @@ type CreateReviewContext struct {
 func NewCreateReviewContext(c *goa.Context) (*CreateReviewContext, error) {
 	var err error
 	ctx := CreateReviewContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	p, err := NewCreateReviewPayload(c.Payload())
 	if err != nil {
@@ -756,29 +518,23 @@ type DeleteReviewContext struct {
 func NewDeleteReviewContext(c *goa.Context) (*DeleteReviewContext, error) {
 	var err error
 	ctx := DeleteReviewContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawReviewID, ok := c.Get("reviewID")
-	if ok {
-		if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
-			ctx.ReviewID = int(reviewID)
-		} else {
-			err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
-		}
+	rawReviewID := c.Get("reviewID")
+	if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
+		ctx.ReviewID = int(reviewID)
+	} else {
+		err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
@@ -805,27 +561,23 @@ type ListReviewContext struct {
 func NewListReviewContext(c *goa.Context) (*ListReviewContext, error) {
 	var err error
 	ctx := ListReviewContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListReviewContext) OK(resp ReviewCollection) error {
+func (ctx *ListReviewContext) OK(resp app.ReviewCollection) error {
 	r, err := resp.Dump()
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -847,29 +599,23 @@ type ShowReviewContext struct {
 func NewShowReviewContext(c *goa.Context) (*ShowReviewContext, error) {
 	var err error
 	ctx := ShowReviewContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawReviewID, ok := c.Get("reviewID")
-	if ok {
-		if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
-			ctx.ReviewID = int(reviewID)
-		} else {
-			err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
-		}
+	rawReviewID := c.Get("reviewID")
+	if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
+		ctx.ReviewID = int(reviewID)
+	} else {
+		err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
@@ -880,7 +626,7 @@ func (ctx *ShowReviewContext) NotFound() error {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowReviewContext) OK(resp *Review, view ReviewViewEnum) error {
+func (ctx *ShowReviewContext) OK(resp *app.Review, view app.ReviewViewEnum) error {
 	r, err := resp.Dump(view)
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -903,29 +649,23 @@ type UpdateReviewContext struct {
 func NewUpdateReviewContext(c *goa.Context) (*UpdateReviewContext, error) {
 	var err error
 	ctx := UpdateReviewContext{Context: c}
-	rawProposalID, ok := c.Get("proposalID")
-	if ok {
-		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-			ctx.ProposalID = int(proposalID)
-		} else {
-			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
-		}
+	rawProposalID := c.Get("proposalID")
+	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+		ctx.ProposalID = int(proposalID)
+	} else {
+		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
 	}
-	rawReviewID, ok := c.Get("reviewID")
-	if ok {
-		if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
-			ctx.ReviewID = int(reviewID)
-		} else {
-			err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
-		}
+	rawReviewID := c.Get("reviewID")
+	if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
+		ctx.ReviewID = int(reviewID)
+	} else {
+		err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
 	}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	p, err := NewUpdateReviewPayload(c.Payload())
 	if err != nil {
@@ -1001,24 +741,6 @@ func (ctx *UpdateReviewContext) NoContent() error {
 // NotFound sends a HTTP response with status code 404.
 func (ctx *UpdateReviewContext) NotFound() error {
 	return ctx.Respond(404, nil)
-}
-
-// BootstrapUiContext provides the ui bootstrap action context.
-type BootstrapUiContext struct {
-	*goa.Context
-}
-
-// NewBootstrapUiContext parses the incoming request URL and body, performs validations and creates the
-// context used by the ui controller bootstrap action.
-func NewBootstrapUiContext(c *goa.Context) (*BootstrapUiContext, error) {
-	var err error
-	ctx := BootstrapUiContext{Context: c}
-	return &ctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *BootstrapUiContext) OK(resp []byte) error {
-	return ctx.Respond(200, resp)
 }
 
 // CreateUserContext provides the user create action context.
@@ -1172,13 +894,11 @@ type DeleteUserContext struct {
 func NewDeleteUserContext(c *goa.Context) (*DeleteUserContext, error) {
 	var err error
 	ctx := DeleteUserContext{Context: c}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
@@ -1207,7 +927,7 @@ func NewListUserContext(c *goa.Context) (*ListUserContext, error) {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListUserContext) OK(resp UserCollection) error {
+func (ctx *ListUserContext) OK(resp app.UserCollection) error {
 	r, err := resp.Dump()
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -1227,13 +947,11 @@ type ShowUserContext struct {
 func NewShowUserContext(c *goa.Context) (*ShowUserContext, error) {
 	var err error
 	ctx := ShowUserContext{Context: c}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	return &ctx, err
 }
@@ -1244,7 +962,7 @@ func (ctx *ShowUserContext) NotFound() error {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowUserContext) OK(resp *User, view UserViewEnum) error {
+func (ctx *ShowUserContext) OK(resp *app.User, view app.UserViewEnum) error {
 	r, err := resp.Dump(view)
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -1265,13 +983,11 @@ type UpdateUserContext struct {
 func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 	var err error
 	ctx := UpdateUserContext{Context: c}
-	rawUserID, ok := c.Get("userID")
-	if ok {
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			ctx.UserID = int(userID)
-		} else {
-			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
-		}
+	rawUserID := c.Get("userID")
+	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+		ctx.UserID = int(userID)
+	} else {
+		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 	}
 	p, err := NewUpdateUserPayload(c.Payload())
 	if err != nil {
