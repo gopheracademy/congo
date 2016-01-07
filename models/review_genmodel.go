@@ -14,17 +14,15 @@ package models
 import (
 	"time"
 
-	"github.com/gopheracademy/congo/app"
-	"github.com/jinzhu/copier"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
 
-// app.ReviewModel storage type
-// Identifier:
+// app.Review storage type
+// Identifier: Review
 type Review struct {
-	ID      int    `json:"ID,omitempty" gorm:"primary_key"`
 	Comment string `json:"comment,omitempty"`
+	ID      int    `json:"id,omitempty" gorm:"primary_key"`
 	Rating  int    `json:"rating,omitempty"`
 
 	// Foreign Keys
@@ -37,30 +35,8 @@ type Review struct {
 	DeletedAt *time.Time
 }
 
-func ReviewFromCreatePayload(ctx *app.CreateReviewContext) Review {
-	payload := ctx.Payload
-	m := Review{}
-	copier.Copy(&m, payload)
-
-	m.ProposalID = int(ctx.ProposalID)
-	m.UserID = int(ctx.UserID)
-	return m
-}
-
-func ReviewFromUpdatePayload(ctx *app.UpdateReviewContext) Review {
-	payload := ctx.Payload
-	m := Review{}
-	copier.Copy(&m, payload)
-	return m
-}
-
-func (m Review) ToApp() *app.Review {
-	target := app.Review{}
-	copier.Copy(&target, &m)
-	return &target
-}
-
 type ReviewStorage interface {
+	DB() interface{}
 	List(ctx context.Context) []Review
 	One(ctx context.Context, id int) (Review, error)
 	Add(ctx context.Context, o Review) (Review, error)
@@ -73,12 +49,10 @@ type ReviewStorage interface {
 	ListByUser(ctx context.Context, parentid int) []Review
 	OneByUser(ctx context.Context, parentid, id int) (Review, error)
 }
-
 type ReviewDB struct {
-	DB gorm.DB
+	db gorm.DB
 }
 
-// would prefer to just pass a context in here, but they're all different, so can't
 func ReviewFilterByProposal(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	if parentid > 0 {
 		return func(db *gorm.DB) *gorm.DB {
@@ -94,7 +68,7 @@ func ReviewFilterByProposal(parentid int, originaldb *gorm.DB) func(db *gorm.DB)
 func (m *ReviewDB) ListByProposal(ctx context.Context, parentid int) []Review {
 
 	var objs []Review
-	m.DB.Scopes(ReviewFilterByProposal(parentid, &m.DB)).Find(&objs)
+	m.db.Scopes(ReviewFilterByProposal(parentid, &m.db)).Find(&objs)
 	return objs
 }
 
@@ -102,12 +76,11 @@ func (m *ReviewDB) OneByProposal(ctx context.Context, parentid, id int) (Review,
 
 	var obj Review
 
-	err := m.DB.Scopes(ReviewFilterByProposal(parentid, &m.DB)).Find(&obj, id).Error
+	err := m.db.Scopes(ReviewFilterByProposal(parentid, &m.db)).Find(&obj, id).Error
 
 	return obj, err
 }
 
-// would prefer to just pass a context in here, but they're all different, so can't
 func ReviewFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	if parentid > 0 {
 		return func(db *gorm.DB) *gorm.DB {
@@ -123,7 +96,7 @@ func ReviewFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *go
 func (m *ReviewDB) ListByUser(ctx context.Context, parentid int) []Review {
 
 	var objs []Review
-	m.DB.Scopes(ReviewFilterByUser(parentid, &m.DB)).Find(&objs)
+	m.db.Scopes(ReviewFilterByUser(parentid, &m.db)).Find(&objs)
 	return objs
 }
 
@@ -131,60 +104,64 @@ func (m *ReviewDB) OneByUser(ctx context.Context, parentid, id int) (Review, err
 
 	var obj Review
 
-	err := m.DB.Scopes(ReviewFilterByUser(parentid, &m.DB)).Find(&obj, id).Error
+	err := m.db.Scopes(ReviewFilterByUser(parentid, &m.db)).Find(&obj, id).Error
 
 	return obj, err
 }
 
 func NewReviewDB(db gorm.DB) *ReviewDB {
 
-	return &ReviewDB{DB: db}
+	return &ReviewDB{db: db}
 
+}
+
+func (m *ReviewDB) DB() interface{} {
+	return &m.db
 }
 
 func (m *ReviewDB) List(ctx context.Context) []Review {
 
 	var objs []Review
-	m.DB.Find(&objs)
-	return objs
-}
-
-func (m *ReviewDB) ListByIDEqual(ctx context.Context, id int) []Review {
-
-	var objs []Review
-	m.DB.Where("id = ?", id).Find(&objs)
-	return objs
-}
-func (m *ReviewDB) ListByIDLike(ctx context.Context, id int) []Review {
-
-	var objs []Review
-	m.DB.Where("id like ?", id).Find(&objs)
+	m.db.Find(&objs)
 	return objs
 }
 
 func (m *ReviewDB) ListByCommentEqual(ctx context.Context, comment string) []Review {
 
 	var objs []Review
-	m.DB.Where("comment = ?", comment).Find(&objs)
+	m.db.Where("comment = ?", comment).Find(&objs)
 	return objs
 }
 func (m *ReviewDB) ListByCommentLike(ctx context.Context, comment string) []Review {
 
 	var objs []Review
-	m.DB.Where("comment like ?", comment).Find(&objs)
+	m.db.Where("comment like ?", comment).Find(&objs)
+	return objs
+}
+
+func (m *ReviewDB) ListByIdEqual(ctx context.Context, id int) []Review {
+
+	var objs []Review
+	m.db.Where("id = ?", id).Find(&objs)
+	return objs
+}
+func (m *ReviewDB) ListByIdLike(ctx context.Context, id int) []Review {
+
+	var objs []Review
+	m.db.Where("id like ?", id).Find(&objs)
 	return objs
 }
 
 func (m *ReviewDB) ListByRatingEqual(ctx context.Context, rating int) []Review {
 
 	var objs []Review
-	m.DB.Where("rating = ?", rating).Find(&objs)
+	m.db.Where("rating = ?", rating).Find(&objs)
 	return objs
 }
 func (m *ReviewDB) ListByRatingLike(ctx context.Context, rating int) []Review {
 
 	var objs []Review
-	m.DB.Where("rating like ?", rating).Find(&objs)
+	m.db.Where("rating like ?", rating).Find(&objs)
 	return objs
 }
 
@@ -192,13 +169,13 @@ func (m *ReviewDB) One(ctx context.Context, id int) (Review, error) {
 
 	var obj Review
 
-	err := m.DB.Find(&obj, id).Error
+	err := m.db.Find(&obj, id).Error
 
 	return obj, err
 }
 
 func (m *ReviewDB) Add(ctx context.Context, model Review) (Review, error) {
-	err := m.DB.Create(&model).Error
+	err := m.db.Create(&model).Error
 
 	return model, err
 }
@@ -208,14 +185,14 @@ func (m *ReviewDB) Update(ctx context.Context, model Review) error {
 	if err != nil {
 		return err
 	}
-	err = m.DB.Model(&obj).Updates(model).Error
+	err = m.db.Model(&obj).Updates(model).Error
 
 	return err
 }
 
 func (m *ReviewDB) Delete(ctx context.Context, id int) error {
 	var obj Review
-	err := m.DB.Delete(&obj, id).Error
+	err := m.db.Delete(&obj, id).Error
 	if err != nil {
 		return err
 	}

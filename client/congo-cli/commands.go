@@ -86,6 +86,11 @@ type (
 		Path    string
 		Payload string
 	}
+	// BootstrapUiCommand is the command line data structure for the bootstrap action of ui
+	BootstrapUiCommand struct {
+		// Path is the HTTP request path.
+		Path string
+	}
 	// CreateUserCommand is the command line data structure for the create action of user
 	CreateUserCommand struct {
 		// Path is the HTTP request path.
@@ -301,6 +306,16 @@ func (cmd *UpdateReviewCommand) Run(c *client.Client) (*http.Response, error) {
 func (cmd *UpdateReviewCommand) RegisterFlags(cc *kingpin.CmdClause) {
 	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID/review/:reviewID`).Required().StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
+}
+
+// Run makes the HTTP request corresponding to the BootstrapUiCommand command.
+func (cmd *BootstrapUiCommand) Run(c *client.Client) (*http.Response, error) {
+	return c.BootstrapUi(cmd.Path)
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *BootstrapUiCommand) RegisterFlags(cc *kingpin.CmdClause) {
+	cc.Arg("path", `Request path, default is "/"`).Default("/").StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the CreateUserCommand command.

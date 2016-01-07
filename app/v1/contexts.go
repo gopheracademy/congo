@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "congo" version 1.0.0: Application Contexts
+// API "congo" version 1.0: Application Contexts
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -10,7 +10,7 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package v100
+package v1
 
 import (
 	"fmt"
@@ -68,80 +68,80 @@ func UnmarshalCreateProposalPayload(source interface{}, inErr error) (target *Cr
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(CreateProposalPayload)
 		if v, ok := val["abstract"]; ok {
-			var tmp7 string
+			var tmp48 string
 			if val, ok := v.(string); ok {
-				tmp7 = val
+				tmp48 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Abstract`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp7) < 50 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp7, len(tmp7), 50, true, err)
+				if len(tmp48) < 50 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp48, len(tmp48), 50, true, err)
 				}
-				if len(tmp7) > 500 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp7, len(tmp7), 500, false, err)
+				if len(tmp48) > 500 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp48, len(tmp48), 500, false, err)
 				}
 			}
-			target.Abstract = tmp7
+			target.Abstract = tmp48
 		}
 		if v, ok := val["detail"]; ok {
-			var tmp8 string
+			var tmp49 string
 			if val, ok := v.(string); ok {
-				tmp8 = val
+				tmp49 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Detail`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp8) < 100 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp8, len(tmp8), 100, true, err)
+				if len(tmp49) < 100 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp49, len(tmp49), 100, true, err)
 				}
-				if len(tmp8) > 2000 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp8, len(tmp8), 2000, false, err)
+				if len(tmp49) > 2000 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp49, len(tmp49), 2000, false, err)
 				}
 			}
-			target.Detail = tmp8
+			target.Detail = tmp49
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp9 string
+			var tmp50 string
 			if val, ok := v.(string); ok {
-				tmp9 = val
+				tmp50 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp9) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp9, len(tmp9), 2, true, err)
+				if len(tmp50) < 2 {
+					err = goa.InvalidLengthError(`payload.Firstname`, tmp50, len(tmp50), 2, true, err)
 				}
 			}
-			target.Firstname = tmp9
+			target.Firstname = tmp50
 		}
 		if v, ok := val["title"]; ok {
-			var tmp10 string
+			var tmp51 string
 			if val, ok := v.(string); ok {
-				tmp10 = val
+				tmp51 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Title`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp10) < 10 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp10, len(tmp10), 10, true, err)
+				if len(tmp51) < 10 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp51, len(tmp51), 10, true, err)
 				}
-				if len(tmp10) > 200 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp10, len(tmp10), 200, false, err)
+				if len(tmp51) > 200 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp51, len(tmp51), 200, false, err)
 				}
 			}
-			target.Title = tmp10
+			target.Title = tmp51
 		} else {
 			err = goa.MissingAttributeError(`payload`, "title", err)
 		}
 		if v, ok := val["withdrawn"]; ok {
-			var tmp11 bool
+			var tmp52 bool
 			if val, ok := v.(bool); ok {
-				tmp11 = val
+				tmp52 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Withdrawn`, v, "bool", err)
 			}
-			target.Withdrawn = tmp11
+			target.Withdrawn = tmp52
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -212,7 +212,7 @@ func NewListProposalContext(c *goa.Context) (*ListProposalContext, error) {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListProposalContext) OK(resp app.ProposalCollection) error {
+func (ctx *ListProposalContext) OK(resp ProposalCollection) error {
 	r, err := resp.Dump()
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -254,7 +254,7 @@ func (ctx *ShowProposalContext) NotFound() error {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowProposalContext) OK(resp *app.Proposal, view app.ProposalViewEnum) error {
+func (ctx *ShowProposalContext) OK(resp *Proposal, view ProposalViewEnum) error {
 	r, err := resp.Dump(view)
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -318,78 +318,78 @@ func UnmarshalUpdateProposalPayload(source interface{}, inErr error) (target *Up
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UpdateProposalPayload)
 		if v, ok := val["abstract"]; ok {
-			var tmp12 string
+			var tmp53 string
 			if val, ok := v.(string); ok {
-				tmp12 = val
+				tmp53 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Abstract`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp12) < 50 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp12, len(tmp12), 50, true, err)
+				if len(tmp53) < 50 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp53, len(tmp53), 50, true, err)
 				}
-				if len(tmp12) > 500 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp12, len(tmp12), 500, false, err)
+				if len(tmp53) > 500 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp53, len(tmp53), 500, false, err)
 				}
 			}
-			target.Abstract = tmp12
+			target.Abstract = tmp53
 		}
 		if v, ok := val["detail"]; ok {
-			var tmp13 string
+			var tmp54 string
 			if val, ok := v.(string); ok {
-				tmp13 = val
+				tmp54 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Detail`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp13) < 100 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp13, len(tmp13), 100, true, err)
+				if len(tmp54) < 100 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp54, len(tmp54), 100, true, err)
 				}
-				if len(tmp13) > 2000 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp13, len(tmp13), 2000, false, err)
+				if len(tmp54) > 2000 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp54, len(tmp54), 2000, false, err)
 				}
 			}
-			target.Detail = tmp13
+			target.Detail = tmp54
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp14 string
+			var tmp55 string
 			if val, ok := v.(string); ok {
-				tmp14 = val
+				tmp55 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp14) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp14, len(tmp14), 2, true, err)
+				if len(tmp55) < 2 {
+					err = goa.InvalidLengthError(`payload.Firstname`, tmp55, len(tmp55), 2, true, err)
 				}
 			}
-			target.Firstname = tmp14
+			target.Firstname = tmp55
 		}
 		if v, ok := val["title"]; ok {
-			var tmp15 string
+			var tmp56 string
 			if val, ok := v.(string); ok {
-				tmp15 = val
+				tmp56 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Title`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp15) < 10 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp15, len(tmp15), 10, true, err)
+				if len(tmp56) < 10 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp56, len(tmp56), 10, true, err)
 				}
-				if len(tmp15) > 200 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp15, len(tmp15), 200, false, err)
+				if len(tmp56) > 200 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp56, len(tmp56), 200, false, err)
 				}
 			}
-			target.Title = tmp15
+			target.Title = tmp56
 		}
 		if v, ok := val["withdrawn"]; ok {
-			var tmp16 bool
+			var tmp57 bool
 			if val, ok := v.(bool); ok {
-				tmp16 = val
+				tmp57 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Withdrawn`, v, "bool", err)
 			}
-			target.Withdrawn = tmp16
+			target.Withdrawn = tmp57
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -459,38 +459,38 @@ func UnmarshalCreateReviewPayload(source interface{}, inErr error) (target *Crea
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(CreateReviewPayload)
 		if v, ok := val["comment"]; ok {
-			var tmp17 string
+			var tmp58 string
 			if val, ok := v.(string); ok {
-				tmp17 = val
+				tmp58 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Comment`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp17) < 10 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp17, len(tmp17), 10, true, err)
+				if len(tmp58) < 10 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp58, len(tmp58), 10, true, err)
 				}
-				if len(tmp17) > 200 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp17, len(tmp17), 200, false, err)
+				if len(tmp58) > 200 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp58, len(tmp58), 200, false, err)
 				}
 			}
-			target.Comment = tmp17
+			target.Comment = tmp58
 		}
 		if v, ok := val["rating"]; ok {
-			var tmp18 int
+			var tmp59 int
 			if f, ok := v.(float64); ok {
-				tmp18 = int(f)
+				tmp59 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if tmp18 < 1 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp18, 1, true, err)
+				if tmp59 < 1 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp59, 1, true, err)
 				}
-				if tmp18 > 5 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp18, 5, false, err)
+				if tmp59 > 5 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp59, 5, false, err)
 				}
 			}
-			target.Rating = tmp18
+			target.Rating = tmp59
 		} else {
 			err = goa.MissingAttributeError(`payload`, "rating", err)
 		}
@@ -577,7 +577,7 @@ func NewListReviewContext(c *goa.Context) (*ListReviewContext, error) {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListReviewContext) OK(resp app.ReviewCollection) error {
+func (ctx *ListReviewContext) OK(resp ReviewCollection) error {
 	r, err := resp.Dump()
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -626,7 +626,7 @@ func (ctx *ShowReviewContext) NotFound() error {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowReviewContext) OK(resp *app.Review, view app.ReviewViewEnum) error {
+func (ctx *ShowReviewContext) OK(resp *Review, view ReviewViewEnum) error {
 	r, err := resp.Dump(view)
 	if err != nil {
 		return fmt.Errorf("invalid response: %s", err)
@@ -694,38 +694,38 @@ func UnmarshalUpdateReviewPayload(source interface{}, inErr error) (target *Upda
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UpdateReviewPayload)
 		if v, ok := val["comment"]; ok {
-			var tmp19 string
+			var tmp60 string
 			if val, ok := v.(string); ok {
-				tmp19 = val
+				tmp60 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Comment`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp19) < 10 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp19, len(tmp19), 10, true, err)
+				if len(tmp60) < 10 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp60, len(tmp60), 10, true, err)
 				}
-				if len(tmp19) > 200 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp19, len(tmp19), 200, false, err)
+				if len(tmp60) > 200 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp60, len(tmp60), 200, false, err)
 				}
 			}
-			target.Comment = tmp19
+			target.Comment = tmp60
 		}
 		if v, ok := val["rating"]; ok {
-			var tmp20 int
+			var tmp61 int
 			if f, ok := v.(float64); ok {
-				tmp20 = int(f)
+				tmp61 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if tmp20 < 1 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp20, 1, true, err)
+				if tmp61 < 1 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp61, 1, true, err)
 				}
-				if tmp20 > 5 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp20, 5, false, err)
+				if tmp61 > 5 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp61, 5, false, err)
 				}
 			}
-			target.Rating = tmp20
+			target.Rating = tmp61
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -787,90 +787,90 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(CreateUserPayload)
 		if v, ok := val["bio"]; ok {
-			var tmp21 string
+			var tmp62 string
 			if val, ok := v.(string); ok {
-				tmp21 = val
+				tmp62 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Bio`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp21) > 500 {
-					err = goa.InvalidLengthError(`payload.Bio`, tmp21, len(tmp21), 500, false, err)
+				if len(tmp62) > 500 {
+					err = goa.InvalidLengthError(`payload.Bio`, tmp62, len(tmp62), 500, false, err)
 				}
 			}
-			target.Bio = tmp21
+			target.Bio = tmp62
 		}
 		if v, ok := val["city"]; ok {
-			var tmp22 string
+			var tmp63 string
 			if val, ok := v.(string); ok {
-				tmp22 = val
+				tmp63 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.City`, v, "string", err)
 			}
-			target.City = tmp22
+			target.City = tmp63
 		}
 		if v, ok := val["country"]; ok {
-			var tmp23 string
+			var tmp64 string
 			if val, ok := v.(string); ok {
-				tmp23 = val
+				tmp64 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Country`, v, "string", err)
 			}
-			target.Country = tmp23
+			target.Country = tmp64
 		}
 		if v, ok := val["email"]; ok {
-			var tmp24 string
+			var tmp65 string
 			if val, ok := v.(string); ok {
-				tmp24 = val
+				tmp65 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
 			if err == nil {
-				if tmp24 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp24); err2 != nil {
-						err = goa.InvalidFormatError(`payload.Email`, tmp24, goa.FormatEmail, err2, err)
+				if tmp65 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp65); err2 != nil {
+						err = goa.InvalidFormatError(`payload.Email`, tmp65, goa.FormatEmail, err2, err)
 					}
 				}
 			}
-			target.Email = tmp24
+			target.Email = tmp65
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp25 string
+			var tmp66 string
 			if val, ok := v.(string); ok {
-				tmp25 = val
+				tmp66 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
-			target.Firstname = tmp25
+			target.Firstname = tmp66
 		} else {
 			err = goa.MissingAttributeError(`payload`, "firstname", err)
 		}
 		if v, ok := val["lastname"]; ok {
-			var tmp26 string
+			var tmp67 string
 			if val, ok := v.(string); ok {
-				tmp26 = val
+				tmp67 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Lastname`, v, "string", err)
 			}
-			target.Lastname = tmp26
+			target.Lastname = tmp67
 		}
 		if v, ok := val["role"]; ok {
-			var tmp27 string
+			var tmp68 string
 			if val, ok := v.(string); ok {
-				tmp27 = val
+				tmp68 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Role`, v, "string", err)
 			}
-			target.Role = tmp27
+			target.Role = tmp68
 		}
 		if v, ok := val["state"]; ok {
-			var tmp28 string
+			var tmp69 string
 			if val, ok := v.(string); ok {
-				tmp28 = val
+				tmp69 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.State`, v, "string", err)
 			}
-			target.State = tmp28
+			target.State = tmp69
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -1022,90 +1022,90 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UpdateUserPayload)
 		if v, ok := val["bio"]; ok {
-			var tmp29 string
+			var tmp70 string
 			if val, ok := v.(string); ok {
-				tmp29 = val
+				tmp70 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Bio`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp29) > 500 {
-					err = goa.InvalidLengthError(`payload.Bio`, tmp29, len(tmp29), 500, false, err)
+				if len(tmp70) > 500 {
+					err = goa.InvalidLengthError(`payload.Bio`, tmp70, len(tmp70), 500, false, err)
 				}
 			}
-			target.Bio = tmp29
+			target.Bio = tmp70
 		}
 		if v, ok := val["city"]; ok {
-			var tmp30 string
+			var tmp71 string
 			if val, ok := v.(string); ok {
-				tmp30 = val
+				tmp71 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.City`, v, "string", err)
 			}
-			target.City = tmp30
+			target.City = tmp71
 		}
 		if v, ok := val["country"]; ok {
-			var tmp31 string
+			var tmp72 string
 			if val, ok := v.(string); ok {
-				tmp31 = val
+				tmp72 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Country`, v, "string", err)
 			}
-			target.Country = tmp31
+			target.Country = tmp72
 		}
 		if v, ok := val["email"]; ok {
-			var tmp32 string
+			var tmp73 string
 			if val, ok := v.(string); ok {
-				tmp32 = val
+				tmp73 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
 			if err == nil {
-				if tmp32 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp32); err2 != nil {
-						err = goa.InvalidFormatError(`payload.Email`, tmp32, goa.FormatEmail, err2, err)
+				if tmp73 != "" {
+					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp73); err2 != nil {
+						err = goa.InvalidFormatError(`payload.Email`, tmp73, goa.FormatEmail, err2, err)
 					}
 				}
 			}
-			target.Email = tmp32
+			target.Email = tmp73
 		} else {
 			err = goa.MissingAttributeError(`payload`, "email", err)
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp33 string
+			var tmp74 string
 			if val, ok := v.(string); ok {
-				tmp33 = val
+				tmp74 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
-			target.Firstname = tmp33
+			target.Firstname = tmp74
 		}
 		if v, ok := val["lastname"]; ok {
-			var tmp34 string
+			var tmp75 string
 			if val, ok := v.(string); ok {
-				tmp34 = val
+				tmp75 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Lastname`, v, "string", err)
 			}
-			target.Lastname = tmp34
+			target.Lastname = tmp75
 		}
 		if v, ok := val["role"]; ok {
-			var tmp35 string
+			var tmp76 string
 			if val, ok := v.(string); ok {
-				tmp35 = val
+				tmp76 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Role`, v, "string", err)
 			}
-			target.Role = tmp35
+			target.Role = tmp76
 		}
 		if v, ok := val["state"]; ok {
-			var tmp36 string
+			var tmp77 string
 			if val, ok := v.(string); ok {
-				tmp36 = val
+				tmp77 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.State`, v, "string", err)
 			}
-			target.State = tmp36
+			target.State = tmp77
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)

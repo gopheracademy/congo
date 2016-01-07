@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/app/v1"
 	"github.com/gopheracademy/congo/models"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/gopheracademy/congo/util"
@@ -94,10 +95,10 @@ func main() {
 	app.MountAuthController(service, a)
 	// Mount "user" controller
 	c3 := NewUserController(service, models.NewUserDB(db))
-	app.MountUserController(service, c3)
+	v1.MountUserController(service, c3)
 	c3.Use(jwt.Middleware(jwtSpec))
 	c4 := NewProposalController(service, models.NewProposalDB(db))
-	app.MountProposalController(service, c4)
+	v1.MountProposalController(service, c4)
 	c4.Use(jwt.Middleware(jwtSpec))
 	ui := NewUIController(service, &db)
 	app.MountUiController(service, ui)

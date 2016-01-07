@@ -1,5 +1,5 @@
 //************************************************************************//
-// congo Swagger Spec
+// congo: Media Helpers
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -9,11 +9,15 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package swagger
+package models
 
-import "github.com/raphael/goa"
+import (
+	"github.com/gopheracademy/congo/app/v1"
+	"github.com/jinzhu/copier"
+)
 
-// MountController mounts the swagger spec controller under "/swagger.json".
-func MountController(service goa.Service) {
-	service.ServeFiles("/swagger.json", "swagger/swagger.json")
+func (m Review) ToV1() *v1.Review {
+	target := v1.Review{}
+	copier.Copy(&target, &m)
+	return &target
 }

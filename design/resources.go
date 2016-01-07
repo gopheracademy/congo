@@ -7,7 +7,6 @@ import (
 
 var _ = Resource("ui", func() {
 	BasePath("/")
-
 	Action("bootstrap", func() {
 		Routing(
 			GET("//"),
@@ -20,7 +19,6 @@ var _ = Resource("ui", func() {
 })
 
 var _ = Resource("auth", func() {
-
 	DefaultMedia(Authorize)
 	BasePath("/auth")
 	Action("token", func() {
@@ -67,7 +65,7 @@ var _ = Resource("auth", func() {
 	})
 })
 var _ = Resource("user", func() {
-	APIVersion("1.0.0")
+	APIVersion("1.0")
 	DefaultMedia(User)
 	BasePath("/users")
 	Action("list", func() {
@@ -134,10 +132,10 @@ var _ = Resource("user", func() {
 })
 
 var _ = Resource("proposal", func() {
+	APIVersion("1.0")
 	Parent("user")
 	DefaultMedia(Proposal)
 	BasePath("/proposals")
-	APIVersion("1.0.0")
 	Action("list", func() {
 		Routing(
 			GET(""),
@@ -199,9 +197,9 @@ var _ = Resource("proposal", func() {
 })
 
 var _ = Resource("review", func() {
+	APIVersion("1.0")
 	Parent("proposal")
 	DefaultMedia(Review)
-	APIVersion("1.0.0")
 	BasePath("/review")
 	Action("list", func() {
 		Routing(

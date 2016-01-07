@@ -1,5 +1,5 @@
 //************************************************************************//
-// congo Swagger Spec
+// congo JavaScript Client Example
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -9,11 +9,13 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package swagger
+package js
 
 import "github.com/raphael/goa"
 
-// MountController mounts the swagger spec controller under "/swagger.json".
+// MountController mounts the JavaScript example controller under "/js".
 func MountController(service goa.Service) {
-	service.ServeFiles("/swagger.json", "swagger/swagger.json")
+	// Serve static files under js
+	service.ServeFiles("/js/*filepath", "/home/bketelsen/src/github.com/gopheracademy/congo/js")
+	service.Info("mount", "ctrl", "JS", "action", "ServeFiles", "route", "GET /js/*")
 }

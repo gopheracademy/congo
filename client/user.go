@@ -83,7 +83,7 @@ type UpdateUserPayload struct {
 	Bio       string `json:"bio,omitempty"`
 	City      string `json:"city,omitempty"`
 	Country   string `json:"country,omitempty"`
-	Email     string `json:"email,omitempty"`
+	Email     string `json:"email"`
 	Firstname string `json:"firstname,omitempty"`
 	Lastname  string `json:"lastname,omitempty"`
 	Role      string `json:"role,omitempty"`

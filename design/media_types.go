@@ -8,7 +8,6 @@ import (
 // User is the user resource media type.
 var User = MediaType("application/vnd.user+json", func() {
 	Description("A user belonging to a tenant account")
-	Metadata("mediatype", "123")
 	Reference(UserModel)
 	Attributes(func() {
 		Attribute("id", Integer, "ID of user")
@@ -87,6 +86,7 @@ var Login = MediaType("application/vnd.login+json", func() {
 
 // Review is the review resource mediatype
 var Review = MediaType("application/vnd.review+json", func() {
+	APIVersion("1.0")
 	Description("A review is submitted by a reviewer")
 	Reference(ReviewModel)
 	Attributes(func() {
@@ -109,6 +109,7 @@ var Review = MediaType("application/vnd.review+json", func() {
 
 // Proposal is the proposal resource mediatype
 var Proposal = MediaType("application/vnd.proposal+json", func() {
+	APIVersion("1.0")
 	Description("A response to a CFP")
 	Reference(ProposalModel)
 	Attributes(func() {
