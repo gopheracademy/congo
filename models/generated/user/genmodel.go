@@ -9,11 +9,13 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package models
+package user
 
 import (
 	"time"
 
+	"github.com/gopheracademy/congo/models/proposal"
+	"github.com/gopheracademy/congo/models/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -37,8 +39,8 @@ type User struct {
 	DeletedAt *time.Time
 
 	// Children
-	Proposals []Proposal
-	Reviews   []Review
+	Proposals []proposal.Proposal
+	Reviews   []review.Review
 
 	// Authboss
 
@@ -79,140 +81,140 @@ type UserStorage interface {
 	Delete(ctx context.Context, id int) error
 }
 type UserDB struct {
-	db gorm.DB
+	Db gorm.DB
 }
 
 func NewUserDB(db gorm.DB) *UserDB {
 
-	return &UserDB{db: db}
+	return &UserDB{Db: db}
 
 }
 
 func (m *UserDB) DB() interface{} {
-	return &m.db
+	return &m.Db
 }
 
 func (m *UserDB) List(ctx context.Context) []User {
 
 	var objs []User
-	m.db.Find(&objs)
+	m.Db.Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByBioEqual(ctx context.Context, bio string) []User {
 
 	var objs []User
-	m.db.Where("bio = ?", bio).Find(&objs)
+	m.Db.Where("bio = ?", bio).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByBioLike(ctx context.Context, bio string) []User {
 
 	var objs []User
-	m.db.Where("bio like ?", bio).Find(&objs)
+	m.Db.Where("bio like ?", bio).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByCityEqual(ctx context.Context, city string) []User {
 
 	var objs []User
-	m.db.Where("city = ?", city).Find(&objs)
+	m.Db.Where("city = ?", city).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByCityLike(ctx context.Context, city string) []User {
 
 	var objs []User
-	m.db.Where("city like ?", city).Find(&objs)
+	m.Db.Where("city like ?", city).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByCountryEqual(ctx context.Context, country string) []User {
 
 	var objs []User
-	m.db.Where("country = ?", country).Find(&objs)
+	m.Db.Where("country = ?", country).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByCountryLike(ctx context.Context, country string) []User {
 
 	var objs []User
-	m.db.Where("country like ?", country).Find(&objs)
+	m.Db.Where("country like ?", country).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByEmailEqual(ctx context.Context, email string) []User {
 
 	var objs []User
-	m.db.Where("email = ?", email).Find(&objs)
+	m.Db.Where("email = ?", email).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByEmailLike(ctx context.Context, email string) []User {
 
 	var objs []User
-	m.db.Where("email like ?", email).Find(&objs)
+	m.Db.Where("email like ?", email).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByFirstnameEqual(ctx context.Context, firstname string) []User {
 
 	var objs []User
-	m.db.Where("firstname = ?", firstname).Find(&objs)
+	m.Db.Where("firstname = ?", firstname).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByFirstnameLike(ctx context.Context, firstname string) []User {
 
 	var objs []User
-	m.db.Where("firstname like ?", firstname).Find(&objs)
+	m.Db.Where("firstname like ?", firstname).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByIdEqual(ctx context.Context, id int) []User {
 
 	var objs []User
-	m.db.Where("id = ?", id).Find(&objs)
+	m.Db.Where("id = ?", id).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByIdLike(ctx context.Context, id int) []User {
 
 	var objs []User
-	m.db.Where("id like ?", id).Find(&objs)
+	m.Db.Where("id like ?", id).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByLastnameEqual(ctx context.Context, lastname string) []User {
 
 	var objs []User
-	m.db.Where("lastname = ?", lastname).Find(&objs)
+	m.Db.Where("lastname = ?", lastname).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByLastnameLike(ctx context.Context, lastname string) []User {
 
 	var objs []User
-	m.db.Where("lastname like ?", lastname).Find(&objs)
+	m.Db.Where("lastname like ?", lastname).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByRoleEqual(ctx context.Context, role string) []User {
 
 	var objs []User
-	m.db.Where("role = ?", role).Find(&objs)
+	m.Db.Where("role = ?", role).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByRoleLike(ctx context.Context, role string) []User {
 
 	var objs []User
-	m.db.Where("role like ?", role).Find(&objs)
+	m.Db.Where("role like ?", role).Find(&objs)
 	return objs
 }
 
 func (m *UserDB) ListByStateEqual(ctx context.Context, state string) []User {
 
 	var objs []User
-	m.db.Where("state = ?", state).Find(&objs)
+	m.Db.Where("state = ?", state).Find(&objs)
 	return objs
 }
 func (m *UserDB) ListByStateLike(ctx context.Context, state string) []User {
 
 	var objs []User
-	m.db.Where("state like ?", state).Find(&objs)
+	m.Db.Where("state like ?", state).Find(&objs)
 	return objs
 }
 
@@ -220,13 +222,13 @@ func (m *UserDB) One(ctx context.Context, id int) (User, error) {
 
 	var obj User
 
-	err := m.db.Find(&obj, id).Error
+	err := m.Db.Find(&obj, id).Error
 
 	return obj, err
 }
 
 func (m *UserDB) Add(ctx context.Context, model User) (User, error) {
-	err := m.db.Create(&model).Error
+	err := m.Db.Create(&model).Error
 
 	return model, err
 }
@@ -236,14 +238,16 @@ func (m *UserDB) Update(ctx context.Context, model User) error {
 	if err != nil {
 		return err
 	}
-	err = m.db.Model(&obj).Updates(model).Error
+	err = m.Db.Model(&obj).Updates(model).Error
 
 	return err
 }
 
 func (m *UserDB) Delete(ctx context.Context, id int) error {
 	var obj User
-	err := m.db.Delete(&obj, id).Error
+
+	err := m.Db.Delete(&obj, id).Error
+
 	if err != nil {
 		return err
 	}

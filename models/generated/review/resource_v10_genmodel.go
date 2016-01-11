@@ -9,15 +9,25 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package models
+package review
 
 import (
-	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/app/v1"
 	"github.com/jinzhu/copier"
 )
 
-func (m User) ToDefault() *app.User {
-	target := app.User{}
-	copier.Copy(&target, &m)
-	return &target
+func ReviewFromV1CreatePayload(ctx *v1.CreateReviewContext) Review {
+	payload := ctx.Payload
+	m := Review{}
+	copier.Copy(&m, payload)
+
+	return m
+}
+
+func ReviewFromV1UpdatePayload(ctx *v1.UpdateReviewContext) Review {
+	payload := ctx.Payload
+	m := Review{}
+	copier.Copy(&m, payload)
+
+	return m
 }

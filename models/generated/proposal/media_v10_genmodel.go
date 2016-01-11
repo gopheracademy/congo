@@ -9,25 +9,15 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package models
+package proposal
 
 import (
 	"github.com/gopheracademy/congo/app/v1"
 	"github.com/jinzhu/copier"
 )
 
-func ReviewFromV1CreatePayload(ctx *v1.CreateReviewContext) Review {
-	payload := ctx.Payload
-	m := Review{}
-	copier.Copy(&m, payload)
-
-	return m
-}
-
-func ReviewFromV1UpdatePayload(ctx *v1.UpdateReviewContext) Review {
-	payload := ctx.Payload
-	m := Review{}
-	copier.Copy(&m, payload)
-
-	return m
+func (m Proposal) ToV1() *v1.Proposal {
+	target := v1.Proposal{}
+	copier.Copy(&target, &m)
+	return &target
 }

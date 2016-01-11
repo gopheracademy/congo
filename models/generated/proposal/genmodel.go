@@ -9,11 +9,12 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package models
+package proposal
 
 import (
 	"time"
 
+	"github.com/gopheracademy/congo/models/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -37,7 +38,7 @@ type Proposal struct {
 	UserID int
 
 	// Children
-	Reviews []Review
+	Reviews []review.Review
 }
 
 type ProposalStorage interface {
@@ -52,7 +53,7 @@ type ProposalStorage interface {
 	OneByUser(ctx context.Context, parentid, id int) (Proposal, error)
 }
 type ProposalDB struct {
-	db gorm.DB
+	Db gorm.DB
 }
 
 func ProposalFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
@@ -70,7 +71,7 @@ func ProposalFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *
 func (m *ProposalDB) ListByUser(ctx context.Context, parentid int) []Proposal {
 
 	var objs []Proposal
-	m.db.Scopes(ProposalFilterByUser(parentid, &m.db)).Find(&objs)
+	m.Db.Scopes(ProposalFilterByUser(parentid, &m.Db)).Find(&objs)
 	return objs
 }
 
@@ -78,103 +79,103 @@ func (m *ProposalDB) OneByUser(ctx context.Context, parentid, id int) (Proposal,
 
 	var obj Proposal
 
-	err := m.db.Scopes(ProposalFilterByUser(parentid, &m.db)).Find(&obj, id).Error
+	err := m.Db.Scopes(ProposalFilterByUser(parentid, &m.Db)).Find(&obj, id).Error
 
 	return obj, err
 }
 
 func NewProposalDB(db gorm.DB) *ProposalDB {
 
-	return &ProposalDB{db: db}
+	return &ProposalDB{Db: db}
 
 }
 
 func (m *ProposalDB) DB() interface{} {
-	return &m.db
+	return &m.Db
 }
 
 func (m *ProposalDB) List(ctx context.Context) []Proposal {
 
 	var objs []Proposal
-	m.db.Find(&objs)
+	m.Db.Find(&objs)
 	return objs
 }
 
 func (m *ProposalDB) ListByAbstractEqual(ctx context.Context, abstract string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("abstract = ?", abstract).Find(&objs)
+	m.Db.Where("abstract = ?", abstract).Find(&objs)
 	return objs
 }
 func (m *ProposalDB) ListByAbstractLike(ctx context.Context, abstract string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("abstract like ?", abstract).Find(&objs)
+	m.Db.Where("abstract like ?", abstract).Find(&objs)
 	return objs
 }
 
 func (m *ProposalDB) ListByDetailEqual(ctx context.Context, detail string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("detail = ?", detail).Find(&objs)
+	m.Db.Where("detail = ?", detail).Find(&objs)
 	return objs
 }
 func (m *ProposalDB) ListByDetailLike(ctx context.Context, detail string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("detail like ?", detail).Find(&objs)
+	m.Db.Where("detail like ?", detail).Find(&objs)
 	return objs
 }
 
 func (m *ProposalDB) ListByFirstnameEqual(ctx context.Context, firstname string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("firstname = ?", firstname).Find(&objs)
+	m.Db.Where("firstname = ?", firstname).Find(&objs)
 	return objs
 }
 func (m *ProposalDB) ListByFirstnameLike(ctx context.Context, firstname string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("firstname like ?", firstname).Find(&objs)
+	m.Db.Where("firstname like ?", firstname).Find(&objs)
 	return objs
 }
 
 func (m *ProposalDB) ListByIdEqual(ctx context.Context, id int) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("id = ?", id).Find(&objs)
+	m.Db.Where("id = ?", id).Find(&objs)
 	return objs
 }
 func (m *ProposalDB) ListByIdLike(ctx context.Context, id int) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("id like ?", id).Find(&objs)
+	m.Db.Where("id like ?", id).Find(&objs)
 	return objs
 }
 
 func (m *ProposalDB) ListByTitleEqual(ctx context.Context, title string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("title = ?", title).Find(&objs)
+	m.Db.Where("title = ?", title).Find(&objs)
 	return objs
 }
 func (m *ProposalDB) ListByTitleLike(ctx context.Context, title string) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("title like ?", title).Find(&objs)
+	m.Db.Where("title like ?", title).Find(&objs)
 	return objs
 }
 
 func (m *ProposalDB) ListByWithdrawnEqual(ctx context.Context, withdrawn bool) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("withdrawn = ?", withdrawn).Find(&objs)
+	m.Db.Where("withdrawn = ?", withdrawn).Find(&objs)
 	return objs
 }
 func (m *ProposalDB) ListByWithdrawnLike(ctx context.Context, withdrawn bool) []Proposal {
 
 	var objs []Proposal
-	m.db.Where("withdrawn like ?", withdrawn).Find(&objs)
+	m.Db.Where("withdrawn like ?", withdrawn).Find(&objs)
 	return objs
 }
 
@@ -182,13 +183,13 @@ func (m *ProposalDB) One(ctx context.Context, id int) (Proposal, error) {
 
 	var obj Proposal
 
-	err := m.db.Find(&obj, id).Error
+	err := m.Db.Find(&obj, id).Error
 
 	return obj, err
 }
 
 func (m *ProposalDB) Add(ctx context.Context, model Proposal) (Proposal, error) {
-	err := m.db.Create(&model).Error
+	err := m.Db.Create(&model).Error
 
 	return model, err
 }
@@ -198,14 +199,16 @@ func (m *ProposalDB) Update(ctx context.Context, model Proposal) error {
 	if err != nil {
 		return err
 	}
-	err = m.db.Model(&obj).Updates(model).Error
+	err = m.Db.Model(&obj).Updates(model).Error
 
 	return err
 }
 
 func (m *ProposalDB) Delete(ctx context.Context, id int) error {
 	var obj Proposal
-	err := m.db.Delete(&obj, id).Error
+
+	err := m.Db.Delete(&obj, id).Error
+
 	if err != nil {
 		return err
 	}
@@ -214,7 +217,7 @@ func (m *ProposalDB) Delete(ctx context.Context, id int) error {
 }
 
 func FilterProposalByUser(parent int, list []Proposal) []Proposal {
-	filtered := make([]Proposal, 0)
+	var filtered []Proposal
 	for _, o := range list {
 		if o.UserID == int(parent) {
 			filtered = append(filtered, o)
