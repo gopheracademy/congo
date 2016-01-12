@@ -33,6 +33,15 @@ type User struct {
 	Role      string `json:"role,omitempty"`
 	State     string `json:"state,omitempty"`
 
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+
+	// Children
+	Proposals []proposal.Proposal
+	Reviews   []review.Review
+
 	// Authboss
 
 	// Auth
@@ -57,15 +66,6 @@ type User struct {
 	// Recover
 	RecoverToken       string
 	RecoverTokenExpiry time.Time
-
-	// Timestamps
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-
-	// Children
-	Proposals []proposal.Proposal
-	Reviews   []review.Review
 }
 
 func (m User) GetRole() string {
