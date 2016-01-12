@@ -9,10 +9,10 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package user
+package models
 
 import (
-	"github.com/gopheracademy/congo/models/generated/user"
+	"github.com/gopheracademy/congo/gorma"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -30,13 +30,13 @@ type UserStorage interface {
 }
 
 func NewUserDB(db gorm.DB) *UserDB {
-	return &UserDB{user.UserDB{Db: db}}
+	return &UserDB{gorma.UserDB{Db: db}}
 
 }
 
 type User struct {
-	user.User
+	gorma.User
 }
 type UserDB struct {
-	user.UserDB
+	gorma.UserDB
 }

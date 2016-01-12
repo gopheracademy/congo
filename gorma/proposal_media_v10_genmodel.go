@@ -9,15 +9,15 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package review
+package gorma
 
 import (
 	"github.com/gopheracademy/congo/app/v1"
 	"github.com/jinzhu/copier"
 )
 
-func (m Review) ToV1() *v1.Review {
-	target := v1.Review{}
+func (m Proposal) ToV1() *v1.Proposal {
+	target := v1.Proposal{}
 	copier.Copy(&target, &m)
 	return &target
 }

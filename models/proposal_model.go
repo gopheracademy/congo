@@ -9,10 +9,10 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package proposal
+package models
 
 import (
-	"github.com/gopheracademy/congo/models/generated/proposal"
+	"github.com/gopheracademy/congo/gorma"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -33,13 +33,13 @@ type ProposalStorage interface {
 }
 
 func NewProposalDB(db gorm.DB) *ProposalDB {
-	return &ProposalDB{proposal.ProposalDB{Db: db}}
+	return &ProposalDB{gorma.ProposalDB{Db: db}}
 
 }
 
 type Proposal struct {
-	proposal.Proposal
+	gorma.Proposal
 }
 type ProposalDB struct {
-	proposal.ProposalDB
+	gorma.ProposalDB
 }

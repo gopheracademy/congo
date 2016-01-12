@@ -9,13 +9,13 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package user
+package gorma
 
 import (
 	"time"
 
-	"github.com/gopheracademy/congo/models/proposal"
-	"github.com/gopheracademy/congo/models/review"
+	"github.com/gopheracademy/congo/gorma/proposal"
+	"github.com/gopheracademy/congo/gorma/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -32,11 +32,6 @@ type User struct {
 	Lastname  string `json:"lastname,omitempty"`
 	Role      string `json:"role,omitempty"`
 	State     string `json:"state,omitempty"`
-
-	// Timestamps
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
 
 	// Children
 	Proposals []proposal.Proposal
@@ -66,6 +61,11 @@ type User struct {
 	// Recover
 	RecoverToken       string
 	RecoverTokenExpiry time.Time
+
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
 }
 
 func (m User) GetRole() string {

@@ -9,24 +9,24 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package review
+package gorma
 
 import (
 	"github.com/gopheracademy/congo/app/v1"
 	"github.com/jinzhu/copier"
 )
 
-func ReviewFromV1CreatePayload(ctx *v1.CreateReviewContext) Review {
+func ProposalFromV1CreatePayload(ctx *v1.CreateProposalContext) Proposal {
 	payload := ctx.Payload
-	m := Review{}
+	m := Proposal{}
 	copier.Copy(&m, payload)
 
 	return m
 }
 
-func ReviewFromV1UpdatePayload(ctx *v1.UpdateReviewContext) Review {
+func ProposalFromV1UpdatePayload(ctx *v1.UpdateProposalContext) Proposal {
 	payload := ctx.Payload
-	m := Review{}
+	m := Proposal{}
 	copier.Copy(&m, payload)
 
 	return m

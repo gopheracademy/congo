@@ -9,7 +9,7 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package user
+package gorma
 
 import (
 	"github.com/gopheracademy/congo/app/v1"

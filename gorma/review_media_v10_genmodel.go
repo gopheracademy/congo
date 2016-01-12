@@ -9,15 +9,15 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package user
+package gorma
 
 import (
-	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/app/v1"
 	"github.com/jinzhu/copier"
 )
 
-func (m User) ToDefault() *app.User {
-	target := app.User{}
+func (m Review) ToV1() *v1.Review {
+	target := v1.Review{}
 	copier.Copy(&target, &m)
 	return &target
 }

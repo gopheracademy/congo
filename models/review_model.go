@@ -9,10 +9,10 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package review
+package models
 
 import (
-	"github.com/gopheracademy/congo/models/generated/review"
+	"github.com/gopheracademy/congo/gorma"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -36,13 +36,13 @@ type ReviewStorage interface {
 }
 
 func NewReviewDB(db gorm.DB) *ReviewDB {
-	return &ReviewDB{review.ReviewDB{Db: db}}
+	return &ReviewDB{gorma.ReviewDB{Db: db}}
 
 }
 
 type Review struct {
-	review.Review
+	gorma.Review
 }
 type ReviewDB struct {
-	review.ReviewDB
+	gorma.ReviewDB
 }
