@@ -34,8 +34,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Callback(ctx)
 	}
-	mux.Handle("GET", "/api/auth/:provider/callback", ctrl.HandleFunc("Callback", h))
-	service.Info("mount", "ctrl", "Auth", "action", "Callback", "route", "GET /api/auth/:provider/callback")
+	mux.Handle("GET", "/auth/:provider/callback", ctrl.HandleFunc("Callback", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Callback", "route", "GET /auth/:provider/callback")
 	h = func(c *goa.Context) error {
 		ctx, err := NewOauthAuthContext(c)
 		if err != nil {
@@ -43,8 +43,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Oauth(ctx)
 	}
-	mux.Handle("GET", "/api/auth/:provider", ctrl.HandleFunc("Oauth", h))
-	service.Info("mount", "ctrl", "Auth", "action", "Oauth", "route", "GET /api/auth/:provider")
+	mux.Handle("GET", "/auth/:provider", ctrl.HandleFunc("Oauth", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Oauth", "route", "GET /auth/:provider")
 	h = func(c *goa.Context) error {
 		ctx, err := NewRefreshAuthContext(c)
 		if err != nil {
@@ -52,8 +52,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Refresh(ctx)
 	}
-	mux.Handle("POST", "/api/auth/refresh", ctrl.HandleFunc("Refresh", h))
-	service.Info("mount", "ctrl", "Auth", "action", "Refresh", "route", "POST /api/auth/refresh")
+	mux.Handle("POST", "/auth/refresh", ctrl.HandleFunc("Refresh", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Refresh", "route", "POST /auth/refresh")
 	h = func(c *goa.Context) error {
 		ctx, err := NewTokenAuthContext(c)
 		if err != nil {
@@ -61,8 +61,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Token(ctx)
 	}
-	mux.Handle("POST", "/api/auth/token", ctrl.HandleFunc("Token", h))
-	service.Info("mount", "ctrl", "Auth", "action", "Token", "route", "POST /api/auth/token")
+	mux.Handle("POST", "/auth/token", ctrl.HandleFunc("Token", h))
+	service.Info("mount", "ctrl", "Auth", "action", "Token", "route", "POST /auth/token")
 }
 
 // UiController is the controller interface for the Ui actions.

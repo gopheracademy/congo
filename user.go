@@ -26,7 +26,7 @@ func (c *UserController) Create(ctx *v1.CreateUserContext) error {
 	if err != nil {
 		return ctx.Err()
 	}
-	ctx.Header().Set("Location", v1.UserHref(m.ID))
+	ctx.Header().Set("Location", v1.UserHref("v1", m.ID))
 	return ctx.Created()
 }
 
@@ -46,7 +46,7 @@ func (c *UserController) List(ctx *v1.ListUserContext) error {
 	for _, y := range res {
 		fmt.Println(y)
 		nm := y.ToDefault()
-		nm.Href = v1.UserHref(y.ID)
+		nm.Href = v1.UserHref("v1", y.ID)
 		list = append(list, nm)
 	}
 	return ctx.OK(list)
@@ -60,7 +60,7 @@ func (c *UserController) Show(ctx *v1.ShowUserContext) error {
 	}
 	m := res.ToDefault()
 	m.ID = int(res.ID)
-	m.Href = v1.UserHref(res.ID)
+	m.Href = v1.UserHref("v1", res.ID)
 
 	return ctx.OK(m, "default")
 }

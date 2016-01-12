@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "congo" version 1.0: Application Contexts
+// API "congo" version v1: Application Contexts
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -33,10 +33,12 @@ func NewCreateProposalContext(c *goa.Context) (*CreateProposalContext, error) {
 	var err error
 	ctx := CreateProposalContext{Context: c}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	p, err := NewCreateProposalPayload(c.Payload())
 	if err != nil {
@@ -167,16 +169,20 @@ func NewDeleteProposalContext(c *goa.Context) (*DeleteProposalContext, error) {
 	var err error
 	ctx := DeleteProposalContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -203,10 +209,12 @@ func NewListProposalContext(c *goa.Context) (*ListProposalContext, error) {
 	var err error
 	ctx := ListProposalContext{Context: c}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -234,16 +242,20 @@ func NewShowProposalContext(c *goa.Context) (*ShowProposalContext, error) {
 	var err error
 	ctx := ShowProposalContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -277,16 +289,20 @@ func NewUpdateProposalContext(c *goa.Context) (*UpdateProposalContext, error) {
 	var err error
 	ctx := UpdateProposalContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	p, err := NewUpdateProposalPayload(c.Payload())
 	if err != nil {
@@ -421,16 +437,20 @@ func NewCreateReviewContext(c *goa.Context) (*CreateReviewContext, error) {
 	var err error
 	ctx := CreateReviewContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	p, err := NewCreateReviewPayload(c.Payload())
 	if err != nil {
@@ -519,22 +539,28 @@ func NewDeleteReviewContext(c *goa.Context) (*DeleteReviewContext, error) {
 	var err error
 	ctx := DeleteReviewContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawReviewID := c.Get("reviewID")
-	if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
-		ctx.ReviewID = int(reviewID)
-	} else {
-		err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
+	if rawReviewID != "" {
+		if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
+			ctx.ReviewID = int(reviewID)
+		} else {
+			err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -562,16 +588,20 @@ func NewListReviewContext(c *goa.Context) (*ListReviewContext, error) {
 	var err error
 	ctx := ListReviewContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -600,22 +630,28 @@ func NewShowReviewContext(c *goa.Context) (*ShowReviewContext, error) {
 	var err error
 	ctx := ShowReviewContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawReviewID := c.Get("reviewID")
-	if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
-		ctx.ReviewID = int(reviewID)
-	} else {
-		err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
+	if rawReviewID != "" {
+		if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
+			ctx.ReviewID = int(reviewID)
+		} else {
+			err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -650,22 +686,28 @@ func NewUpdateReviewContext(c *goa.Context) (*UpdateReviewContext, error) {
 	var err error
 	ctx := UpdateReviewContext{Context: c}
 	rawProposalID := c.Get("proposalID")
-	if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
-		ctx.ProposalID = int(proposalID)
-	} else {
-		err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+	if rawProposalID != "" {
+		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
+			ctx.ProposalID = int(proposalID)
+		} else {
+			err = goa.InvalidParamTypeError("proposalID", rawProposalID, "integer", err)
+		}
 	}
 	rawReviewID := c.Get("reviewID")
-	if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
-		ctx.ReviewID = int(reviewID)
-	} else {
-		err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
+	if rawReviewID != "" {
+		if reviewID, err2 := strconv.Atoi(rawReviewID); err2 == nil {
+			ctx.ReviewID = int(reviewID)
+		} else {
+			err = goa.InvalidParamTypeError("reviewID", rawReviewID, "integer", err)
+		}
 	}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	p, err := NewUpdateReviewPayload(c.Payload())
 	if err != nil {
@@ -895,10 +937,12 @@ func NewDeleteUserContext(c *goa.Context) (*DeleteUserContext, error) {
 	var err error
 	ctx := DeleteUserContext{Context: c}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -948,10 +992,12 @@ func NewShowUserContext(c *goa.Context) (*ShowUserContext, error) {
 	var err error
 	ctx := ShowUserContext{Context: c}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	return &ctx, err
 }
@@ -984,10 +1030,12 @@ func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 	var err error
 	ctx := UpdateUserContext{Context: c}
 	rawUserID := c.Get("userID")
-	if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-		ctx.UserID = int(userID)
-	} else {
-		err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+	if rawUserID != "" {
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			ctx.UserID = int(userID)
+		} else {
+			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
+		}
 	}
 	p, err := NewUpdateUserPayload(c.Payload())
 	if err != nil {

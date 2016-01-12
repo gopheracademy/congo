@@ -127,7 +127,7 @@ func (cmd *CallbackAuthCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CallbackAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/auth/:provider/callback`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /auth/:provider/callback`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the OauthAuthCommand command.
@@ -137,7 +137,7 @@ func (cmd *OauthAuthCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *OauthAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/auth/:provider`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /auth/:provider`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the RefreshAuthCommand command.
@@ -154,7 +154,7 @@ func (cmd *RefreshAuthCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *RefreshAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, default is "/api/auth/refresh"`).Default("/api/auth/refresh").StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, default is "/auth/refresh"`).Default("/auth/refresh").StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 
@@ -172,7 +172,7 @@ func (cmd *TokenAuthCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *TokenAuthCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, default is "/api/auth/token"`).Default("/api/auth/token").StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, default is "/auth/token"`).Default("/auth/token").StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 
@@ -190,7 +190,7 @@ func (cmd *CreateProposalCommand) Run(c *client.Client) (*http.Response, error) 
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateProposalCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals`).Required().StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 
@@ -201,7 +201,7 @@ func (cmd *DeleteProposalCommand) Run(c *client.Client) (*http.Response, error) 
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteProposalCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the ListProposalCommand command.
@@ -211,7 +211,7 @@ func (cmd *ListProposalCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListProposalCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the ShowProposalCommand command.
@@ -221,7 +221,7 @@ func (cmd *ShowProposalCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowProposalCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the UpdateProposalCommand command.
@@ -238,7 +238,7 @@ func (cmd *UpdateProposalCommand) Run(c *client.Client) (*http.Response, error) 
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateProposalCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID`).Required().StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 
@@ -256,7 +256,7 @@ func (cmd *CreateReviewCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateReviewCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID/review`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID/review`).Required().StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 
@@ -267,7 +267,7 @@ func (cmd *DeleteReviewCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteReviewCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID/review/:reviewID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID/review/:reviewID`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the ListReviewCommand command.
@@ -277,7 +277,7 @@ func (cmd *ListReviewCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListReviewCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID/review`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID/review`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the ShowReviewCommand command.
@@ -287,7 +287,7 @@ func (cmd *ShowReviewCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowReviewCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID/review/:reviewID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID/review/:reviewID`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the UpdateReviewCommand command.
@@ -304,7 +304,7 @@ func (cmd *UpdateReviewCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateReviewCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID/proposals/:proposalID/review/:reviewID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID/proposals/:proposalID/review/:reviewID`).Required().StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 
@@ -332,7 +332,7 @@ func (cmd *CreateUserCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateUserCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, default is "/api/users"`).Default("/api/users").StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, default is "/users"`).Default("/users").StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }
 
@@ -343,7 +343,7 @@ func (cmd *DeleteUserCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteUserCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the ListUserCommand command.
@@ -353,7 +353,7 @@ func (cmd *ListUserCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListUserCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, default is "/api/users"`).Default("/api/users").StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, default is "/users"`).Default("/users").StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the ShowUserCommand command.
@@ -363,7 +363,7 @@ func (cmd *ShowUserCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowUserCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID`).Required().StringVar(&cmd.Path)
 }
 
 // Run makes the HTTP request corresponding to the UpdateUserCommand command.
@@ -380,6 +380,6 @@ func (cmd *UpdateUserCommand) Run(c *client.Client) (*http.Response, error) {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateUserCommand) RegisterFlags(cc *kingpin.CmdClause) {
-	cc.Arg("path", `Request path, format is /api/users/:userID`).Required().StringVar(&cmd.Path)
+	cc.Arg("path", `Request path, format is /users/:userID`).Required().StringVar(&cmd.Path)
 	cc.Flag("payload", "Request JSON body").StringVar(&cmd.Payload)
 }

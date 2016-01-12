@@ -30,7 +30,9 @@ func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
 	var err error
 	ctx := CallbackAuthContext{Context: c}
 	rawProvider := c.Get("provider")
-	ctx.Provider = rawProvider
+	if rawProvider != "" {
+		ctx.Provider = rawProvider
+	}
 	return &ctx, err
 }
 
@@ -51,7 +53,9 @@ func NewOauthAuthContext(c *goa.Context) (*OauthAuthContext, error) {
 	var err error
 	ctx := OauthAuthContext{Context: c}
 	rawProvider := c.Get("provider")
-	ctx.Provider = rawProvider
+	if rawProvider != "" {
+		ctx.Provider = rawProvider
+	}
 	return &ctx, err
 }
 

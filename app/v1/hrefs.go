@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "congo" version 1.0: Application Resource Href Factories
+// API "congo" version v1: Application Resource Href Factories
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -15,16 +15,16 @@ package v1
 import "fmt"
 
 // ProposalHref returns the resource href.
-func ProposalHref(userID, proposalID interface{}) string {
-	return fmt.Sprintf("/api/users/%v/proposals/%v", userID, proposalID)
+func ProposalHref(version, userID, proposalID interface{}) string {
+	return fmt.Sprintf("/%v/users/%v/proposals/%v", version, userID, proposalID)
 }
 
 // ReviewHref returns the resource href.
-func ReviewHref(userID, proposalID, reviewID interface{}) string {
-	return fmt.Sprintf("/api/users/%v/proposals/%v/review/%v", userID, proposalID, reviewID)
+func ReviewHref(version, userID, proposalID, reviewID interface{}) string {
+	return fmt.Sprintf("/%v/users/%v/proposals/%v/review/%v", version, userID, proposalID, reviewID)
 }
 
 // UserHref returns the resource href.
-func UserHref(userID interface{}) string {
-	return fmt.Sprintf("/api/users/%v", userID)
+func UserHref(version, userID interface{}) string {
+	return fmt.Sprintf("/%v/users/%v", version, userID)
 }

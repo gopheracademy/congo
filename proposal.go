@@ -25,7 +25,7 @@ func (c *ProposalController) Create(ctx *v1.CreateProposalContext) error {
 	if err != nil {
 		return ctx.Err()
 	}
-	ctx.Header().Set("Location", v1.ProposalHref(ctx.UserID, m.ID))
+	ctx.Header().Set("Location", v1.ProposalHref("v1", ctx.UserID, m.ID))
 	return ctx.Created()
 }
 
@@ -45,7 +45,7 @@ func (c *ProposalController) List(ctx *v1.ListProposalContext) error {
 	for _, y := range res {
 		fmt.Println(y)
 		nm := y.ToV1()
-		nm.Href = v1.ProposalHref(y.UserID, y.ID)
+		nm.Href = v1.ProposalHref("v1", y.UserID, y.ID)
 		list = append(list, nm)
 	}
 	return ctx.OK(list)
@@ -59,7 +59,7 @@ func (c *ProposalController) Show(ctx *v1.ShowProposalContext) error {
 	}
 	m := res.ToV1()
 	m.ID = int(res.ID)
-	m.Href = v1.ProposalHref(res.UserID, res.ID)
+	m.Href = v1.ProposalHref("v1", res.UserID, res.ID)
 
 	return ctx.OK(m, "default")
 }
