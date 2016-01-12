@@ -14,8 +14,6 @@ package gorma
 import (
 	"time"
 
-	"github.com/gopheracademy/congo/gorma/proposal"
-	"github.com/gopheracademy/congo/gorma/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -32,6 +30,15 @@ type User struct {
 	Lastname  string `json:"lastname,omitempty"`
 	Role      string `json:"role,omitempty"`
 	State     string `json:"state,omitempty"`
+
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+
+	// Children
+	Proposals []Proposal
+	Reviews   []Review
 
 	// Authboss
 
@@ -57,15 +64,6 @@ type User struct {
 	// Recover
 	RecoverToken       string
 	RecoverTokenExpiry time.Time
-
-	// Timestamps
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-
-	// Children
-	Proposals []proposal.Proposal
-	Reviews   []review.Review
 }
 
 func (m User) GetRole() string {

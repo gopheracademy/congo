@@ -14,7 +14,6 @@ package gorma
 import (
 	"time"
 
-	"github.com/gopheracademy/congo/gorma/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -38,7 +37,7 @@ type Proposal struct {
 	UserID int
 
 	// Children
-	Reviews []review.Review
+	Reviews []Review
 }
 
 type ProposalStorage interface {

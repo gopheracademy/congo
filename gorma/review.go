@@ -25,14 +25,14 @@ type Review struct {
 	ID      int    `json:"id,omitempty" gorm:"primary_key"`
 	Rating  int    `json:"rating,omitempty"`
 
+	// Foreign Keys
+	ProposalID int
+	UserID     int
+
 	// Timestamps
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
-
-	// Foreign Keys
-	ProposalID int
-	UserID     int
 }
 
 type ReviewStorage interface {

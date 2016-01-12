@@ -12,7 +12,9 @@
 package models
 
 import (
+	"github.com/gopheracademy/congo/app/v1"
 	"github.com/gopheracademy/congo/gorma"
+	"github.com/jinzhu/copier"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -42,4 +44,32 @@ type Proposal struct {
 }
 type ProposalDB struct {
 	gorma.ProposalDB
+}
+
+// Payload Conversion Helpers
+
+func ProposalFromV1CreatePayload(ctx *v1.CreateProposalContext) Proposal {
+	payload := ctx.Payload
+	m := Proposal{}
+	copier.Copy(&m, payload)
+
+	m.UserID = int(ctx.UserID)
+	return m
+}
+
+func ProposalFromV1UpdatePayload(ctx *v1.UpdateProposalContext) Proposal {
+	payload := ctx.Payload
+	m := Proposal{}
+	copier.Copy(&m, payload)
+
+	m.UserID = int(ctx.UserID)
+	return m
+}
+
+// Version Conversion Helpers
+
+func (m Proposal) ToV1() *v1.Proposal {
+	target := v1.Proposal{}
+	copier.Copy(&target, &m)
+	return &target
 }
