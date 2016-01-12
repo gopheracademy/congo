@@ -11,14 +11,14 @@ import (
 
 // CreateUserPayload is the data structure used to initialize the user create request body.
 type CreateUserPayload struct {
-	Bio       string `json:"bio,omitempty"`
-	City      string `json:"city,omitempty"`
-	Country   string `json:"country,omitempty"`
-	Email     string `json:"email,omitempty"`
-	Firstname string `json:"firstname"`
-	Lastname  string `json:"lastname,omitempty"`
-	Role      string `json:"role,omitempty"`
-	State     string `json:"state,omitempty"`
+	Bio       *string
+	City      *string
+	Country   *string
+	Email     *string
+	Firstname string
+	Lastname  *string
+	Role      *string
+	State     *string
 }
 
 // Record new user
@@ -80,14 +80,14 @@ func (c *Client) ShowUser(path string) (*http.Response, error) {
 
 // UpdateUserPayload is the data structure used to initialize the user update request body.
 type UpdateUserPayload struct {
-	Bio       string `json:"bio,omitempty"`
-	City      string `json:"city,omitempty"`
-	Country   string `json:"country,omitempty"`
-	Email     string `json:"email"`
-	Firstname string `json:"firstname,omitempty"`
-	Lastname  string `json:"lastname,omitempty"`
-	Role      string `json:"role,omitempty"`
-	State     string `json:"state,omitempty"`
+	Bio       *string
+	City      *string
+	Country   *string
+	Email     string
+	Firstname *string
+	Lastname  *string
+	Role      *string
+	State     *string
 }
 
 // UpdateUser makes a request to the update action endpoint of the user resource

@@ -21,9 +21,9 @@ import (
 // app.Review storage type
 // Identifier: Review
 type Review struct {
-	Comment string `json:"comment,omitempty"`
-	ID      int    `json:"id,omitempty" gorm:"primary_key"`
-	Rating  int    `json:"rating,omitempty"`
+	Comment *string `json:"comment,omitempty"`
+	ID      *int    `json:"id,omitempty" gorm:"primary_key"`
+	Rating  *int    `json:"rating,omitempty"`
 
 	// Timestamps
 	CreatedAt time.Time
@@ -38,23 +38,23 @@ type Review struct {
 type ReviewStorage interface {
 	DB() interface{}
 	List(ctx context.Context) []Review
-	One(ctx context.Context, id int) (Review, error)
+	One(ctx context.Context, id *int) (Review, error)
 	Add(ctx context.Context, o Review) (Review, error)
 	Update(ctx context.Context, o Review) error
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id *int) error
 
-	ListByProposal(ctx context.Context, parentid int) []Review
-	OneByProposal(ctx context.Context, parentid, id int) (Review, error)
+	ListByProposal(ctx context.Context, parentid *int) []Review
+	OneByProposal(ctx context.Context, parentid, id *int) (Review, error)
 
-	ListByUser(ctx context.Context, parentid int) []Review
-	OneByUser(ctx context.Context, parentid, id int) (Review, error)
+	ListByUser(ctx context.Context, parentid *int) []Review
+	OneByUser(ctx context.Context, parentid, id *int) (Review, error)
 }
 type ReviewDB struct {
 	Db gorm.DB
 }
 
-func ReviewFilterByProposal(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
-	if parentid > 0 {
+func ReviewFilterByProposal(parentid *int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	if parentid != nil && *parentid > 0 {
 		return func(db *gorm.DB) *gorm.DB {
 			return db.Where("proposal_id = ?", parentid)
 		}
@@ -65,14 +65,14 @@ func ReviewFilterByProposal(parentid int, originaldb *gorm.DB) func(db *gorm.DB)
 	}
 }
 
-func (m *ReviewDB) ListByProposal(ctx context.Context, parentid int) []Review {
+func (m *ReviewDB) ListByProposal(ctx context.Context, parentid *int) []Review {
 
 	var objs []Review
 	m.Db.Scopes(ReviewFilterByProposal(parentid, &m.Db)).Find(&objs)
 	return objs
 }
 
-func (m *ReviewDB) OneByProposal(ctx context.Context, parentid, id int) (Review, error) {
+func (m *ReviewDB) OneByProposal(ctx context.Context, parentid, id *int) (Review, error) {
 
 	var obj Review
 
@@ -81,8 +81,8 @@ func (m *ReviewDB) OneByProposal(ctx context.Context, parentid, id int) (Review,
 	return obj, err
 }
 
-func ReviewFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
-	if parentid > 0 {
+func ReviewFilterByUser(parentid *int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	if parentid != nil && *parentid > 0 {
 		return func(db *gorm.DB) *gorm.DB {
 			return db.Where("user_id = ?", parentid)
 		}
@@ -93,14 +93,14 @@ func ReviewFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *go
 	}
 }
 
-func (m *ReviewDB) ListByUser(ctx context.Context, parentid int) []Review {
+func (m *ReviewDB) ListByUser(ctx context.Context, parentid *int) []Review {
 
 	var objs []Review
 	m.Db.Scopes(ReviewFilterByUser(parentid, &m.Db)).Find(&objs)
 	return objs
 }
 
-func (m *ReviewDB) OneByUser(ctx context.Context, parentid, id int) (Review, error) {
+func (m *ReviewDB) OneByUser(ctx context.Context, parentid, id *int) (Review, error) {
 
 	var obj Review
 
@@ -165,7 +165,7 @@ func (m *ReviewDB) ListByRatingLike(ctx context.Context, rating int) []Review {
 	return objs
 }
 
-func (m *ReviewDB) One(ctx context.Context, id int) (Review, error) {
+func (m *ReviewDB) One(ctx context.Context, id *int) (Review, error) {
 
 	var obj Review
 
@@ -190,7 +190,7 @@ func (m *ReviewDB) Update(ctx context.Context, model Review) error {
 	return err
 }
 
-func (m *ReviewDB) Delete(ctx context.Context, id int) error {
+func (m *ReviewDB) Delete(ctx context.Context, id *int) error {
 	var obj Review
 
 	err := m.Db.Delete(&obj, id).Error
@@ -202,20 +202,20 @@ func (m *ReviewDB) Delete(ctx context.Context, id int) error {
 	return nil
 }
 
-func FilterReviewByProposal(parent int, list []Review) []Review {
+func FilterReviewByProposal(parent *int, list []Review) []Review {
 	var filtered []Review
 	for _, o := range list {
-		if o.ProposalID == int(parent) {
+		if o.ProposalID == int(*parent) {
 			filtered = append(filtered, o)
 		}
 	}
 	return filtered
 }
 
-func FilterReviewByUser(parent int, list []Review) []Review {
+func FilterReviewByUser(parent *int, list []Review) []Review {
 	var filtered []Review
 	for _, o := range list {
-		if o.UserID == int(parent) {
+		if o.UserID == int(*parent) {
 			filtered = append(filtered, o)
 		}
 	}

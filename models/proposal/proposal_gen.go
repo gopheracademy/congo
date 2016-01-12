@@ -22,12 +22,12 @@ import (
 // app.Proposal storage type
 // Identifier: Proposal
 type Proposal struct {
-	Abstract  string `json:"abstract,omitempty"`
-	Detail    string `json:"detail,omitempty"`
-	Firstname string `json:"firstname,omitempty"`
-	ID        int    `json:"id,omitempty" gorm:"primary_key"`
-	Title     string `json:"title,omitempty"`
-	Withdrawn bool   `json:"withdrawn,omitempty"`
+	Abstract  *string `json:"abstract,omitempty"`
+	Detail    *string `json:"detail,omitempty"`
+	Firstname *string `json:"firstname,omitempty"`
+	ID        *int    `json:"id,omitempty" gorm:"primary_key"`
+	Title     *string `json:"title,omitempty"`
+	Withdrawn *bool   `json:"withdrawn,omitempty"`
 
 	// Timestamps
 	CreatedAt time.Time
@@ -44,20 +44,20 @@ type Proposal struct {
 type ProposalStorage interface {
 	DB() interface{}
 	List(ctx context.Context) []Proposal
-	One(ctx context.Context, id int) (Proposal, error)
+	One(ctx context.Context, id *int) (Proposal, error)
 	Add(ctx context.Context, o Proposal) (Proposal, error)
 	Update(ctx context.Context, o Proposal) error
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id *int) error
 
-	ListByUser(ctx context.Context, parentid int) []Proposal
-	OneByUser(ctx context.Context, parentid, id int) (Proposal, error)
+	ListByUser(ctx context.Context, parentid *int) []Proposal
+	OneByUser(ctx context.Context, parentid, id *int) (Proposal, error)
 }
 type ProposalDB struct {
 	Db gorm.DB
 }
 
-func ProposalFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
-	if parentid > 0 {
+func ProposalFilterByUser(parentid *int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	if parentid != nil && *parentid > 0 {
 		return func(db *gorm.DB) *gorm.DB {
 			return db.Where("user_id = ?", parentid)
 		}
@@ -68,14 +68,14 @@ func ProposalFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *
 	}
 }
 
-func (m *ProposalDB) ListByUser(ctx context.Context, parentid int) []Proposal {
+func (m *ProposalDB) ListByUser(ctx context.Context, parentid *int) []Proposal {
 
 	var objs []Proposal
 	m.Db.Scopes(ProposalFilterByUser(parentid, &m.Db)).Find(&objs)
 	return objs
 }
 
-func (m *ProposalDB) OneByUser(ctx context.Context, parentid, id int) (Proposal, error) {
+func (m *ProposalDB) OneByUser(ctx context.Context, parentid, id *int) (Proposal, error) {
 
 	var obj Proposal
 
@@ -179,7 +179,7 @@ func (m *ProposalDB) ListByWithdrawnLike(ctx context.Context, withdrawn bool) []
 	return objs
 }
 
-func (m *ProposalDB) One(ctx context.Context, id int) (Proposal, error) {
+func (m *ProposalDB) One(ctx context.Context, id *int) (Proposal, error) {
 
 	var obj Proposal
 
@@ -204,7 +204,7 @@ func (m *ProposalDB) Update(ctx context.Context, model Proposal) error {
 	return err
 }
 
-func (m *ProposalDB) Delete(ctx context.Context, id int) error {
+func (m *ProposalDB) Delete(ctx context.Context, id *int) error {
 	var obj Proposal
 
 	err := m.Db.Delete(&obj, id).Error
@@ -216,10 +216,10 @@ func (m *ProposalDB) Delete(ctx context.Context, id int) error {
 	return nil
 }
 
-func FilterProposalByUser(parent int, list []Proposal) []Proposal {
+func FilterProposalByUser(parent *int, list []Proposal) []Proposal {
 	var filtered []Proposal
 	for _, o := range list {
-		if o.UserID == int(parent) {
+		if o.UserID == int(*parent) {
 			filtered = append(filtered, o)
 		}
 	}

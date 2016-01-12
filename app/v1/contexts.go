@@ -24,6 +24,7 @@ import (
 type CreateProposalContext struct {
 	*goa.Context
 	UserID  int
+	Version string
 	Payload *CreateProposalPayload
 }
 
@@ -40,6 +41,10 @@ func NewCreateProposalContext(c *goa.Context) (*CreateProposalContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewCreateProposalPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -50,11 +55,11 @@ func NewCreateProposalContext(c *goa.Context) (*CreateProposalContext, error) {
 
 // CreateProposalPayload is the proposal create action payload.
 type CreateProposalPayload struct {
-	Abstract  string
-	Detail    string
-	Firstname string
+	Abstract  *string
+	Detail    *string
+	Firstname *string
 	Title     string
-	Withdrawn bool
+	Withdrawn *bool
 }
 
 // NewCreateProposalPayload instantiates a CreateProposalPayload from a raw request body.
@@ -70,80 +75,80 @@ func UnmarshalCreateProposalPayload(source interface{}, inErr error) (target *Cr
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(CreateProposalPayload)
 		if v, ok := val["abstract"]; ok {
-			var tmp48 string
-			if val, ok := v.(string); ok {
-				tmp48 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Abstract`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp48) < 50 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp48, len(tmp48), 50, true, err)
-				}
-				if len(tmp48) > 500 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp48, len(tmp48), 500, false, err)
-				}
-			}
-			target.Abstract = tmp48
-		}
-		if v, ok := val["detail"]; ok {
 			var tmp49 string
 			if val, ok := v.(string); ok {
 				tmp49 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Detail`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`payload.Abstract`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp49) < 100 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp49, len(tmp49), 100, true, err)
+				if len(tmp49) < 50 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp49, len(tmp49), 50, true, err)
 				}
-				if len(tmp49) > 2000 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp49, len(tmp49), 2000, false, err)
+				if len(tmp49) > 500 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp49, len(tmp49), 500, false, err)
 				}
 			}
-			target.Detail = tmp49
+			target.Abstract = &tmp49
 		}
-		if v, ok := val["firstname"]; ok {
+		if v, ok := val["detail"]; ok {
 			var tmp50 string
 			if val, ok := v.(string); ok {
 				tmp50 = val
 			} else {
-				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
+				err = goa.InvalidAttributeTypeError(`payload.Detail`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp50) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp50, len(tmp50), 2, true, err)
+				if len(tmp50) < 100 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp50, len(tmp50), 100, true, err)
+				}
+				if len(tmp50) > 2000 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp50, len(tmp50), 2000, false, err)
 				}
 			}
-			target.Firstname = tmp50
+			target.Detail = &tmp50
 		}
-		if v, ok := val["title"]; ok {
+		if v, ok := val["firstname"]; ok {
 			var tmp51 string
 			if val, ok := v.(string); ok {
 				tmp51 = val
 			} else {
+				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
+			}
+			if err == nil {
+				if len(tmp51) < 2 {
+					err = goa.InvalidLengthError(`payload.Firstname`, tmp51, len(tmp51), 2, true, err)
+				}
+			}
+			target.Firstname = &tmp51
+		}
+		if v, ok := val["title"]; ok {
+			var tmp52 string
+			if val, ok := v.(string); ok {
+				tmp52 = val
+			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Title`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp51) < 10 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp51, len(tmp51), 10, true, err)
+				if len(tmp52) < 10 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp52, len(tmp52), 10, true, err)
 				}
-				if len(tmp51) > 200 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp51, len(tmp51), 200, false, err)
+				if len(tmp52) > 200 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp52, len(tmp52), 200, false, err)
 				}
 			}
-			target.Title = tmp51
+			target.Title = tmp52
 		} else {
 			err = goa.MissingAttributeError(`payload`, "title", err)
 		}
 		if v, ok := val["withdrawn"]; ok {
-			var tmp52 bool
+			var tmp53 bool
 			if val, ok := v.(bool); ok {
-				tmp52 = val
+				tmp53 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Withdrawn`, v, "bool", err)
 			}
-			target.Withdrawn = tmp52
+			target.Withdrawn = &tmp53
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -161,6 +166,7 @@ type DeleteProposalContext struct {
 	*goa.Context
 	ProposalID int
 	UserID     int
+	Version    string
 }
 
 // NewDeleteProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -184,6 +190,10 @@ func NewDeleteProposalContext(c *goa.Context) (*DeleteProposalContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	return &ctx, err
 }
 
@@ -200,7 +210,8 @@ func (ctx *DeleteProposalContext) NotFound() error {
 // ListProposalContext provides the proposal list action context.
 type ListProposalContext struct {
 	*goa.Context
-	UserID int
+	UserID  int
+	Version string
 }
 
 // NewListProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -215,6 +226,10 @@ func NewListProposalContext(c *goa.Context) (*ListProposalContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
+	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -234,6 +249,7 @@ type ShowProposalContext struct {
 	*goa.Context
 	ProposalID int
 	UserID     int
+	Version    string
 }
 
 // NewShowProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -256,6 +272,10 @@ func NewShowProposalContext(c *goa.Context) (*ShowProposalContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
+	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -280,6 +300,7 @@ type UpdateProposalContext struct {
 	*goa.Context
 	ProposalID int
 	UserID     int
+	Version    string
 	Payload    *UpdateProposalPayload
 }
 
@@ -304,6 +325,10 @@ func NewUpdateProposalContext(c *goa.Context) (*UpdateProposalContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewUpdateProposalPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -314,11 +339,11 @@ func NewUpdateProposalContext(c *goa.Context) (*UpdateProposalContext, error) {
 
 // UpdateProposalPayload is the proposal update action payload.
 type UpdateProposalPayload struct {
-	Abstract  string
-	Detail    string
-	Firstname string
-	Title     string
-	Withdrawn bool
+	Abstract  *string
+	Detail    *string
+	Firstname *string
+	Title     *string
+	Withdrawn *bool
 }
 
 // NewUpdateProposalPayload instantiates a UpdateProposalPayload from a raw request body.
@@ -334,78 +359,78 @@ func UnmarshalUpdateProposalPayload(source interface{}, inErr error) (target *Up
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UpdateProposalPayload)
 		if v, ok := val["abstract"]; ok {
-			var tmp53 string
+			var tmp61 string
 			if val, ok := v.(string); ok {
-				tmp53 = val
+				tmp61 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Abstract`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp53) < 50 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp53, len(tmp53), 50, true, err)
+				if len(tmp61) < 50 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp61, len(tmp61), 50, true, err)
 				}
-				if len(tmp53) > 500 {
-					err = goa.InvalidLengthError(`payload.Abstract`, tmp53, len(tmp53), 500, false, err)
+				if len(tmp61) > 500 {
+					err = goa.InvalidLengthError(`payload.Abstract`, tmp61, len(tmp61), 500, false, err)
 				}
 			}
-			target.Abstract = tmp53
+			target.Abstract = &tmp61
 		}
 		if v, ok := val["detail"]; ok {
-			var tmp54 string
+			var tmp62 string
 			if val, ok := v.(string); ok {
-				tmp54 = val
+				tmp62 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Detail`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp54) < 100 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp54, len(tmp54), 100, true, err)
+				if len(tmp62) < 100 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp62, len(tmp62), 100, true, err)
 				}
-				if len(tmp54) > 2000 {
-					err = goa.InvalidLengthError(`payload.Detail`, tmp54, len(tmp54), 2000, false, err)
+				if len(tmp62) > 2000 {
+					err = goa.InvalidLengthError(`payload.Detail`, tmp62, len(tmp62), 2000, false, err)
 				}
 			}
-			target.Detail = tmp54
+			target.Detail = &tmp62
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp55 string
+			var tmp63 string
 			if val, ok := v.(string); ok {
-				tmp55 = val
+				tmp63 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp55) < 2 {
-					err = goa.InvalidLengthError(`payload.Firstname`, tmp55, len(tmp55), 2, true, err)
+				if len(tmp63) < 2 {
+					err = goa.InvalidLengthError(`payload.Firstname`, tmp63, len(tmp63), 2, true, err)
 				}
 			}
-			target.Firstname = tmp55
+			target.Firstname = &tmp63
 		}
 		if v, ok := val["title"]; ok {
-			var tmp56 string
+			var tmp64 string
 			if val, ok := v.(string); ok {
-				tmp56 = val
+				tmp64 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Title`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp56) < 10 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp56, len(tmp56), 10, true, err)
+				if len(tmp64) < 10 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp64, len(tmp64), 10, true, err)
 				}
-				if len(tmp56) > 200 {
-					err = goa.InvalidLengthError(`payload.Title`, tmp56, len(tmp56), 200, false, err)
+				if len(tmp64) > 200 {
+					err = goa.InvalidLengthError(`payload.Title`, tmp64, len(tmp64), 200, false, err)
 				}
 			}
-			target.Title = tmp56
+			target.Title = &tmp64
 		}
 		if v, ok := val["withdrawn"]; ok {
-			var tmp57 bool
+			var tmp65 bool
 			if val, ok := v.(bool); ok {
-				tmp57 = val
+				tmp65 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Withdrawn`, v, "bool", err)
 			}
-			target.Withdrawn = tmp57
+			target.Withdrawn = &tmp65
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -428,6 +453,7 @@ type CreateReviewContext struct {
 	*goa.Context
 	ProposalID int
 	UserID     int
+	Version    string
 	Payload    *CreateReviewPayload
 }
 
@@ -452,6 +478,10 @@ func NewCreateReviewContext(c *goa.Context) (*CreateReviewContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewCreateReviewPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -462,7 +492,7 @@ func NewCreateReviewContext(c *goa.Context) (*CreateReviewContext, error) {
 
 // CreateReviewPayload is the review create action payload.
 type CreateReviewPayload struct {
-	Comment string
+	Comment *string
 	Rating  int
 }
 
@@ -479,38 +509,38 @@ func UnmarshalCreateReviewPayload(source interface{}, inErr error) (target *Crea
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(CreateReviewPayload)
 		if v, ok := val["comment"]; ok {
-			var tmp58 string
+			var tmp68 string
 			if val, ok := v.(string); ok {
-				tmp58 = val
+				tmp68 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Comment`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp58) < 10 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp58, len(tmp58), 10, true, err)
+				if len(tmp68) < 10 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp68, len(tmp68), 10, true, err)
 				}
-				if len(tmp58) > 200 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp58, len(tmp58), 200, false, err)
+				if len(tmp68) > 200 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp68, len(tmp68), 200, false, err)
 				}
 			}
-			target.Comment = tmp58
+			target.Comment = &tmp68
 		}
 		if v, ok := val["rating"]; ok {
-			var tmp59 int
+			var tmp69 int
 			if f, ok := v.(float64); ok {
-				tmp59 = int(f)
+				tmp69 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if tmp59 < 1 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp59, 1, true, err)
+				if tmp69 < 1 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp69, 1, true, err)
 				}
-				if tmp59 > 5 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp59, 5, false, err)
+				if tmp69 > 5 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp69, 5, false, err)
 				}
 			}
-			target.Rating = tmp59
+			target.Rating = tmp69
 		} else {
 			err = goa.MissingAttributeError(`payload`, "rating", err)
 		}
@@ -531,6 +561,7 @@ type DeleteReviewContext struct {
 	ProposalID int
 	ReviewID   int
 	UserID     int
+	Version    string
 }
 
 // NewDeleteReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -562,6 +593,10 @@ func NewDeleteReviewContext(c *goa.Context) (*DeleteReviewContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	return &ctx, err
 }
 
@@ -580,6 +615,7 @@ type ListReviewContext struct {
 	*goa.Context
 	ProposalID int
 	UserID     int
+	Version    string
 }
 
 // NewListReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -603,6 +639,10 @@ func NewListReviewContext(c *goa.Context) (*ListReviewContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	return &ctx, err
 }
 
@@ -622,6 +662,7 @@ type ShowReviewContext struct {
 	ProposalID int
 	ReviewID   int
 	UserID     int
+	Version    string
 }
 
 // NewShowReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -653,6 +694,10 @@ func NewShowReviewContext(c *goa.Context) (*ShowReviewContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	return &ctx, err
 }
 
@@ -677,6 +722,7 @@ type UpdateReviewContext struct {
 	ProposalID int
 	ReviewID   int
 	UserID     int
+	Version    string
 	Payload    *UpdateReviewPayload
 }
 
@@ -709,6 +755,10 @@ func NewUpdateReviewContext(c *goa.Context) (*UpdateReviewContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewUpdateReviewPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -719,8 +769,8 @@ func NewUpdateReviewContext(c *goa.Context) (*UpdateReviewContext, error) {
 
 // UpdateReviewPayload is the review update action payload.
 type UpdateReviewPayload struct {
-	Comment string
-	Rating  int
+	Comment *string
+	Rating  *int
 }
 
 // NewUpdateReviewPayload instantiates a UpdateReviewPayload from a raw request body.
@@ -736,38 +786,38 @@ func UnmarshalUpdateReviewPayload(source interface{}, inErr error) (target *Upda
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UpdateReviewPayload)
 		if v, ok := val["comment"]; ok {
-			var tmp60 string
+			var tmp81 string
 			if val, ok := v.(string); ok {
-				tmp60 = val
+				tmp81 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Comment`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp60) < 10 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp60, len(tmp60), 10, true, err)
+				if len(tmp81) < 10 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp81, len(tmp81), 10, true, err)
 				}
-				if len(tmp60) > 200 {
-					err = goa.InvalidLengthError(`payload.Comment`, tmp60, len(tmp60), 200, false, err)
+				if len(tmp81) > 200 {
+					err = goa.InvalidLengthError(`payload.Comment`, tmp81, len(tmp81), 200, false, err)
 				}
 			}
-			target.Comment = tmp60
+			target.Comment = &tmp81
 		}
 		if v, ok := val["rating"]; ok {
-			var tmp61 int
+			var tmp82 int
 			if f, ok := v.(float64); ok {
-				tmp61 = int(f)
+				tmp82 = int(f)
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Rating`, v, "int", err)
 			}
 			if err == nil {
-				if tmp61 < 1 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp61, 1, true, err)
+				if tmp82 < 1 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp82, 1, true, err)
 				}
-				if tmp61 > 5 {
-					err = goa.InvalidRangeError(`payload.Rating`, tmp61, 5, false, err)
+				if tmp82 > 5 {
+					err = goa.InvalidRangeError(`payload.Rating`, tmp82, 5, false, err)
 				}
 			}
-			target.Rating = tmp61
+			target.Rating = &tmp82
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -788,6 +838,7 @@ func (ctx *UpdateReviewContext) NotFound() error {
 // CreateUserContext provides the user create action context.
 type CreateUserContext struct {
 	*goa.Context
+	Version string
 	Payload *CreateUserPayload
 }
 
@@ -796,6 +847,10 @@ type CreateUserContext struct {
 func NewCreateUserContext(c *goa.Context) (*CreateUserContext, error) {
 	var err error
 	ctx := CreateUserContext{Context: c}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewCreateUserPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -806,14 +861,14 @@ func NewCreateUserContext(c *goa.Context) (*CreateUserContext, error) {
 
 // CreateUserPayload is the user create action payload.
 type CreateUserPayload struct {
-	Bio       string
-	City      string
-	Country   string
-	Email     string
+	Bio       *string
+	City      *string
+	Country   *string
+	Email     *string
 	Firstname string
-	Lastname  string
-	Role      string
-	State     string
+	Lastname  *string
+	Role      *string
+	State     *string
 }
 
 // NewCreateUserPayload instantiates a CreateUserPayload from a raw request body.
@@ -829,90 +884,88 @@ func UnmarshalCreateUserPayload(source interface{}, inErr error) (target *Create
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(CreateUserPayload)
 		if v, ok := val["bio"]; ok {
-			var tmp62 string
+			var tmp83 string
 			if val, ok := v.(string); ok {
-				tmp62 = val
+				tmp83 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Bio`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp62) > 500 {
-					err = goa.InvalidLengthError(`payload.Bio`, tmp62, len(tmp62), 500, false, err)
+				if len(tmp83) > 500 {
+					err = goa.InvalidLengthError(`payload.Bio`, tmp83, len(tmp83), 500, false, err)
 				}
 			}
-			target.Bio = tmp62
+			target.Bio = &tmp83
 		}
 		if v, ok := val["city"]; ok {
-			var tmp63 string
+			var tmp84 string
 			if val, ok := v.(string); ok {
-				tmp63 = val
+				tmp84 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.City`, v, "string", err)
 			}
-			target.City = tmp63
+			target.City = &tmp84
 		}
 		if v, ok := val["country"]; ok {
-			var tmp64 string
+			var tmp85 string
 			if val, ok := v.(string); ok {
-				tmp64 = val
+				tmp85 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Country`, v, "string", err)
 			}
-			target.Country = tmp64
+			target.Country = &tmp85
 		}
 		if v, ok := val["email"]; ok {
-			var tmp65 string
+			var tmp86 string
 			if val, ok := v.(string); ok {
-				tmp65 = val
+				tmp86 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
 			if err == nil {
-				if tmp65 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp65); err2 != nil {
-						err = goa.InvalidFormatError(`payload.Email`, tmp65, goa.FormatEmail, err2, err)
-					}
+				if err2 := goa.ValidateFormat(goa.FormatEmail, tmp86); err2 != nil {
+					err = goa.InvalidFormatError(`payload.Email`, tmp86, goa.FormatEmail, err2, err)
 				}
 			}
-			target.Email = tmp65
+			target.Email = &tmp86
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp66 string
+			var tmp87 string
 			if val, ok := v.(string); ok {
-				tmp66 = val
+				tmp87 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
-			target.Firstname = tmp66
+			target.Firstname = tmp87
 		} else {
 			err = goa.MissingAttributeError(`payload`, "firstname", err)
 		}
 		if v, ok := val["lastname"]; ok {
-			var tmp67 string
+			var tmp88 string
 			if val, ok := v.(string); ok {
-				tmp67 = val
+				tmp88 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Lastname`, v, "string", err)
 			}
-			target.Lastname = tmp67
+			target.Lastname = &tmp88
 		}
 		if v, ok := val["role"]; ok {
-			var tmp68 string
+			var tmp89 string
 			if val, ok := v.(string); ok {
-				tmp68 = val
+				tmp89 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Role`, v, "string", err)
 			}
-			target.Role = tmp68
+			target.Role = &tmp89
 		}
 		if v, ok := val["state"]; ok {
-			var tmp69 string
+			var tmp90 string
 			if val, ok := v.(string); ok {
-				tmp69 = val
+				tmp90 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.State`, v, "string", err)
 			}
-			target.State = tmp69
+			target.State = &tmp90
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -928,7 +981,8 @@ func (ctx *CreateUserContext) Created() error {
 // DeleteUserContext provides the user delete action context.
 type DeleteUserContext struct {
 	*goa.Context
-	UserID int
+	UserID  int
+	Version string
 }
 
 // NewDeleteUserContext parses the incoming request URL and body, performs validations and creates the
@@ -943,6 +997,10 @@ func NewDeleteUserContext(c *goa.Context) (*DeleteUserContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
+	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -960,6 +1018,7 @@ func (ctx *DeleteUserContext) NotFound() error {
 // ListUserContext provides the user list action context.
 type ListUserContext struct {
 	*goa.Context
+	Version string
 }
 
 // NewListUserContext parses the incoming request URL and body, performs validations and creates the
@@ -967,6 +1026,10 @@ type ListUserContext struct {
 func NewListUserContext(c *goa.Context) (*ListUserContext, error) {
 	var err error
 	ctx := ListUserContext{Context: c}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	return &ctx, err
 }
 
@@ -983,7 +1046,8 @@ func (ctx *ListUserContext) OK(resp app.UserCollection) error {
 // ShowUserContext provides the user show action context.
 type ShowUserContext struct {
 	*goa.Context
-	UserID int
+	UserID  int
+	Version string
 }
 
 // NewShowUserContext parses the incoming request URL and body, performs validations and creates the
@@ -998,6 +1062,10 @@ func NewShowUserContext(c *goa.Context) (*ShowUserContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
+	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -1021,6 +1089,7 @@ func (ctx *ShowUserContext) OK(resp *app.User, view app.UserViewEnum) error {
 type UpdateUserContext struct {
 	*goa.Context
 	UserID  int
+	Version string
 	Payload *UpdateUserPayload
 }
 
@@ -1037,6 +1106,10 @@ func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewUpdateUserPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -1047,14 +1120,14 @@ func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 
 // UpdateUserPayload is the user update action payload.
 type UpdateUserPayload struct {
-	Bio       string
-	City      string
-	Country   string
+	Bio       *string
+	City      *string
+	Country   *string
 	Email     string
-	Firstname string
-	Lastname  string
-	Role      string
-	State     string
+	Firstname *string
+	Lastname  *string
+	Role      *string
+	State     *string
 }
 
 // NewUpdateUserPayload instantiates a UpdateUserPayload from a raw request body.
@@ -1070,90 +1143,88 @@ func UnmarshalUpdateUserPayload(source interface{}, inErr error) (target *Update
 	if val, ok := source.(map[string]interface{}); ok {
 		target = new(UpdateUserPayload)
 		if v, ok := val["bio"]; ok {
-			var tmp70 string
+			var tmp94 string
 			if val, ok := v.(string); ok {
-				tmp70 = val
+				tmp94 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Bio`, v, "string", err)
 			}
 			if err == nil {
-				if len(tmp70) > 500 {
-					err = goa.InvalidLengthError(`payload.Bio`, tmp70, len(tmp70), 500, false, err)
+				if len(tmp94) > 500 {
+					err = goa.InvalidLengthError(`payload.Bio`, tmp94, len(tmp94), 500, false, err)
 				}
 			}
-			target.Bio = tmp70
+			target.Bio = &tmp94
 		}
 		if v, ok := val["city"]; ok {
-			var tmp71 string
+			var tmp95 string
 			if val, ok := v.(string); ok {
-				tmp71 = val
+				tmp95 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.City`, v, "string", err)
 			}
-			target.City = tmp71
+			target.City = &tmp95
 		}
 		if v, ok := val["country"]; ok {
-			var tmp72 string
+			var tmp96 string
 			if val, ok := v.(string); ok {
-				tmp72 = val
+				tmp96 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Country`, v, "string", err)
 			}
-			target.Country = tmp72
+			target.Country = &tmp96
 		}
 		if v, ok := val["email"]; ok {
-			var tmp73 string
+			var tmp97 string
 			if val, ok := v.(string); ok {
-				tmp73 = val
+				tmp97 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
 			if err == nil {
-				if tmp73 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp73); err2 != nil {
-						err = goa.InvalidFormatError(`payload.Email`, tmp73, goa.FormatEmail, err2, err)
-					}
+				if err2 := goa.ValidateFormat(goa.FormatEmail, tmp97); err2 != nil {
+					err = goa.InvalidFormatError(`payload.Email`, tmp97, goa.FormatEmail, err2, err)
 				}
 			}
-			target.Email = tmp73
+			target.Email = tmp97
 		} else {
 			err = goa.MissingAttributeError(`payload`, "email", err)
 		}
 		if v, ok := val["firstname"]; ok {
-			var tmp74 string
+			var tmp98 string
 			if val, ok := v.(string); ok {
-				tmp74 = val
+				tmp98 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Firstname`, v, "string", err)
 			}
-			target.Firstname = tmp74
+			target.Firstname = &tmp98
 		}
 		if v, ok := val["lastname"]; ok {
-			var tmp75 string
+			var tmp99 string
 			if val, ok := v.(string); ok {
-				tmp75 = val
+				tmp99 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Lastname`, v, "string", err)
 			}
-			target.Lastname = tmp75
+			target.Lastname = &tmp99
 		}
 		if v, ok := val["role"]; ok {
-			var tmp76 string
+			var tmp100 string
 			if val, ok := v.(string); ok {
-				tmp76 = val
+				tmp100 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Role`, v, "string", err)
 			}
-			target.Role = tmp76
+			target.Role = &tmp100
 		}
 		if v, ok := val["state"]; ok {
-			var tmp77 string
+			var tmp101 string
 			if val, ok := v.(string); ok {
-				tmp77 = val
+				tmp101 = val
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.State`, v, "string", err)
 			}
-			target.State = tmp77
+			target.State = &tmp101
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)

@@ -18,11 +18,11 @@ import "github.com/raphael/goa"
 // Identifier: application/vnd.authorize+json
 type Authorize struct {
 	// access token
-	AccessToken string
+	AccessToken *string
 	// Time to expiration in seconds
-	ExpiresIn int
+	ExpiresIn *int
 	// type of token
-	TokenType string
+	TokenType *string
 }
 
 // LoadAuthorize loads raw data into an instance of Authorize
@@ -65,7 +65,7 @@ func UnmarshalAuthorize(source interface{}, inErr error) (target *Authorize, err
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.AccessToken`, v, "string", err)
 			}
-			target.AccessToken = tmp8
+			target.AccessToken = &tmp8
 		}
 		if v, ok := val["expires_in"]; ok {
 			var tmp9 int
@@ -74,7 +74,7 @@ func UnmarshalAuthorize(source interface{}, inErr error) (target *Authorize, err
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.ExpiresIn`, v, "int", err)
 			}
-			target.ExpiresIn = tmp9
+			target.ExpiresIn = &tmp9
 		}
 		if v, ok := val["token_type"]; ok {
 			var tmp10 string
@@ -83,7 +83,7 @@ func UnmarshalAuthorize(source interface{}, inErr error) (target *Authorize, err
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.TokenType`, v, "string", err)
 			}
-			target.TokenType = tmp10
+			target.TokenType = &tmp10
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -95,11 +95,11 @@ func UnmarshalAuthorize(source interface{}, inErr error) (target *Authorize, err
 // Identifier: application/vnd.login+json
 type Login struct {
 	// UUID of requesting application
-	Application string
+	Application *string
 	// email
-	Email string
+	Email *string
 	// password
-	Password string
+	Password *string
 }
 
 // LoadLogin loads raw data into an instance of Login
@@ -142,7 +142,7 @@ func UnmarshalLogin(source interface{}, inErr error) (target *Login, err error) 
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Application`, v, "string", err)
 			}
-			target.Application = tmp12
+			target.Application = &tmp12
 		}
 		if v, ok := val["email"]; ok {
 			var tmp13 string
@@ -151,7 +151,7 @@ func UnmarshalLogin(source interface{}, inErr error) (target *Login, err error) 
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
-			target.Email = tmp13
+			target.Email = &tmp13
 		}
 		if v, ok := val["password"]; ok {
 			var tmp14 string
@@ -160,7 +160,7 @@ func UnmarshalLogin(source interface{}, inErr error) (target *Login, err error) 
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Password`, v, "string", err)
 			}
-			target.Password = tmp14
+			target.Password = &tmp14
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -172,25 +172,25 @@ func UnmarshalLogin(source interface{}, inErr error) (target *Login, err error) 
 // Identifier: application/vnd.user+json
 type User struct {
 	// Biography of user
-	Bio string
+	Bio *string
 	// City of residence
-	City string
+	City *string
 	// Country of residence
-	Country string
+	Country *string
 	// Email address of user
-	Email string
+	Email *string
 	// First name of user
-	Firstname string
+	Firstname *string
 	// API href of user
-	Href string
+	Href *string
 	// ID of user
-	ID int
+	ID *int
 	// Last name of user
-	Lastname string
+	Lastname *string
 	// Role of user
-	Role string
+	Role *string
 	// State of residence
-	State string
+	State *string
 }
 
 // User views
@@ -225,17 +225,19 @@ func (mt *User) Dump(view UserViewEnum) (res map[string]interface{}, err error) 
 
 // Validate validates the media type instance.
 func (mt *User) Validate() (err error) {
-	if len(mt.Bio) > 500 {
-		err = goa.InvalidLengthError(`response.bio`, mt.Bio, len(mt.Bio), 500, false, err)
-	}
-	if mt.Email != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
-			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
+	if mt.Bio != nil {
+		if len(*mt.Bio) > 500 {
+			err = goa.InvalidLengthError(`response.bio`, *mt.Bio, len(*mt.Bio), 500, false, err)
 		}
 	}
-	if mt.Email != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, mt.Email); err2 != nil {
-			err = goa.InvalidFormatError(`response.email`, mt.Email, goa.FormatEmail, err2, err)
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
+		}
+	}
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
 		}
 	}
 	return
@@ -245,18 +247,8 @@ func (mt *User) Validate() (err error) {
 // using view "default".
 func MarshalUser(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if len(source.Bio) > 500 {
-		err = goa.InvalidLengthError(`.bio`, source.Bio, len(source.Bio), 500, false, err)
-	}
-	if source.Email != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
-			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
-		}
-	}
-	if source.Email != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
-			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
-		}
+	if err2 := source.Validate(); err2 != nil {
+		return nil, goa.ReportError(err, err2)
 	}
 	tmp15 := map[string]interface{}{
 		"bio":       source.Bio,
@@ -278,15 +270,8 @@ func MarshalUser(source *User, inErr error) (target map[string]interface{}, err 
 // using view "link".
 func MarshalUserLink(source *User, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	if source.Email != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
-			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
-		}
-	}
-	if source.Email != "" {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, source.Email); err2 != nil {
-			err = goa.InvalidFormatError(`.email`, source.Email, goa.FormatEmail, err2, err)
-		}
+	if err2 := source.Validate(); err2 != nil {
+		return nil, goa.ReportError(err, err2)
 	}
 	tmp16 := map[string]interface{}{
 		"email": source.Email,
@@ -314,7 +299,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 					err = goa.InvalidLengthError(`load.Bio`, tmp17, len(tmp17), 500, false, err)
 				}
 			}
-			target.Bio = tmp17
+			target.Bio = &tmp17
 		}
 		if v, ok := val["city"]; ok {
 			var tmp18 string
@@ -323,7 +308,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
 			}
-			target.City = tmp18
+			target.City = &tmp18
 		}
 		if v, ok := val["country"]; ok {
 			var tmp19 string
@@ -332,7 +317,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
 			}
-			target.Country = tmp19
+			target.Country = &tmp19
 		}
 		if v, ok := val["email"]; ok {
 			var tmp20 string
@@ -342,18 +327,14 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
 			}
 			if err == nil {
-				if tmp20 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp20); err2 != nil {
-						err = goa.InvalidFormatError(`load.Email`, tmp20, goa.FormatEmail, err2, err)
-					}
+				if err2 := goa.ValidateFormat(goa.FormatEmail, tmp20); err2 != nil {
+					err = goa.InvalidFormatError(`load.Email`, tmp20, goa.FormatEmail, err2, err)
 				}
-				if tmp20 != "" {
-					if err2 := goa.ValidateFormat(goa.FormatEmail, tmp20); err2 != nil {
-						err = goa.InvalidFormatError(`load.Email`, tmp20, goa.FormatEmail, err2, err)
-					}
+				if err2 := goa.ValidateFormat(goa.FormatEmail, tmp20); err2 != nil {
+					err = goa.InvalidFormatError(`load.Email`, tmp20, goa.FormatEmail, err2, err)
 				}
 			}
-			target.Email = tmp20
+			target.Email = &tmp20
 		}
 		if v, ok := val["firstname"]; ok {
 			var tmp21 string
@@ -362,7 +343,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
 			}
-			target.Firstname = tmp21
+			target.Firstname = &tmp21
 		}
 		if v, ok := val["href"]; ok {
 			var tmp22 string
@@ -371,7 +352,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
 			}
-			target.Href = tmp22
+			target.Href = &tmp22
 		}
 		if v, ok := val["id"]; ok {
 			var tmp23 int
@@ -380,7 +361,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
 			}
-			target.ID = tmp23
+			target.ID = &tmp23
 		}
 		if v, ok := val["lastname"]; ok {
 			var tmp24 string
@@ -389,7 +370,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
 			}
-			target.Lastname = tmp24
+			target.Lastname = &tmp24
 		}
 		if v, ok := val["role"]; ok {
 			var tmp25 string
@@ -398,7 +379,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.Role`, v, "string", err)
 			}
-			target.Role = tmp25
+			target.Role = &tmp25
 		}
 		if v, ok := val["state"]; ok {
 			var tmp26 string
@@ -407,7 +388,7 @@ func UnmarshalUser(source interface{}, inErr error) (target *User, err error) {
 			} else {
 				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
 			}
-			target.State = tmp26
+			target.State = &tmp26
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
@@ -442,17 +423,19 @@ func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
 // Validate validates the media type instance.
 func (mt UserCollection) Validate() (err error) {
 	for _, e := range mt {
-		if len(e.Bio) > 500 {
-			err = goa.InvalidLengthError(`response[*].bio`, e.Bio, len(e.Bio), 500, false, err)
-		}
-		if e.Email != "" {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].email`, e.Email, goa.FormatEmail, err2, err)
+		if e.Bio != nil {
+			if len(*e.Bio) > 500 {
+				err = goa.InvalidLengthError(`response[*].bio`, *e.Bio, len(*e.Bio), 500, false, err)
 			}
 		}
-		if e.Email != "" {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, e.Email); err2 != nil {
-				err = goa.InvalidFormatError(`response[*].email`, e.Email, goa.FormatEmail, err2, err)
+		if e.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *e.Email); err2 != nil {
+				err = goa.InvalidFormatError(`response[*].email`, *e.Email, goa.FormatEmail, err2, err)
+			}
+		}
+		if e.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *e.Email); err2 != nil {
+				err = goa.InvalidFormatError(`response[*].email`, *e.Email, goa.FormatEmail, err2, err)
 			}
 		}
 	}

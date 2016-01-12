@@ -106,7 +106,7 @@ func (u *User) BeforeCreate() (err error) {
 
 	u.Password = string(pw)
 
-	u.Email = strings.ToLower(strings.TrimSpace(u.Email))
+	*u.Email = strings.ToLower(strings.TrimSpace(*u.Email))
 
 	return
 }

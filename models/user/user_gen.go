@@ -23,15 +23,15 @@ import (
 // app.User storage type
 // Identifier: User
 type User struct {
-	Bio       string `json:"bio,omitempty"`
-	City      string `json:"city,omitempty"`
-	Country   string `json:"country,omitempty"`
-	Email     string `json:"email,omitempty"`
-	Firstname string `json:"firstname,omitempty"`
-	ID        int    `json:"id,omitempty" gorm:"primary_key"`
-	Lastname  string `json:"lastname,omitempty"`
-	Role      string `json:"role,omitempty"`
-	State     string `json:"state,omitempty"`
+	Bio       *string `json:"bio,omitempty"`
+	City      *string `json:"city,omitempty"`
+	Country   *string `json:"country,omitempty"`
+	Email     *string `json:"email,omitempty"`
+	Firstname *string `json:"firstname,omitempty"`
+	ID        *int    `json:"id,omitempty" gorm:"primary_key"`
+	Lastname  *string `json:"lastname,omitempty"`
+	Role      *string `json:"role,omitempty"`
+	State     *string `json:"state,omitempty"`
 
 	// Timestamps
 	CreatedAt time.Time
@@ -69,16 +69,16 @@ type User struct {
 }
 
 func (m User) GetRole() string {
-	return m.Role
+	return *m.Role
 }
 
 type UserStorage interface {
 	DB() interface{}
 	List(ctx context.Context) []User
-	One(ctx context.Context, id int) (User, error)
+	One(ctx context.Context, id *int) (User, error)
 	Add(ctx context.Context, o User) (User, error)
 	Update(ctx context.Context, o User) error
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id *int) error
 }
 type UserDB struct {
 	Db gorm.DB
@@ -218,7 +218,7 @@ func (m *UserDB) ListByStateLike(ctx context.Context, state string) []User {
 	return objs
 }
 
-func (m *UserDB) One(ctx context.Context, id int) (User, error) {
+func (m *UserDB) One(ctx context.Context, id *int) (User, error) {
 
 	var obj User
 
@@ -243,7 +243,7 @@ func (m *UserDB) Update(ctx context.Context, model User) error {
 	return err
 }
 
-func (m *UserDB) Delete(ctx context.Context, id int) error {
+func (m *UserDB) Delete(ctx context.Context, id *int) error {
 	var obj User
 
 	err := m.Db.Delete(&obj, id).Error

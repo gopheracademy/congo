@@ -81,16 +81,16 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 	if err == nil {
 		userdb := user.NewUserDB(*c.db)
 		userID = token.Claims["sub"].(int)
-		u, err := userdb.One(ctx, userID)
+		u, err := userdb.One(ctx, &userID)
 		if err == nil {
-			if u.Role == models.ADMIN {
+			if u.Role != nil && *u.Role == models.ADMIN {
 				admin = true
 			}
 			auth = &app.Authorize{
-				AccessToken: token.Raw,
-				ExpiresIn:   time.Now().Second() - u.Oauth2Expiry.Second(),
-				TokenType:   "Bearer",
+				AccessToken: &token.Raw,
 			}
+			*auth.ExpiresIn = time.Now().Second() - u.Oauth2Expiry.Second()
+			*auth.TokenType = "Bearer"
 		}
 	}
 	return RenderBootstrap(ctx, userID, admin, auth)

@@ -22,6 +22,7 @@ import (
 type CallbackAuthContext struct {
 	*goa.Context
 	Provider string
+	Version  string
 }
 
 // NewCallbackAuthContext parses the incoming request URL and body, performs validations and creates the
@@ -32,6 +33,10 @@ func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
 	rawProvider := c.Get("provider")
 	if rawProvider != "" {
 		ctx.Provider = rawProvider
+	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -45,6 +50,7 @@ func (ctx *CallbackAuthContext) OK(resp []byte) error {
 type OauthAuthContext struct {
 	*goa.Context
 	Provider string
+	Version  string
 }
 
 // NewOauthAuthContext parses the incoming request URL and body, performs validations and creates the
@@ -55,6 +61,10 @@ func NewOauthAuthContext(c *goa.Context) (*OauthAuthContext, error) {
 	rawProvider := c.Get("provider")
 	if rawProvider != "" {
 		ctx.Provider = rawProvider
+	}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -72,6 +82,7 @@ func (ctx *OauthAuthContext) OK(resp *Authorize) error {
 // RefreshAuthContext provides the auth refresh action context.
 type RefreshAuthContext struct {
 	*goa.Context
+	Version string
 	Payload *RefreshAuthPayload
 }
 
@@ -80,6 +91,10 @@ type RefreshAuthContext struct {
 func NewRefreshAuthContext(c *goa.Context) (*RefreshAuthContext, error) {
 	var err error
 	ctx := RefreshAuthContext{Context: c}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewRefreshAuthPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -91,11 +106,11 @@ func NewRefreshAuthContext(c *goa.Context) (*RefreshAuthContext, error) {
 // RefreshAuthPayload is the auth refresh action payload.
 type RefreshAuthPayload struct {
 	// UUID of requesting application
-	Application string
+	Application *string
 	// email
-	Email string
+	Email *string
 	// password
-	Password string
+	Password *string
 }
 
 // NewRefreshAuthPayload instantiates a RefreshAuthPayload from a raw request body.
@@ -117,7 +132,7 @@ func UnmarshalRefreshAuthPayload(source interface{}, inErr error) (target *Refre
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Application`, v, "string", err)
 			}
-			target.Application = tmp1
+			target.Application = &tmp1
 		}
 		if v, ok := val["email"]; ok {
 			var tmp2 string
@@ -126,7 +141,7 @@ func UnmarshalRefreshAuthPayload(source interface{}, inErr error) (target *Refre
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
-			target.Email = tmp2
+			target.Email = &tmp2
 		}
 		if v, ok := val["password"]; ok {
 			var tmp3 string
@@ -135,7 +150,7 @@ func UnmarshalRefreshAuthPayload(source interface{}, inErr error) (target *Refre
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Password`, v, "string", err)
 			}
-			target.Password = tmp3
+			target.Password = &tmp3
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)
@@ -156,6 +171,7 @@ func (ctx *RefreshAuthContext) Created(resp *Authorize) error {
 // TokenAuthContext provides the auth token action context.
 type TokenAuthContext struct {
 	*goa.Context
+	Version string
 	Payload *TokenAuthPayload
 }
 
@@ -164,6 +180,10 @@ type TokenAuthContext struct {
 func NewTokenAuthContext(c *goa.Context) (*TokenAuthContext, error) {
 	var err error
 	ctx := TokenAuthContext{Context: c}
+	rawVersion := c.Get("version")
+	if rawVersion != "" {
+		ctx.Version = rawVersion
+	}
 	p, err := NewTokenAuthPayload(c.Payload())
 	if err != nil {
 		return nil, err
@@ -175,11 +195,11 @@ func NewTokenAuthContext(c *goa.Context) (*TokenAuthContext, error) {
 // TokenAuthPayload is the auth token action payload.
 type TokenAuthPayload struct {
 	// UUID of requesting application
-	Application string
+	Application *string
 	// email
-	Email string
+	Email *string
 	// password
-	Password string
+	Password *string
 }
 
 // NewTokenAuthPayload instantiates a TokenAuthPayload from a raw request body.
@@ -201,7 +221,7 @@ func UnmarshalTokenAuthPayload(source interface{}, inErr error) (target *TokenAu
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Application`, v, "string", err)
 			}
-			target.Application = tmp4
+			target.Application = &tmp4
 		}
 		if v, ok := val["email"]; ok {
 			var tmp5 string
@@ -210,7 +230,7 @@ func UnmarshalTokenAuthPayload(source interface{}, inErr error) (target *TokenAu
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Email`, v, "string", err)
 			}
-			target.Email = tmp5
+			target.Email = &tmp5
 		}
 		if v, ok := val["password"]; ok {
 			var tmp6 string
@@ -219,7 +239,7 @@ func UnmarshalTokenAuthPayload(source interface{}, inErr error) (target *TokenAu
 			} else {
 				err = goa.InvalidAttributeTypeError(`payload.Password`, v, "string", err)
 			}
-			target.Password = tmp6
+			target.Password = &tmp6
 		}
 	} else {
 		err = goa.InvalidAttributeTypeError(`payload`, source, "dictionary", err)

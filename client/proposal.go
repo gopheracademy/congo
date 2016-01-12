@@ -11,11 +11,11 @@ import (
 
 // CreateProposalPayload is the data structure used to initialize the proposal create request body.
 type CreateProposalPayload struct {
-	Abstract  string `json:"abstract,omitempty"`
-	Detail    string `json:"detail,omitempty"`
-	Firstname string `json:"firstname,omitempty"`
-	Title     string `json:"title"`
-	Withdrawn bool   `json:"withdrawn,omitempty"`
+	Abstract  *string
+	Detail    *string
+	Firstname *string
+	Title     string
+	Withdrawn *bool
 }
 
 // Create a new proposal
@@ -77,11 +77,11 @@ func (c *Client) ShowProposal(path string) (*http.Response, error) {
 
 // UpdateProposalPayload is the data structure used to initialize the proposal update request body.
 type UpdateProposalPayload struct {
-	Abstract  string `json:"abstract,omitempty"`
-	Detail    string `json:"detail,omitempty"`
-	Firstname string `json:"firstname,omitempty"`
-	Title     string `json:"title,omitempty"`
-	Withdrawn bool   `json:"withdrawn,omitempty"`
+	Abstract  *string
+	Detail    *string
+	Firstname *string
+	Title     *string
+	Withdrawn *bool
 }
 
 // UpdateProposal makes a request to the update action endpoint of the proposal resource

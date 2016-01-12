@@ -38,11 +38,11 @@ func (c *Client) OauthAuth(path string) (*http.Response, error) {
 // RefreshAuthPayload is the data structure used to initialize the auth refresh request body.
 type RefreshAuthPayload struct {
 	// UUID of requesting application
-	Application string `json:"application,omitempty"`
+	Application *string
 	// email
-	Email string `json:"email,omitempty"`
+	Email *string
 	// password
-	Password string `json:"password,omitempty"`
+	Password *string
 }
 
 // Obtain a refreshed access token
@@ -66,11 +66,11 @@ func (c *Client) RefreshAuth(path string, payload *RefreshAuthPayload) (*http.Re
 // TokenAuthPayload is the data structure used to initialize the auth token request body.
 type TokenAuthPayload struct {
 	// UUID of requesting application
-	Application string `json:"application,omitempty"`
+	Application *string
 	// email
-	Email string `json:"email,omitempty"`
+	Email *string
 	// password
-	Password string `json:"password,omitempty"`
+	Password *string
 }
 
 // Obtain an access token

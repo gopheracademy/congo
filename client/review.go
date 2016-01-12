@@ -11,8 +11,8 @@ import (
 
 // CreateReviewPayload is the data structure used to initialize the review create request body.
 type CreateReviewPayload struct {
-	Comment string `json:"comment,omitempty"`
-	Rating  int    `json:"rating"`
+	Comment *string
+	Rating  int
 }
 
 // Create a new review
@@ -74,8 +74,8 @@ func (c *Client) ShowReview(path string) (*http.Response, error) {
 
 // UpdateReviewPayload is the data structure used to initialize the review update request body.
 type UpdateReviewPayload struct {
-	Comment string `json:"comment,omitempty"`
-	Rating  int    `json:"rating,omitempty"`
+	Comment *string
+	Rating  *int
 }
 
 // UpdateReview makes a request to the update action endpoint of the review resource

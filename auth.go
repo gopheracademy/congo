@@ -59,9 +59,9 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 				Oauth2Provider: prov,
 				Oauth2Token:    user.AccessToken,
 
-				Email: user.Email,
-				Role:  models.USER,
+				Email: &user.Email,
 			}
+			*cuser.Role = models.USER
 			cuser, err = udb.Add(context.Background(), cuser)
 			if err != nil {
 				fmt.Println(err)
@@ -78,19 +78,19 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 
 	}
 	fmt.Println("Role: ", cuser.Role)
-	if cuser.Role == models.ADMIN {
+	if cuser.Role != nil && *cuser.Role == models.ADMIN {
 		admin = true
 	}
 	claims := make(map[string]interface{})
-	claims["sub"] = strconv.Itoa(cuser.ID)
+	claims["sub"] = strconv.Itoa(*cuser.ID)
 	claims["provider"] = prov
 	claims["first_name"] = cuser.Firstname
 	t, err := c.tm.Create(claims)
 	auth := app.Authorize{}
-	auth.AccessToken = t
-	auth.ExpiresIn = 60 // TBD extract from auth response raw data?
+	auth.AccessToken = &t
+	*auth.ExpiresIn = 60 // TBD extract from auth response raw data?
 
-	return RenderBootstrap(ctx, cuser.ID, admin, &auth)
+	return RenderBootstrap(ctx, *cuser.ID, admin, &auth)
 }
 
 func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
@@ -111,8 +111,8 @@ func (c *AuthController) Token(ctx *app.TokenAuthContext) error {
 
 	// authenticate
 	login := muser.Login{
-		Email:    ctx.Payload.Email,
-		Password: ctx.Payload.Password,
+		Email:    *ctx.Payload.Email,
+		Password: *ctx.Payload.Password,
 	}
 	fmt.Println(login)
 	userdb := muser.NewUserDB(*c.db)
@@ -132,9 +132,9 @@ func (c *AuthController) Token(ctx *app.TokenAuthContext) error {
 	}
 	// return token
 	a := &app.Authorize{}
-	a.TokenType = "Bearer"
-	a.AccessToken = t
-	a.ExpiresIn = c.spec.TTLMinutes * 60
+	*a.TokenType = "Bearer"
+	*a.AccessToken = t
+	*a.ExpiresIn = c.spec.TTLMinutes * 60
 	return ctx.Created(a)
 }
 
@@ -178,8 +178,8 @@ func (c *AuthController) Refresh(ctx *app.RefreshAuthContext) error {
 	}
 	// authenticate
 	login := muser.Login{
-		Email:    ctx.Payload.Email,
-		Password: ctx.Payload.Password,
+		Email:    *ctx.Payload.Email,
+		Password: *ctx.Payload.Password,
 	}
 
 	userdb := muser.NewUserDB(*c.db)
@@ -196,9 +196,9 @@ func (c *AuthController) Refresh(ctx *app.RefreshAuthContext) error {
 	t, err := c.tm.Create(claims)
 	// return token
 	a := &app.Authorize{}
-	a.TokenType = "Bearer"
-	a.AccessToken = t
-	a.ExpiresIn = c.spec.TTLMinutes * 60
+	*a.TokenType = "Bearer"
+	*a.AccessToken = t
+	*a.ExpiresIn = c.spec.TTLMinutes * 60
 	return ctx.Created(a)
 }
 

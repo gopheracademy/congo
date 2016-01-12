@@ -31,7 +31,7 @@ func (c *ProposalController) Create(ctx *v1.CreateProposalContext) error {
 
 // Delete runs the delete action.
 func (c *ProposalController) Delete(ctx *v1.DeleteProposalContext) error {
-	err := c.storage.Delete(ctx, ctx.ProposalID)
+	err := c.storage.Delete(ctx, &ctx.ProposalID)
 	if err != nil {
 		return ctx.Err()
 	}
@@ -45,7 +45,7 @@ func (c *ProposalController) List(ctx *v1.ListProposalContext) error {
 	for _, y := range res {
 		fmt.Println(y)
 		nm := y.ToV1()
-		nm.Href = v1.ProposalHref("v1", y.UserID, y.ID)
+		*nm.Href = v1.ProposalHref("v1", y.UserID, y.ID)
 		list = append(list, nm)
 	}
 	return ctx.OK(list)
@@ -53,13 +53,13 @@ func (c *ProposalController) List(ctx *v1.ListProposalContext) error {
 
 // Show runs the show action.
 func (c *ProposalController) Show(ctx *v1.ShowProposalContext) error {
-	res, err := c.storage.One(ctx, ctx.ProposalID)
+	res, err := c.storage.One(ctx, &ctx.ProposalID)
 	if err != nil {
 		ctx.Error(err.Error())
 	}
 	m := res.ToV1()
-	m.ID = int(res.ID)
-	m.Href = v1.ProposalHref("v1", res.UserID, res.ID)
+	*m.ID = int(*res.ID)
+	*m.Href = v1.ProposalHref("v1", res.UserID, *res.ID)
 
 	return ctx.OK(m, "default")
 }
@@ -67,7 +67,7 @@ func (c *ProposalController) Show(ctx *v1.ShowProposalContext) error {
 // Update runs the update action.
 func (c *ProposalController) Update(ctx *v1.UpdateProposalContext) error {
 	m := proposal.ProposalFromV1UpdatePayload(ctx)
-	m.ID = ctx.UserID
+	*m.ID = ctx.UserID
 	err := c.storage.Update(ctx, m)
 	if err != nil {
 		fmt.Println(err)
