@@ -9,7 +9,7 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package gorma
+package review
 
 import (
 	"time"

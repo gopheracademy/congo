@@ -9,6 +9,7 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/gorma"
 	"github.com/gopheracademy/congo/models"
 	"github.com/jinzhu/gorm"
 	"github.com/markbates/goth/gothic"
@@ -54,14 +55,14 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	if err != nil {
 		if err.Error() == "record not found" { // todo: get a real error here?
 			cuser = models.User{
-				// OAuth2
-				Oauth2Uid:      user.UserID,
-				Oauth2Provider: prov,
-				Oauth2Token:    user.AccessToken,
+				gorma.User{
+					Oauth2Uid:      user.UserID,
+					Oauth2Provider: prov,
+					Oauth2Token:    user.AccessToken,
 
-				Email: user.Email,
-				Role:  models.USER,
-			}
+					Email: user.Email,
+					Role:  models.USER,
+				}}
 			cuser, err = udb.Add(context.Background(), cuser)
 			if err != nil {
 				fmt.Println(err)

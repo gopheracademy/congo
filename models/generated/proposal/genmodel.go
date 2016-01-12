@@ -9,11 +9,12 @@
 // The content of this file is auto-generated, DO NOT MODIFY
 //************************************************************************//
 
-package gorma
+package proposal
 
 import (
 	"time"
 
+	"github.com/gopheracademy/congo/models/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -28,16 +29,16 @@ type Proposal struct {
 	Title     string `json:"title,omitempty"`
 	Withdrawn bool   `json:"withdrawn,omitempty"`
 
-	// Timestamps
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-
 	// Foreign Keys
 	UserID int
 
 	// Children
-	Reviews []Review
+	Reviews []review.Review
+
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
 }
 
 type ProposalStorage interface {
