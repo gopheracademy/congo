@@ -38,6 +38,6 @@ var _ = API("congo", func() {
 	})
 })
 
-var _ = Version("1.0", func() {
+var _ = Version("v1", func() {
 	Description("Multi-tenant conference management application API v1")
 })

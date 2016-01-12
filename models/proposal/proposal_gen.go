@@ -29,9 +29,6 @@ type Proposal struct {
 	Title     string `json:"title,omitempty"`
 	Withdrawn bool   `json:"withdrawn,omitempty"`
 
-	// Children
-	Reviews []review.Review
-
 	// Timestamps
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -39,6 +36,9 @@ type Proposal struct {
 
 	// Foreign Keys
 	UserID int
+
+	// Children
+	Reviews []review.Review
 }
 
 type ProposalStorage interface {

@@ -65,7 +65,7 @@ var _ = Resource("auth", func() {
 	})
 })
 var _ = Resource("user", func() {
-	APIVersion("1.0")
+	APIVersion("v1")
 	DefaultMedia(User)
 	BasePath("/users")
 	Action("list", func() {
@@ -132,7 +132,7 @@ var _ = Resource("user", func() {
 })
 
 var _ = Resource("proposal", func() {
-	APIVersion("1.0")
+	APIVersion("v1")
 	Parent("user")
 	DefaultMedia(Proposal)
 	BasePath("/proposals")
@@ -197,7 +197,7 @@ var _ = Resource("proposal", func() {
 })
 
 var _ = Resource("review", func() {
-	APIVersion("1.0")
+	APIVersion("v1")
 	Parent("proposal")
 	DefaultMedia(Review)
 	BasePath("/review")
