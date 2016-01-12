@@ -10,7 +10,8 @@ import (
 
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/app/v1"
-	"github.com/gopheracademy/congo/models"
+	"github.com/gopheracademy/congo/models/proposal"
+	"github.com/gopheracademy/congo/models/user"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/gopheracademy/congo/util"
 	"github.com/jinzhu/gorm"
@@ -94,10 +95,10 @@ func main() {
 	a := NewAuthController(service, &db, tm, jwtSpec)
 	app.MountAuthController(service, a)
 	// Mount "user" controller
-	c3 := NewUserController(service, models.NewUserDB(db))
+	c3 := NewUserController(service, user.NewUserDB(db))
 	v1.MountUserController(service, c3)
 	c3.Use(jwt.Middleware(jwtSpec))
-	c4 := NewProposalController(service, models.NewProposalDB(db))
+	c4 := NewProposalController(service, proposal.NewProposalDB(db))
 	v1.MountProposalController(service, c4)
 	c4.Use(jwt.Middleware(jwtSpec))
 	ui := NewUIController(service, &db)
@@ -133,7 +134,7 @@ func connectDB() (gorm.DB, error) {
 	var err error
 	db, err = gorm.Open("postgres", constr)
 	if err == nil {
-		db.AutoMigrate(&models.User{})
+		db.AutoMigrate(&user.User{})
 	}
 	db.LogMode(true)
 	return db, err

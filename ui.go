@@ -8,6 +8,7 @@ import (
 
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/models"
+	"github.com/gopheracademy/congo/models/user"
 	"github.com/jinzhu/gorm"
 	"github.com/raphael/goa"
 	"github.com/raphael/goa-middleware/jwt"
@@ -78,7 +79,7 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 	var auth *app.Authorize
 	token, err := jwt.GetToken(ctx.Context, jwtSpec)
 	if err == nil {
-		userdb := models.NewUserDB(*c.db)
+		userdb := user.NewUserDB(*c.db)
 		userID = token.Claims["sub"].(int)
 		u, err := userdb.One(ctx, userID)
 		if err == nil {

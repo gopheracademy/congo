@@ -4,24 +4,24 @@ import (
 	"fmt"
 
 	"github.com/gopheracademy/congo/app/v1"
-	"github.com/gopheracademy/congo/models"
+	"github.com/gopheracademy/congo/models/proposal"
 	"github.com/raphael/goa"
 )
 
 // ProposalController implements the proposal resource.
 type ProposalController struct {
 	goa.Controller
-	storage models.ProposalStorage
+	storage proposal.ProposalStorage
 }
 
 // NewProposalController creates a account controller.
-func NewProposalController(service goa.Service, storage models.ProposalStorage) v1.ProposalController {
+func NewProposalController(service goa.Service, storage proposal.ProposalStorage) v1.ProposalController {
 	return &ProposalController{storage: storage, Controller: service.NewController("ProposalController")}
 }
 
 // Create runs the create action.
 func (c *ProposalController) Create(ctx *v1.CreateProposalContext) error {
-	m, err := c.storage.Add(ctx, models.ProposalFromV1CreatePayload(ctx))
+	m, err := c.storage.Add(ctx, proposal.ProposalFromV1CreatePayload(ctx))
 	if err != nil {
 		return ctx.Err()
 	}
@@ -66,7 +66,7 @@ func (c *ProposalController) Show(ctx *v1.ShowProposalContext) error {
 
 // Update runs the update action.
 func (c *ProposalController) Update(ctx *v1.UpdateProposalContext) error {
-	m := models.ProposalFromV1UpdatePayload(ctx)
+	m := proposal.ProposalFromV1UpdatePayload(ctx)
 	m.ID = ctx.UserID
 	err := c.storage.Update(ctx, m)
 	if err != nil {

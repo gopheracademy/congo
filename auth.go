@@ -9,8 +9,8 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/gopheracademy/congo/app"
-	"github.com/gopheracademy/congo/gorma"
 	"github.com/gopheracademy/congo/models"
+	muser "github.com/gopheracademy/congo/models/user"
 	"github.com/jinzhu/gorm"
 	"github.com/markbates/goth/gothic"
 
@@ -47,22 +47,21 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	}
 	fmt.Println(user)
 
-	udb := models.NewUserDB(*c.db)
+	udb := muser.NewUserDB(*c.db)
 	prov, _ := provider(ctx.Request())
-	var cuser models.User
+	var cuser muser.User
 	var admin bool
 	cuser, err = udb.UserByOauth(user.UserID, prov)
 	if err != nil {
 		if err.Error() == "record not found" { // todo: get a real error here?
-			cuser = models.User{
-				gorma.User{
-					Oauth2Uid:      user.UserID,
-					Oauth2Provider: prov,
-					Oauth2Token:    user.AccessToken,
+			cuser = muser.User{
+				Oauth2Uid:      user.UserID,
+				Oauth2Provider: prov,
+				Oauth2Token:    user.AccessToken,
 
-					Email: user.Email,
-					Role:  models.USER,
-				}}
+				Email: user.Email,
+				Role:  models.USER,
+			}
 			cuser, err = udb.Add(context.Background(), cuser)
 			if err != nil {
 				fmt.Println(err)
@@ -111,12 +110,12 @@ func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
 func (c *AuthController) Token(ctx *app.TokenAuthContext) error {
 
 	// authenticate
-	login := models.Login{
+	login := muser.Login{
 		Email:    ctx.Payload.Email,
 		Password: ctx.Payload.Password,
 	}
 	fmt.Println(login)
-	userdb := models.NewUserDB(*c.db)
+	userdb := muser.NewUserDB(*c.db)
 	user, err := userdb.GetByLogin(ctx, login)
 	if err != nil {
 		//Logger(m.e, ctx).Error(err)
@@ -178,12 +177,12 @@ func (c *AuthController) Refresh(ctx *app.RefreshAuthContext) error {
 		return err
 	}
 	// authenticate
-	login := models.Login{
+	login := muser.Login{
 		Email:    ctx.Payload.Email,
 		Password: ctx.Payload.Password,
 	}
 
-	userdb := models.NewUserDB(*c.db)
+	userdb := muser.NewUserDB(*c.db)
 	user, err := userdb.GetByLogin(ctx, login)
 	if err != nil {
 		//Logger(m.e, ctx).Error(err)

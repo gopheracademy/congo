@@ -5,24 +5,24 @@ import (
 
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/app/v1"
-	"github.com/gopheracademy/congo/models"
+	"github.com/gopheracademy/congo/models/user"
 	"github.com/raphael/goa"
 )
 
 // UserController implements the account resource.
 type UserController struct {
 	goa.Controller
-	storage models.UserStorage
+	storage user.UserStorage
 }
 
 // NewUserController creates a account controller.
-func NewUserController(service goa.Service, storage models.UserStorage) v1.UserController {
+func NewUserController(service goa.Service, storage user.UserStorage) v1.UserController {
 	return &UserController{storage: storage, Controller: service.NewController("UserController")}
 }
 
 // Create runs the create action.
 func (c *UserController) Create(ctx *v1.CreateUserContext) error {
-	m, err := c.storage.Add(ctx, models.UserFromV1CreatePayload(ctx))
+	m, err := c.storage.Add(ctx, user.UserFromV1CreatePayload(ctx))
 	if err != nil {
 		return ctx.Err()
 	}
@@ -67,7 +67,7 @@ func (c *UserController) Show(ctx *v1.ShowUserContext) error {
 
 // Update runs the update action.
 func (c *UserController) Update(ctx *v1.UpdateUserContext) error {
-	m := models.UserFromV1UpdatePayload(ctx)
+	m := user.UserFromV1UpdatePayload(ctx)
 	m.ID = ctx.UserID
 	err := c.storage.Update(ctx, m)
 	if err != nil {

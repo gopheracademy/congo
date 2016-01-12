@@ -29,16 +29,16 @@ type Proposal struct {
 	Title     string `json:"title,omitempty"`
 	Withdrawn bool   `json:"withdrawn,omitempty"`
 
+	// Timestamps
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+
 	// Foreign Keys
 	UserID int
 
 	// Children
 	Reviews []review.Review
-
-	// Timestamps
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
 }
 
 type ProposalStorage interface {
