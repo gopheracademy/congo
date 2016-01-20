@@ -66,6 +66,7 @@ var _ = Resource("auth", func() {
 })
 var _ = Resource("user", func() {
 	APIVersion("v1")
+
 	DefaultMedia(User)
 	BasePath("/users")
 	Action("list", func() {
@@ -98,7 +99,7 @@ var _ = Resource("user", func() {
 			POST(""),
 		)
 		Description("Record new user")
-		Payload(UserModel, func() {
+		Payload(UserPayload, func() {
 			Required("firstname")
 			Required("lastname")
 			Required("email")
@@ -113,7 +114,7 @@ var _ = Resource("user", func() {
 		Params(func() {
 			Param("userID", Integer)
 		})
-		Payload(UserModel, func() {
+		Payload(UserPayload, func() {
 			Required("email")
 		})
 		Response(NoContent)
@@ -133,6 +134,7 @@ var _ = Resource("user", func() {
 
 var _ = Resource("proposal", func() {
 	APIVersion("v1")
+
 	Parent("user")
 	DefaultMedia(Proposal)
 	BasePath("/proposals")
@@ -165,7 +167,7 @@ var _ = Resource("proposal", func() {
 			POST(""),
 		)
 		Description("Create a new proposal")
-		Payload(ProposalModel, func() {
+		Payload(ProposalPayload, func() {
 			Required("title")
 			Required("abstract")
 			Required("detail")
@@ -180,7 +182,7 @@ var _ = Resource("proposal", func() {
 		Params(func() {
 			Param("proposalID", Integer)
 		})
-		Payload(ProposalModel)
+		Payload(ProposalPayload)
 		Response(NoContent)
 		Response(NotFound)
 	})
@@ -230,7 +232,7 @@ var _ = Resource("review", func() {
 			POST(""),
 		)
 		Description("Create a new review")
-		Payload(ReviewModel, func() {
+		Payload(ReviewPayload, func() {
 			Required("rating")
 		})
 		Response(Created, "^/users/[0-9]+/proposals/[0-9]+/reviews/[0-9]+$")
@@ -243,7 +245,7 @@ var _ = Resource("review", func() {
 		Params(func() {
 			Param("reviewID", Integer)
 		})
-		Payload(ReviewModel)
+		Payload(ReviewPayload)
 		Response(NoContent)
 		Response(NotFound)
 	})

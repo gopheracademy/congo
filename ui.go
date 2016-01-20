@@ -81,7 +81,7 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 	if err == nil {
 		userdb := user.NewUserDB(*c.db)
 		userID = token.Claims["sub"].(int)
-		u, err := userdb.One(ctx, &userID)
+		u, err := userdb.One(ctx, userID)
 		if err == nil {
 			if u.Role != nil && *u.Role == models.ADMIN {
 				admin = true

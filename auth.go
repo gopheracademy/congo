@@ -82,7 +82,7 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 		admin = true
 	}
 	claims := make(map[string]interface{})
-	claims["sub"] = strconv.Itoa(*cuser.ID)
+	claims["sub"] = strconv.Itoa(cuser.ID)
 	claims["provider"] = prov
 	claims["first_name"] = cuser.Firstname
 	t, err := c.tm.Create(claims)
@@ -90,7 +90,7 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	auth.AccessToken = &t
 	*auth.ExpiresIn = 60 // TBD extract from auth response raw data?
 
-	return RenderBootstrap(ctx, *cuser.ID, admin, &auth)
+	return RenderBootstrap(ctx, cuser.ID, admin, &auth)
 }
 
 func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {

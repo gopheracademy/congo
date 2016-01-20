@@ -1,5 +1,5 @@
 //************************************************************************//
-// congo: Models
+// API "congo": Models
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -12,188 +12,71 @@
 package proposal
 
 import (
-	"time"
-
-	"github.com/gopheracademy/congo/models/review"
+	"github.com/gopheracademy/congo/app"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
 
-// app.Proposal storage type
-// Identifier: Proposal
+// Proposal Model
+//  // Stores ProposalPayload
 type Proposal struct {
-	Abstract  *string `json:"abstract,omitempty"`
-	Detail    *string `json:"detail,omitempty"`
-	Firstname *string `json:"firstname,omitempty"`
-	ID        *int    `json:"id,omitempty" gorm:"primary_key"`
-	Title     *string `json:"title,omitempty"`
-	Withdrawn *bool   `json:"withdrawn,omitempty"`
-
-	// Timestamps
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-
-	// Foreign Keys
-	UserID int
-
-	// Children
-	Reviews []review.Review
+	ID        int             `gorm:"primary_key"` // This is the Payload Model PK field
+	Firstname string          //
+	Title     string          //
+	Abstract  string          //
+	Detail    string          //
+	Withdrawn bool            //
+	UserID    User            //
+	Reviews   Review          //
+	CreatedAt date.Timestamp  // timestamp
+	UpdatedAt date.Timestamp  // timestamp
+	DeletedAt *date.Timestamp // nullable timestamp (soft delete)
 }
 
-type ProposalStorage interface {
-	DB() interface{}
-	List(ctx context.Context) []Proposal
-	One(ctx context.Context, id *int) (Proposal, error)
-	Add(ctx context.Context, o Proposal) (Proposal, error)
-	Update(ctx context.Context, o Proposal) error
-	Delete(ctx context.Context, id *int) error
-
-	ListByUser(ctx context.Context, parentid *int) []Proposal
-	OneByUser(ctx context.Context, parentid, id *int) (Proposal, error)
-}
+// ProposalDB is the implementation of the storage interface for Proposal
 type ProposalDB struct {
 	Db gorm.DB
 }
 
-func ProposalFilterByUser(parentid *int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
-	if parentid != nil && *parentid > 0 {
-		return func(db *gorm.DB) *gorm.DB {
-			return db.Where("user_id = ?", parentid)
-		}
-	} else {
-		return func(db *gorm.DB) *gorm.DB {
-			return db
-		}
-	}
-}
-
-func (m *ProposalDB) ListByUser(ctx context.Context, parentid *int) []Proposal {
-
-	var objs []Proposal
-	m.Db.Scopes(ProposalFilterByUser(parentid, &m.Db)).Find(&objs)
-	return objs
-}
-
-func (m *ProposalDB) OneByUser(ctx context.Context, parentid, id *int) (Proposal, error) {
-
-	var obj Proposal
-
-	err := m.Db.Scopes(ProposalFilterByUser(parentid, &m.Db)).Find(&obj, id).Error
-
-	return obj, err
-}
-
+// NewProposalDB creates a new storage type
 func NewProposalDB(db gorm.DB) *ProposalDB {
-
 	return &ProposalDB{Db: db}
-
 }
 
+// DB returns  the underlying database
 func (m *ProposalDB) DB() interface{} {
 	return &m.Db
 }
 
-func (m *ProposalDB) List(ctx context.Context) []Proposal {
-
-	var objs []Proposal
-	m.Db.Find(&objs)
-	return objs
+// Storage Interface
+type ProposalStorage interface {
+	DB() interface{}
+	List(ctx context.Context) []Proposal
+	One(ctx context.Context, id int) (Proposal, error)
+	Add(ctx context.Context, proposal Proposal) (Proposal, error)
+	Update(ctx context.Context, proposal Proposal) error
+	Delete(ctx context.Context, id int) error
+	ListByUser(ctx context.Context, user_id int) []Proposal
+	OneByUser(ctx context.Context, user_id, id int) (Proposal, error)
 }
 
-func (m *ProposalDB) ListByAbstractEqual(ctx context.Context, abstract string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("abstract = ?", abstract).Find(&objs)
-	return objs
-}
-func (m *ProposalDB) ListByAbstractLike(ctx context.Context, abstract string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("abstract like ?", abstract).Find(&objs)
-	return objs
-}
-
-func (m *ProposalDB) ListByDetailEqual(ctx context.Context, detail string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("detail = ?", detail).Find(&objs)
-	return objs
-}
-func (m *ProposalDB) ListByDetailLike(ctx context.Context, detail string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("detail like ?", detail).Find(&objs)
-	return objs
-}
-
-func (m *ProposalDB) ListByFirstnameEqual(ctx context.Context, firstname string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("firstname = ?", firstname).Find(&objs)
-	return objs
-}
-func (m *ProposalDB) ListByFirstnameLike(ctx context.Context, firstname string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("firstname like ?", firstname).Find(&objs)
-	return objs
-}
-
-func (m *ProposalDB) ListByIdEqual(ctx context.Context, id int) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("id = ?", id).Find(&objs)
-	return objs
-}
-func (m *ProposalDB) ListByIdLike(ctx context.Context, id int) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("id like ?", id).Find(&objs)
-	return objs
-}
-
-func (m *ProposalDB) ListByTitleEqual(ctx context.Context, title string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("title = ?", title).Find(&objs)
-	return objs
-}
-func (m *ProposalDB) ListByTitleLike(ctx context.Context, title string) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("title like ?", title).Find(&objs)
-	return objs
-}
-
-func (m *ProposalDB) ListByWithdrawnEqual(ctx context.Context, withdrawn bool) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("withdrawn = ?", withdrawn).Find(&objs)
-	return objs
-}
-func (m *ProposalDB) ListByWithdrawnLike(ctx context.Context, withdrawn bool) []Proposal {
-
-	var objs []Proposal
-	m.Db.Where("withdrawn like ?", withdrawn).Find(&objs)
-	return objs
-}
-
-func (m *ProposalDB) One(ctx context.Context, id *int) (Proposal, error) {
+// CRUD Functions
+// One returns a single record by ID
+func (m *ProposalDB) One(ctx context.Context, id int) (Proposal, error) {
 
 	var obj Proposal
-
 	err := m.Db.Find(&obj, id).Error
 
 	return obj, err
 }
 
+// Add creates a new record
 func (m *ProposalDB) Add(ctx context.Context, model Proposal) (Proposal, error) {
 	err := m.Db.Create(&model).Error
-
 	return model, err
 }
 
+// Update modifies a single record
 func (m *ProposalDB) Update(ctx context.Context, model Proposal) error {
 	obj, err := m.One(ctx, model.ID)
 	if err != nil {
@@ -204,9 +87,9 @@ func (m *ProposalDB) Update(ctx context.Context, model Proposal) error {
 	return err
 }
 
-func (m *ProposalDB) Delete(ctx context.Context, id *int) error {
+// Delete removes a single record
+func (m *ProposalDB) Delete(ctx context.Context, id int) error {
 	var obj Proposal
-
 	err := m.Db.Delete(&obj, id).Error
 
 	if err != nil {
@@ -216,6 +99,37 @@ func (m *ProposalDB) Delete(ctx context.Context, id *int) error {
 	return nil
 }
 
+// Belongs To Relationships
+// ProposalFilterByUser is a gorm filter for a Belongs To relationship
+func ProposalFilterByUser(parentid int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	if parentid > 0 {
+		return func(db *gorm.DB) *gorm.DB {
+			return db.Where("user_id", parentid)
+		}
+	} else {
+		return func(db *gorm.DB) *gorm.DB {
+			return db
+		}
+	}
+}
+
+// ListByUser returns an array of associated User models
+func (m *ProposalDB) ListByUser(ctx context.Context, parentid int) []Proposal {
+	var objs []Proposal
+	m.Db.Scopes(ProposalFilterByUser(parentid, &m.Db)).Find(&objs)
+	return objs
+}
+
+// OneByUser returns a single associated User model
+func (m *ProposalDB) OneByUser(ctx context.Context, parentid, id int) (Proposal, error) {
+
+	var obj Proposal
+	err := m.Db.Scopes(ProposalFilterByUser(parentid, &m.Db)).Find(&obj, id).Error
+
+	return obj, err
+}
+
+// FilterProposalByUser iterates a list and returns only those with the foreign key provided
 func FilterProposalByUser(parent *int, list []Proposal) []Proposal {
 	var filtered []Proposal
 	for _, o := range list {
@@ -224,4 +138,39 @@ func FilterProposalByUser(parent *int, list []Proposal) []Proposal {
 		}
 	}
 	return filtered
+}
+
+// Useful conversion functions
+func (m *ProposalDB) ToProposalPayload() app.ProposalPayload {
+	payload := app.ProposalPayload{}
+	payload.Abstract = m.Abstract
+	payload.Detail = m.Detail
+	payload.Firstname = m.Firstname
+	payload.Title = m.Title
+	payload.Withdrawn = m.Withdrawn
+	return payload
+}
+
+// Convert from	Version v1 CreateProposalPayload to Proposal
+func ProposalFromv1CreateProposalPayload(t CreateProposalPayload) Proposal {
+	proposal := Proposal{}
+	proposal.Abstract = t.Abstract
+	proposal.Detail = t.Detail
+	proposal.Firstname = t.Firstname
+	proposal.Title = t.Title
+	proposal.Withdrawn = t.Withdrawn
+
+	return proposal
+}
+
+// Convert from	Version v1 UpdateProposalPayload to Proposal
+func ProposalFromv1UpdateProposalPayload(t UpdateProposalPayload) Proposal {
+	proposal := Proposal{}
+	proposal.Abstract = t.Abstract
+	proposal.Detail = t.Detail
+	proposal.Firstname = t.Firstname
+	proposal.Title = t.Title
+	proposal.Withdrawn = t.Withdrawn
+
+	return proposal
 }

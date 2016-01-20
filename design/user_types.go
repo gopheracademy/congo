@@ -7,11 +7,7 @@ import (
 
 // UserModel defines the data structure used in the create user request body.
 // It is also the base type for the user media type used to render users.
-var UserModel = Type("UserModel", func() {
-	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#authboss", "All")
-	Metadata("github.com/bketelsen/gorma#roler", "true")
-	Metadata("github.com/bketelsen/gorma#hasmany", "Proposal,Review")
+var UserPayload = Type("UserPayload", func() {
 	Attribute("firstname", func() {
 	})
 	Attribute("lastname", func() {
@@ -28,17 +24,12 @@ var UserModel = Type("UserModel", func() {
 	Attribute("bio", func() {
 		MaxLength(500)
 	})
-	Attribute("role", func() {
-	})
 
 })
 
 // ProposalModel defines the data structure used in the create proposal request body.
 // It is also the base type for the proposal media type used to render users.
-var ProposalModel = Type("ProposalModel", func() {
-	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#belongsto", "User")
-	Metadata("github.com/bketelsen/gorma#hasmany", "Review")
+var ProposalPayload = Type("ProposalPayload", func() {
 	Attribute("firstname", func() {
 		MinLength(2)
 	})
@@ -59,9 +50,7 @@ var ProposalModel = Type("ProposalModel", func() {
 
 // ReviewModel defines the data structure used to create a review request body
 // It is also the base type for the review media type used to render reviews
-var ReviewModel = Type("ReviewModel", func() {
-	Metadata("github.com/bketelsen/gorma", "Model")
-	Metadata("github.com/bketelsen/gorma#belongsto", "Proposal,User")
+var ReviewPayload = Type("ReviewPayload", func() {
 	Attribute("comment", func() {
 		MinLength(10)
 		MaxLength(200)

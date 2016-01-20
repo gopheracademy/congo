@@ -32,7 +32,7 @@ func (c *UserController) Create(ctx *v1.CreateUserContext) error {
 
 // Delete runs the delete action.
 func (c *UserController) Delete(ctx *v1.DeleteUserContext) error {
-	err := c.storage.Delete(ctx, &ctx.UserID)
+	err := c.storage.Delete(ctx, ctx.UserID)
 	if err != nil {
 		return ctx.Err()
 	}
@@ -46,7 +46,8 @@ func (c *UserController) List(ctx *v1.ListUserContext) error {
 	for _, y := range res {
 		fmt.Println(y)
 		nm := y.ToDefault()
-		*nm.Href = v1.UserHref("v1", y.ID)
+		hr := v1.UserHref("v1", y.ID)
+		nm.Href = &hr
 		list = append(list, nm)
 	}
 	return ctx.OK(list)
@@ -54,21 +55,22 @@ func (c *UserController) List(ctx *v1.ListUserContext) error {
 
 // Show runs the show action.
 func (c *UserController) Show(ctx *v1.ShowUserContext) error {
-	res, err := c.storage.One(ctx, &ctx.UserID)
+	res, err := c.storage.One(ctx, ctx.UserID)
 	if err != nil {
 		ctx.Error(err.Error())
 	}
 	m := res.ToDefault()
-	*m.ID = int(*res.ID)
-	*m.Href = v1.UserHref("v1", res.ID)
-
+	i := int(res.ID)
+	m.ID = &i
+	hr := v1.UserHref("v1", res.ID)
+	m.Href = &hr
 	return ctx.OK(m, "default")
 }
 
 // Update runs the update action.
 func (c *UserController) Update(ctx *v1.UpdateUserContext) error {
 	m := user.UserFromV1UpdatePayload(ctx)
-	*m.ID = ctx.UserID
+	m.ID = ctx.UserID
 	err := c.storage.Update(ctx, m)
 	if err != nil {
 		fmt.Println(err)

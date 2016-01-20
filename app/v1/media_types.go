@@ -39,14 +39,6 @@ const (
 	ProposalLinkView ProposalViewEnum = "link"
 )
 
-// LoadProposal loads raw data into an instance of Proposal
-// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
-// complete list of supported data types.
-func LoadProposal(raw interface{}) (res *Proposal, err error) {
-	res, err = UnmarshalProposal(raw, err)
-	return
-}
-
 // Dump produces raw data from an instance of Proposal running all the
 // validations. See LoadProposal for the definition of raw data.
 func (mt *Proposal) Dump(view ProposalViewEnum) (res map[string]interface{}, err error) {
@@ -99,16 +91,17 @@ func (mt *Proposal) Validate() (err error) {
 func MarshalProposal(source *Proposal, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if err2 := source.Validate(); err2 != nil {
-		return nil, goa.ReportError(err, err2)
+		err = goa.ReportError(err, err2)
+		return
 	}
-	tmp102 := map[string]interface{}{
+	tmp30 := map[string]interface{}{
 		"abstract": source.Abstract,
 		"detail":   source.Detail,
 		"href":     source.Href,
 		"id":       source.ID,
 		"title":    source.Title,
 	}
-	target = tmp102
+	target = tmp30
 	return
 }
 
@@ -117,94 +110,15 @@ func MarshalProposal(source *Proposal, inErr error) (target map[string]interface
 func MarshalProposalLink(source *Proposal, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if err2 := source.Validate(); err2 != nil {
-		return nil, goa.ReportError(err, err2)
+		err = goa.ReportError(err, err2)
+		return
 	}
-	tmp103 := map[string]interface{}{
+	tmp31 := map[string]interface{}{
 		"href":  source.Href,
 		"id":    source.ID,
 		"title": source.Title,
 	}
-	target = tmp103
-	return
-}
-
-// UnmarshalProposal unmarshals and validates a raw interface{} into an instance of Proposal
-func UnmarshalProposal(source interface{}, inErr error) (target *Proposal, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(Proposal)
-		if v, ok := val["abstract"]; ok {
-			var tmp104 string
-			if val, ok := v.(string); ok {
-				tmp104 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Abstract`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp104) < 50 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp104, len(tmp104), 50, true, err)
-				}
-				if len(tmp104) > 500 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp104, len(tmp104), 500, false, err)
-				}
-			}
-			target.Abstract = &tmp104
-		}
-		if v, ok := val["detail"]; ok {
-			var tmp105 string
-			if val, ok := v.(string); ok {
-				tmp105 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Detail`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp105) < 100 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp105, len(tmp105), 100, true, err)
-				}
-				if len(tmp105) > 2000 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp105, len(tmp105), 2000, false, err)
-				}
-			}
-			target.Detail = &tmp105
-		}
-		if v, ok := val["href"]; ok {
-			var tmp106 string
-			if val, ok := v.(string); ok {
-				tmp106 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
-			}
-			target.Href = &tmp106
-		}
-		if v, ok := val["id"]; ok {
-			var tmp107 int
-			if f, ok := v.(float64); ok {
-				tmp107 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = &tmp107
-		}
-		if v, ok := val["title"]; ok {
-			var tmp108 string
-			if val, ok := v.(string); ok {
-				tmp108 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Title`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp108) < 10 {
-					err = goa.InvalidLengthError(`load.Title`, tmp108, len(tmp108), 10, true, err)
-				}
-				if len(tmp108) > 200 {
-					err = goa.InvalidLengthError(`load.Title`, tmp108, len(tmp108), 200, false, err)
-				}
-			}
-			target.Title = &tmp108
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
-	}
+	target = tmp31
 	return
 }
 
@@ -212,22 +126,14 @@ func UnmarshalProposal(source interface{}, inErr error) (target *Proposal, err e
 // Identifier: application/vnd.proposal+json; type=collection
 type ProposalCollection []*Proposal
 
-// LoadProposalCollection loads raw data into an instance of ProposalCollection
-// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
-// complete list of supported data types.
-func LoadProposalCollection(raw interface{}) (res ProposalCollection, err error) {
-	res, err = UnmarshalProposalCollection(raw, err)
-	return
-}
-
 // Dump produces raw data from an instance of ProposalCollection running all the
 // validations. See LoadProposalCollection for the definition of raw data.
 func (mt ProposalCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp109 := range mt {
-		var tmp110 map[string]interface{}
-		tmp110, err = MarshalProposal(tmp109, err)
-		res[i] = tmp110
+	for i, tmp32 := range mt {
+		var tmp33 map[string]interface{}
+		tmp33, err = MarshalProposal(tmp32, err)
+		res[i] = tmp33
 	}
 	return
 }
@@ -280,20 +186,6 @@ func MarshalProposalCollection(source ProposalCollection, inErr error) (target [
 	return
 }
 
-// UnmarshalProposalCollection unmarshals and validates a raw interface{} into an instance of ProposalCollection
-func UnmarshalProposalCollection(source interface{}, inErr error) (target ProposalCollection, err error) {
-	err = inErr
-	if val, ok := source.([]interface{}); ok {
-		target = make([]*Proposal, len(val))
-		for tmp111, v := range val {
-			target[tmp111], err = UnmarshalProposal(v, err)
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)
-	}
-	return
-}
-
 // A review is submitted by a reviewer
 // Identifier: application/vnd.review+json
 type Review struct {
@@ -316,14 +208,6 @@ const (
 	// Review link view
 	ReviewLinkView ReviewViewEnum = "link"
 )
-
-// LoadReview loads raw data into an instance of Review
-// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
-// complete list of supported data types.
-func LoadReview(raw interface{}) (res *Review, err error) {
-	res, err = UnmarshalReview(raw, err)
-	return
-}
 
 // Dump produces raw data from an instance of Review running all the
 // validations. See LoadReview for the definition of raw data.
@@ -367,15 +251,16 @@ func (mt *Review) Validate() (err error) {
 func MarshalReview(source *Review, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
 	if err2 := source.Validate(); err2 != nil {
-		return nil, goa.ReportError(err, err2)
+		err = goa.ReportError(err, err2)
+		return
 	}
-	tmp112 := map[string]interface{}{
+	tmp34 := map[string]interface{}{
 		"comment": source.Comment,
 		"href":    source.Href,
 		"id":      source.ID,
 		"rating":  source.Rating,
 	}
-	target = tmp112
+	target = tmp34
 	return
 }
 
@@ -383,74 +268,11 @@ func MarshalReview(source *Review, inErr error) (target map[string]interface{}, 
 // using view "link".
 func MarshalReviewLink(source *Review, inErr error) (target map[string]interface{}, err error) {
 	err = inErr
-	tmp113 := map[string]interface{}{
+	tmp35 := map[string]interface{}{
 		"href": source.Href,
 		"id":   source.ID,
 	}
-	target = tmp113
-	return
-}
-
-// UnmarshalReview unmarshals and validates a raw interface{} into an instance of Review
-func UnmarshalReview(source interface{}, inErr error) (target *Review, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(Review)
-		if v, ok := val["comment"]; ok {
-			var tmp114 string
-			if val, ok := v.(string); ok {
-				tmp114 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Comment`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp114) < 10 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp114, len(tmp114), 10, true, err)
-				}
-				if len(tmp114) > 200 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp114, len(tmp114), 200, false, err)
-				}
-			}
-			target.Comment = &tmp114
-		}
-		if v, ok := val["href"]; ok {
-			var tmp115 string
-			if val, ok := v.(string); ok {
-				tmp115 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Href`, v, "string", err)
-			}
-			target.Href = &tmp115
-		}
-		if v, ok := val["id"]; ok {
-			var tmp116 int
-			if f, ok := v.(float64); ok {
-				tmp116 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.ID`, v, "int", err)
-			}
-			target.ID = &tmp116
-		}
-		if v, ok := val["rating"]; ok {
-			var tmp117 int
-			if f, ok := v.(float64); ok {
-				tmp117 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Rating`, v, "int", err)
-			}
-			if err == nil {
-				if tmp117 < 1 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp117, 1, true, err)
-				}
-				if tmp117 > 5 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp117, 5, false, err)
-				}
-			}
-			target.Rating = &tmp117
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
-	}
+	target = tmp35
 	return
 }
 
@@ -458,22 +280,14 @@ func UnmarshalReview(source interface{}, inErr error) (target *Review, err error
 // Identifier: application/vnd.review+json; type=collection
 type ReviewCollection []*Review
 
-// LoadReviewCollection loads raw data into an instance of ReviewCollection
-// into a variable of type interface{}. See https://golang.org/pkg/encoding/json/#Unmarshal for the
-// complete list of supported data types.
-func LoadReviewCollection(raw interface{}) (res ReviewCollection, err error) {
-	res, err = UnmarshalReviewCollection(raw, err)
-	return
-}
-
 // Dump produces raw data from an instance of ReviewCollection running all the
 // validations. See LoadReviewCollection for the definition of raw data.
 func (mt ReviewCollection) Dump() (res []map[string]interface{}, err error) {
 	res = make([]map[string]interface{}, len(mt))
-	for i, tmp118 := range mt {
-		var tmp119 map[string]interface{}
-		tmp119, err = MarshalReview(tmp118, err)
-		res[i] = tmp119
+	for i, tmp36 := range mt {
+		var tmp37 map[string]interface{}
+		tmp37, err = MarshalReview(tmp36, err)
+		res[i] = tmp37
 	}
 	return
 }
@@ -516,16 +330,159 @@ func MarshalReviewCollection(source ReviewCollection, inErr error) (target []map
 	return
 }
 
-// UnmarshalReviewCollection unmarshals and validates a raw interface{} into an instance of ReviewCollection
-func UnmarshalReviewCollection(source interface{}, inErr error) (target ReviewCollection, err error) {
-	err = inErr
-	if val, ok := source.([]interface{}); ok {
-		target = make([]*Review, len(val))
-		for tmp120, v := range val {
-			target[tmp120], err = UnmarshalReview(v, err)
+// A user belonging to a tenant account
+// Identifier: application/vnd.user+json
+type User struct {
+	// Biography of user
+	Bio *string
+	// City of residence
+	City *string
+	// Country of residence
+	Country *string
+	// Email address of user
+	Email *string
+	// First name of user
+	Firstname *string
+	// API href of user
+	Href *string
+	// ID of user
+	ID *int
+	// Last name of user
+	Lastname *string
+	// Role of user
+	Role *string
+	// State of residence
+	State *string
+}
+
+// User views
+type UserViewEnum string
+
+const (
+	// User default view
+	UserDefaultView UserViewEnum = "default"
+	// User link view
+	UserLinkView UserViewEnum = "link"
+)
+
+// Dump produces raw data from an instance of User running all the
+// validations. See LoadUser for the definition of raw data.
+func (mt *User) Dump(view UserViewEnum) (res map[string]interface{}, err error) {
+	if view == UserDefaultView {
+		res, err = MarshalUser(mt, err)
+	}
+	if view == UserLinkView {
+		res, err = MarshalUserLink(mt, err)
+	}
+	return
+}
+
+// Validate validates the media type instance.
+func (mt *User) Validate() (err error) {
+	if mt.Bio != nil {
+		if len(*mt.Bio) > 500 {
+			err = goa.InvalidLengthError(`response.bio`, *mt.Bio, len(*mt.Bio), 500, false, err)
 		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "array", err)
+	}
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
+		}
+	}
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
+		}
+	}
+	return
+}
+
+// MarshalUser validates and renders an instance of User into a interface{}
+// using view "default".
+func MarshalUser(source *User, inErr error) (target map[string]interface{}, err error) {
+	err = inErr
+	if err2 := source.Validate(); err2 != nil {
+		err = goa.ReportError(err, err2)
+		return
+	}
+	tmp38 := map[string]interface{}{
+		"bio":       source.Bio,
+		"city":      source.City,
+		"country":   source.Country,
+		"email":     source.Email,
+		"firstname": source.Firstname,
+		"href":      source.Href,
+		"id":        source.ID,
+		"lastname":  source.Lastname,
+		"role":      source.Role,
+		"state":     source.State,
+	}
+	target = tmp38
+	return
+}
+
+// MarshalUserLink validates and renders an instance of User into a interface{}
+// using view "link".
+func MarshalUserLink(source *User, inErr error) (target map[string]interface{}, err error) {
+	err = inErr
+	if err2 := source.Validate(); err2 != nil {
+		err = goa.ReportError(err, err2)
+		return
+	}
+	tmp39 := map[string]interface{}{
+		"email": source.Email,
+		"href":  source.Href,
+		"id":    source.ID,
+	}
+	target = tmp39
+	return
+}
+
+// UserCollection media type
+// Identifier: application/vnd.user+json; type=collection
+type UserCollection []*User
+
+// Dump produces raw data from an instance of UserCollection running all the
+// validations. See LoadUserCollection for the definition of raw data.
+func (mt UserCollection) Dump() (res []map[string]interface{}, err error) {
+	res = make([]map[string]interface{}, len(mt))
+	for i, tmp40 := range mt {
+		var tmp41 map[string]interface{}
+		tmp41, err = MarshalUser(tmp40, err)
+		res[i] = tmp41
+	}
+	return
+}
+
+// Validate validates the media type instance.
+func (mt UserCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e.Bio != nil {
+			if len(*e.Bio) > 500 {
+				err = goa.InvalidLengthError(`response[*].bio`, *e.Bio, len(*e.Bio), 500, false, err)
+			}
+		}
+		if e.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *e.Email); err2 != nil {
+				err = goa.InvalidFormatError(`response[*].email`, *e.Email, goa.FormatEmail, err2, err)
+			}
+		}
+		if e.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *e.Email); err2 != nil {
+				err = goa.InvalidFormatError(`response[*].email`, *e.Email, goa.FormatEmail, err2, err)
+			}
+		}
+	}
+	return
+}
+
+// MarshalUserCollection validates and renders an instance of UserCollection into a interface{}
+// using view "default".
+func MarshalUserCollection(source UserCollection, inErr error) (target []map[string]interface{}, err error) {
+	err = inErr
+	target = make([]map[string]interface{}, len(source))
+	for i, res := range source {
+		target[i], err = MarshalUser(res, err)
 	}
 	return
 }
