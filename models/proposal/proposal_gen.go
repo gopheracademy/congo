@@ -13,6 +13,8 @@ package proposal
 
 import (
 	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/app/v1"
+	"github.com/gopheracademy/congo/models/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -21,15 +23,15 @@ import (
 //  // Stores ProposalPayload
 type Proposal struct {
 	ID        int             `gorm:"primary_key"` // This is the Payload Model PK field
-	Firstname string          //
-	Title     string          //
-	Abstract  string          //
 	Detail    string          //
+	Title     string          //
 	Withdrawn bool            //
-	UserID    User            //
-	Reviews   Review          //
-	CreatedAt date.Timestamp  // timestamp
+	UserID    int             // belongs to User
+	Firstname string          //
+	Reviews   []review.Review // has many Reviews
+	Abstract  string          //
 	UpdatedAt date.Timestamp  // timestamp
+	CreatedAt date.Timestamp  // timestamp
 	DeletedAt *date.Timestamp // nullable timestamp (soft delete)
 }
 
@@ -143,34 +145,32 @@ func FilterProposalByUser(parent *int, list []Proposal) []Proposal {
 // Useful conversion functions
 func (m *ProposalDB) ToProposalPayload() app.ProposalPayload {
 	payload := app.ProposalPayload{}
-	payload.Abstract = m.Abstract
-	payload.Detail = m.Detail
-	payload.Firstname = m.Firstname
-	payload.Title = m.Title
-	payload.Withdrawn = m.Withdrawn
+	*payload.Withdrawn = m.Withdrawn
+	*payload.Abstract = m.Abstract
+	*payload.Detail = m.Detail
+	*payload.Title = m.Title
+	*payload.Firstname = m.Firstname
 	return payload
 }
 
 // Convert from	Version v1 CreateProposalPayload to Proposal
-func ProposalFromv1CreateProposalPayload(t CreateProposalPayload) Proposal {
+func ProposalFromv1CreateProposalPayload(t v1.CreateProposalPayload) Proposal {
 	proposal := Proposal{}
-	proposal.Abstract = t.Abstract
-	proposal.Detail = t.Detail
-	proposal.Firstname = t.Firstname
-	proposal.Title = t.Title
-	proposal.Withdrawn = t.Withdrawn
-
+	*proposal.Firstname = m.Firstname
+	proposal.Abstract = m.Abstract
+	proposal.Detail = m.Detail
+	proposal.Title = m.Title
+	*proposal.Withdrawn = m.Withdrawn
 	return proposal
 }
 
 // Convert from	Version v1 UpdateProposalPayload to Proposal
-func ProposalFromv1UpdateProposalPayload(t UpdateProposalPayload) Proposal {
+func ProposalFromv1UpdateProposalPayload(t v1.UpdateProposalPayload) Proposal {
 	proposal := Proposal{}
-	proposal.Abstract = t.Abstract
-	proposal.Detail = t.Detail
-	proposal.Firstname = t.Firstname
-	proposal.Title = t.Title
-	proposal.Withdrawn = t.Withdrawn
-
+	*proposal.Abstract = m.Abstract
+	*proposal.Detail = m.Detail
+	*proposal.Title = m.Title
+	*proposal.Withdrawn = m.Withdrawn
+	*proposal.Firstname = m.Firstname
 	return proposal
 }

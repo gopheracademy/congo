@@ -13,6 +13,7 @@ package review
 
 import (
 	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/app/v1"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -21,10 +22,10 @@ import (
 //  // Stores ReviewPayload
 type Review struct {
 	ID         int             `gorm:"primary_key"` // This is the Review Model PK field
-	UserID     User            //
-	ProposalID Proposal        //
 	Comment    string          //
 	Rating     int             //
+	UserID     int             // belongs to User
+	ProposalID int             // belongs to Proposal
 	DeletedAt  *date.Timestamp // nullable timestamp (soft delete)
 	CreatedAt  date.Timestamp  // timestamp
 	UpdatedAt  date.Timestamp  // timestamp
@@ -183,25 +184,23 @@ func FilterReviewByUser(parent *int, list []Review) []Review {
 // Useful conversion functions
 func (m *ReviewDB) ToReviewPayload() app.ReviewPayload {
 	payload := app.ReviewPayload{}
-	payload.Comment = m.Comment
-	payload.Rating = m.Rating
+	*payload.Comment = m.Comment
+	*payload.Rating = m.Rating
 	return payload
 }
 
 // Convert from	Version v1 CreateReviewPayload to Review
-func ReviewFromv1CreateReviewPayload(t CreateReviewPayload) Review {
+func ReviewFromv1CreateReviewPayload(t v1.CreateReviewPayload) Review {
 	review := Review{}
-	review.Comment = t.Comment
-	review.Rating = t.Rating
-
+	*review.Comment = m.Comment
+	review.Rating = m.Rating
 	return review
 }
 
 // Convert from	Version v1 UpdateReviewPayload to Review
-func ReviewFromv1UpdateReviewPayload(t UpdateReviewPayload) Review {
+func ReviewFromv1UpdateReviewPayload(t v1.UpdateReviewPayload) Review {
 	review := Review{}
-	review.Comment = t.Comment
-	review.Rating = t.Rating
-
+	*review.Rating = m.Rating
+	*review.Comment = m.Comment
 	return review
 }

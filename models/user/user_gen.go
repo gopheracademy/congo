@@ -13,6 +13,9 @@ package user
 
 import (
 	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/app/v1"
+	"github.com/gopheracademy/congo/models/proposal"
+	"github.com/gopheracademy/congo/models/review"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/net/context"
 )
@@ -20,19 +23,19 @@ import (
 // User Model
 //  // Stores UserPayload
 type User struct {
-	ID        int             `gorm:"primary_key"` // This is the User Model PK field
-	Bio       string          //
-	City      string          //
-	Reviews   Review          //
-	Email     string          //
-	Firstname string          //
-	State     string          //
-	Lastname  string          //
-	Proposals Proposal        //
-	Country   string          //
-	UpdatedAt date.Timestamp  // timestamp
-	DeletedAt *date.Timestamp // nullable timestamp (soft delete)
-	CreatedAt date.Timestamp  // timestamp
+	ID        int                 `gorm:"primary_key"` // This is the User Model PK field
+	Lastname  string              //
+	Firstname string              //
+	Bio       string              //
+	Reviews   []review.Review     // has many Reviews
+	Proposals []proposal.Proposal // has many Proposals
+	City      string              //
+	Country   string              //
+	State     string              //
+	Email     string              //
+	UpdatedAt date.Timestamp      // timestamp
+	DeletedAt *date.Timestamp     // nullable timestamp (soft delete)
+	CreatedAt date.Timestamp      // timestamp
 }
 
 // UserDB is the implementation of the storage interface for User
@@ -102,40 +105,38 @@ func (m *UserDB) Delete(ctx context.Context, id int) error {
 // Useful conversion functions
 func (m *UserDB) ToUserPayload() app.UserPayload {
 	payload := app.UserPayload{}
-	payload.Bio = m.Bio
-	payload.City = m.City
-	payload.Country = m.Country
-	payload.Email = m.Email
-	payload.Firstname = m.Firstname
-	payload.Lastname = m.Lastname
-	payload.State = m.State
+	*payload.City = m.City
+	*payload.Country = m.Country
+	*payload.Firstname = m.Firstname
+	*payload.State = m.State
+	*payload.Bio = m.Bio
+	*payload.Email = m.Email
+	*payload.Lastname = m.Lastname
 	return payload
 }
 
 // Convert from	Version v1 CreateUserPayload to User
-func UserFromv1CreateUserPayload(t CreateUserPayload) User {
+func UserFromv1CreateUserPayload(t v1.CreateUserPayload) User {
 	user := User{}
-	user.Bio = t.Bio
-	user.City = t.City
-	user.Country = t.Country
-	user.Email = t.Email
-	user.Firstname = t.Firstname
-	user.Lastname = t.Lastname
-	user.State = t.State
-
+	user.Email = m.Email
+	user.Lastname = m.Lastname
+	*user.Bio = m.Bio
+	*user.Country = m.Country
+	user.Firstname = m.Firstname
+	*user.State = m.State
+	*user.City = m.City
 	return user
 }
 
 // Convert from	Version v1 UpdateUserPayload to User
-func UserFromv1UpdateUserPayload(t UpdateUserPayload) User {
+func UserFromv1UpdateUserPayload(t v1.UpdateUserPayload) User {
 	user := User{}
-	user.Bio = t.Bio
-	user.City = t.City
-	user.Country = t.Country
-	user.Email = t.Email
-	user.Firstname = t.Firstname
-	user.Lastname = t.Lastname
-	user.State = t.State
-
+	*user.Bio = m.Bio
+	user.Email = m.Email
+	*user.Lastname = m.Lastname
+	*user.City = m.City
+	*user.Country = m.Country
+	*user.Firstname = m.Firstname
+	*user.State = m.State
 	return user
 }
