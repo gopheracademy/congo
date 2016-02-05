@@ -12,64 +12,123 @@
 
 package app
 
+import "github.com/goadesign/goa"
+
 // Token authorization response
 // Identifier: application/vnd.authorize+json
 type Authorize struct {
 	// access token
-	AccessToken *string
+	AccessToken *string `json:"access_token,omitempty" xml:"access_token,omitempty"`
 	// Time to expiration in seconds
-	ExpiresIn *int
+	ExpiresIn *int `json:"expires_in,omitempty" xml:"expires_in,omitempty"`
 	// type of token
-	TokenType *string
-}
-
-// Dump produces raw data from an instance of Authorize running all the
-// validations. See LoadAuthorize for the definition of raw data.
-func (mt *Authorize) Dump() (res map[string]interface{}, err error) {
-	res, err = MarshalAuthorize(mt, err)
-	return
-}
-
-// MarshalAuthorize validates and renders an instance of Authorize into a interface{}
-// using view "default".
-func MarshalAuthorize(source *Authorize, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	tmp1 := map[string]interface{}{
-		"access_token": source.AccessToken,
-		"expires_in":   source.ExpiresIn,
-		"token_type":   source.TokenType,
-	}
-	target = tmp1
-	return
+	TokenType *string `json:"token_type,omitempty" xml:"token_type,omitempty"`
 }
 
 // Login media type
 // Identifier: application/vnd.login+json
 type Login struct {
 	// UUID of requesting application
-	Application *string
+	Application *string `json:"application,omitempty" xml:"application,omitempty"`
 	// email
-	Email *string
+	Email *string `json:"email,omitempty" xml:"email,omitempty"`
 	// password
-	Password *string
+	Password *string `json:"password,omitempty" xml:"password,omitempty"`
 }
 
-// Dump produces raw data from an instance of Login running all the
-// validations. See LoadLogin for the definition of raw data.
-func (mt *Login) Dump() (res map[string]interface{}, err error) {
-	res, err = MarshalLogin(mt, err)
+// A user belonging to a tenant account
+// Identifier: application/vnd.user+json
+type User struct {
+	// Biography of user
+	Bio *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	// City of residence
+	City *string `json:"city,omitempty" xml:"city,omitempty"`
+	// Country of residence
+	Country *string `json:"country,omitempty" xml:"country,omitempty"`
+	// Email address of user
+	Email *string `json:"email,omitempty" xml:"email,omitempty"`
+	// First name of user
+	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
+	// API href of user
+	Href *string `json:"href,omitempty" xml:"href,omitempty"`
+	// ID of user
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+	// Last name of user
+	Lastname *string `json:"lastname,omitempty" xml:"lastname,omitempty"`
+	// Role of user
+	Role *string `json:"role,omitempty" xml:"role,omitempty"`
+	// State of residence
+	State *string `json:"state,omitempty" xml:"state,omitempty"`
+}
+
+// Validate validates the media type instance.
+func (mt *User) Validate() (err error) {
+	if mt.Bio != nil {
+		if len(*mt.Bio) > 500 {
+			err = goa.InvalidLengthError(`response.bio`, *mt.Bio, len(*mt.Bio), 500, false, err)
+		}
+	}
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
+		}
+	}
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
+		}
+	}
 	return
 }
 
-// MarshalLogin validates and renders an instance of Login into a interface{}
-// using view "default".
-func MarshalLogin(source *Login, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	tmp2 := map[string]interface{}{
-		"application": source.Application,
-		"email":       source.Email,
-		"password":    source.Password,
+// A user belonging to a tenant account, link view
+// Identifier: application/vnd.user+json
+type UserLink struct {
+	// Email address of user
+	Email *string `json:"email,omitempty" xml:"email,omitempty"`
+	// API href of user
+	Href *string `json:"href,omitempty" xml:"href,omitempty"`
+	// ID of user
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+}
+
+// Validate validates the media type instance.
+func (mt *UserLink) Validate() (err error) {
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
+		}
 	}
-	target = tmp2
+	if mt.Email != nil {
+		if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email); err2 != nil {
+			err = goa.InvalidFormatError(`response.email`, *mt.Email, goa.FormatEmail, err2, err)
+		}
+	}
+	return
+}
+
+// , default view
+// Identifier: application/vnd.user+json; type=collection
+type UserCollection []*User
+
+// Validate validates the media type instance.
+func (mt UserCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e.Bio != nil {
+			if len(*e.Bio) > 500 {
+				err = goa.InvalidLengthError(`response[*].bio`, *e.Bio, len(*e.Bio), 500, false, err)
+			}
+		}
+		if e.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *e.Email); err2 != nil {
+				err = goa.InvalidFormatError(`response[*].email`, *e.Email, goa.FormatEmail, err2, err)
+			}
+		}
+		if e.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *e.Email); err2 != nil {
+				err = goa.InvalidFormatError(`response[*].email`, *e.Email, goa.FormatEmail, err2, err)
+			}
+		}
+	}
 	return
 }

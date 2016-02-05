@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/goadesign/goa"
 	"github.com/gopheracademy/congo/app/v1"
-	"github.com/raphael/goa"
 )
 
 // ReviewController implements the review resource.

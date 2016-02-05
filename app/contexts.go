@@ -12,11 +12,7 @@
 
 package app
 
-import (
-	"fmt"
-
-	"github.com/raphael/goa"
-)
+import "github.com/goadesign/goa"
 
 // CallbackAuthContext provides the auth callback action context.
 type CallbackAuthContext struct {
@@ -43,6 +39,7 @@ func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
 
 // OK sends a HTTP response with status code 200.
 func (ctx *CallbackAuthContext) OK(resp []byte) error {
+	ctx.Header().Set("Content-Type", "text/html")
 	return ctx.RespondBytes(200, resp)
 }
 
@@ -71,12 +68,8 @@ func NewOauthAuthContext(c *goa.Context) (*OauthAuthContext, error) {
 
 // OK sends a HTTP response with status code 200.
 func (ctx *OauthAuthContext) OK(resp *Authorize) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.Respond(200, r)
+	ctx.Header().Set("Content-Type", "application/vnd.authorize")
+	return ctx.Respond(200, resp)
 }
 
 // RefreshAuthContext provides the auth refresh action context.
@@ -101,21 +94,17 @@ func NewRefreshAuthContext(c *goa.Context) (*RefreshAuthContext, error) {
 // RefreshAuthPayload is the auth refresh action payload.
 type RefreshAuthPayload struct {
 	// UUID of requesting application
-	Application *string
+	Application *string `json:"application,omitempty" xml:"application,omitempty"`
 	// email
-	Email *string
+	Email *string `json:"email,omitempty" xml:"email,omitempty"`
 	// password
-	Password *string
+	Password *string `json:"password,omitempty" xml:"password,omitempty"`
 }
 
 // Created sends a HTTP response with status code 201.
 func (ctx *RefreshAuthContext) Created(resp *Authorize) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.Respond(201, r)
+	ctx.Header().Set("Content-Type", "application/vnd.authorize+json")
+	return ctx.Respond(201, resp)
 }
 
 // TokenAuthContext provides the auth token action context.
@@ -140,21 +129,17 @@ func NewTokenAuthContext(c *goa.Context) (*TokenAuthContext, error) {
 // TokenAuthPayload is the auth token action payload.
 type TokenAuthPayload struct {
 	// UUID of requesting application
-	Application *string
+	Application *string `json:"application,omitempty" xml:"application,omitempty"`
 	// email
-	Email *string
+	Email *string `json:"email,omitempty" xml:"email,omitempty"`
 	// password
-	Password *string
+	Password *string `json:"password,omitempty" xml:"password,omitempty"`
 }
 
 // Created sends a HTTP response with status code 201.
 func (ctx *TokenAuthContext) Created(resp *Authorize) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.authorize+json; charset=utf-8")
-	return ctx.Respond(201, r)
+	ctx.Header().Set("Content-Type", "application/vnd.authorize+json")
+	return ctx.Respond(201, resp)
 }
 
 // BootstrapUiContext provides the ui bootstrap action context.
@@ -172,5 +157,6 @@ func NewBootstrapUiContext(c *goa.Context) (*BootstrapUiContext, error) {
 
 // OK sends a HTTP response with status code 200.
 func (ctx *BootstrapUiContext) OK(resp []byte) error {
+	ctx.Header().Set("Content-Type", "text/html")
 	return ctx.RespondBytes(200, resp)
 }

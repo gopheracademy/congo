@@ -3,25 +3,25 @@ package main
 import (
 	"fmt"
 
+	"github.com/goadesign/goa"
 	"github.com/gopheracademy/congo/app/v1"
-	"github.com/gopheracademy/congo/models/proposal"
-	"github.com/raphael/goa"
+	"github.com/gopheracademy/congo/genmodels"
 )
 
 // ProposalController implements the proposal resource.
 type ProposalController struct {
 	goa.Controller
-	storage proposal.ProposalStorage
+	storage genmodels.ProposalStorage
 }
 
 // NewProposalController creates a account controller.
-func NewProposalController(service goa.Service, storage proposal.ProposalStorage) v1.ProposalController {
+func NewProposalController(service goa.Service, storage genmodels.ProposalStorage) v1.ProposalController {
 	return &ProposalController{storage: storage, Controller: service.NewController("ProposalController")}
 }
 
 // Create runs the create action.
 func (c *ProposalController) Create(ctx *v1.CreateProposalContext) error {
-	m, err := c.storage.Add(ctx, proposal.ProposalFromV1CreatePayload(ctx))
+	m, err := c.storage.Add(ctx, genmodels.ProposalFromV1CreatePayload(ctx))
 	if err != nil {
 		return ctx.Err()
 	}

@@ -1,15 +1,14 @@
 package design
 
 import (
-	. "github.com/raphael/goa/design"
-	. "github.com/raphael/goa/design/dsl"
+	. "github.com/goadesign/goa/design"
+	. "github.com/goadesign/goa/design/apidsl"
 )
 
 // User is the user resource media type.
 var User = MediaType("application/vnd.user+json", func() {
 	Description("A user belonging to a tenant account")
 	Reference(UserPayload)
-	APIVersion("v1")
 	Attributes(func() {
 		Attribute("id", Integer, "ID of user")
 		Attribute("href", String, "API href of user")

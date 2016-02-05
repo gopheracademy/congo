@@ -3,26 +3,26 @@ package main
 import (
 	"fmt"
 
+	"github.com/goadesign/goa"
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/app/v1"
-	"github.com/gopheracademy/congo/models/user"
-	"github.com/raphael/goa"
+	"github.com/gopheracademy/congo/genmodels"
 )
 
 // UserController implements the account resource.
 type UserController struct {
 	goa.Controller
-	storage user.UserStorage
+	storage genmodels.UserStorage
 }
 
 // NewUserController creates a account controller.
-func NewUserController(service goa.Service, storage user.UserStorage) v1.UserController {
+func NewUserController(service goa.Service, storage genmodels.UserStorage) v1.UserController {
 	return &UserController{storage: storage, Controller: service.NewController("UserController")}
 }
 
 // Create runs the create action.
 func (c *UserController) Create(ctx *v1.CreateUserContext) error {
-	m, err := c.storage.Add(ctx, user.UserFromV1CreatePayload(ctx))
+	m, err := c.storage.Add(ctx, genmodels.UserFromV1CreatePayload(ctx))
 	if err != nil {
 		return ctx.Err()
 	}

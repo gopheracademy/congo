@@ -6,12 +6,11 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/goadesign/goa"
+	"github.com/goadesign/middleware/jwt"
 	"github.com/gopheracademy/congo/app"
-	"github.com/gopheracademy/congo/models"
-	"github.com/gopheracademy/congo/models/user"
+	"github.com/gopheracademy/congo/genmodels"
 	"github.com/jinzhu/gorm"
-	"github.com/raphael/goa"
-	"github.com/raphael/goa-middleware/jwt"
 )
 
 // Template used to render bootstrap page.
@@ -79,11 +78,11 @@ func (c *UIController) Bootstrap(ctx *app.BootstrapUiContext) error {
 	var auth *app.Authorize
 	token, err := jwt.GetToken(ctx.Context, jwtSpec)
 	if err == nil {
-		userdb := user.NewUserDB(*c.db)
+		userdb := genmodels.NewUserDB(*c.db)
 		userID = token.Claims["sub"].(int)
 		u, err := userdb.One(ctx, userID)
 		if err == nil {
-			if u.Role != nil && *u.Role == models.ADMIN {
+			if u.Role != nil && *u.Role == genmodels.ADMIN {
 				admin = true
 			}
 			auth = &app.Authorize{

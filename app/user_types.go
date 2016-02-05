@@ -12,15 +12,15 @@
 
 package app
 
-import "github.com/raphael/goa"
+import "github.com/goadesign/goa"
 
 // ProposalPayload type
 type ProposalPayload struct {
-	Abstract  *string
-	Detail    *string
-	Firstname *string
-	Title     *string
-	Withdrawn *bool
+	Abstract  *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail    *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
+	Title     *string `json:"title,omitempty" xml:"title,omitempty"`
+	Withdrawn *bool   `json:"withdrawn,omitempty" xml:"withdrawn,omitempty"`
 }
 
 // Validate validates the type instance.
@@ -63,28 +63,10 @@ func (ut *ProposalPayload) Validate() (err error) {
 	return
 }
 
-// MarshalProposalPayload validates and renders an instance of ProposalPayload into a interface{}
-func MarshalProposalPayload(source *ProposalPayload, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if err2 := source.Validate(); err2 != nil {
-		err = goa.ReportError(err, err2)
-		return
-	}
-	tmp3 := map[string]interface{}{
-		"abstract":  source.Abstract,
-		"detail":    source.Detail,
-		"firstname": source.Firstname,
-		"title":     source.Title,
-		"withdrawn": source.Withdrawn,
-	}
-	target = tmp3
-	return
-}
-
 // ReviewPayload type
 type ReviewPayload struct {
-	Comment *string
-	Rating  *int
+	Comment *string `json:"comment,omitempty" xml:"comment,omitempty"`
+	Rating  *int    `json:"rating,omitempty" xml:"rating,omitempty"`
 }
 
 // Validate validates the type instance.
@@ -112,30 +94,15 @@ func (ut *ReviewPayload) Validate() (err error) {
 	return
 }
 
-// MarshalReviewPayload validates and renders an instance of ReviewPayload into a interface{}
-func MarshalReviewPayload(source *ReviewPayload, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if err2 := source.Validate(); err2 != nil {
-		err = goa.ReportError(err, err2)
-		return
-	}
-	tmp4 := map[string]interface{}{
-		"comment": source.Comment,
-		"rating":  source.Rating,
-	}
-	target = tmp4
-	return
-}
-
 // UserPayload type
 type UserPayload struct {
-	Bio       *string
-	City      *string
-	Country   *string
-	Email     *string
-	Firstname *string
-	Lastname  *string
-	State     *string
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	City      *string `json:"city,omitempty" xml:"city,omitempty"`
+	Country   *string `json:"country,omitempty" xml:"country,omitempty"`
+	Email     *string `json:"email,omitempty" xml:"email,omitempty"`
+	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
+	Lastname  *string `json:"lastname,omitempty" xml:"lastname,omitempty"`
+	State     *string `json:"state,omitempty" xml:"state,omitempty"`
 }
 
 // Validate validates the type instance.
@@ -150,25 +117,5 @@ func (ut *UserPayload) Validate() (err error) {
 			err = goa.InvalidFormatError(`response.email`, *ut.Email, goa.FormatEmail, err2, err)
 		}
 	}
-	return
-}
-
-// MarshalUserPayload validates and renders an instance of UserPayload into a interface{}
-func MarshalUserPayload(source *UserPayload, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if err2 := source.Validate(); err2 != nil {
-		err = goa.ReportError(err, err2)
-		return
-	}
-	tmp5 := map[string]interface{}{
-		"bio":       source.Bio,
-		"city":      source.City,
-		"country":   source.Country,
-		"email":     source.Email,
-		"firstname": source.Firstname,
-		"lastname":  source.Lastname,
-		"state":     source.State,
-	}
-	target = tmp5
 	return
 }

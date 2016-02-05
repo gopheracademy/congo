@@ -12,7 +12,7 @@
 
 package app
 
-import "github.com/raphael/goa"
+import "github.com/goadesign/goa"
 
 // AuthController is the controller interface for the Auth actions.
 type AuthController interface {
@@ -25,6 +25,15 @@ type AuthController interface {
 
 // MountAuthController "mounts" a Auth resource controller on the given service.
 func MountAuthController(service goa.Service, ctrl AuthController) {
+	// Setup encoders and decoders. This is idempotent and is done by each MountXXX function.
+	service.SetEncoder(goa.GobEncoderFactory(), false, "application/gob", "application/x-gob")
+	service.SetEncoder(goa.JSONEncoderFactory(), true, "application/json")
+	service.SetEncoder(goa.XMLEncoderFactory(), false, "application/xml", "text/xml")
+	service.SetDecoder(goa.GobDecoderFactory(), false, "application/gob", "application/x-gob")
+	service.SetDecoder(goa.JSONDecoderFactory(), true, "application/json")
+	service.SetDecoder(goa.XMLDecoderFactory(), false, "application/xml", "text/xml")
+
+	// Setup endpoint handler
 	var h goa.Handler
 	mux := service.ServeMux()
 	h = func(c *goa.Context) error {
@@ -73,9 +82,6 @@ func unmarshalRefreshAuthPayload(ctx *goa.Context) error {
 	if err := ctx.Service().DecodeRequest(ctx, payload); err != nil {
 		return err
 	}
-	if err := payload.Validate(); err != nil {
-		return err
-	}
 	ctx.SetPayload(payload)
 	return nil
 }
@@ -84,9 +90,6 @@ func unmarshalRefreshAuthPayload(ctx *goa.Context) error {
 func unmarshalTokenAuthPayload(ctx *goa.Context) error {
 	payload := &TokenAuthPayload{}
 	if err := ctx.Service().DecodeRequest(ctx, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
 		return err
 	}
 	ctx.SetPayload(payload)
@@ -101,6 +104,15 @@ type UiController interface {
 
 // MountUiController "mounts" a Ui resource controller on the given service.
 func MountUiController(service goa.Service, ctrl UiController) {
+	// Setup encoders and decoders. This is idempotent and is done by each MountXXX function.
+	service.SetEncoder(goa.GobEncoderFactory(), false, "application/gob", "application/x-gob")
+	service.SetEncoder(goa.JSONEncoderFactory(), true, "application/json")
+	service.SetEncoder(goa.XMLEncoderFactory(), false, "application/xml", "text/xml")
+	service.SetDecoder(goa.GobDecoderFactory(), false, "application/gob", "application/x-gob")
+	service.SetDecoder(goa.JSONDecoderFactory(), true, "application/json")
+	service.SetDecoder(goa.XMLDecoderFactory(), false, "application/xml", "text/xml")
+
+	// Setup endpoint handler
 	var h goa.Handler
 	mux := service.ServeMux()
 	h = func(c *goa.Context) error {

@@ -1,48 +1,57 @@
 package design
 
 import (
-	"github.com/bketelsen/gorma"
-	. "github.com/bketelsen/gorma/dsl"
+	"github.com/goadesign/gorma"
+	. "github.com/goadesign/gorma/dsl"
 )
 
 var _ = StorageGroup("CongoStorageGroup", func() {
 	Description("This is the global storage group")
-	RelationalStore("postgres", gorma.Postgres, func() {
+	Store("postgres", gorma.Postgres, func() {
 		Description("This is the Postgres relational store")
-		RelationalModel("User", UserPayload, func() {
+		Model("User", func() {
+			BuildsFrom(UserPayload)
+			RendersTo(User)
 			Description("User Model")
 			HasMany("Reviews", "Review")
 			HasMany("Proposals", "Proposal")
-			RelationalField("ID", gorma.PKInteger, func() {
+			Field("id", gorma.PKInteger, func() {
 				Description("This is the User Model PK field")
 			})
-			RelationalField("CreatedAt", gorma.Timestamp, func() {})
-			RelationalField("UpdatedAt", gorma.Timestamp, func() {})
-			RelationalField("DeletedAt", gorma.NullableTimestamp, func() {})
+			Field("created_at", gorma.Timestamp, func() {})
+			Field("updated_at", gorma.Timestamp, func() {})
+			Field("deleted_at", gorma.NullableTimestamp, func() {})
 		})
 
-		RelationalModel("Proposal", ProposalPayload, func() {
+		Model("Proposal", func() {
+			BuildsFrom(ProposalPayload)
+			RendersTo(Proposal)
 			Description("Proposal Model")
 			BelongsTo("User")
 			HasMany("Reviews", "Review")
-			RelationalField("ID", gorma.PKInteger, func() {
+			Field("id", gorma.PKInteger, func() {
 				Description("This is the Payload Model PK field")
 			})
-			RelationalField("CreatedAt", gorma.Timestamp, func() {})
-			RelationalField("UpdatedAt", gorma.Timestamp, func() {})
-			RelationalField("DeletedAt", gorma.NullableTimestamp, func() {})
+			Field("title", func() {
+				Alias("proposal_title")
+			})
+			Field("created_at", gorma.Timestamp, func() {})
+			Field("updated_at", gorma.Timestamp, func() {})
+			Field("deleted_at", gorma.NullableTimestamp, func() {})
 		})
 
-		RelationalModel("Review", ReviewPayload, func() {
+		Model("Review", func() {
+			BuildsFrom(ReviewPayload)
+			RendersTo(Review)
 			Description("Review Model")
 			BelongsTo("User")
 			BelongsTo("Proposal")
-			RelationalField("ID", gorma.PKInteger, func() {
+			Field("id", gorma.PKInteger, func() {
 				Description("This is the Review Model PK field")
 			})
-			RelationalField("CreatedAt", gorma.Timestamp, func() {})
-			RelationalField("UpdatedAt", gorma.Timestamp, func() {})
-			RelationalField("DeletedAt", gorma.NullableTimestamp, func() {})
+			Field("created_at", gorma.Timestamp, func() {})
+			Field("updated_at", gorma.Timestamp, func() {})
+			Field("deleted_at", gorma.NullableTimestamp, func() {})
 		})
 	})
 })

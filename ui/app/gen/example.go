@@ -11,7 +11,7 @@
 
 package js
 
-import "github.com/raphael/goa"
+import "github.com/goadesign/goa"
 
 // MountController mounts the JavaScript example controller under "/js".
 func MountController(service goa.Service) {

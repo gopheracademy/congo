@@ -9,14 +9,13 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/gopheracademy/congo/app"
-	"github.com/gopheracademy/congo/models"
-	muser "github.com/gopheracademy/congo/models/user"
+	"github.com/gopheracademy/congo/genmodels"
 	"github.com/jinzhu/gorm"
 	"github.com/markbates/goth/gothic"
 
 	djwt "github.com/dgrijalva/jwt-go"
-	"github.com/raphael/goa"
-	"github.com/raphael/goa-middleware/jwt"
+	"github.com/goadesign/goa"
+	"github.com/goadesign/middleware/jwt"
 )
 
 // AuthController implements the auth resource.
@@ -47,21 +46,21 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 	}
 	fmt.Println(user)
 
-	udb := muser.NewUserDB(*c.db)
+	udb := genmodels.NewUserDB(*c.db)
 	prov, _ := provider(ctx.Request())
-	var cuser muser.User
+	var cuser genmodels.User
 	var admin bool
 	cuser, err = udb.UserByOauth(user.UserID, prov)
 	if err != nil {
 		if err.Error() == "record not found" { // todo: get a real error here?
-			cuser = muser.User{
+			cuser = genmodels.User{
 				Oauth2Uid:      user.UserID,
 				Oauth2Provider: prov,
 				Oauth2Token:    user.AccessToken,
 
 				Email: &user.Email,
 			}
-			*cuser.Role = models.USER
+			*cuser.Role = genmodels.USER
 			cuser, err = udb.Add(context.Background(), cuser)
 			if err != nil {
 				fmt.Println(err)
@@ -78,7 +77,7 @@ func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
 
 	}
 	fmt.Println("Role: ", cuser.Role)
-	if cuser.Role != nil && *cuser.Role == models.ADMIN {
+	if cuser.Role != nil && *cuser.Role == genmodels.ADMIN {
 		admin = true
 	}
 	claims := make(map[string]interface{})
@@ -110,12 +109,12 @@ func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
 func (c *AuthController) Token(ctx *app.TokenAuthContext) error {
 
 	// authenticate
-	login := muser.Login{
+	login := genmodels.Login{
 		Email:    *ctx.Payload.Email,
 		Password: *ctx.Payload.Password,
 	}
 	fmt.Println(login)
-	userdb := muser.NewUserDB(*c.db)
+	userdb := genmodels.NewUserDB(*c.db)
 	user, err := userdb.GetByLogin(ctx, login)
 	if err != nil {
 		//Logger(m.e, ctx).Error(err)
@@ -177,12 +176,12 @@ func (c *AuthController) Refresh(ctx *app.RefreshAuthContext) error {
 		return err
 	}
 	// authenticate
-	login := muser.Login{
+	login := genmodels.Login{
 		Email:    *ctx.Payload.Email,
 		Password: *ctx.Payload.Password,
 	}
 
-	userdb := muser.NewUserDB(*c.db)
+	userdb := genmodels.NewUserDB(*c.db)
 	user, err := userdb.GetByLogin(ctx, login)
 	if err != nil {
 		//Logger(m.e, ctx).Error(err)

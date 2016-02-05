@@ -6,12 +6,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/user"
 	"path/filepath"
 
+	"github.com/goadesign/goa"
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/app/v1"
-	"github.com/gopheracademy/congo/models/proposal"
-	"github.com/gopheracademy/congo/models/user"
+	"github.com/gopheracademy/congo/genmodels"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/gopheracademy/congo/util"
 	"github.com/jinzhu/gorm"
@@ -20,11 +21,10 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/twitter"
-	"github.com/raphael/goa"
 	//	_ "gopkg.in/authboss.v0/remember"
 	jg "github.com/dgrijalva/jwt-go"
-	"github.com/raphael/goa-middleware/cors"
-	"github.com/raphael/goa-middleware/jwt"
+	"github.com/goadesign/middleware/cors"
+	"github.com/goadesign/middleware/jwt"
 )
 
 // JWT specification
@@ -95,7 +95,7 @@ func main() {
 	a := NewAuthController(service, &db, tm, jwtSpec)
 	app.MountAuthController(service, a)
 	// Mount "user" controller
-	c3 := NewUserController(service, user.NewUserDB(db))
+	c3 := NewUserController(service, genmodels.NewUserDB(db))
 	v1.MountUserController(service, c3)
 	c3.Use(jwt.Middleware(jwtSpec))
 	c4 := NewProposalController(service, proposal.NewProposalDB(db))

@@ -11,8 +11,8 @@ import (
 
 // CreateProposalPayload is the data structure used to initialize the proposal create request body.
 type CreateProposalPayload struct {
-	Abstract  *string
-	Detail    *string
+	Abstract  string
+	Detail    string
 	Firstname *string
 	Title     string
 	Withdrawn *bool

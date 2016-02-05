@@ -3,7 +3,7 @@ package client
 import (
 	"net/http"
 
-	"github.com/raphael/goa"
+	"github.com/goadesign/goa"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 

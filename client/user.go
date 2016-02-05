@@ -14,10 +14,9 @@ type CreateUserPayload struct {
 	Bio       *string
 	City      *string
 	Country   *string
-	Email     *string
+	Email     string
 	Firstname string
-	Lastname  *string
-	Role      *string
+	Lastname  string
 	State     *string
 }
 
@@ -86,7 +85,6 @@ type UpdateUserPayload struct {
 	Email     string
 	Firstname *string
 	Lastname  *string
-	Role      *string
 	State     *string
 }
 

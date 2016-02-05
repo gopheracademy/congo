@@ -13,10 +13,9 @@
 package v1
 
 import (
-	"fmt"
+	"github.com/goadesign/goa"
+	"github.com/gopheracademy/congo/app"
 	"strconv"
-
-	"github.com/raphael/goa"
 )
 
 // CreateProposalContext provides the proposal create action context.
@@ -25,6 +24,7 @@ type CreateProposalContext struct {
 	UserID  int
 	Version string
 	Payload *CreateProposalPayload
+	Version string
 }
 
 // NewCreateProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -49,11 +49,11 @@ func NewCreateProposalContext(c *goa.Context) (*CreateProposalContext, error) {
 
 // CreateProposalPayload is the proposal create action payload.
 type CreateProposalPayload struct {
-	Abstract  string
-	Detail    string
-	Firstname *string
-	Title     string
-	Withdrawn *bool
+	Abstract  string  `json:"abstract" xml:"abstract"`
+	Detail    string  `json:"detail" xml:"detail"`
+	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
+	Title     string  `json:"title" xml:"title"`
+	Withdrawn *bool   `json:"withdrawn,omitempty" xml:"withdrawn,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -107,6 +107,7 @@ type DeleteProposalContext struct {
 	ProposalID int
 	UserID     int
 	Version    string
+	Version    string
 }
 
 // NewDeleteProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -152,6 +153,7 @@ type ListProposalContext struct {
 	*goa.Context
 	UserID  int
 	Version string
+	Version string
 }
 
 // NewListProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -175,13 +177,9 @@ func NewListProposalContext(c *goa.Context) (*ListProposalContext, error) {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListProposalContext) OK(resp ProposalCollection) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.proposal+json; type=collection; charset=utf-8")
-	return ctx.Respond(200, r)
+func (ctx *ListProposalContext) OK(resp app.ProposalCollection) error {
+	ctx.Header().Set("Content-Type", "application/vnd.proposal+json; type=collection")
+	return ctx.Respond(200, resp)
 }
 
 // ShowProposalContext provides the proposal show action context.
@@ -189,6 +187,7 @@ type ShowProposalContext struct {
 	*goa.Context
 	ProposalID int
 	UserID     int
+	Version    string
 	Version    string
 }
 
@@ -220,19 +219,15 @@ func NewShowProposalContext(c *goa.Context) (*ShowProposalContext, error) {
 	return &ctx, err
 }
 
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowProposalContext) OK(resp *app.Proposal) error {
+	ctx.Header().Set("Content-Type", "application/vnd.proposal")
+	return ctx.Respond(200, resp)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowProposalContext) NotFound() error {
 	return ctx.RespondBytes(404, nil)
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowProposalContext) OK(resp *Proposal, view ProposalViewEnum) error {
-	r, err := resp.Dump(view)
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.proposal+json; charset=utf-8")
-	return ctx.Respond(200, r)
 }
 
 // UpdateProposalContext provides the proposal update action context.
@@ -242,6 +237,7 @@ type UpdateProposalContext struct {
 	UserID     int
 	Version    string
 	Payload    *UpdateProposalPayload
+	Version    string
 }
 
 // NewUpdateProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -274,11 +270,11 @@ func NewUpdateProposalContext(c *goa.Context) (*UpdateProposalContext, error) {
 
 // UpdateProposalPayload is the proposal update action payload.
 type UpdateProposalPayload struct {
-	Abstract  *string
-	Detail    *string
-	Firstname *string
-	Title     *string
-	Withdrawn *bool
+	Abstract  *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail    *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
+	Title     *string `json:"title,omitempty" xml:"title,omitempty"`
+	Withdrawn *bool   `json:"withdrawn,omitempty" xml:"withdrawn,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -338,6 +334,7 @@ type CreateReviewContext struct {
 	UserID     int
 	Version    string
 	Payload    *CreateReviewPayload
+	Version    string
 }
 
 // NewCreateReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -370,8 +367,8 @@ func NewCreateReviewContext(c *goa.Context) (*CreateReviewContext, error) {
 
 // CreateReviewPayload is the review create action payload.
 type CreateReviewPayload struct {
-	Comment *string
-	Rating  int
+	Comment *string `json:"comment,omitempty" xml:"comment,omitempty"`
+	Rating  int     `json:"rating" xml:"rating"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -407,6 +404,7 @@ type DeleteReviewContext struct {
 	ProposalID int
 	ReviewID   int
 	UserID     int
+	Version    string
 	Version    string
 }
 
@@ -462,6 +460,7 @@ type ListReviewContext struct {
 	ProposalID int
 	UserID     int
 	Version    string
+	Version    string
 }
 
 // NewListReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -493,13 +492,9 @@ func NewListReviewContext(c *goa.Context) (*ListReviewContext, error) {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListReviewContext) OK(resp ReviewCollection) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.review+json; type=collection; charset=utf-8")
-	return ctx.Respond(200, r)
+func (ctx *ListReviewContext) OK(resp app.ReviewCollection) error {
+	ctx.Header().Set("Content-Type", "application/vnd.review+json; type=collection")
+	return ctx.Respond(200, resp)
 }
 
 // ShowReviewContext provides the review show action context.
@@ -508,6 +503,7 @@ type ShowReviewContext struct {
 	ProposalID int
 	ReviewID   int
 	UserID     int
+	Version    string
 	Version    string
 }
 
@@ -547,19 +543,15 @@ func NewShowReviewContext(c *goa.Context) (*ShowReviewContext, error) {
 	return &ctx, err
 }
 
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowReviewContext) OK(resp *app.Review) error {
+	ctx.Header().Set("Content-Type", "application/vnd.review")
+	return ctx.Respond(200, resp)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowReviewContext) NotFound() error {
 	return ctx.RespondBytes(404, nil)
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowReviewContext) OK(resp *Review, view ReviewViewEnum) error {
-	r, err := resp.Dump(view)
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.review+json; charset=utf-8")
-	return ctx.Respond(200, r)
 }
 
 // UpdateReviewContext provides the review update action context.
@@ -570,6 +562,7 @@ type UpdateReviewContext struct {
 	UserID     int
 	Version    string
 	Payload    *UpdateReviewPayload
+	Version    string
 }
 
 // NewUpdateReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -610,8 +603,8 @@ func NewUpdateReviewContext(c *goa.Context) (*UpdateReviewContext, error) {
 
 // UpdateReviewPayload is the review update action payload.
 type UpdateReviewPayload struct {
-	Comment *string
-	Rating  *int
+	Comment *string `json:"comment,omitempty" xml:"comment,omitempty"`
+	Rating  *int    `json:"rating,omitempty" xml:"rating,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -654,6 +647,7 @@ type CreateUserContext struct {
 	*goa.Context
 	Version string
 	Payload *CreateUserPayload
+	Version string
 }
 
 // NewCreateUserContext parses the incoming request URL and body, performs validations and creates the
@@ -670,13 +664,13 @@ func NewCreateUserContext(c *goa.Context) (*CreateUserContext, error) {
 
 // CreateUserPayload is the user create action payload.
 type CreateUserPayload struct {
-	Bio       *string
-	City      *string
-	Country   *string
-	Email     string
-	Firstname string
-	Lastname  string
-	State     *string
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	City      *string `json:"city,omitempty" xml:"city,omitempty"`
+	Country   *string `json:"country,omitempty" xml:"country,omitempty"`
+	Email     string  `json:"email" xml:"email"`
+	Firstname string  `json:"firstname" xml:"firstname"`
+	Lastname  string  `json:"lastname" xml:"lastname"`
+	State     *string `json:"state,omitempty" xml:"state,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -714,6 +708,7 @@ type DeleteUserContext struct {
 	*goa.Context
 	UserID  int
 	Version string
+	Version string
 }
 
 // NewDeleteUserContext parses the incoming request URL and body, performs validations and creates the
@@ -750,6 +745,7 @@ func (ctx *DeleteUserContext) NotFound() error {
 type ListUserContext struct {
 	*goa.Context
 	Version string
+	Version string
 }
 
 // NewListUserContext parses the incoming request URL and body, performs validations and creates the
@@ -765,19 +761,16 @@ func NewListUserContext(c *goa.Context) (*ListUserContext, error) {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListUserContext) OK(resp UserCollection) error {
-	r, err := resp.Dump()
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.user+json; type=collection; charset=utf-8")
-	return ctx.Respond(200, r)
+func (ctx *ListUserContext) OK(resp app.UserCollection) error {
+	ctx.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
+	return ctx.Respond(200, resp)
 }
 
 // ShowUserContext provides the user show action context.
 type ShowUserContext struct {
 	*goa.Context
 	UserID  int
+	Version string
 	Version string
 }
 
@@ -807,13 +800,9 @@ func (ctx *ShowUserContext) NotFound() error {
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowUserContext) OK(resp *User, view UserViewEnum) error {
-	r, err := resp.Dump(view)
-	if err != nil {
-		return fmt.Errorf("invalid response: %s", err)
-	}
-	ctx.Header().Set("Content-Type", "application/vnd.user+json; charset=utf-8")
-	return ctx.Respond(200, r)
+func (ctx *ShowUserContext) OK(resp *app.User) error {
+	ctx.Header().Set("Content-Type", "application/vnd.user")
+	return ctx.Respond(200, resp)
 }
 
 // UpdateUserContext provides the user update action context.
@@ -822,6 +811,7 @@ type UpdateUserContext struct {
 	UserID  int
 	Version string
 	Payload *UpdateUserPayload
+	Version string
 }
 
 // NewUpdateUserContext parses the incoming request URL and body, performs validations and creates the
@@ -846,13 +836,13 @@ func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 
 // UpdateUserPayload is the user update action payload.
 type UpdateUserPayload struct {
-	Bio       *string
-	City      *string
-	Country   *string
-	Email     string
-	Firstname *string
-	Lastname  *string
-	State     *string
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	City      *string `json:"city,omitempty" xml:"city,omitempty"`
+	Country   *string `json:"country,omitempty" xml:"country,omitempty"`
+	Email     string  `json:"email" xml:"email"`
+	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
+	Lastname  *string `json:"lastname,omitempty" xml:"lastname,omitempty"`
+	State     *string `json:"state,omitempty" xml:"state,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
