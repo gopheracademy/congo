@@ -22,7 +22,7 @@ import (
 func (m *UserDB) ListAppUser(ctx *goa.Context) []*app.User {
 	now := time.Now()
 	defer ctx.Info("ListUser", "duration", time.Since(now))
-	var objs []app.User
+	var objs []*app.User
 	err := m.Db.Table(m.TableName()).Find(&objs).Error
 	if err != nil {
 		ctx.Error("error listing User", "error", err.Error())
@@ -34,13 +34,13 @@ func (m *UserDB) ListAppUser(ctx *goa.Context) []*app.User {
 
 func (m *User) UserToAppUser() *app.User {
 	user := &app.User{}
-	user.Bio = m.Bio
 	user.City = m.City
-	user.Country = m.Country
 	user.Email = m.Email
 	user.Firstname = m.Firstname
 	user.Lastname = m.Lastname
 	user.ID = &m.ID
+	user.Bio = m.Bio
+	user.Country = m.Country
 	user.State = m.State
 
 	return user
@@ -51,7 +51,7 @@ func (m *UserDB) OneUser(ctx *goa.Context, id int) *app.User {
 	now := time.Now()
 	defer ctx.Info("OneUser", "duration", time.Since(now))
 
-	var native User
+	var native *User
 
 	m.Db.Table(m.TableName()).Preload("Proposal").Preload("Review").Where("id = ?", id).Find(&native)
 	view := native.UserToAppUser()
@@ -64,7 +64,7 @@ func (m *UserDB) OneUser(ctx *goa.Context, id int) *app.User {
 func (m *UserDB) ListAppUserLink(ctx *goa.Context) []*app.UserLink {
 	now := time.Now()
 	defer ctx.Info("ListUserLink", "duration", time.Since(now))
-	var objs []app.UserLink
+	var objs []*app.UserLink
 	err := m.Db.Table(m.TableName()).Find(&objs).Error
 	if err != nil {
 		ctx.Error("error listing User", "error", err.Error())
@@ -76,8 +76,8 @@ func (m *UserDB) ListAppUserLink(ctx *goa.Context) []*app.UserLink {
 
 func (m *User) UserToAppUserLink() *app.UserLink {
 	user := &app.UserLink{}
-	user.ID = &m.ID
 	user.Email = m.Email
+	user.ID = &m.ID
 
 	return user
 }
@@ -87,7 +87,7 @@ func (m *UserDB) OneUserLink(ctx *goa.Context, id int) *app.UserLink {
 	now := time.Now()
 	defer ctx.Info("OneUserLink", "duration", time.Since(now))
 
-	var native User
+	var native *User
 
 	m.Db.Table(m.TableName()).Preload("Proposal").Preload("Review").Where("id = ?", id).Find(&native)
 	view := native.UserToAppUserLink()
