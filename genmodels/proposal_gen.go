@@ -28,9 +28,9 @@ type Proposal struct {
 	Title     *string  `gorm:"column:proposal_title"`
 	UserID    int      // has many Proposal
 	Withdrawn *bool
+	CreatedAt time.Time  // timestamp
 	DeletedAt *time.Time // nullable timestamp (soft delete)
 	UpdatedAt time.Time  // timestamp
-	CreatedAt time.Time  // timestamp
 	User      User
 }
 
@@ -64,8 +64,8 @@ type ProposalStorage interface {
 	DB() interface{}
 	List(ctx goa.Context) []Proposal
 	Get(ctx goa.Context, id int) (Proposal, error)
-	Add(ctx goa.Context, proposal Proposal) (Proposal, error)
-	Update(ctx goa.Context, proposal Proposal) error
+	Add(ctx goa.Context, proposal *Proposal) (Proposal, error)
+	Update(ctx goa.Context, proposal *Proposal) error
 	Delete(ctx goa.Context, id int) error
 }
 

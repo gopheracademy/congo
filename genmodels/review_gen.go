@@ -25,9 +25,9 @@ type Review struct {
 	ProposalID int // Belongs To Proposal
 	Rating     *int
 	UserID     int        // has many Review
+	UpdatedAt  time.Time  // timestamp
 	DeletedAt  *time.Time // nullable timestamp (soft delete)
 	CreatedAt  time.Time  // timestamp
-	UpdatedAt  time.Time  // timestamp
 	User       User
 	Proposal   Proposal
 }
@@ -62,8 +62,8 @@ type ReviewStorage interface {
 	DB() interface{}
 	List(ctx goa.Context) []Review
 	Get(ctx goa.Context, id int) (Review, error)
-	Add(ctx goa.Context, review Review) (Review, error)
-	Update(ctx goa.Context, review Review) error
+	Add(ctx goa.Context, review *Review) (Review, error)
+	Update(ctx goa.Context, review *Review) error
 	Delete(ctx goa.Context, id int) error
 }
 

@@ -31,8 +31,8 @@ type User struct {
 	Reviews   []Review   // has many Reviews
 	State     *string
 	CreatedAt time.Time  // timestamp
-	DeletedAt *time.Time // nullable timestamp (soft delete)
 	UpdatedAt time.Time  // timestamp
+	DeletedAt *time.Time // nullable timestamp (soft delete)
 }
 
 // TableName overrides the table name settings in Gorm to force a specific table name
@@ -65,8 +65,8 @@ type UserStorage interface {
 	DB() interface{}
 	List(ctx goa.Context) []User
 	Get(ctx goa.Context, id int) (User, error)
-	Add(ctx goa.Context, user User) (User, error)
-	Update(ctx goa.Context, user User) error
+	Add(ctx goa.Context, user *User) (User, error)
+	Update(ctx goa.Context, user *User) error
 	Delete(ctx goa.Context, id int) error
 }
 
