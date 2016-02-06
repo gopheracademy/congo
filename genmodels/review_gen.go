@@ -28,8 +28,8 @@ type Review struct {
 	CreatedAt  time.Time  // timestamp
 	UpdatedAt  time.Time  // timestamp
 	DeletedAt  *time.Time // nullable timestamp (soft delete)
-	Proposal   Proposal
 	User       User
+	Proposal   Proposal
 }
 
 // TableName overrides the table name settings in Gorm to force a specific table name

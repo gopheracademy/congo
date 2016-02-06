@@ -40,5 +40,5 @@ var _ = API("congo", func() {
 
 var _ = Version("v1", func() {
 	Description("Multi-tenant conference management application API v1")
-	BasePath("/:version/api")
+	BasePath("/:api_version/api")
 })

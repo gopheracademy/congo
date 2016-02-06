@@ -36,10 +36,10 @@ func (m *ProposalDB) ListV1Proposal(ctx *goa.Context) []*v1.Proposal {
 
 func (m *Proposal) ProposalToV1Proposal() *v1.Proposal {
 	proposal := &v1.Proposal{}
-	proposal.Abstract = m.Abstract
-	proposal.Title = m.Title
 	proposal.ID = &m.ID
+	proposal.Abstract = m.Abstract
 	proposal.Detail = m.Detail
+	proposal.Title = m.Title
 
 	return proposal
 }
@@ -49,11 +49,11 @@ func (m *ProposalDB) OneProposal(ctx *goa.Context, id int) *v1.Proposal {
 	now := time.Now()
 	defer ctx.Info("OneProposal", "duration", time.Since(now))
 
-	var native *Proposal
+	var native Proposal
 
-	m.Db.Table(m.TableName()).Preload("Review").Preload("User").Where("id = ?", id).Find(&native)
-	view := native.ProposalToV1Proposal()
-	return view
+	m.Db.Table(m.TableName()).Preload("Reviews").Preload("User").Where("id = ?", id).Find(&native)
+	view := *native.ProposalToV1Proposal()
+	return &view
 
 }
 
@@ -86,10 +86,10 @@ func (m *ProposalDB) OneProposalLink(ctx *goa.Context, id int) *v1.ProposalLink 
 	now := time.Now()
 	defer ctx.Info("OneProposalLink", "duration", time.Since(now))
 
-	var native *Proposal
+	var native Proposal
 
-	m.Db.Table(m.TableName()).Preload("Review").Preload("User").Where("id = ?", id).Find(&native)
-	view := native.ProposalToV1ProposalLink()
-	return view
+	m.Db.Table(m.TableName()).Preload("Reviews").Preload("User").Where("id = ?", id).Find(&native)
+	view := *native.ProposalToV1ProposalLink()
+	return &view
 
 }

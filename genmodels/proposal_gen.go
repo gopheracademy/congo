@@ -28,9 +28,9 @@ type Proposal struct {
 	Title     *string  `gorm:"column:proposal_title"`
 	UserID    int      // has many Proposal
 	Withdrawn *bool
+	DeletedAt *time.Time // nullable timestamp (soft delete)
 	CreatedAt time.Time  // timestamp
 	UpdatedAt time.Time  // timestamp
-	DeletedAt *time.Time // nullable timestamp (soft delete)
 	User      User
 }
 

@@ -48,11 +48,11 @@ func (m *ReviewDB) OneReview(ctx *goa.Context, id int) *v1.Review {
 	now := time.Now()
 	defer ctx.Info("OneReview", "duration", time.Since(now))
 
-	var native *Review
+	var native Review
 
 	m.Db.Table(m.TableName()).Preload("Proposal").Preload("User").Where("id = ?", id).Find(&native)
-	view := native.ReviewToV1Review()
-	return view
+	view := *native.ReviewToV1Review()
+	return &view
 
 }
 
@@ -84,10 +84,10 @@ func (m *ReviewDB) OneReviewLink(ctx *goa.Context, id int) *v1.ReviewLink {
 	now := time.Now()
 	defer ctx.Info("OneReviewLink", "duration", time.Since(now))
 
-	var native *Review
+	var native Review
 
 	m.Db.Table(m.TableName()).Preload("Proposal").Preload("User").Where("id = ?", id).Find(&native)
-	view := native.ReviewToV1ReviewLink()
-	return view
+	view := *native.ReviewToV1ReviewLink()
+	return &view
 
 }

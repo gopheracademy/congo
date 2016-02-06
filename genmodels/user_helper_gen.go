@@ -35,14 +35,14 @@ func (m *UserDB) ListAppUser(ctx *goa.Context) []*app.User {
 
 func (m *User) UserToAppUser() *app.User {
 	user := &app.User{}
-	user.City = m.City
-	user.Email = m.Email
-	user.Firstname = m.Firstname
-	user.Lastname = m.Lastname
 	user.ID = &m.ID
-	user.Bio = m.Bio
 	user.Country = m.Country
+	user.Email = m.Email
+	user.Lastname = m.Lastname
 	user.State = m.State
+	user.Bio = m.Bio
+	user.City = m.City
+	user.Firstname = m.Firstname
 
 	return user
 }
@@ -52,11 +52,11 @@ func (m *UserDB) OneUser(ctx *goa.Context, id int) *app.User {
 	now := time.Now()
 	defer ctx.Info("OneUser", "duration", time.Since(now))
 
-	var native *User
+	var native User
 
-	m.Db.Table(m.TableName()).Preload("Proposal").Preload("Review").Where("id = ?", id).Find(&native)
-	view := native.UserToAppUser()
-	return view
+	m.Db.Table(m.TableName()).Preload("Proposals").Preload("Reviews").Where("id = ?", id).Find(&native)
+	view := *native.UserToAppUser()
+	return &view
 
 }
 
@@ -88,10 +88,10 @@ func (m *UserDB) OneUserLink(ctx *goa.Context, id int) *app.UserLink {
 	now := time.Now()
 	defer ctx.Info("OneUserLink", "duration", time.Since(now))
 
-	var native *User
+	var native User
 
-	m.Db.Table(m.TableName()).Preload("Proposal").Preload("Review").Where("id = ?", id).Find(&native)
-	view := native.UserToAppUserLink()
-	return view
+	m.Db.Table(m.TableName()).Preload("Proposals").Preload("Reviews").Where("id = ?", id).Find(&native)
+	view := *native.UserToAppUserLink()
+	return &view
 
 }

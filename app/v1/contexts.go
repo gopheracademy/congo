@@ -21,10 +21,9 @@ import (
 // CreateProposalContext provides the proposal create action context.
 type CreateProposalContext struct {
 	*goa.Context
-	UserID  int
-	Version string
-	Payload *CreateProposalPayload
-	Version string
+	APIVersion string
+	UserID     int
+	Payload    *CreateProposalPayload
 }
 
 // NewCreateProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -32,6 +31,10 @@ type CreateProposalContext struct {
 func NewCreateProposalContext(c *goa.Context) (*CreateProposalContext, error) {
 	var err error
 	ctx := CreateProposalContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawUserID := c.Get("userID")
 	if rawUserID != "" {
 		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
@@ -39,10 +42,6 @@ func NewCreateProposalContext(c *goa.Context) (*CreateProposalContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -104,10 +103,9 @@ func (ctx *CreateProposalContext) Created() error {
 // DeleteProposalContext provides the proposal delete action context.
 type DeleteProposalContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	UserID     int
-	Version    string
-	Version    string
 }
 
 // NewDeleteProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -115,6 +113,10 @@ type DeleteProposalContext struct {
 func NewDeleteProposalContext(c *goa.Context) (*DeleteProposalContext, error) {
 	var err error
 	ctx := DeleteProposalContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -130,10 +132,6 @@ func NewDeleteProposalContext(c *goa.Context) (*DeleteProposalContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -151,9 +149,8 @@ func (ctx *DeleteProposalContext) NotFound() error {
 // ListProposalContext provides the proposal list action context.
 type ListProposalContext struct {
 	*goa.Context
-	UserID  int
-	Version string
-	Version string
+	APIVersion string
+	UserID     int
 }
 
 // NewListProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -161,6 +158,10 @@ type ListProposalContext struct {
 func NewListProposalContext(c *goa.Context) (*ListProposalContext, error) {
 	var err error
 	ctx := ListProposalContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawUserID := c.Get("userID")
 	if rawUserID != "" {
 		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
@@ -169,15 +170,11 @@ func NewListProposalContext(c *goa.Context) (*ListProposalContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
-	}
 	return &ctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListProposalContext) OK(resp app.ProposalCollection) error {
+func (ctx *ListProposalContext) OK(resp ProposalCollection) error {
 	ctx.Header().Set("Content-Type", "application/vnd.proposal+json; type=collection")
 	return ctx.Respond(200, resp)
 }
@@ -185,10 +182,9 @@ func (ctx *ListProposalContext) OK(resp app.ProposalCollection) error {
 // ShowProposalContext provides the proposal show action context.
 type ShowProposalContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	UserID     int
-	Version    string
-	Version    string
 }
 
 // NewShowProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -196,6 +192,10 @@ type ShowProposalContext struct {
 func NewShowProposalContext(c *goa.Context) (*ShowProposalContext, error) {
 	var err error
 	ctx := ShowProposalContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -212,15 +212,11 @@ func NewShowProposalContext(c *goa.Context) (*ShowProposalContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
-	}
 	return &ctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowProposalContext) OK(resp *app.Proposal) error {
+func (ctx *ShowProposalContext) OK(resp *Proposal) error {
 	ctx.Header().Set("Content-Type", "application/vnd.proposal")
 	return ctx.Respond(200, resp)
 }
@@ -233,11 +229,10 @@ func (ctx *ShowProposalContext) NotFound() error {
 // UpdateProposalContext provides the proposal update action context.
 type UpdateProposalContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	UserID     int
-	Version    string
 	Payload    *UpdateProposalPayload
-	Version    string
 }
 
 // NewUpdateProposalContext parses the incoming request URL and body, performs validations and creates the
@@ -245,6 +240,10 @@ type UpdateProposalContext struct {
 func NewUpdateProposalContext(c *goa.Context) (*UpdateProposalContext, error) {
 	var err error
 	ctx := UpdateProposalContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -260,10 +259,6 @@ func NewUpdateProposalContext(c *goa.Context) (*UpdateProposalContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -330,11 +325,10 @@ func (ctx *UpdateProposalContext) NotFound() error {
 // CreateReviewContext provides the review create action context.
 type CreateReviewContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	UserID     int
-	Version    string
 	Payload    *CreateReviewPayload
-	Version    string
 }
 
 // NewCreateReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -342,6 +336,10 @@ type CreateReviewContext struct {
 func NewCreateReviewContext(c *goa.Context) (*CreateReviewContext, error) {
 	var err error
 	ctx := CreateReviewContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -357,10 +355,6 @@ func NewCreateReviewContext(c *goa.Context) (*CreateReviewContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -401,11 +395,10 @@ func (ctx *CreateReviewContext) Created() error {
 // DeleteReviewContext provides the review delete action context.
 type DeleteReviewContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	ReviewID   int
 	UserID     int
-	Version    string
-	Version    string
 }
 
 // NewDeleteReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -413,6 +406,10 @@ type DeleteReviewContext struct {
 func NewDeleteReviewContext(c *goa.Context) (*DeleteReviewContext, error) {
 	var err error
 	ctx := DeleteReviewContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -436,10 +433,6 @@ func NewDeleteReviewContext(c *goa.Context) (*DeleteReviewContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -457,10 +450,9 @@ func (ctx *DeleteReviewContext) NotFound() error {
 // ListReviewContext provides the review list action context.
 type ListReviewContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	UserID     int
-	Version    string
-	Version    string
 }
 
 // NewListReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -468,6 +460,10 @@ type ListReviewContext struct {
 func NewListReviewContext(c *goa.Context) (*ListReviewContext, error) {
 	var err error
 	ctx := ListReviewContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -484,15 +480,11 @@ func NewListReviewContext(c *goa.Context) (*ListReviewContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
-	}
 	return &ctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListReviewContext) OK(resp app.ReviewCollection) error {
+func (ctx *ListReviewContext) OK(resp ReviewCollection) error {
 	ctx.Header().Set("Content-Type", "application/vnd.review+json; type=collection")
 	return ctx.Respond(200, resp)
 }
@@ -500,11 +492,10 @@ func (ctx *ListReviewContext) OK(resp app.ReviewCollection) error {
 // ShowReviewContext provides the review show action context.
 type ShowReviewContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	ReviewID   int
 	UserID     int
-	Version    string
-	Version    string
 }
 
 // NewShowReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -512,6 +503,10 @@ type ShowReviewContext struct {
 func NewShowReviewContext(c *goa.Context) (*ShowReviewContext, error) {
 	var err error
 	ctx := ShowReviewContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -536,17 +531,7 @@ func NewShowReviewContext(c *goa.Context) (*ShowReviewContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
-	}
 	return &ctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowReviewContext) OK(resp *app.Review) error {
-	ctx.Header().Set("Content-Type", "application/vnd.review")
-	return ctx.Respond(200, resp)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -554,15 +539,20 @@ func (ctx *ShowReviewContext) NotFound() error {
 	return ctx.RespondBytes(404, nil)
 }
 
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowReviewContext) OK(resp *Review) error {
+	ctx.Header().Set("Content-Type", "application/vnd.review")
+	return ctx.Respond(200, resp)
+}
+
 // UpdateReviewContext provides the review update action context.
 type UpdateReviewContext struct {
 	*goa.Context
+	APIVersion string
 	ProposalID int
 	ReviewID   int
 	UserID     int
-	Version    string
 	Payload    *UpdateReviewPayload
-	Version    string
 }
 
 // NewUpdateReviewContext parses the incoming request URL and body, performs validations and creates the
@@ -570,6 +560,10 @@ type UpdateReviewContext struct {
 func NewUpdateReviewContext(c *goa.Context) (*UpdateReviewContext, error) {
 	var err error
 	ctx := UpdateReviewContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProposalID := c.Get("proposalID")
 	if rawProposalID != "" {
 		if proposalID, err2 := strconv.Atoi(rawProposalID); err2 == nil {
@@ -593,10 +587,6 @@ func NewUpdateReviewContext(c *goa.Context) (*UpdateReviewContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -645,9 +635,8 @@ func (ctx *UpdateReviewContext) NotFound() error {
 // CreateUserContext provides the user create action context.
 type CreateUserContext struct {
 	*goa.Context
-	Version string
-	Payload *CreateUserPayload
-	Version string
+	APIVersion string
+	Payload    *CreateUserPayload
 }
 
 // NewCreateUserContext parses the incoming request URL and body, performs validations and creates the
@@ -655,9 +644,9 @@ type CreateUserContext struct {
 func NewCreateUserContext(c *goa.Context) (*CreateUserContext, error) {
 	var err error
 	ctx := CreateUserContext{Context: c}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
 	}
 	return &ctx, err
 }
@@ -706,9 +695,8 @@ func (ctx *CreateUserContext) Created() error {
 // DeleteUserContext provides the user delete action context.
 type DeleteUserContext struct {
 	*goa.Context
-	UserID  int
-	Version string
-	Version string
+	APIVersion string
+	UserID     int
 }
 
 // NewDeleteUserContext parses the incoming request URL and body, performs validations and creates the
@@ -716,6 +704,10 @@ type DeleteUserContext struct {
 func NewDeleteUserContext(c *goa.Context) (*DeleteUserContext, error) {
 	var err error
 	ctx := DeleteUserContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawUserID := c.Get("userID")
 	if rawUserID != "" {
 		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
@@ -723,10 +715,6 @@ func NewDeleteUserContext(c *goa.Context) (*DeleteUserContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -744,8 +732,7 @@ func (ctx *DeleteUserContext) NotFound() error {
 // ListUserContext provides the user list action context.
 type ListUserContext struct {
 	*goa.Context
-	Version string
-	Version string
+	APIVersion string
 }
 
 // NewListUserContext parses the incoming request URL and body, performs validations and creates the
@@ -753,9 +740,9 @@ type ListUserContext struct {
 func NewListUserContext(c *goa.Context) (*ListUserContext, error) {
 	var err error
 	ctx := ListUserContext{Context: c}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
 	}
 	return &ctx, err
 }
@@ -769,9 +756,8 @@ func (ctx *ListUserContext) OK(resp app.UserCollection) error {
 // ShowUserContext provides the user show action context.
 type ShowUserContext struct {
 	*goa.Context
-	UserID  int
-	Version string
-	Version string
+	APIVersion string
+	UserID     int
 }
 
 // NewShowUserContext parses the incoming request URL and body, performs validations and creates the
@@ -779,6 +765,10 @@ type ShowUserContext struct {
 func NewShowUserContext(c *goa.Context) (*ShowUserContext, error) {
 	var err error
 	ctx := ShowUserContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawUserID := c.Get("userID")
 	if rawUserID != "" {
 		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
@@ -787,11 +777,12 @@ func NewShowUserContext(c *goa.Context) (*ShowUserContext, error) {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
 	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
-	}
 	return &ctx, err
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowUserContext) NotFound() error {
+	return ctx.RespondBytes(404, nil)
 }
 
 // OK sends a HTTP response with status code 200.
@@ -800,18 +791,12 @@ func (ctx *ShowUserContext) OK(resp *app.User) error {
 	return ctx.Respond(200, resp)
 }
 
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowUserContext) NotFound() error {
-	return ctx.RespondBytes(404, nil)
-}
-
 // UpdateUserContext provides the user update action context.
 type UpdateUserContext struct {
 	*goa.Context
-	UserID  int
-	Version string
-	Payload *UpdateUserPayload
-	Version string
+	APIVersion string
+	UserID     int
+	Payload    *UpdateUserPayload
 }
 
 // NewUpdateUserContext parses the incoming request URL and body, performs validations and creates the
@@ -819,6 +804,10 @@ type UpdateUserContext struct {
 func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 	var err error
 	ctx := UpdateUserContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawUserID := c.Get("userID")
 	if rawUserID != "" {
 		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
@@ -826,10 +815,6 @@ func NewUpdateUserContext(c *goa.Context) (*UpdateUserContext, error) {
 		} else {
 			err = goa.InvalidParamTypeError("userID", rawUserID, "integer", err)
 		}
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }

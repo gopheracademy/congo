@@ -15,16 +15,16 @@ package v1
 import "fmt"
 
 // ProposalHref returns the resource href.
-func ProposalHref(version, userID, proposalID interface{}) string {
-	return fmt.Sprintf("/%v/api/users/%v/proposals/%v", version, userID, proposalID)
+func ProposalHref(api_version, userID, proposalID interface{}) string {
+	return fmt.Sprintf("/%v/api/users/%v/proposals/%v", api_version, userID, proposalID)
 }
 
 // ReviewHref returns the resource href.
-func ReviewHref(version, userID, proposalID, reviewID interface{}) string {
-	return fmt.Sprintf("/%v/api/users/%v/proposals/%v/review/%v", version, userID, proposalID, reviewID)
+func ReviewHref(api_version, userID, proposalID, reviewID interface{}) string {
+	return fmt.Sprintf("/%v/api/users/%v/proposals/%v/review/%v", api_version, userID, proposalID, reviewID)
 }
 
 // UserHref returns the resource href.
-func UserHref(version, userID interface{}) string {
-	return fmt.Sprintf("/%v/api/users/%v", version, userID)
+func UserHref(api_version, userID interface{}) string {
+	return fmt.Sprintf("/%v/api/users/%v", api_version, userID)
 }

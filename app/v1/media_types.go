@@ -12,10 +12,7 @@
 
 package v1
 
-import (
-	"github.com/goadesign/goa"
-	"github.com/gopheracademy/congo/app"
-)
+import "github.com/goadesign/goa"
 
 // A response to a CFP
 // Identifier: application/vnd.proposal+json
@@ -95,7 +92,7 @@ func (mt *ProposalLink) Validate() (err error) {
 
 // , default view
 // Identifier: application/vnd.proposal+json; type=collection
-type ProposalCollection []*app.Proposal
+type ProposalCollection []*Proposal
 
 // Validate validates the media type instance.
 func (mt ProposalCollection) Validate() (err error) {
@@ -132,15 +129,6 @@ func (mt ProposalCollection) Validate() (err error) {
 		}
 	}
 	return
-}
-
-// A review is submitted by a reviewer, link view
-// Identifier: application/vnd.review+json
-type ReviewLink struct {
-	// API href of user
-	Href *string `json:"href,omitempty" xml:"href,omitempty"`
-	// ID of user
-	ID *int `json:"id,omitempty" xml:"id,omitempty"`
 }
 
 // A review is submitted by a reviewer
@@ -181,9 +169,18 @@ func (mt *Review) Validate() (err error) {
 	return
 }
 
+// A review is submitted by a reviewer, link view
+// Identifier: application/vnd.review+json
+type ReviewLink struct {
+	// API href of user
+	Href *string `json:"href,omitempty" xml:"href,omitempty"`
+	// ID of user
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+}
+
 // , default view
 // Identifier: application/vnd.review+json; type=collection
-type ReviewCollection []*app.Review
+type ReviewCollection []*Review
 
 // Validate validates the media type instance.
 func (mt ReviewCollection) Validate() (err error) {

@@ -39,56 +39,56 @@ func MountProposalController(service goa.Service, ctrl ProposalController) {
 	mux := service.Version("v1").ServeMux()
 	h = func(c *goa.Context) error {
 		ctx, err := NewCreateProposalContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		ctx.Payload = ctx.RawPayload().(*CreateProposalPayload)
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Create(ctx)
 	}
-	mux.Handle("POST", "/:version/api/users/:userID/proposals", ctrl.HandleFunc("Create", h, unmarshalCreateProposalPayload))
-	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Create", "route", "POST /:version/api/users/:userID/proposals")
+	mux.Handle("POST", "/:api_version/api/users/:userID/proposals", ctrl.HandleFunc("Create", h, unmarshalCreateProposalPayload))
+	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Create", "route", "POST /:api_version/api/users/:userID/proposals")
 	h = func(c *goa.Context) error {
 		ctx, err := NewDeleteProposalContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Delete(ctx)
 	}
-	mux.Handle("DELETE", "/:version/api/users/:userID/proposals/:proposalID", ctrl.HandleFunc("Delete", h, nil))
-	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Delete", "route", "DELETE /:version/api/users/:userID/proposals/:proposalID")
+	mux.Handle("DELETE", "/:api_version/api/users/:userID/proposals/:proposalID", ctrl.HandleFunc("Delete", h, nil))
+	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Delete", "route", "DELETE /:api_version/api/users/:userID/proposals/:proposalID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewListProposalContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.List(ctx)
 	}
-	mux.Handle("GET", "/:version/api/users/:userID/proposals", ctrl.HandleFunc("List", h, nil))
-	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "List", "route", "GET /:version/api/users/:userID/proposals")
+	mux.Handle("GET", "/:api_version/api/users/:userID/proposals", ctrl.HandleFunc("List", h, nil))
+	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "List", "route", "GET /:api_version/api/users/:userID/proposals")
 	h = func(c *goa.Context) error {
 		ctx, err := NewShowProposalContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Show(ctx)
 	}
-	mux.Handle("GET", "/:version/api/users/:userID/proposals/:proposalID", ctrl.HandleFunc("Show", h, nil))
-	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Show", "route", "GET /:version/api/users/:userID/proposals/:proposalID")
+	mux.Handle("GET", "/:api_version/api/users/:userID/proposals/:proposalID", ctrl.HandleFunc("Show", h, nil))
+	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Show", "route", "GET /:api_version/api/users/:userID/proposals/:proposalID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewUpdateProposalContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		ctx.Payload = ctx.RawPayload().(*UpdateProposalPayload)
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Update(ctx)
 	}
-	mux.Handle("PATCH", "/:version/api/users/:userID/proposals/:proposalID", ctrl.HandleFunc("Update", h, unmarshalUpdateProposalPayload))
-	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Update", "route", "PATCH /:version/api/users/:userID/proposals/:proposalID")
+	mux.Handle("PATCH", "/:api_version/api/users/:userID/proposals/:proposalID", ctrl.HandleFunc("Update", h, unmarshalUpdateProposalPayload))
+	service.Info("mount", "ctrl", "Proposal", "version", "v1", "action", "Update", "route", "PATCH /:api_version/api/users/:userID/proposals/:proposalID")
 }
 
 // unmarshalCreateProposalPayload unmarshals the request body.
@@ -142,56 +142,56 @@ func MountReviewController(service goa.Service, ctrl ReviewController) {
 	mux := service.Version("v1").ServeMux()
 	h = func(c *goa.Context) error {
 		ctx, err := NewCreateReviewContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		ctx.Payload = ctx.RawPayload().(*CreateReviewPayload)
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Create(ctx)
 	}
-	mux.Handle("POST", "/:version/api/users/:userID/proposals/:proposalID/review", ctrl.HandleFunc("Create", h, unmarshalCreateReviewPayload))
-	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Create", "route", "POST /:version/api/users/:userID/proposals/:proposalID/review")
+	mux.Handle("POST", "/:api_version/api/users/:userID/proposals/:proposalID/review", ctrl.HandleFunc("Create", h, unmarshalCreateReviewPayload))
+	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Create", "route", "POST /:api_version/api/users/:userID/proposals/:proposalID/review")
 	h = func(c *goa.Context) error {
 		ctx, err := NewDeleteReviewContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Delete(ctx)
 	}
-	mux.Handle("DELETE", "/:version/api/users/:userID/proposals/:proposalID/review/:reviewID", ctrl.HandleFunc("Delete", h, nil))
-	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Delete", "route", "DELETE /:version/api/users/:userID/proposals/:proposalID/review/:reviewID")
+	mux.Handle("DELETE", "/:api_version/api/users/:userID/proposals/:proposalID/review/:reviewID", ctrl.HandleFunc("Delete", h, nil))
+	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Delete", "route", "DELETE /:api_version/api/users/:userID/proposals/:proposalID/review/:reviewID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewListReviewContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.List(ctx)
 	}
-	mux.Handle("GET", "/:version/api/users/:userID/proposals/:proposalID/review", ctrl.HandleFunc("List", h, nil))
-	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "List", "route", "GET /:version/api/users/:userID/proposals/:proposalID/review")
+	mux.Handle("GET", "/:api_version/api/users/:userID/proposals/:proposalID/review", ctrl.HandleFunc("List", h, nil))
+	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "List", "route", "GET /:api_version/api/users/:userID/proposals/:proposalID/review")
 	h = func(c *goa.Context) error {
 		ctx, err := NewShowReviewContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Show(ctx)
 	}
-	mux.Handle("GET", "/:version/api/users/:userID/proposals/:proposalID/review/:reviewID", ctrl.HandleFunc("Show", h, nil))
-	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Show", "route", "GET /:version/api/users/:userID/proposals/:proposalID/review/:reviewID")
+	mux.Handle("GET", "/:api_version/api/users/:userID/proposals/:proposalID/review/:reviewID", ctrl.HandleFunc("Show", h, nil))
+	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Show", "route", "GET /:api_version/api/users/:userID/proposals/:proposalID/review/:reviewID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewUpdateReviewContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		ctx.Payload = ctx.RawPayload().(*UpdateReviewPayload)
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Update(ctx)
 	}
-	mux.Handle("PATCH", "/:version/api/users/:userID/proposals/:proposalID/review/:reviewID", ctrl.HandleFunc("Update", h, unmarshalUpdateReviewPayload))
-	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Update", "route", "PATCH /:version/api/users/:userID/proposals/:proposalID/review/:reviewID")
+	mux.Handle("PATCH", "/:api_version/api/users/:userID/proposals/:proposalID/review/:reviewID", ctrl.HandleFunc("Update", h, unmarshalUpdateReviewPayload))
+	service.Info("mount", "ctrl", "Review", "version", "v1", "action", "Update", "route", "PATCH /:api_version/api/users/:userID/proposals/:proposalID/review/:reviewID")
 }
 
 // unmarshalCreateReviewPayload unmarshals the request body.
@@ -245,56 +245,56 @@ func MountUserController(service goa.Service, ctrl UserController) {
 	mux := service.Version("v1").ServeMux()
 	h = func(c *goa.Context) error {
 		ctx, err := NewCreateUserContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		ctx.Payload = ctx.RawPayload().(*CreateUserPayload)
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Create(ctx)
 	}
-	mux.Handle("POST", "/:version/api/users", ctrl.HandleFunc("Create", h, unmarshalCreateUserPayload))
-	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Create", "route", "POST /:version/api/users")
+	mux.Handle("POST", "/:api_version/api/users", ctrl.HandleFunc("Create", h, unmarshalCreateUserPayload))
+	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Create", "route", "POST /:api_version/api/users")
 	h = func(c *goa.Context) error {
 		ctx, err := NewDeleteUserContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Delete(ctx)
 	}
-	mux.Handle("DELETE", "/:version/api/users/:userID", ctrl.HandleFunc("Delete", h, nil))
-	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Delete", "route", "DELETE /:version/api/users/:userID")
+	mux.Handle("DELETE", "/:api_version/api/users/:userID", ctrl.HandleFunc("Delete", h, nil))
+	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Delete", "route", "DELETE /:api_version/api/users/:userID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewListUserContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.List(ctx)
 	}
-	mux.Handle("GET", "/:version/api/users", ctrl.HandleFunc("List", h, nil))
-	service.Info("mount", "ctrl", "User", "version", "v1", "action", "List", "route", "GET /:version/api/users")
+	mux.Handle("GET", "/:api_version/api/users", ctrl.HandleFunc("List", h, nil))
+	service.Info("mount", "ctrl", "User", "version", "v1", "action", "List", "route", "GET /:api_version/api/users")
 	h = func(c *goa.Context) error {
 		ctx, err := NewShowUserContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Show(ctx)
 	}
-	mux.Handle("GET", "/:version/api/users/:userID", ctrl.HandleFunc("Show", h, nil))
-	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Show", "route", "GET /:version/api/users/:userID")
+	mux.Handle("GET", "/:api_version/api/users/:userID", ctrl.HandleFunc("Show", h, nil))
+	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Show", "route", "GET /:api_version/api/users/:userID")
 	h = func(c *goa.Context) error {
 		ctx, err := NewUpdateUserContext(c)
-		ctx.Version = service.Version("v1").VersionName()
+		ctx.APIVersion = service.Version("v1").VersionName()
 		ctx.Payload = ctx.RawPayload().(*UpdateUserPayload)
 		if err != nil {
 			return goa.NewBadRequestError(err)
 		}
 		return ctrl.Update(ctx)
 	}
-	mux.Handle("PATCH", "/:version/api/users/:userID", ctrl.HandleFunc("Update", h, unmarshalUpdateUserPayload))
-	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Update", "route", "PATCH /:version/api/users/:userID")
+	mux.Handle("PATCH", "/:api_version/api/users/:userID", ctrl.HandleFunc("Update", h, unmarshalUpdateUserPayload))
+	service.Info("mount", "ctrl", "User", "version", "v1", "action", "Update", "route", "PATCH /:api_version/api/users/:userID")
 }
 
 // unmarshalCreateUserPayload unmarshals the request body.

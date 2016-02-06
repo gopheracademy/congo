@@ -17,8 +17,8 @@ import "github.com/goadesign/goa"
 // CallbackAuthContext provides the auth callback action context.
 type CallbackAuthContext struct {
 	*goa.Context
-	Provider string
-	Version  string
+	APIVersion string
+	Provider   string
 }
 
 // NewCallbackAuthContext parses the incoming request URL and body, performs validations and creates the
@@ -26,13 +26,13 @@ type CallbackAuthContext struct {
 func NewCallbackAuthContext(c *goa.Context) (*CallbackAuthContext, error) {
 	var err error
 	ctx := CallbackAuthContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProvider := c.Get("provider")
 	if rawProvider != "" {
 		ctx.Provider = rawProvider
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -46,8 +46,8 @@ func (ctx *CallbackAuthContext) OK(resp []byte) error {
 // OauthAuthContext provides the auth oauth action context.
 type OauthAuthContext struct {
 	*goa.Context
-	Provider string
-	Version  string
+	APIVersion string
+	Provider   string
 }
 
 // NewOauthAuthContext parses the incoming request URL and body, performs validations and creates the
@@ -55,13 +55,13 @@ type OauthAuthContext struct {
 func NewOauthAuthContext(c *goa.Context) (*OauthAuthContext, error) {
 	var err error
 	ctx := OauthAuthContext{Context: c}
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
+	}
 	rawProvider := c.Get("provider")
 	if rawProvider != "" {
 		ctx.Provider = rawProvider
-	}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
 	}
 	return &ctx, err
 }
@@ -75,8 +75,8 @@ func (ctx *OauthAuthContext) OK(resp *Authorize) error {
 // RefreshAuthContext provides the auth refresh action context.
 type RefreshAuthContext struct {
 	*goa.Context
-	Version string
-	Payload *RefreshAuthPayload
+	APIVersion string
+	Payload    *RefreshAuthPayload
 }
 
 // NewRefreshAuthContext parses the incoming request URL and body, performs validations and creates the
@@ -84,9 +84,9 @@ type RefreshAuthContext struct {
 func NewRefreshAuthContext(c *goa.Context) (*RefreshAuthContext, error) {
 	var err error
 	ctx := RefreshAuthContext{Context: c}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
 	}
 	return &ctx, err
 }
@@ -110,8 +110,8 @@ func (ctx *RefreshAuthContext) Created(resp *Authorize) error {
 // TokenAuthContext provides the auth token action context.
 type TokenAuthContext struct {
 	*goa.Context
-	Version string
-	Payload *TokenAuthPayload
+	APIVersion string
+	Payload    *TokenAuthPayload
 }
 
 // NewTokenAuthContext parses the incoming request URL and body, performs validations and creates the
@@ -119,9 +119,9 @@ type TokenAuthContext struct {
 func NewTokenAuthContext(c *goa.Context) (*TokenAuthContext, error) {
 	var err error
 	ctx := TokenAuthContext{Context: c}
-	rawVersion := c.Get("version")
-	if rawVersion != "" {
-		ctx.Version = rawVersion
+	rawAPIVersion := c.Get("api_version")
+	if rawAPIVersion != "" {
+		ctx.APIVersion = rawAPIVersion
 	}
 	return &ctx, err
 }
