@@ -12,8 +12,10 @@
 package genmodels
 
 import (
-	"github.com/goadesign/goa"
 	"time"
+
+	"github.com/goadesign/goa"
+	"github.com/gopheracademy/congo/app/v1"
 )
 
 // v1

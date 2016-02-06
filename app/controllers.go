@@ -43,8 +43,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Callback(ctx)
 	}
-	mux.Handle("GET", "/auth/:provider/callback", ctrl.HandleFunc("Callback", h, nil))
-	service.Info("mount", "ctrl", "Auth", "action", "Callback", "route", "GET /auth/:provider/callback")
+	mux.Handle("GET", "/api/auth/:provider/callback", ctrl.HandleFunc("Callback", h, nil))
+	service.Info("mount", "ctrl", "Auth", "action", "Callback", "route", "GET /api/auth/:provider/callback")
 	h = func(c *goa.Context) error {
 		ctx, err := NewOauthAuthContext(c)
 		if err != nil {
@@ -52,8 +52,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Oauth(ctx)
 	}
-	mux.Handle("GET", "/auth/:provider", ctrl.HandleFunc("Oauth", h, nil))
-	service.Info("mount", "ctrl", "Auth", "action", "Oauth", "route", "GET /auth/:provider")
+	mux.Handle("GET", "/api/auth/:provider", ctrl.HandleFunc("Oauth", h, nil))
+	service.Info("mount", "ctrl", "Auth", "action", "Oauth", "route", "GET /api/auth/:provider")
 	h = func(c *goa.Context) error {
 		ctx, err := NewRefreshAuthContext(c)
 		ctx.Payload = ctx.RawPayload().(*RefreshAuthPayload)
@@ -62,8 +62,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Refresh(ctx)
 	}
-	mux.Handle("POST", "/auth/refresh", ctrl.HandleFunc("Refresh", h, unmarshalRefreshAuthPayload))
-	service.Info("mount", "ctrl", "Auth", "action", "Refresh", "route", "POST /auth/refresh")
+	mux.Handle("POST", "/api/auth/refresh", ctrl.HandleFunc("Refresh", h, unmarshalRefreshAuthPayload))
+	service.Info("mount", "ctrl", "Auth", "action", "Refresh", "route", "POST /api/auth/refresh")
 	h = func(c *goa.Context) error {
 		ctx, err := NewTokenAuthContext(c)
 		ctx.Payload = ctx.RawPayload().(*TokenAuthPayload)
@@ -72,8 +72,8 @@ func MountAuthController(service goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Token(ctx)
 	}
-	mux.Handle("POST", "/auth/token", ctrl.HandleFunc("Token", h, unmarshalTokenAuthPayload))
-	service.Info("mount", "ctrl", "Auth", "action", "Token", "route", "POST /auth/token")
+	mux.Handle("POST", "/api/auth/token", ctrl.HandleFunc("Token", h, unmarshalTokenAuthPayload))
+	service.Info("mount", "ctrl", "Auth", "action", "Token", "route", "POST /api/auth/token")
 }
 
 // unmarshalRefreshAuthPayload unmarshals the request body.

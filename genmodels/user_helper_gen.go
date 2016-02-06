@@ -12,9 +12,10 @@
 package genmodels
 
 import (
+	"time"
+
 	"github.com/goadesign/goa"
 	"github.com/gopheracademy/congo/app"
-	"time"
 )
 
 // MediaType Retrieval Functions

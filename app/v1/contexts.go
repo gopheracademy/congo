@@ -794,15 +794,15 @@ func NewShowUserContext(c *goa.Context) (*ShowUserContext, error) {
 	return &ctx, err
 }
 
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowUserContext) NotFound() error {
-	return ctx.RespondBytes(404, nil)
-}
-
 // OK sends a HTTP response with status code 200.
 func (ctx *ShowUserContext) OK(resp *app.User) error {
 	ctx.Header().Set("Content-Type", "application/vnd.user")
 	return ctx.Respond(200, resp)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowUserContext) NotFound() error {
+	return ctx.RespondBytes(404, nil)
 }
 
 // UpdateUserContext provides the user update action context.

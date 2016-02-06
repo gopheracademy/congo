@@ -26,7 +26,7 @@ var _ = API("congo", func() {
 	})
 	Host("api.gopheracademy.com")
 	Scheme("http")
-	BasePath("/")
+	BasePath("/api")
 	ResponseTemplate(Created, func(pattern string) {
 		Description("Resource created")
 		Status(201)
@@ -40,5 +40,5 @@ var _ = API("congo", func() {
 
 var _ = Version("v1", func() {
 	Description("Multi-tenant conference management application API v1")
-	BasePath("/:version")
+	BasePath("/:version/api")
 })

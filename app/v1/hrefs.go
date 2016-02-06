@@ -16,15 +16,15 @@ import "fmt"
 
 // ProposalHref returns the resource href.
 func ProposalHref(version, userID, proposalID interface{}) string {
-	return fmt.Sprintf("/%v/users/%v/proposals/%v", version, userID, proposalID)
+	return fmt.Sprintf("/%v/api/users/%v/proposals/%v", version, userID, proposalID)
 }
 
 // ReviewHref returns the resource href.
 func ReviewHref(version, userID, proposalID, reviewID interface{}) string {
-	return fmt.Sprintf("/%v/users/%v/proposals/%v/review/%v", version, userID, proposalID, reviewID)
+	return fmt.Sprintf("/%v/api/users/%v/proposals/%v/review/%v", version, userID, proposalID, reviewID)
 }
 
 // UserHref returns the resource href.
 func UserHref(version, userID interface{}) string {
-	return fmt.Sprintf("/%v/users/%v", version, userID)
+	return fmt.Sprintf("/%v/api/users/%v", version, userID)
 }
