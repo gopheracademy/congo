@@ -7,12 +7,12 @@ import (
 
 // ReviewController implements the review resource.
 type ReviewController struct {
-	*goa.Controller
+	goa.Controller
 }
 
 // NewReviewController creates a review controller.
-func NewReviewController(service *goa.Service) *ReviewController {
-	return &ReviewController{Controller: service.NewController("review")}
+func NewReviewController(service goa.Service) app.ReviewController {
+	return &ReviewController{Controller: service.NewController("ReviewController")}
 }
 
 // Create runs the create action.
@@ -27,14 +27,13 @@ func (c *ReviewController) Delete(ctx *app.DeleteReviewContext) error {
 
 // List runs the list action.
 func (c *ReviewController) List(ctx *app.ListReviewContext) error {
-	res := app.ReviewCollection{}
-	return ctx.OK(res)
+	return nil
 }
 
 // Show runs the show action.
 func (c *ReviewController) Show(ctx *app.ShowReviewContext) error {
-	res := &app.Review{}
-	return ctx.OK(res)
+	res := &v1.Review{}
+	return ctx.OK(res, "default")
 }
 
 // Update runs the update action.

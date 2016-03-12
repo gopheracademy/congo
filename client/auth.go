@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gopheracademy/congo/app"
 	"io"
 	"net/http"
 	"net/url"
@@ -35,18 +36,8 @@ func (c *Client) OauthAuth(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// RefreshAuthPayload is the data structure used to initialize the auth refresh request body.
-type RefreshAuthPayload struct {
-	// UUID of requesting application
-	Application *string
-	// email
-	Email *string
-	// password
-	Password *string
-}
-
 // Obtain a refreshed access token
-func (c *Client) RefreshAuth(path string, payload *RefreshAuthPayload) (*http.Response, error) {
+func (c *Client) RefreshAuth(path string, payload *app.RefreshAuthPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -63,18 +54,8 @@ func (c *Client) RefreshAuth(path string, payload *RefreshAuthPayload) (*http.Re
 	return c.Client.Do(req)
 }
 
-// TokenAuthPayload is the data structure used to initialize the auth token request body.
-type TokenAuthPayload struct {
-	// UUID of requesting application
-	Application *string
-	// email
-	Email *string
-	// password
-	Password *string
-}
-
 // Obtain an access token
-func (c *Client) TokenAuth(path string, payload *TokenAuthPayload) (*http.Response, error) {
+func (c *Client) TokenAuth(path string, payload *app.TokenAuthPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

@@ -13,7 +13,7 @@ package swagger
 
 import "github.com/goadesign/goa"
 
-// MountController mounts the swagger spec controller under "/swagger.json".
-func MountController(service goa.Service) {
+// MountController mounts the swagger spec controller.
+func MountController(service *goa.Service) {
 	service.ServeFiles("/swagger.json", "swagger/swagger.json")
 }
