@@ -54,13 +54,6 @@ var Tenant = MediaType("application/vnd.tenant+json", func() {
 // GopherCon
 var Series = MediaType("application/vnd.series+json", func() {
 	Description("")
-	Attributes(func() {
-		Attribute("name", String, "name")
-	})
-	View("default", func() {
-		Attribute("name")
-	})
-})
 
 // Event is the event resource media type.
 // GopherCon 2016

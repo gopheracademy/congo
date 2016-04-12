@@ -4,24 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gopheracademy/congo/app"
 	"io"
 	"net/http"
 	"net/url"
 )
 
-// CreateUserPayload is the data structure used to initialize the user create request body.
-type CreateUserPayload struct {
-	Bio       *string
-	City      *string
-	Country   *string
-	Email     string
-	Firstname string
-	Lastname  string
-	State     *string
-}
-
 // Record new user
-func (c *Client) CreateUser(path string, payload *CreateUserPayload) (*http.Response, error) {
+func (c *Client) CreateUser(path string, payload *app.CreateUserPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -77,19 +67,8 @@ func (c *Client) ShowUser(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// UpdateUserPayload is the data structure used to initialize the user update request body.
-type UpdateUserPayload struct {
-	Bio       *string
-	City      *string
-	Country   *string
-	Email     string
-	Firstname *string
-	Lastname  *string
-	State     *string
-}
-
 // UpdateUser makes a request to the update action endpoint of the user resource
-func (c *Client) UpdateUser(path string, payload *UpdateUserPayload) (*http.Response, error) {
+func (c *Client) UpdateUser(path string, payload *app.UpdateUserPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

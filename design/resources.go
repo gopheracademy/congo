@@ -41,7 +41,6 @@ var _ = Resource("healthz", func() {
 		Description("Get Server Status")
 	})
 })
-
 var _ = Resource("adminuser", func() {
 	DefaultMedia(User)
 

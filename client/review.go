@@ -4,19 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gopheracademy/congo/app"
 	"io"
 	"net/http"
 	"net/url"
 )
 
-// CreateReviewPayload is the data structure used to initialize the review create request body.
-type CreateReviewPayload struct {
-	Comment *string
-	Rating  int
-}
-
 // Create a new review
-func (c *Client) CreateReview(path string, payload *CreateReviewPayload) (*http.Response, error) {
+func (c *Client) CreateReview(path string, payload *app.CreateReviewPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -72,14 +67,8 @@ func (c *Client) ShowReview(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// UpdateReviewPayload is the data structure used to initialize the review update request body.
-type UpdateReviewPayload struct {
-	Comment *string
-	Rating  *int
-}
-
 // UpdateReview makes a request to the update action endpoint of the review resource
-func (c *Client) UpdateReview(path string, payload *UpdateReviewPayload) (*http.Response, error) {
+func (c *Client) UpdateReview(path string, payload *app.UpdateReviewPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

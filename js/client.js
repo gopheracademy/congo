@@ -38,7 +38,7 @@ define(['axios'] , function (axios) {
   }
 
   // OAUTH2 callback endpoint
-  // path is the request path, the format is "/auth/:provider/callback"
+  // path is the request path, the format is "/api/auth/:provider/callback"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -56,7 +56,7 @@ define(['axios'] , function (axios) {
   }
 
   // Create a new proposal
-  // path is the request path, the format is "/users/:userID/proposals"
+  // path is the request path, the format is "/api/users/:userID/proposals"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -76,7 +76,7 @@ define(['axios'] , function (axios) {
   }
 
   // Create a new review
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID/review"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -96,7 +96,7 @@ define(['axios'] , function (axios) {
   }
 
   // Record new user
-  // path is the request path, the format is "/users"
+  // path is the request path, the format is "/api/users"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -116,7 +116,7 @@ define(['axios'] , function (axios) {
   }
 
   // deleteProposal calls the delete action of the proposal resource.
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -134,7 +134,7 @@ define(['axios'] , function (axios) {
   }
 
   // deleteReview calls the delete action of the review resource.
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID/review/:reviewID"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review/:reviewID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -152,7 +152,7 @@ define(['axios'] , function (axios) {
   }
 
   // deleteUser calls the delete action of the user resource.
-  // path is the request path, the format is "/users/:userID"
+  // path is the request path, the format is "/api/users/:userID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -170,7 +170,7 @@ define(['axios'] , function (axios) {
   }
 
   // List all proposals for a user
-  // path is the request path, the format is "/users/:userID/proposals"
+  // path is the request path, the format is "/api/users/:userID/proposals"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -188,7 +188,7 @@ define(['axios'] , function (axios) {
   }
 
   // List all reviews for a proposal
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID/review"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -206,7 +206,7 @@ define(['axios'] , function (axios) {
   }
 
   // List all users in account
-  // path is the request path, the format is "/users"
+  // path is the request path, the format is "/api/users"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -224,7 +224,7 @@ define(['axios'] , function (axios) {
   }
 
   // OAUTH2 login endpoint
-  // path is the request path, the format is "/auth/:provider"
+  // path is the request path, the format is "/api/auth/:provider"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -242,7 +242,7 @@ define(['axios'] , function (axios) {
   }
 
   // Obtain a refreshed access token
-  // path is the request path, the format is "/auth/refresh"
+  // path is the request path, the format is "/api/auth/refresh"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -262,7 +262,7 @@ define(['axios'] , function (axios) {
   }
 
   // Retrieve proposal with given id
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -280,7 +280,7 @@ define(['axios'] , function (axios) {
   }
 
   // Retrieve review with given id
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID/review/:reviewID"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review/:reviewID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -298,7 +298,7 @@ define(['axios'] , function (axios) {
   }
 
   // Retrieve user with given id
-  // path is the request path, the format is "/users/:userID"
+  // path is the request path, the format is "/api/users/:userID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -316,7 +316,7 @@ define(['axios'] , function (axios) {
   }
 
   // Obtain an access token
-  // path is the request path, the format is "/auth/token"
+  // path is the request path, the format is "/api/auth/token"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -336,7 +336,7 @@ define(['axios'] , function (axios) {
   }
 
   // updateProposal calls the update action of the proposal resource.
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -356,7 +356,7 @@ define(['axios'] , function (axios) {
   }
 
   // updateReview calls the update action of the review resource.
-  // path is the request path, the format is "/users/:userID/proposals/:proposalID/review/:reviewID"
+  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review/:reviewID"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -376,7 +376,7 @@ define(['axios'] , function (axios) {
   }
 
   // updateUser calls the update action of the user resource.
-  // path is the request path, the format is "/users/:userID"
+  // path is the request path, the format is "/api/users/:userID"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api

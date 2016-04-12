@@ -4,22 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gopheracademy/congo/app"
 	"io"
 	"net/http"
 	"net/url"
 )
 
-// CreateProposalPayload is the data structure used to initialize the proposal create request body.
-type CreateProposalPayload struct {
-	Abstract  string
-	Detail    string
-	Firstname *string
-	Title     string
-	Withdrawn *bool
-}
-
 // Create a new proposal
-func (c *Client) CreateProposal(path string, payload *CreateProposalPayload) (*http.Response, error) {
+func (c *Client) CreateProposal(path string, payload *app.CreateProposalPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -75,17 +67,8 @@ func (c *Client) ShowProposal(path string) (*http.Response, error) {
 	return c.Client.Do(req)
 }
 
-// UpdateProposalPayload is the data structure used to initialize the proposal update request body.
-type UpdateProposalPayload struct {
-	Abstract  *string
-	Detail    *string
-	Firstname *string
-	Title     *string
-	Withdrawn *bool
-}
-
 // UpdateProposal makes a request to the update action endpoint of the proposal resource
-func (c *Client) UpdateProposal(path string, payload *UpdateProposalPayload) (*http.Response, error) {
+func (c *Client) UpdateProposal(path string, payload *app.UpdateProposalPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

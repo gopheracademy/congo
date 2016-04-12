@@ -13,6 +13,7 @@ var sg = StorageGroup("XOR Storage", func() {
 			BuildsFrom(func() {
 				Payload("user", "create")
 				Payload("user", "update")
+<<<<<<< HEAD
 				Payload("adminuser", "create")
 				Payload("adminuser", "update")
 			})
@@ -29,6 +30,16 @@ var sg = StorageGroup("XOR Storage", func() {
 
 			Field("last_name", gorma.String, func() {
 				Alias("lastname")
+=======
+			})
+			RendersTo(User)
+			Description("User Model")
+			HasMany("Reviews", "Review")
+			HasMany("Proposals", "Proposal")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the User Model PK field")
+>>>>>>> d16d31f78e7efce748d2a2e8192efa72fe080e47
 			})
 			Field("href", gorma.String)
 		})
@@ -45,6 +56,7 @@ var sg = StorageGroup("XOR Storage", func() {
 				Description("This is part the ID PK field")
 			})
 
+<<<<<<< HEAD
 			Field("href", gorma.String)
 			Field("GrantMemberID", gorma.Integer, func() {
 				PrimaryKey()
@@ -272,6 +284,42 @@ var sg = StorageGroup("XOR Storage", func() {
 				PrimaryKey()
 				Description("This is the ID PK field")
 			})
+=======
+		Model("Proposal", func() {
+			BuildsFrom(func() {
+				Payload("proposal", "create")
+				Payload("proposal", "update")
+			})
+			RendersTo(Proposal)
+			Description("Proposal Model")
+			BelongsTo("User")
+			HasMany("Reviews", "Review")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the Payload Model PK field")
+			})
+			Field("created_at", gorma.Timestamp, func() {})
+			Field("updated_at", gorma.Timestamp, func() {})
+			Field("deleted_at", gorma.NullableTimestamp, func() {})
+		})
+
+		Model("Review", func() {
+			BuildsFrom(func() {
+				Payload("review", "create")
+				Payload("review", "update")
+			})
+			RendersTo(Review)
+			Description("Review Model")
+			BelongsTo("User")
+			BelongsTo("Proposal")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the Review Model PK field")
+			})
+			Field("created_at", gorma.Timestamp, func() {})
+			Field("updated_at", gorma.Timestamp, func() {})
+			Field("deleted_at", gorma.NullableTimestamp, func() {})
+>>>>>>> d16d31f78e7efce748d2a2e8192efa72fe080e47
 		})
 
 	})

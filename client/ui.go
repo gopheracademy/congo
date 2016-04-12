@@ -7,7 +7,7 @@ import (
 )
 
 // Render single page app HTML
-func (c *Client) BootstrapUi(path string) (*http.Response, error) {
+func (c *Client) BootstrapUI(path string) (*http.Response, error) {
 	var body io.Reader
 	u := url.URL{Host: c.Host, Scheme: c.Scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), body)

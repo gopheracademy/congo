@@ -1,10 +1,8 @@
 package client
 
 import (
-	"net/http"
-
 	"github.com/goadesign/goa"
-	"gopkg.in/alecthomas/kingpin.v2"
+	"github.com/spf13/cobra"
 )
 
 type (
@@ -18,9 +16,9 @@ type (
 	// call the method passing in arguments computed from the command line.
 	ActionCommand interface {
 		// Run makes the HTTP request and returns the response.
-		Run(c *Client) (*http.Response, error)
+		Run(c *Client) error
 		// RegisterFlags defines the command flags.
-		RegisterFlags(*kingpin.CmdClause)
+		RegisterFlags(*cobra.Command)
 	}
 )
 
