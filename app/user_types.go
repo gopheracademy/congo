@@ -14,108 +14,352 @@ package app
 
 import "github.com/goadesign/goa"
 
-// ProposalPayload user type.
-type ProposalPayload struct {
-	Abstract  *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
-	Detail    *string `json:"detail,omitempty" xml:"detail,omitempty"`
-	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
-	Title     *string `json:"title,omitempty" xml:"title,omitempty"`
-	Withdrawn *bool   `json:"withdrawn,omitempty" xml:"withdrawn,omitempty"`
+// AdminUserPayload user type.
+type adminUserPayload struct {
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	MemberID       *int    `json:"member_id,omitempty" xml:"member_id,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
 }
 
-// Validate validates the ProposalPayload type instance.
-func (ut *ProposalPayload) Validate() (err error) {
-	if ut.Abstract != nil {
-		if len(*ut.Abstract) < 50 {
-			err = goa.InvalidLengthError(`response.abstract`, *ut.Abstract, len(*ut.Abstract), 50, true, err)
+// Validate validates the adminUserPayload type instance.
+func (ut *adminUserPayload) Validate() (err error) {
+	if ut.Email != nil {
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
 		}
 	}
-	if ut.Abstract != nil {
-		if len(*ut.Abstract) > 500 {
-			err = goa.InvalidLengthError(`response.abstract`, *ut.Abstract, len(*ut.Abstract), 500, false, err)
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
 		}
 	}
-	if ut.Detail != nil {
-		if len(*ut.Detail) < 100 {
-			err = goa.InvalidLengthError(`response.detail`, *ut.Detail, len(*ut.Detail), 100, true, err)
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
 		}
 	}
-	if ut.Detail != nil {
-		if len(*ut.Detail) > 2000 {
-			err = goa.InvalidLengthError(`response.detail`, *ut.Detail, len(*ut.Detail), 2000, false, err)
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
 		}
 	}
-	if ut.Firstname != nil {
-		if len(*ut.Firstname) < 2 {
-			err = goa.InvalidLengthError(`response.firstname`, *ut.Firstname, len(*ut.Firstname), 2, true, err)
-		}
-	}
-	if ut.Title != nil {
-		if len(*ut.Title) < 10 {
-			err = goa.InvalidLengthError(`response.title`, *ut.Title, len(*ut.Title), 10, true, err)
-		}
-	}
-	if ut.Title != nil {
-		if len(*ut.Title) > 200 {
-			err = goa.InvalidLengthError(`response.title`, *ut.Title, len(*ut.Title), 200, false, err)
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
 		}
 	}
 	return
 }
 
-// ReviewPayload user type.
-type ReviewPayload struct {
-	Comment *string `json:"comment,omitempty" xml:"comment,omitempty"`
-	Rating  *int    `json:"rating,omitempty" xml:"rating,omitempty"`
+// Publicize creates AdminUserPayload from adminUserPayload
+func (ut *adminUserPayload) Publicize() *AdminUserPayload {
+	var pub AdminUserPayload
+	if ut.Email != nil {
+		pub.Email = ut.Email
+	}
+	if ut.FirstName != nil {
+		pub.FirstName = ut.FirstName
+	}
+	if ut.ID != nil {
+		pub.ID = ut.ID
+	}
+	if ut.LastName != nil {
+		pub.LastName = ut.LastName
+	}
+	if ut.MemberID != nil {
+		pub.MemberID = ut.MemberID
+	}
+	if ut.Password != nil {
+		pub.Password = ut.Password
+	}
+	if ut.Role != nil {
+		pub.Role = ut.Role
+	}
+	if ut.Validated != nil {
+		pub.Validated = ut.Validated
+	}
+	if ut.ValidationCode != nil {
+		pub.ValidationCode = ut.ValidationCode
+	}
+	return &pub
 }
 
-// Validate validates the ReviewPayload type instance.
-func (ut *ReviewPayload) Validate() (err error) {
-	if ut.Comment != nil {
-		if len(*ut.Comment) < 10 {
-			err = goa.InvalidLengthError(`response.comment`, *ut.Comment, len(*ut.Comment), 10, true, err)
+// AdminUserPayload user type.
+type AdminUserPayload struct {
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	MemberID       *int    `json:"member_id,omitempty" xml:"member_id,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
+}
+
+// Validate validates the AdminUserPayload type instance.
+func (ut *AdminUserPayload) Validate() (err error) {
+	if ut.Email != nil {
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
 		}
 	}
-	if ut.Comment != nil {
-		if len(*ut.Comment) > 200 {
-			err = goa.InvalidLengthError(`response.comment`, *ut.Comment, len(*ut.Comment), 200, false, err)
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
 		}
 	}
-	if ut.Rating != nil {
-		if *ut.Rating < 1 {
-			err = goa.InvalidRangeError(`response.rating`, *ut.Rating, 1, true, err)
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
 		}
 	}
-	if ut.Rating != nil {
-		if *ut.Rating > 5 {
-			err = goa.InvalidRangeError(`response.rating`, *ut.Rating, 5, false, err)
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
+		}
+	}
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
+		}
+	}
+	return err
+}
+
+// EventPayload user type.
+type eventPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the eventPayload type instance.
+func (ut *eventPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
 		}
 	}
 	return
+}
+
+// Publicize creates EventPayload from eventPayload
+func (ut *eventPayload) Publicize() *EventPayload {
+	var pub EventPayload
+	if ut.Name != nil {
+		pub.Name = ut.Name
+	}
+	return &pub
+}
+
+// EventPayload user type.
+type EventPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the EventPayload type instance.
+func (ut *EventPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	return err
+}
+
+// SeriesPayload user type.
+type seriesPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the seriesPayload type instance.
+func (ut *seriesPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	return
+}
+
+// Publicize creates SeriesPayload from seriesPayload
+func (ut *seriesPayload) Publicize() *SeriesPayload {
+	var pub SeriesPayload
+	if ut.Name != nil {
+		pub.Name = ut.Name
+	}
+	return &pub
+}
+
+// SeriesPayload user type.
+type SeriesPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the SeriesPayload type instance.
+func (ut *SeriesPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	return err
+}
+
+// TenantPayload user type.
+type tenantPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the tenantPayload type instance.
+func (ut *tenantPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	return
+}
+
+// Publicize creates TenantPayload from tenantPayload
+func (ut *tenantPayload) Publicize() *TenantPayload {
+	var pub TenantPayload
+	if ut.Name != nil {
+		pub.Name = ut.Name
+	}
+	return &pub
+}
+
+// TenantPayload user type.
+type TenantPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the TenantPayload type instance.
+func (ut *TenantPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	return err
+}
+
+// UserPayload user type.
+type userPayload struct {
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
+}
+
+// Validate validates the userPayload type instance.
+func (ut *userPayload) Validate() (err error) {
+	if ut.Email != nil {
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
+		}
+	}
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
+		}
+	}
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
+		}
+	}
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
+		}
+	}
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
+		}
+	}
+	return
+}
+
+// Publicize creates UserPayload from userPayload
+func (ut *userPayload) Publicize() *UserPayload {
+	var pub UserPayload
+	if ut.Email != nil {
+		pub.Email = ut.Email
+	}
+	if ut.FirstName != nil {
+		pub.FirstName = ut.FirstName
+	}
+	if ut.ID != nil {
+		pub.ID = ut.ID
+	}
+	if ut.LastName != nil {
+		pub.LastName = ut.LastName
+	}
+	if ut.Password != nil {
+		pub.Password = ut.Password
+	}
+	if ut.Role != nil {
+		pub.Role = ut.Role
+	}
+	if ut.Validated != nil {
+		pub.Validated = ut.Validated
+	}
+	if ut.ValidationCode != nil {
+		pub.ValidationCode = ut.ValidationCode
+	}
+	return &pub
 }
 
 // UserPayload user type.
 type UserPayload struct {
-	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
-	City      *string `json:"city,omitempty" xml:"city,omitempty"`
-	Country   *string `json:"country,omitempty" xml:"country,omitempty"`
-	Email     *string `json:"email,omitempty" xml:"email,omitempty"`
-	Firstname *string `json:"firstname,omitempty" xml:"firstname,omitempty"`
-	Lastname  *string `json:"lastname,omitempty" xml:"lastname,omitempty"`
-	State     *string `json:"state,omitempty" xml:"state,omitempty"`
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
 }
 
 // Validate validates the UserPayload type instance.
 func (ut *UserPayload) Validate() (err error) {
-	if ut.Bio != nil {
-		if len(*ut.Bio) > 500 {
-			err = goa.InvalidLengthError(`response.bio`, *ut.Bio, len(*ut.Bio), 500, false, err)
-		}
-	}
 	if ut.Email != nil {
-		if err2 := goa.ValidateFormat(goa.FormatEmail, *ut.Email); err2 != nil {
-			err = goa.InvalidFormatError(`response.email`, *ut.Email, goa.FormatEmail, err2, err)
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
 		}
 	}
-	return
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
+		}
+	}
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
+		}
+	}
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
+		}
+	}
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
+		}
+	}
+	return err
 }

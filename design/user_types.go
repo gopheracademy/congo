@@ -53,6 +53,10 @@ var EventPayload = Type("EventPayload", func() {
 	Attribute("name", func() {
 		MinLength(2)
 	})
+	Attribute("url", func() {
+		MinLength(5)
+	})
+
 })
 
 // AdminUserPayload defines the data structure used in the create user request body.

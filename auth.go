@@ -12,26 +12,17 @@ type AuthController struct {
 
 // NewAuthController creates a auth controller.
 func NewAuthController(service *goa.Service) *AuthController {
-	return &AuthController{Controller: service.NewController("auth")}
-}
-
-// Callback runs the callback action.
-func (c *AuthController) Callback(ctx *app.CallbackAuthContext) error {
-	return nil
-}
-
-// Oauth runs the oauth action.
-func (c *AuthController) Oauth(ctx *app.OauthAuthContext) error {
-	res := &app.Authorize{}
-	return ctx.OK(res)
+	return &AuthController{Controller: service.NewController("AuthController")}
 }
 
 // Refresh runs the refresh action.
 func (c *AuthController) Refresh(ctx *app.RefreshAuthContext) error {
+	// TBD: implement
 	return nil
 }
 
 // Token runs the token action.
 func (c *AuthController) Token(ctx *app.TokenAuthContext) error {
+	// TBD: implement
 	return nil
 }

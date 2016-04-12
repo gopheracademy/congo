@@ -22,15 +22,15 @@ import (
 // MediaType Retrieval Functions
 
 // ListUser returns an array of view: default.
-func (m *UserDB) ListUser(ctx context.Context) []*app.User {
+func (m *UserDB) ListUser(ctx context.Context, tenantID int) []*app.User {
 	defer goa.MeasureSince([]string{"goa", "db", "user", "listuser"}, time.Now())
 
 	var native []*User
 	var objs []*app.User
-	err := m.Db.Scopes().Table(m.TableName()).Find(&native).Error
+	err := m.Db.Scopes(UserFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Find(&native).Error
 
 	if err != nil {
-		goa.Error(ctx, "error listing User", "error", err.Error())
+		goa.LogError(ctx, "error listing User", "error", err.Error())
 		return objs
 	}
 
@@ -44,27 +44,26 @@ func (m *UserDB) ListUser(ctx context.Context) []*app.User {
 // UserToUser returns the User representation of User.
 func (m *User) UserToUser() *app.User {
 	user := &app.User{}
-	user.Bio = m.Bio
-	user.City = m.City
-	user.Country = m.Country
 	user.Email = &m.Email
-	user.Firstname = &m.Firstname
+	user.FirstName = &m.FirstName
+	user.Href = &m.Href
 	user.ID = &m.ID
-	user.Lastname = &m.Lastname
-	user.State = m.State
+	user.LastName = &m.LastName
+	user.Role = &m.Role
+	user.TenantID = &m.TenantID
 
 	return user
 }
 
 // OneUser returns an array of view: default.
-func (m *UserDB) OneUser(ctx context.Context, id int) (*app.User, error) {
+func (m *UserDB) OneUser(ctx context.Context, id int, tenantID int) (*app.User, error) {
 	defer goa.MeasureSince([]string{"goa", "db", "user", "oneuser"}, time.Now())
 
 	var native User
-	err := m.Db.Scopes().Table(m.TableName()).Preload("Proposals").Preload("Reviews").Where("id = ?", id).Find(&native).Error
+	err := m.Db.Scopes(UserFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Preload("Tenant").Where("id = ?", id).Find(&native).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
-		goa.Error(ctx, "error getting User", "error", err.Error())
+		goa.LogError(ctx, "error getting User", "error", err.Error())
 		return nil, err
 	}
 
@@ -75,15 +74,15 @@ func (m *UserDB) OneUser(ctx context.Context, id int) (*app.User, error) {
 // MediaType Retrieval Functions
 
 // ListUserLink returns an array of view: link.
-func (m *UserDB) ListUserLink(ctx context.Context) []*app.UserLink {
+func (m *UserDB) ListUserLink(ctx context.Context, tenantID int) []*app.UserLink {
 	defer goa.MeasureSince([]string{"goa", "db", "user", "listuserlink"}, time.Now())
 
 	var native []*User
 	var objs []*app.UserLink
-	err := m.Db.Scopes().Table(m.TableName()).Find(&native).Error
+	err := m.Db.Scopes(UserFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Find(&native).Error
 
 	if err != nil {
-		goa.Error(ctx, "error listing User", "error", err.Error())
+		goa.LogError(ctx, "error listing User", "error", err.Error())
 		return objs
 	}
 
@@ -98,23 +97,77 @@ func (m *UserDB) ListUserLink(ctx context.Context) []*app.UserLink {
 func (m *User) UserToUserLink() *app.UserLink {
 	user := &app.UserLink{}
 	user.Email = &m.Email
+	user.Href = &m.Href
 	user.ID = &m.ID
 
 	return user
 }
 
 // OneUserLink returns an array of view: link.
-func (m *UserDB) OneUserLink(ctx context.Context, id int) (*app.UserLink, error) {
+func (m *UserDB) OneUserLink(ctx context.Context, id int, tenantID int) (*app.UserLink, error) {
 	defer goa.MeasureSince([]string{"goa", "db", "user", "oneuserlink"}, time.Now())
 
 	var native User
-	err := m.Db.Scopes().Table(m.TableName()).Preload("Proposals").Preload("Reviews").Where("id = ?", id).Find(&native).Error
+	err := m.Db.Scopes(UserFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Preload("Tenant").Where("id = ?", id).Find(&native).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
-		goa.Error(ctx, "error getting User", "error", err.Error())
+		goa.LogError(ctx, "error getting User", "error", err.Error())
 		return nil, err
 	}
 
 	view := *native.UserToUserLink()
+	return &view, err
+}
+
+// MediaType Retrieval Functions
+
+// ListUserTenant returns an array of view: tenant.
+func (m *UserDB) ListUserTenant(ctx context.Context, tenantID int) []*app.UserTenant {
+	defer goa.MeasureSince([]string{"goa", "db", "user", "listusertenant"}, time.Now())
+
+	var native []*User
+	var objs []*app.UserTenant
+	err := m.Db.Scopes(UserFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Find(&native).Error
+
+	if err != nil {
+		goa.LogError(ctx, "error listing User", "error", err.Error())
+		return objs
+	}
+
+	for _, t := range native {
+		objs = append(objs, t.UserToUserTenant())
+	}
+
+	return objs
+}
+
+// UserToUserTenant returns the User representation of User.
+func (m *User) UserToUserTenant() *app.UserTenant {
+	user := &app.UserTenant{}
+	user.Email = &m.Email
+	user.FirstName = &m.FirstName
+	user.Href = &m.Href
+	user.ID = &m.ID
+	user.LastName = &m.LastName
+	user.Role = &m.Role
+	user.TenantID = &m.TenantID
+	user.Validated = m.Validated
+
+	return user
+}
+
+// OneUserTenant returns an array of view: tenant.
+func (m *UserDB) OneUserTenant(ctx context.Context, id int, tenantID int) (*app.UserTenant, error) {
+	defer goa.MeasureSince([]string{"goa", "db", "user", "oneusertenant"}, time.Now())
+
+	var native User
+	err := m.Db.Scopes(UserFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Preload("Tenant").Where("id = ?", id).Find(&native).Error
+
+	if err != nil && err != gorm.ErrRecordNotFound {
+		goa.LogError(ctx, "error getting User", "error", err.Error())
+		return nil, err
+	}
+
+	view := *native.UserToUserTenant()
 	return &view, err
 }

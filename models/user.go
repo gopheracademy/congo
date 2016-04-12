@@ -19,21 +19,23 @@ import (
 	"time"
 )
 
-// User Model
+// This is the User model
 type User struct {
-	ID        int `gorm:"primary_key"` // This is the User Model PK field
-	Bio       *string
-	City      *string
-	Country   *string
-	Email     string
-	Firstname string
-	Lastname  string
-	Proposals []Proposal // has many Proposals
-	Reviews   []Review   // has many Reviews
-	State     *string
-	CreatedAt time.Time  // timestamp
-	DeletedAt *time.Time // nullable timestamp (soft delete)
-	UpdatedAt time.Time  // timestamp
+	ID             int `gorm:"primary_key"` // This is the ID PK field
+	CreatedAt      time.Time
+	DeletedAt      *time.Time
+	Email          string
+	FirstName      string `gorm:"column:firstname"`
+	Href           string
+	LastName       string `gorm:"column:lastname"`
+	MemberID       *int
+	Password       string
+	Role           string
+	TenantID       int // Belongs To Tenant
+	UpdatedAt      time.Time
+	Validated      *bool
+	ValidationCode *string
+	Tenant         Tenant
 }
 
 // TableName overrides the table name settings in Gorm to force a specific table name
@@ -68,13 +70,20 @@ type UserStorage interface {
 	Update(ctx context.Context, user *User) error
 	Delete(ctx context.Context, id int) error
 
-	ListUser(ctx context.Context) []*app.User
-	OneUser(ctx context.Context, id int) (*app.User, error)
+	ListUser(ctx context.Context, tenantID int) []*app.User
+	OneUser(ctx context.Context, id int, tenantID int) (*app.User, error)
 
-	ListUserLink(ctx context.Context) []*app.UserLink
-	OneUserLink(ctx context.Context, id int) (*app.UserLink, error)
+	ListUserLink(ctx context.Context, tenantID int) []*app.UserLink
+	OneUserLink(ctx context.Context, id int, tenantID int) (*app.UserLink, error)
+
+	ListUserTenant(ctx context.Context, tenantID int) []*app.UserTenant
+	OneUserTenant(ctx context.Context, id int, tenantID int) (*app.UserTenant, error)
+
+	UpdateFromCreateAdminuserPayload(ctx context.Context, payload *app.CreateAdminuserPayload, id int) error
 
 	UpdateFromCreateUserPayload(ctx context.Context, payload *app.CreateUserPayload, id int) error
+
+	UpdateFromUpdateAdminuserPayload(ctx context.Context, payload *app.UpdateAdminuserPayload, id int) error
 
 	UpdateFromUpdateUserPayload(ctx context.Context, payload *app.UpdateUserPayload, id int) error
 }
@@ -84,6 +93,18 @@ type UserStorage interface {
 func (m *UserDB) TableName() string {
 	return "users"
 
+}
+
+// Belongs To Relationships
+
+// UserFilterByTenant is a gorm filter for a Belongs To relationship.
+func UserFilterByTenant(tenantID int, originaldb *gorm.DB) func(db *gorm.DB) *gorm.DB {
+	if tenantID > 0 {
+		return func(db *gorm.DB) *gorm.DB {
+			return db.Where("tenant_id = ?", tenantID)
+		}
+	}
+	return func(db *gorm.DB) *gorm.DB { return db }
 }
 
 // CRUD Functions
@@ -109,7 +130,7 @@ func (m *UserDB) List(ctx context.Context) []User {
 	var objs []User
 	err := m.Db.Table(m.TableName()).Find(&objs).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		goa.Error(ctx, "error listing User", "error", err.Error())
+		goa.LogError(ctx, "error listing User", "error", err.Error())
 		return objs
 	}
 
@@ -122,7 +143,7 @@ func (m *UserDB) Add(ctx context.Context, model *User) (*User, error) {
 
 	err := m.Db.Create(model).Error
 	if err != nil {
-		goa.Error(ctx, "error updating User", "error", err.Error())
+		goa.LogError(ctx, "error updating User", "error", err.Error())
 		return model, err
 	}
 
@@ -151,31 +172,87 @@ func (m *UserDB) Delete(ctx context.Context, id int) error {
 	err := m.Db.Delete(&obj, id).Error
 
 	if err != nil {
-		goa.Error(ctx, "error retrieving User", "error", err.Error())
+		goa.LogError(ctx, "error retrieving User", "error", err.Error())
 		return err
 	}
 
 	return nil
 }
 
+// UserFromCreateAdminuserPayload Converts source CreateAdminuserPayload to target User model
+// only copying the non-nil fields from the source.
+func UserFromCreateAdminuserPayload(payload *app.CreateAdminuserPayload) *User {
+	user := &User{}
+	user.Email = payload.Email
+	user.FirstName = payload.FirstName
+	if payload.ID != nil {
+		user.ID = *payload.ID
+	}
+	user.LastName = payload.LastName
+	if payload.MemberID != nil {
+		user.MemberID = payload.MemberID
+	}
+	user.Password = payload.Password
+	user.Role = payload.Role
+	if payload.Validated != nil {
+		user.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		user.ValidationCode = payload.ValidationCode
+	}
+
+	return user
+}
+
+// UpdateFromCreateAdminuserPayload applies non-nil changes from CreateAdminuserPayload to the model and saves it
+func (m *UserDB) UpdateFromCreateAdminuserPayload(ctx context.Context, payload *app.CreateAdminuserPayload, id int) error {
+	defer goa.MeasureSince([]string{"goa", "db", "user", "updatefromcreateAdminuserPayload"}, time.Now())
+
+	var obj User
+	err := m.Db.Table(m.TableName()).Where("id = ?", id).Find(&obj).Error
+	if err != nil {
+		goa.LogError(ctx, "error retrieving User", "error", err.Error())
+		return err
+	}
+	obj.Email = payload.Email
+	obj.FirstName = payload.FirstName
+	if payload.ID != nil {
+		obj.ID = *payload.ID
+	}
+	obj.LastName = payload.LastName
+	if payload.MemberID != nil {
+		obj.MemberID = payload.MemberID
+	}
+	obj.Password = payload.Password
+	obj.Role = payload.Role
+	if payload.Validated != nil {
+		obj.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		obj.ValidationCode = payload.ValidationCode
+	}
+
+	err = m.Db.Save(&obj).Error
+	return err
+}
+
 // UserFromCreateUserPayload Converts source CreateUserPayload to target User model
 // only copying the non-nil fields from the source.
 func UserFromCreateUserPayload(payload *app.CreateUserPayload) *User {
 	user := &User{}
-	if payload.Bio != nil {
-		user.Bio = payload.Bio
-	}
-	if payload.City != nil {
-		user.City = payload.City
-	}
-	if payload.Country != nil {
-		user.Country = payload.Country
-	}
 	user.Email = payload.Email
-	user.Firstname = payload.Firstname
-	user.Lastname = payload.Lastname
-	if payload.State != nil {
-		user.State = payload.State
+	user.FirstName = payload.FirstName
+	if payload.ID != nil {
+		user.ID = *payload.ID
+	}
+	user.LastName = payload.LastName
+	user.Password = payload.Password
+	user.Role = payload.Role
+	if payload.Validated != nil {
+		user.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		user.ValidationCode = payload.ValidationCode
 	}
 
 	return user
@@ -188,23 +265,93 @@ func (m *UserDB) UpdateFromCreateUserPayload(ctx context.Context, payload *app.C
 	var obj User
 	err := m.Db.Table(m.TableName()).Where("id = ?", id).Find(&obj).Error
 	if err != nil {
-		goa.Error(ctx, "error retrieving User", "error", err.Error())
+		goa.LogError(ctx, "error retrieving User", "error", err.Error())
 		return err
 	}
-	if payload.Bio != nil {
-		obj.Bio = payload.Bio
-	}
-	if payload.City != nil {
-		obj.City = payload.City
-	}
-	if payload.Country != nil {
-		obj.Country = payload.Country
-	}
 	obj.Email = payload.Email
-	obj.Firstname = payload.Firstname
-	obj.Lastname = payload.Lastname
-	if payload.State != nil {
-		obj.State = payload.State
+	obj.FirstName = payload.FirstName
+	if payload.ID != nil {
+		obj.ID = *payload.ID
+	}
+	obj.LastName = payload.LastName
+	obj.Password = payload.Password
+	obj.Role = payload.Role
+	if payload.Validated != nil {
+		obj.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		obj.ValidationCode = payload.ValidationCode
+	}
+
+	err = m.Db.Save(&obj).Error
+	return err
+}
+
+// UserFromUpdateAdminuserPayload Converts source UpdateAdminuserPayload to target User model
+// only copying the non-nil fields from the source.
+func UserFromUpdateAdminuserPayload(payload *app.UpdateAdminuserPayload) *User {
+	user := &User{}
+	if payload.Email != nil {
+		user.Email = *payload.Email
+	}
+	if payload.FirstName != nil {
+		user.FirstName = *payload.FirstName
+	}
+	if payload.ID != nil {
+		user.ID = *payload.ID
+	}
+	if payload.LastName != nil {
+		user.LastName = *payload.LastName
+	}
+	if payload.Password != nil {
+		user.Password = *payload.Password
+	}
+	if payload.Role != nil {
+		user.Role = *payload.Role
+	}
+	if payload.Validated != nil {
+		user.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		user.ValidationCode = payload.ValidationCode
+	}
+
+	return user
+}
+
+// UpdateFromUpdateAdminuserPayload applies non-nil changes from UpdateAdminuserPayload to the model and saves it
+func (m *UserDB) UpdateFromUpdateAdminuserPayload(ctx context.Context, payload *app.UpdateAdminuserPayload, id int) error {
+	defer goa.MeasureSince([]string{"goa", "db", "user", "updatefromupdateAdminuserPayload"}, time.Now())
+
+	var obj User
+	err := m.Db.Table(m.TableName()).Where("id = ?", id).Find(&obj).Error
+	if err != nil {
+		goa.LogError(ctx, "error retrieving User", "error", err.Error())
+		return err
+	}
+	if payload.Email != nil {
+		obj.Email = *payload.Email
+	}
+	if payload.FirstName != nil {
+		obj.FirstName = *payload.FirstName
+	}
+	if payload.ID != nil {
+		obj.ID = *payload.ID
+	}
+	if payload.LastName != nil {
+		obj.LastName = *payload.LastName
+	}
+	if payload.Password != nil {
+		obj.Password = *payload.Password
+	}
+	if payload.Role != nil {
+		obj.Role = *payload.Role
+	}
+	if payload.Validated != nil {
+		obj.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		obj.ValidationCode = payload.ValidationCode
 	}
 
 	err = m.Db.Save(&obj).Error
@@ -215,24 +362,29 @@ func (m *UserDB) UpdateFromCreateUserPayload(ctx context.Context, payload *app.C
 // only copying the non-nil fields from the source.
 func UserFromUpdateUserPayload(payload *app.UpdateUserPayload) *User {
 	user := &User{}
-	if payload.Bio != nil {
-		user.Bio = payload.Bio
+	if payload.Email != nil {
+		user.Email = *payload.Email
 	}
-	if payload.City != nil {
-		user.City = payload.City
+	if payload.FirstName != nil {
+		user.FirstName = *payload.FirstName
 	}
-	if payload.Country != nil {
-		user.Country = payload.Country
+	if payload.ID != nil {
+		user.ID = *payload.ID
 	}
-	user.Email = payload.Email
-	if payload.Firstname != nil {
-		user.Firstname = *payload.Firstname
+	if payload.LastName != nil {
+		user.LastName = *payload.LastName
 	}
-	if payload.Lastname != nil {
-		user.Lastname = *payload.Lastname
+	if payload.Password != nil {
+		user.Password = *payload.Password
 	}
-	if payload.State != nil {
-		user.State = payload.State
+	if payload.Role != nil {
+		user.Role = *payload.Role
+	}
+	if payload.Validated != nil {
+		user.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		user.ValidationCode = payload.ValidationCode
 	}
 
 	return user
@@ -245,27 +397,32 @@ func (m *UserDB) UpdateFromUpdateUserPayload(ctx context.Context, payload *app.U
 	var obj User
 	err := m.Db.Table(m.TableName()).Where("id = ?", id).Find(&obj).Error
 	if err != nil {
-		goa.Error(ctx, "error retrieving User", "error", err.Error())
+		goa.LogError(ctx, "error retrieving User", "error", err.Error())
 		return err
 	}
-	if payload.Bio != nil {
-		obj.Bio = payload.Bio
+	if payload.Email != nil {
+		obj.Email = *payload.Email
 	}
-	if payload.City != nil {
-		obj.City = payload.City
+	if payload.FirstName != nil {
+		obj.FirstName = *payload.FirstName
 	}
-	if payload.Country != nil {
-		obj.Country = payload.Country
+	if payload.ID != nil {
+		obj.ID = *payload.ID
 	}
-	obj.Email = payload.Email
-	if payload.Firstname != nil {
-		obj.Firstname = *payload.Firstname
+	if payload.LastName != nil {
+		obj.LastName = *payload.LastName
 	}
-	if payload.Lastname != nil {
-		obj.Lastname = *payload.Lastname
+	if payload.Password != nil {
+		obj.Password = *payload.Password
 	}
-	if payload.State != nil {
-		obj.State = payload.State
+	if payload.Role != nil {
+		obj.Role = *payload.Role
+	}
+	if payload.Validated != nil {
+		obj.Validated = payload.Validated
+	}
+	if payload.ValidationCode != nil {
+		obj.ValidationCode = payload.ValidationCode
 	}
 
 	err = m.Db.Save(&obj).Error

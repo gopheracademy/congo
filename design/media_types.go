@@ -41,7 +41,7 @@ var Login = MediaType("application/vnd.login+json", func() {
 // Tenant is the tenant resource media type.
 // GopherAcademy
 var Tenant = MediaType("application/vnd.tenant+json", func() {
-	Description("")
+	Description("Tenant account in Congo")
 	Attributes(func() {
 		Attribute("name", String, "name")
 	})
@@ -53,21 +53,30 @@ var Tenant = MediaType("application/vnd.tenant+json", func() {
 // Series is the series resource media type.
 // GopherCon
 var Series = MediaType("application/vnd.series+json", func() {
-	Description("")
+	Description("A series is a recurring event, e.g. GopherCon")
+	Attributes(func() {
+		Attribute("name", String, "name")
+	})
+	View("default", func() {
+		Attribute("name")
+	})
+})
 
 // Event is the event resource media type.
 // GopherCon 2016
 var Event = MediaType("application/vnd.event+json", func() {
-	Description("")
+	Description("An event is a specific instance of a conference, e.g. GopherCon 2016")
 	Attributes(func() {
 		Attribute("name", String, "name")
 		Attribute("location", String, "location")
-		Attribute("start_date", Date, "start_date")
-		Attribute("end_date", Date, "end_date")
+		Attribute("url", String, "event URL")
+		Attribute("start_date", DateTime, "start_date")
+		Attribute("end_date", DateTime, "end_date")
 	})
 	View("default", func() {
 		Attribute("name")
 		Attribute("location")
+		Attribute("url")
 		Attribute("start_date")
 		Attribute("end_date")
 	})

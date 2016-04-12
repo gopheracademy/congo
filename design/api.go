@@ -12,12 +12,12 @@ var _ = API("congo", func() {
 	Contact(func() {
 		Name("congo")
 		Email("congo")
-		URL("congo")
+		URL("https://congo.com")
 	})
 
 	Docs(func() {
 		Description("Getting Started Guide")
-		URL("https://congo")
+		URL("https://congo.com")
 	})
 	Host("congo.gopheracademy.com")
 	Scheme("https")
@@ -39,12 +39,5 @@ var _ = API("congo", func() {
 	})
 	BasicAuthSecurity("password", func() {
 		Description("Use your own password!")
-	})
-
-	Trait("Authenticated", func() { // Traits define DSL that can be run anywhere
-		Headers(func() {
-			Header("Authorized", String)
-			Required("Authorized")
-		})
 	})
 })

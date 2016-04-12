@@ -12,7 +12,7 @@ import (
 )
 
 // Record new user
-func (c *Client) CreateUser(ctx context.Context, path string, payload *app.CreateUserPayload) (*http.Response, error) {
+func (c *Client) CreateAdminuser(ctx context.Context, path string, payload *app.CreateAdminuserPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -33,8 +33,8 @@ func (c *Client) CreateUser(ctx context.Context, path string, payload *app.Creat
 	return c.Client.Do(ctx, req)
 }
 
-// DeleteUser makes a request to the delete action endpoint of the user resource
-func (c *Client) DeleteUser(ctx context.Context, path string) (*http.Response, error) {
+// DeleteAdminuser makes a request to the delete action endpoint of the adminuser resource
+func (c *Client) DeleteAdminuser(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -50,8 +50,8 @@ func (c *Client) DeleteUser(ctx context.Context, path string) (*http.Response, e
 	return c.Client.Do(ctx, req)
 }
 
-// List all users for a tenant
-func (c *Client) ListUser(ctx context.Context, path string) (*http.Response, error) {
+// List all users
+func (c *Client) ListAdminuser(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -68,7 +68,7 @@ func (c *Client) ListUser(ctx context.Context, path string) (*http.Response, err
 }
 
 // Retrieve user with given id
-func (c *Client) ShowUser(ctx context.Context, path string) (*http.Response, error) {
+func (c *Client) ShowAdminuser(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -84,8 +84,8 @@ func (c *Client) ShowUser(ctx context.Context, path string) (*http.Response, err
 	return c.Client.Do(ctx, req)
 }
 
-// UpdateUser makes a request to the update action endpoint of the user resource
-func (c *Client) UpdateUser(ctx context.Context, path string, payload *app.UpdateUserPayload) (*http.Response, error) {
+// UpdateAdminuser makes a request to the update action endpoint of the adminuser resource
+func (c *Client) UpdateAdminuser(ctx context.Context, path string, payload *app.UpdateAdminuserPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

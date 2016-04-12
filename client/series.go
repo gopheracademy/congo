@@ -11,8 +11,8 @@ import (
 	"net/url"
 )
 
-// Record new user
-func (c *Client) CreateUser(ctx context.Context, path string, payload *app.CreateUserPayload) (*http.Response, error) {
+// Record new series
+func (c *Client) CreateSeries(ctx context.Context, path string, payload *app.CreateSeriesPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -33,8 +33,8 @@ func (c *Client) CreateUser(ctx context.Context, path string, payload *app.Creat
 	return c.Client.Do(ctx, req)
 }
 
-// DeleteUser makes a request to the delete action endpoint of the user resource
-func (c *Client) DeleteUser(ctx context.Context, path string) (*http.Response, error) {
+// DeleteSeries makes a request to the delete action endpoint of the series resource
+func (c *Client) DeleteSeries(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -50,8 +50,8 @@ func (c *Client) DeleteUser(ctx context.Context, path string) (*http.Response, e
 	return c.Client.Do(ctx, req)
 }
 
-// List all users for a tenant
-func (c *Client) ListUser(ctx context.Context, path string) (*http.Response, error) {
+// List all series
+func (c *Client) ListSeries(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -67,8 +67,8 @@ func (c *Client) ListUser(ctx context.Context, path string) (*http.Response, err
 	return c.Client.Do(ctx, req)
 }
 
-// Retrieve user with given id
-func (c *Client) ShowUser(ctx context.Context, path string) (*http.Response, error) {
+// Retrieve series with given id
+func (c *Client) ShowSeries(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -84,8 +84,8 @@ func (c *Client) ShowUser(ctx context.Context, path string) (*http.Response, err
 	return c.Client.Do(ctx, req)
 }
 
-// UpdateUser makes a request to the update action endpoint of the user resource
-func (c *Client) UpdateUser(ctx context.Context, path string, payload *app.UpdateUserPayload) (*http.Response, error) {
+// UpdateSeries makes a request to the update action endpoint of the series resource
+func (c *Client) UpdateSeries(ctx context.Context, path string, payload *app.UpdateSeriesPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
