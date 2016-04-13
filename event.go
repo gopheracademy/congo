@@ -21,7 +21,7 @@ func NewEventController(service *goa.Service, storagelist map[string]Storage, e 
 		Controller:  service.NewController("EventController"),
 		e:           e,
 		storagelist: storagelist,
-		storage:     storagelist["USERSTORAGE"].(models.EventStorage),
+		storage:     storagelist["EVENTSTORAGE"].(models.EventStorage),
 	}
 }
 
