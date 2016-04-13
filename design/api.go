@@ -12,12 +12,12 @@ var _ = API("congo", func() {
 	Contact(func() {
 		Name("congo")
 		Email("congo")
-		URL("https://congo.com")
+		URL("https://congo.gopheracademy.com")
 	})
 
 	Docs(func() {
 		Description("Getting Started Guide")
-		URL("https://congo.com")
+		URL("https://congodocs.gopheracademy.com")
 	})
 	Host("congo.gopheracademy.com")
 	Scheme("https")
