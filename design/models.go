@@ -33,5 +33,19 @@ var sg = StorageGroup("XOR Storage", func() {
 			Field("href", gorma.String)
 		})
 
+		Model("Tenant", func() {
+			BuildsFrom(func() {
+				Payload("tenant", "create")
+				Payload("tenant", "update")
+			})
+			RendersTo(Tenant)
+			Description("This is the Tenant model")
+			HasMany("users", "User")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the ID PK field")
+			})
+		})
+
 	})
 })

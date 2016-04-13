@@ -5,10 +5,7 @@ ci: clean prep gen test build
 
 build:
 	go build github.com/gopheracademy/congo
-	cd ui && npm run build && cd ..
 
-build-cli:
-	go build github.com/gopheracademy/congo/client/congo-cli
 
 clean:
 	rm -rf app/
@@ -24,7 +21,7 @@ prep:
 
 gen:
 	goagen --design github.com/gopheracademy/congo/design app
-	goagen --design github.com/gopheracademy/congo/design js -o ui/app/gen
+	goagen --design github.com/gopheracademy/congo/design js 
 	goagen --design github.com/gopheracademy/congo/design client
 	goagen --design github.com/gopheracademy/congo/design schema
 	goagen --design github.com/gopheracademy/congo/design swagger
@@ -33,8 +30,19 @@ gen:
 
 
 test:
-	gb list -f '{{if .TestGoFiles}}{{.ImportPath}}{{end}}' github.com/gopheracademy/congo/... | awk 'NF'  |  xargs gb test
+	go test ./...
 
-run:
-	SESSION_SECRET=ASDF1234ASDFLKAJSDF  TWITTER_KEY=q7ZO1zxazOpAUT06aiTrF83Up  TWITTER_SECRET=uogbiWtHHQQ1nl3OfPOe92vZkt7YtgYgQWlaxGXSj3tqrhnSNC CONGO_ENVIRONMENT=dev CONGO_PORT=8080 ./congo
+pgup:
+	docker-compose -f dc-postgres.yml up -d
+
+pgdown:
+	docker-compose -f dc-postgres.yml down
+
+pgclean:
+	docker-compose -f dc-postgres.yml rm
+
+appdev:
+	CONGO_DB_HOST=127.0.0.1 CONGO_DB_USERNAME=congo CONGO_DB_NAME=congo CONGO_DB_PORT=5432 CONGO_DB_PASSWORD=congopass ./congo
+
+run: pgup build appdev
  

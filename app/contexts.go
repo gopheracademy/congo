@@ -16,6 +16,7 @@ import (
 	"github.com/goadesign/goa"
 	"golang.org/x/net/context"
 	"strconv"
+	"time"
 )
 
 // CreateAdminuserContext provides the adminuser create action context.
@@ -760,7 +761,10 @@ func NewUpdateEventContext(ctx context.Context, service *goa.Service) (*UpdateEv
 
 // updateEventPayload is the event update action payload.
 type updateEventPayload struct {
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -770,21 +774,38 @@ func (payload *updateEventPayload) Validate() (err error) {
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.name`, *payload.Name, len(*payload.Name), 2, true))
 		}
 	}
+	if payload.URL != nil {
+		if len(*payload.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.url`, *payload.URL, len(*payload.URL), 5, true))
+		}
+	}
 	return err
 }
 
 // Publicize creates UpdateEventPayload from updateEventPayload
 func (payload *updateEventPayload) Publicize() *UpdateEventPayload {
 	var pub UpdateEventPayload
+	if payload.EndDate != nil {
+		pub.EndDate = payload.EndDate
+	}
 	if payload.Name != nil {
 		pub.Name = payload.Name
+	}
+	if payload.StartDate != nil {
+		pub.StartDate = payload.StartDate
+	}
+	if payload.URL != nil {
+		pub.URL = payload.URL
 	}
 	return &pub
 }
 
 // UpdateEventPayload is the event update action payload.
 type UpdateEventPayload struct {
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -792,6 +813,11 @@ func (payload *UpdateEventPayload) Validate() (err error) {
 	if payload.Name != nil {
 		if len(*payload.Name) < 2 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.name`, *payload.Name, len(*payload.Name), 2, true))
+		}
+	}
+	if payload.URL != nil {
+		if len(*payload.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.url`, *payload.URL, len(*payload.URL), 5, true))
 		}
 	}
 	return err

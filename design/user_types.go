@@ -56,6 +56,8 @@ var EventPayload = Type("EventPayload", func() {
 	Attribute("url", func() {
 		MinLength(5)
 	})
+	Attribute("start_date", DateTime)
+	Attribute("end_date", DateTime)
 
 })
 

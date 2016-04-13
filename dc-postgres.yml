@@ -1,0 +1,8 @@
+postgres:
+  image: postgres
+  environment:
+    POSTGRES_PASSWORD: congopass
+    POSTGRES_USER: congo
+    POSTGRES_DB: congo
+  ports:
+    - "5432:5432"

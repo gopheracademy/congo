@@ -12,7 +12,10 @@
 
 package app
 
-import "github.com/goadesign/goa"
+import (
+	"github.com/goadesign/goa"
+	"time"
+)
 
 // AdminUserPayload user type.
 type adminUserPayload struct {
@@ -135,7 +138,10 @@ func (ut *AdminUserPayload) Validate() (err error) {
 
 // EventPayload user type.
 type eventPayload struct {
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // Validate validates the eventPayload type instance.
@@ -145,21 +151,38 @@ func (ut *eventPayload) Validate() (err error) {
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
 		}
 	}
+	if ut.URL != nil {
+		if len(*ut.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.url`, *ut.URL, len(*ut.URL), 5, true))
+		}
+	}
 	return
 }
 
 // Publicize creates EventPayload from eventPayload
 func (ut *eventPayload) Publicize() *EventPayload {
 	var pub EventPayload
+	if ut.EndDate != nil {
+		pub.EndDate = ut.EndDate
+	}
 	if ut.Name != nil {
 		pub.Name = ut.Name
+	}
+	if ut.StartDate != nil {
+		pub.StartDate = ut.StartDate
+	}
+	if ut.URL != nil {
+		pub.URL = ut.URL
 	}
 	return &pub
 }
 
 // EventPayload user type.
 type EventPayload struct {
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // Validate validates the EventPayload type instance.
@@ -167,6 +190,11 @@ func (ut *EventPayload) Validate() (err error) {
 	if ut.Name != nil {
 		if len(*ut.Name) < 2 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	if ut.URL != nil {
+		if len(*ut.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.url`, *ut.URL, len(*ut.URL), 5, true))
 		}
 	}
 	return err

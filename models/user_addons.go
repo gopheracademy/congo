@@ -2,11 +2,9 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/jinzhu/gorm"
-	sendgrid "github.com/sendgrid/sendgrid-go"
 
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
@@ -34,6 +32,8 @@ func (u *User) BeforeCreate() (err error) {
 	u.Email = strings.ToLower(strings.TrimSpace(u.Email))
 	return
 }
+
+/*
 func (u *User) AfterCreate() error {
 	if *u.Validated {
 		return nil
@@ -41,7 +41,8 @@ func (u *User) AfterCreate() error {
 	go u.ValidationEmail()
 	return nil
 }
-
+*/
+/*
 func (u *User) ValidationEmail() error {
 	sg := sendgrid.NewSendGridClientWithApiKey("")
 	message := sendgrid.NewMail()
@@ -55,7 +56,7 @@ func (u *User) ValidationEmail() error {
 
 	return r
 }
-
+*/
 type Login struct {
 	Email    string
 	Password string

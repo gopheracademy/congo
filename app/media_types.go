@@ -72,6 +72,8 @@ type Event struct {
 	Name *string `json:"name,omitempty" xml:"name,omitempty"`
 	// start_date
 	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	// event URL
+	URL *string `json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // EventCollection media type is a collection of Event.

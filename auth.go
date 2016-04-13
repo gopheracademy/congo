@@ -3,16 +3,24 @@ package main
 import (
 	"github.com/goadesign/goa"
 	"github.com/gopheracademy/congo/app"
+	"github.com/gopheracademy/congo/jwt"
 )
 
-// AuthController implements the auth resource.
+// NewAuthController creates a auth controller.
 type AuthController struct {
 	*goa.Controller
+	e    *Env
+	tm   *jwt.TokenManager
+	spec *jwt.Specification
 }
 
 // NewAuthController creates a auth controller.
-func NewAuthController(service *goa.Service) *AuthController {
-	return &AuthController{Controller: service.NewController("AuthController")}
+func NewAuthController(service *goa.Service, e *Env, tm *jwt.TokenManager, spec *jwt.Specification) *AuthController {
+	return &AuthController{Controller: service.NewController("AuthController"),
+		e:    e,
+		tm:   tm,
+		spec: spec,
+	}
 }
 
 // Refresh runs the refresh action.
