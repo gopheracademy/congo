@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -112,4 +113,13 @@ func main() {
 	swagger.MountController(service)
 
 	service.ListenAndServe(":8080")
+	db.LogMode(true)
+	return db, err
+}
+func pubKey(*jg.Token) (interface{}, error) {
+	return ioutil.ReadFile("keys/congo.rsa.pub")
+}
+
+func privateKey() (interface{}, error) {
+	return ioutil.ReadFile("keys/congo.rsa")
 }
