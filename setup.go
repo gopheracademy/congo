@@ -68,7 +68,14 @@ func makeStorage(e *Env) map[string]Storage {
 	storage := make(map[string]Storage, 0)
 	userStorage := models.NewUserDB(e.DB)
 	storage["USERSTORAGE"] = userStorage
+
 	tenantStorage := models.NewTenantDB(e.DB)
 	storage["TENANTSTORAGE"] = tenantStorage
+
+	eventStorage := models.NewEventDB(e.DB)
+	storage["EVENTSTORAGE"] = eventStorage
+
+	seriesStorage := models.NewSeriesDB(e.DB)
+	storage["SERIESSTORAGE"] = seriesStorage
 	return storage
 }
