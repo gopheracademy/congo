@@ -29,12 +29,10 @@ var Authorize = MediaType("application/vnd.authorize+json", func() {
 var Login = MediaType("application/vnd.login+json", func() {
 	Description("")
 	Attributes(func() {
-		Attribute("id", Integer, "ID")
 		Attribute("email", String, "email")
 		Attribute("password", String, "password")
 	})
 	View("default", func() {
-		Attribute("id")
 		Attribute("email")
 		Attribute("password")
 	})

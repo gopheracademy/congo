@@ -87,8 +87,6 @@ type EventCollection []*Event
 type Login struct {
 	// email
 	Email *string `json:"email,omitempty" xml:"email,omitempty"`
-	// ID
-	ID *int `json:"id,omitempty" xml:"id,omitempty"`
 	// password
 	Password *string `json:"password,omitempty" xml:"password,omitempty"`
 }

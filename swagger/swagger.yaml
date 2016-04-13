@@ -149,7 +149,7 @@ definitions:
   CreateEventPayload:
     properties:
       name:
-        example: 6kvn
+        example: tw
         minLength: 2
         type: string
     required:
@@ -159,7 +159,7 @@ definitions:
   CreateSeriesPayload:
     properties:
       name:
-        example: 8q
+        example: snyg
         minLength: 2
         type: string
     required:
@@ -169,7 +169,7 @@ definitions:
   CreateTenantPayload:
     properties:
       name:
-        example: 1g
+        example: z6k
         minLength: 2
         type: string
     required:
@@ -179,7 +179,7 @@ definitions:
   CreateUserPayload:
     properties:
       email:
-        example: v8v
+        example: 6rjm
         minLength: 2
         type: string
       first_name:
@@ -192,17 +192,17 @@ definitions:
         minLength: 2
         type: string
       password:
-        example: cwg227gsxn
+        example: 3rle6ysw
         minLength: 8
         type: string
       role:
-        example: Vel odio et inventore.
+        example: Blanditiis aut id iusto minima.
         type: string
       validated:
-        example: true
+        example: false
         type: boolean
       validation_code:
-        example: y4r9v66sum
+        example: qgm3gf1gi9
         minLength: 8
         type: string
     required:
@@ -299,25 +299,25 @@ definitions:
   Series:
     description: A series is a recurring event, e.g. GopherCon
     example:
-      name: Itaque praesentium incidunt illo distinctio fugit molestias.
+      name: Et quae.
     properties:
       name:
         description: name
-        example: Quae incidunt voluptatem dolores tempora esse impedit.
+        example: Dolor in voluptatem sit neque iusto.
         type: string
     title: 'Mediatype identifier: application/vnd.series+json'
     type: object
   SeriesCollection:
     example:
-    - name: Ipsum dolor.
-    - name: Voluptatum aut sapiente consequatur sit autem vel.
+    - name: Impedit magnam itaque praesentium incidunt illo.
+    - name: Fugit molestias eos ex harum quis ea.
     items:
       example:
-        name: Ex harum quis.
+        name: Voluptatem dolores.
       properties:
         name:
           description: name
-          example: Quae incidunt voluptatem dolores tempora esse impedit.
+          example: Dolor in voluptatem sit neque iusto.
           type: string
       type: object
     title: 'Mediatype identifier: application/vnd.series+json; type=collection'
@@ -325,8 +325,8 @@ definitions:
   Tenant:
     description: Tenant account in Congo
     example:
-      id: 2.8749156e+18
-      name: Maiores quia.
+      id: 8.688219e+17
+      name: Dolor tempore.
     properties:
       id:
         description: ID
@@ -341,16 +341,14 @@ definitions:
     type: object
   TenantCollection:
     example:
-    - id: 4.9610305e+18
-      name: Et voluptatem eum.
-    - id: 7.076086e+18
-      name: Quasi consectetur iusto dolor iure fuga harum.
-    - id: 1.4947862e+18
-      name: Cumque quos.
+    - id: 4.8374784e+18
+      name: Ab officia aut eum similique reiciendis.
+    - id: 3.1373646e+18
+      name: Nisi et voluptatem.
     items:
       example:
-        id: 5.5016846e+18
-        name: Officia aut eum similique reiciendis.
+        id: 5.995526e+18
+        name: Sapiente consequatur sit autem vel mollitia et.
       properties:
         id:
           description: ID
@@ -393,18 +391,18 @@ definitions:
   UpdateEventPayload:
     properties:
       end_date:
-        example: 2015-04-04T05:51:16-04:00
+        example: 1993-02-24T21:28:42-05:00
         format: date-time
         type: string
       name:
         minLength: 2
         type: string
       start_date:
-        example: 2011-10-20T15:52:41-04:00
+        example: 1998-06-05T03:55:04-04:00
         format: date-time
         type: string
       url:
-        example: z26rj
+        example: jmk0diz
         minLength: 5
         type: string
     title: UpdateEventPayload
@@ -452,14 +450,14 @@ definitions:
   User:
     description: A user belonging to a tenant
     example:
-      active: false
-      email: Quis asperiores.
-      first_name: Aliquam corporis dolorum nobis nihil.
-      href: Quae fuga tempora exercitationem nihil.
-      id: 7.4839644e+18
-      last_name: Qui molestias nihil.
-      role: Expedita et.
-      tenant_id: 6.450897e+18
+      active: true
+      email: Omnis quasi consectetur iusto dolor iure fuga.
+      first_name: Aut placeat cumque.
+      href: Praesentium id quis asperiores ipsum aliquam corporis.
+      id: 9.1285914e+18
+      last_name: Nihil vero quae fuga tempora exercitationem nihil.
+      role: Facilis qui molestias nihil saepe.
+      tenant_id: 5.30938e+18
       validated: false
     properties:
       active:
@@ -508,33 +506,24 @@ definitions:
   UserCollection:
     example:
     - active: true
-      email: Eos earum aut.
-      first_name: A at quia perspiciatis nisi nihil.
-      href: Est perferendis velit et.
-      id: 8.2121116e+18
-      last_name: Ipsa laudantium iste eos qui.
-      role: Sed nam.
-      tenant_id: 1.04518716e+18
+      email: Earum ut eum alias voluptatibus dolorem non.
+      first_name: Praesentium quia enim et eos earum.
+      href: Officiis a at quia.
+      id: 1.9858597e+18
+      last_name: Nihil aperiam est.
+      role: Velit et atque earum ipsa.
+      tenant_id: 2.9530716e+18
       validated: false
-    - active: true
-      email: Totam porro voluptatibus nam.
-      first_name: Hic quo occaecati enim aut incidunt sed.
-      href: Laudantium suscipit.
-      id: 2.2889023e+18
-      last_name: Reiciendis tempore est.
-      role: Quis autem atque accusantium.
-      tenant_id: 9.008032e+18
-      validated: true
     items:
       example:
-        active: true
-        email: Voluptatem et reprehenderit et ad quo.
-        first_name: Blanditiis officiis sint hic ex ea ut.
-        href: Dignissimos rerum repellat aut tempora nihil voluptas.
-        id: 8.1248096e+17
-        last_name: Dolor dolorum sequi corporis non.
-        role: Earum ut eum alias voluptatibus dolorem non.
-        tenant_id: 7.330815e+18
+        active: false
+        email: Quis pariatur.
+        first_name: Et reprehenderit et ad.
+        href: Ad blanditiis officiis sint hic ex.
+        id: 9.27952e+17
+        last_name: Quas dignissimos rerum.
+        role: Aut tempora nihil voluptas quo nesciunt dolor.
+        tenant_id: 3.2152477e+18
         validated: true
       properties:
         active:
@@ -583,13 +572,13 @@ definitions:
     type: array
 externalDocs:
   description: Getting Started Guide
-  url: https://congo.com
+  url: https://congodocs.gopheracademy.com
 host: congo.gopheracademy.com
 info:
   contact:
     email: congo
     name: congo
-    url: https://congo.com
+    url: https://congo.gopheracademy.com
   description: Congo
   title: Congo
   version: ""
