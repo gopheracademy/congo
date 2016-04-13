@@ -38,6 +38,7 @@ func createSeries(db gorm.DB) error {
 
 		series := models.Series{}
 		series.Name = name
+		series.TenantID = 1
 
 		err = db.Create(&series).Error
 	}

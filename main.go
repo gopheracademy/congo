@@ -97,7 +97,7 @@ func main() {
 	c4 := NewHealthzController(service)
 	app.MountHealthzController(service, c4)
 	// Mount "series" controller
-	c5 := NewSeriesController(service)
+	c5 := NewSeriesController(service, storageList, env)
 	app.MountSeriesController(service, c5)
 	// Mount "tenant" controller
 	c6 := NewTenantController(service, storageList, env)
