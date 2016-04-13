@@ -11,17 +11,18 @@ definitions:
       access_token: Laudantium tempore voluptatem.
       expires_in: 4.869193e+18
       tenant:
-        name: Eum est aut adipisci eaque.
-      token_type: Dolorum illo.
+        id: 5.7283627e+18
+        name: Est aut adipisci eaque molestias dolorum illo.
+      token_type: Optio beatae aperiam quo.
       user:
         active: false
-        email: Beatae aperiam quo rerum neque beatae consequatur.
-        first_name: Sed explicabo id eum eos tempora.
-        href: Aliquam id.
-        id: 8.8082195e+18
-        last_name: Debitis est esse a.
-        role: Libero sint cumque voluptatum iste qui molestiae.
-        tenant_id: 9.2230895e+18
+        email: Beatae consequatur mollitia sed explicabo id.
+        first_name: Eos tempora corporis aliquam id nulla suscipit.
+        href: Est esse a inventore libero sint cumque.
+        id: 7.8311655e+18
+        last_name: Qui molestiae.
+        role: Atque dolorem voluptas et.
+        tenant_id: 6.2444844e+18
         validated: false
     properties:
       access_token:
@@ -36,16 +37,22 @@ definitions:
       tenant:
         description: tenant
         example:
-          name: Sunt et.
+          id: 3.9695187e+18
+          name: Et libero culpa.
         properties:
+          id:
+            description: ID
+            example: 1.9994007e+18
+            format: int64
+            type: integer
           name:
             description: name
-            example: Ab sit eos.
+            example: Sit eos.
             type: string
         type: object
       token_type:
         description: type of token
-        example: Culpa minima error dolores dolorem tempora.
+        example: Error dolores dolorem tempora aut.
         type: string
       user:
         description: user
@@ -66,7 +73,7 @@ definitions:
             type: boolean
           email:
             description: Email address of user
-            example: lwz
+            example: wz
             format: email
             minLength: 2
             type: string
@@ -118,15 +125,14 @@ definitions:
       last_name:
         minLength: 2
         type: string
-      member_id:
-        example: 7.3852855e+18
-        format: int64
-        type: integer
       password:
         minLength: 8
         type: string
       role:
         type: string
+      tenant_id:
+        format: int64
+        type: integer
       validated:
         type: boolean
       validation_code:
@@ -143,6 +149,7 @@ definitions:
   CreateEventPayload:
     properties:
       name:
+        example: 6kvn
         minLength: 2
         type: string
     required:
@@ -152,6 +159,7 @@ definitions:
   CreateSeriesPayload:
     properties:
       name:
+        example: 8q
         minLength: 2
         type: string
     required:
@@ -161,7 +169,7 @@ definitions:
   CreateTenantPayload:
     properties:
       name:
-        example: qnbs
+        example: 1g
         minLength: 2
         type: string
     required:
@@ -171,7 +179,7 @@ definitions:
   CreateUserPayload:
     properties:
       email:
-        example: 4zn
+        example: v8v
         minLength: 2
         type: string
       first_name:
@@ -184,17 +192,17 @@ definitions:
         minLength: 2
         type: string
       password:
-        example: ygqb6gz6kv
+        example: cwg227gsxn
         minLength: 8
         type: string
       role:
-        example: Modi aut delectus qui autem vel saepe.
+        example: Vel odio et inventore.
         type: string
       validated:
         example: true
         type: boolean
       validation_code:
-        example: 3rle6ysw
+        example: y4r9v66sum
         minLength: 8
         type: string
     required:
@@ -208,77 +216,82 @@ definitions:
   Event:
     description: An event is a specific instance of a conference, e.g. GopherCon 2016
     example:
-      end_date: 1995-03-23T19:05:53-05:00
-      location: Aliquam qui.
-      name: Nihil est sit ducimus.
-      start_date: 1984-06-18T22:46:02-04:00
-      url: Molestias dicta excepturi corporis ullam.
+      end_date: 1989-11-30T02:51:32-05:00
+      location: Est sit.
+      name: Cupiditate quo molestias dicta excepturi.
+      start_date: 2004-02-11T09:42:24-05:00
+      url: Itaque ex eum hic accusamus qui aspernatur.
     properties:
       end_date:
         description: end_date
-        example: 2008-04-08T06:24:33-04:00
+        example: 2003-04-17T13:45:10-04:00
         format: date-time
         type: string
       location:
         description: location
-        example: Et iure.
+        example: Sit ut.
         type: string
       name:
         description: name
-        example: Corporis eaque sit ut enim qui quia.
+        example: Qui quia voluptates culpa suscipit quia.
         type: string
       start_date:
         description: start_date
-        example: 2009-12-13T10:00:31-05:00
+        example: 1995-03-23T19:05:53-05:00
         format: date-time
         type: string
       url:
         description: event URL
-        example: Suscipit quia.
+        example: Aliquam qui.
         type: string
     title: 'Mediatype identifier: application/vnd.event+json'
     type: object
   EventCollection:
     example:
-    - end_date: 1997-08-19T11:06:19-04:00
-      location: Alias impedit.
-      name: Cumque delectus ipsum.
-      start_date: 1980-10-15T18:51:20-04:00
-      url: Vel id praesentium debitis nostrum aut quia.
-    - end_date: 1997-02-19T18:04:15-05:00
-      location: Recusandae amet voluptatem omnis necessitatibus sequi.
-      name: Qui itaque.
+    - end_date: 1999-11-22T14:52:31-05:00
+      location: Nostrum aut quia aut sed recusandae amet.
+      name: Omnis necessitatibus sequi ab qui itaque.
       start_date: 1989-11-24T06:14:49-05:00
       url: Delectus sint id reiciendis hic.
+    - end_date: 2001-05-24T18:33:18-04:00
+      location: Voluptatem veniam et dolor excepturi molestias.
+      name: Rerum mollitia et sunt.
+      start_date: 1999-04-16T02:08:59-04:00
+      url: Id tempora facilis voluptas quia.
+    - end_date: 2014-06-18T01:15:35-04:00
+      location: Aperiam nihil voluptatem qui voluptate.
+      name: Nihil nesciunt voluptatem reprehenderit et qui.
+      start_date: 1987-03-08T07:14:21-05:00
+      url: Cumque aut sit.
     items:
       example:
-        end_date: 1973-11-17T07:42:19-05:00
-        location: Eum hic accusamus qui aspernatur vitae.
-        name: Saepe odit porro.
-        start_date: 1985-05-14T04:14:31-04:00
-        url: Tenetur sint aspernatur.
+        end_date: 1988-02-03T17:47:27-05:00
+        location: Saepe odit porro.
+        name: Harum tenetur sint aspernatur nemo inventore placeat.
+        start_date: 1976-05-31T06:39:48-04:00
+        url: Vel cumque delectus ipsum facere qui vel.
       properties:
         end_date:
           description: end_date
-          example: 2008-04-08T06:24:33-04:00
+          example: 2003-04-17T13:45:10-04:00
           format: date-time
           type: string
         location:
           description: location
-          example: Et iure.
+          example: Sit ut.
           type: string
         name:
           description: name
-          example: Corporis eaque sit ut enim qui quia.
+          example: Qui quia voluptates culpa suscipit quia.
           type: string
         start_date:
           description: start_date
-          example: 2009-12-13T10:00:31-05:00
+          example: 1995-03-23T19:05:53-05:00
           format: date-time
           type: string
         url:
           description: event URL
-          example: Suscipit quia.
+          example: Aliquam qui.
           type: string
       type: object
     title: 'Mediatype identifier: application/vnd.event+json; type=collection'
@@ -286,24 +299,25 @@ definitions:
   Series:
     description: A series is a recurring event, e.g. GopherCon
     example:
-      name: Nesciunt voluptatem reprehenderit et qui.
+      name: Itaque praesentium incidunt illo distinctio fugit molestias.
     properties:
       name:
         description: name
-        example: Ipsum aperiam nihil voluptatem qui voluptate recusandae.
+        example: Quae incidunt voluptatem dolores tempora esse impedit.
         type: string
     title: 'Mediatype identifier: application/vnd.series+json'
     type: object
   SeriesCollection:
     example:
-    - name: Odit ex.
+    - name: Ipsum dolor.
+    - name: Voluptatum aut sapiente consequatur sit autem vel.
     items:
       example:
-        name: Libero cumque aut sit et numquam.
+        name: Ex harum quis.
       properties:
         name:
           description: name
-          example: Ipsum aperiam nihil voluptatem qui voluptate recusandae.
+          example: Quae incidunt voluptatem dolores tempora esse impedit.
           type: string
       type: object
     title: 'Mediatype identifier: application/vnd.series+json; type=collection'
@@ -311,25 +325,41 @@ definitions:
   Tenant:
     description: Tenant account in Congo
     example:
-      name: Dolorem similique consectetur atque.
+      id: 2.8749156e+18
+      name: Maiores quia.
     properties:
+      id:
+        description: ID
+        example: 1.9994007e+18
+        format: int64
+        type: integer
       name:
         description: name
-        example: Ab sit eos.
+        example: Sit eos.
         type: string
     title: 'Mediatype identifier: application/vnd.tenant+json'
     type: object
   TenantCollection:
     example:
-    - name: Dolor in voluptatem sit neque iusto.
-    - name: Et quae.
+    - id: 4.9610305e+18
+      name: Et voluptatem eum.
+    - id: 7.076086e+18
+      name: Quasi consectetur iusto dolor iure fuga harum.
+    - id: 1.4947862e+18
+      name: Cumque quos.
     items:
       example:
-        name: Numquam quae ut porro.
+        id: 5.5016846e+18
+        name: Officia aut eum similique reiciendis.
       properties:
+        id:
+          description: ID
+          example: 1.9994007e+18
+          format: int64
+          type: integer
         name:
           description: name
-          example: Ab sit eos.
+          example: Sit eos.
           type: string
       type: object
     title: 'Mediatype identifier: application/vnd.tenant+json; type=collection'
@@ -363,15 +393,18 @@ definitions:
   UpdateEventPayload:
     properties:
       end_date:
+        example: 2015-04-04T05:51:16-04:00
         format: date-time
         type: string
       name:
         minLength: 2
         type: string
       start_date:
+        example: 2011-10-20T15:52:41-04:00
         format: date-time
         type: string
       url:
+        example: z26rj
         minLength: 5
         type: string
     title: UpdateEventPayload
@@ -417,16 +450,16 @@ definitions:
     title: UpdateUserPayload
     type: object
   User:
-    description: A user belonging to a member
+    description: A user belonging to a tenant
     example:
       active: false
-      email: Dolores tempora esse impedit.
-      first_name: Itaque praesentium incidunt illo distinctio fugit molestias.
-      href: Ex harum quis.
-      id: 6.046393e+18
-      last_name: Ipsum dolor.
-      role: Voluptatum aut sapiente consequatur sit autem vel.
-      tenant_id: 2.8749156e+18
+      email: Quis asperiores.
+      first_name: Aliquam corporis dolorum nobis nihil.
+      href: Quae fuga tempora exercitationem nihil.
+      id: 7.4839644e+18
+      last_name: Qui molestias nihil.
+      role: Expedita et.
+      tenant_id: 6.450897e+18
       validated: false
     properties:
       active:
@@ -435,7 +468,7 @@ definitions:
         type: boolean
       email:
         description: Email address of user
-        example: lwz
+        example: wz
         format: email
         minLength: 2
         type: string
@@ -475,43 +508,34 @@ definitions:
   UserCollection:
     example:
     - active: true
-      email: Nihil vero quae fuga tempora exercitationem nihil.
-      first_name: Facilis qui molestias nihil saepe.
-      href: Et voluptatem non quis pariatur voluptatem.
-      id: 6.6419474e+18
-      last_name: Et ad quo.
-      role: Blanditiis officiis sint hic ex ea ut.
-      tenant_id: 4.863047e+18
-      validated: true
-    - active: true
-      email: Aut tempora nihil voluptas quo nesciunt dolor.
-      first_name: Sequi corporis non molestiae earum ut.
-      href: Alias voluptatibus dolorem non.
-      id: 7.330815e+18
-      last_name: Quia enim.
-      role: Eos earum aut.
-      tenant_id: 5.3146654e+18
-      validated: true
-    - active: true
-      email: Perspiciatis nisi.
-      first_name: Aperiam est perferendis velit et atque.
-      href: Ipsa laudantium iste eos qui.
-      id: 7.341766e+18
-      last_name: Nam et minus molestiae.
-      role: Totam porro voluptatibus nam.
-      tenant_id: 5.8413144e+18
+      email: Eos earum aut.
+      first_name: A at quia perspiciatis nisi nihil.
+      href: Est perferendis velit et.
+      id: 8.2121116e+18
+      last_name: Ipsa laudantium iste eos qui.
+      role: Sed nam.
+      tenant_id: 1.04518716e+18
       validated: false
+    - active: true
+      email: Totam porro voluptatibus nam.
+      first_name: Hic quo occaecati enim aut incidunt sed.
+      href: Laudantium suscipit.
+      id: 2.2889023e+18
+      last_name: Reiciendis tempore est.
+      role: Quis autem atque accusantium.
+      tenant_id: 9.008032e+18
+      validated: true
     items:
       example:
         active: true
-        email: Dolorum ab officia aut.
-        first_name: Similique reiciendis aut sit.
-        href: Et voluptatem eum.
-        id: 7.076086e+18
-        last_name: Quasi consectetur iusto dolor iure fuga harum.
-        role: Placeat cumque quos praesentium id quis asperiores.
-        tenant_id: 6.1328746e+18
-        validated: false
+        email: Voluptatem et reprehenderit et ad quo.
+        first_name: Blanditiis officiis sint hic ex ea ut.
+        href: Dignissimos rerum repellat aut tempora nihil voluptas.
+        id: 8.1248096e+17
+        last_name: Dolor dolorum sequi corporis non.
+        role: Earum ut eum alias voluptatibus dolorem non.
+        tenant_id: 7.330815e+18
+        validated: true
       properties:
         active:
           description: Activation status
@@ -519,7 +543,7 @@ definitions:
           type: boolean
         email:
           description: Email address of user
-          example: lwz
+          example: wz
           format: email
           minLength: 2
           type: string

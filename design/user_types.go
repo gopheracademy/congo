@@ -65,7 +65,7 @@ var EventPayload = Type("EventPayload", func() {
 // It is also the base type for the user media type used to render users.
 var AdminUserPayload = Type("AdminUserPayload", func() {
 	Attribute("id", Integer)
-	Attribute("member_id", Integer)
+	Attribute("tenant_id", Integer)
 	Attribute("first_name", func() {
 		MinLength(2)
 	})

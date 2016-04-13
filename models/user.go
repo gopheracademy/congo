@@ -28,7 +28,6 @@ type User struct {
 	FirstName      string `gorm:"column:firstname"`
 	Href           string
 	LastName       string `gorm:"column:lastname"`
-	MemberID       *int
 	Password       string
 	Role           string
 	TenantID       int // Belongs To Tenant
@@ -189,11 +188,11 @@ func UserFromCreateAdminuserPayload(payload *app.CreateAdminuserPayload) *User {
 		user.ID = *payload.ID
 	}
 	user.LastName = payload.LastName
-	if payload.MemberID != nil {
-		user.MemberID = payload.MemberID
-	}
 	user.Password = payload.Password
 	user.Role = payload.Role
+	if payload.TenantID != nil {
+		user.TenantID = *payload.TenantID
+	}
 	if payload.Validated != nil {
 		user.Validated = payload.Validated
 	}
@@ -220,11 +219,11 @@ func (m *UserDB) UpdateFromCreateAdminuserPayload(ctx context.Context, payload *
 		obj.ID = *payload.ID
 	}
 	obj.LastName = payload.LastName
-	if payload.MemberID != nil {
-		obj.MemberID = payload.MemberID
-	}
 	obj.Password = payload.Password
 	obj.Role = payload.Role
+	if payload.TenantID != nil {
+		obj.TenantID = *payload.TenantID
+	}
 	if payload.Validated != nil {
 		obj.Validated = payload.Validated
 	}

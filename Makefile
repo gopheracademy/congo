@@ -7,13 +7,13 @@ build:
 	go build github.com/gopheracademy/congo
 
 
-clean:
+clean: pgdown 
 	rm -rf app/
 	rm -rf client/
 	rm -rf js/
-	rm -rf models/
 	rm -rf schema/
 	rm -rf swagger/
+
 
 prep:
 	go get -u github.com/goadesign/goa/...
@@ -25,9 +25,7 @@ gen:
 	goagen --design github.com/gopheracademy/congo/design client
 	goagen --design github.com/gopheracademy/congo/design schema
 	goagen --design github.com/gopheracademy/congo/design swagger
-	goagen --design github.com/gopheracademy/congo/design gen --pkg-path=github.com/bketelsen/gorma
-
-
+	goagen --design github.com/gopheracademy/congo/design gen --pkg-path=github.com/goadesign/gorma
 
 test:
 	go test ./...
@@ -42,7 +40,7 @@ pgclean:
 	docker-compose -f dc-postgres.yml rm
 
 appdev:
-	CONGO_DB_HOST=127.0.0.1 CONGO_DB_USERNAME=congo CONGO_DB_NAME=congo CONGO_DB_PORT=5432 CONGO_DB_PASSWORD=congopass ./congo
+	CONGO_DEBUG=true CONGO_DB_HOST=docker.local CONGO_DB_USERNAME=congo CONGO_DB_NAME=congo CONGO_DB_PORT=5432 CONGO_DB_PASSWORD=congopass ./congo
 
 run: pgup build appdev
  

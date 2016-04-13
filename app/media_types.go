@@ -87,6 +87,8 @@ type EventCollection []*Event
 type Login struct {
 	// email
 	Email *string `json:"email,omitempty" xml:"email,omitempty"`
+	// ID
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
 	// password
 	Password *string `json:"password,omitempty" xml:"password,omitempty"`
 }
@@ -108,6 +110,8 @@ type SeriesCollection []*Series
 //
 // Identifier: application/vnd.tenant+json
 type Tenant struct {
+	// ID
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
 	// name
 	Name *string `json:"name,omitempty" xml:"name,omitempty"`
 }

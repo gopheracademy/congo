@@ -29,10 +29,12 @@ var Authorize = MediaType("application/vnd.authorize+json", func() {
 var Login = MediaType("application/vnd.login+json", func() {
 	Description("")
 	Attributes(func() {
+		Attribute("id", Integer, "ID")
 		Attribute("email", String, "email")
 		Attribute("password", String, "password")
 	})
 	View("default", func() {
+		Attribute("id")
 		Attribute("email")
 		Attribute("password")
 	})
@@ -43,9 +45,11 @@ var Login = MediaType("application/vnd.login+json", func() {
 var Tenant = MediaType("application/vnd.tenant+json", func() {
 	Description("Tenant account in Congo")
 	Attributes(func() {
+		Attribute("id", Integer, "ID")
 		Attribute("name", String, "name")
 	})
 	View("default", func() {
+		Attribute("id")
 		Attribute("name")
 	})
 })
@@ -84,7 +88,7 @@ var Event = MediaType("application/vnd.event+json", func() {
 
 // User is the user resource media type.
 var User = MediaType("application/vnd.user+json", func() {
-	Description("A user belonging to a member")
+	Description("A user belonging to a tenant")
 	Reference(UserPayload)
 	Attributes(func() {
 		Attribute("id", Integer, "ID of record")

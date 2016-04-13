@@ -24,6 +24,7 @@ type Tenant struct {
 	ID        int `gorm:"primary_key"` // This is the ID PK field
 	CreatedAt time.Time
 	DeletedAt *time.Time
+	Events    []Event // has many Events
 	Name      string
 	UpdatedAt time.Time
 	Users     []User // has many Users

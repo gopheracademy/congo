@@ -44,6 +44,7 @@ func (m *TenantDB) ListTenant(ctx context.Context) []*app.Tenant {
 // TenantToTenant returns the Tenant representation of Tenant.
 func (m *Tenant) TenantToTenant() *app.Tenant {
 	tenant := &app.Tenant{}
+	tenant.ID = &m.ID
 	tenant.Name = &m.Name
 
 	return tenant
@@ -54,7 +55,7 @@ func (m *TenantDB) OneTenant(ctx context.Context, id int) (*app.Tenant, error) {
 	defer goa.MeasureSince([]string{"goa", "db", "tenant", "onetenant"}, time.Now())
 
 	var native Tenant
-	err := m.Db.Scopes().Table(m.TableName()).Preload("Users").Where("id = ?", id).Find(&native).Error
+	err := m.Db.Scopes().Table(m.TableName()).Preload("Events").Preload("Users").Where("id = ?", id).Find(&native).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
 		goa.LogError(ctx, "error getting Tenant", "error", err.Error())

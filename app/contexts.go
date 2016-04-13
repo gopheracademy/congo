@@ -43,9 +43,9 @@ type createAdminuserPayload struct {
 	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
 	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
 	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
-	MemberID       *int    `json:"member_id,omitempty" xml:"member_id,omitempty"`
 	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
 	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	TenantID       *int    `json:"tenant_id,omitempty" xml:"tenant_id,omitempty"`
 	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
 	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
 }
@@ -111,14 +111,14 @@ func (payload *createAdminuserPayload) Publicize() *CreateAdminuserPayload {
 	if payload.LastName != nil {
 		pub.LastName = *payload.LastName
 	}
-	if payload.MemberID != nil {
-		pub.MemberID = payload.MemberID
-	}
 	if payload.Password != nil {
 		pub.Password = *payload.Password
 	}
 	if payload.Role != nil {
 		pub.Role = *payload.Role
+	}
+	if payload.TenantID != nil {
+		pub.TenantID = payload.TenantID
 	}
 	if payload.Validated != nil {
 		pub.Validated = payload.Validated
@@ -135,9 +135,9 @@ type CreateAdminuserPayload struct {
 	FirstName      string  `json:"first_name" xml:"first_name"`
 	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
 	LastName       string  `json:"last_name" xml:"last_name"`
-	MemberID       *int    `json:"member_id,omitempty" xml:"member_id,omitempty"`
 	Password       string  `json:"password" xml:"password"`
 	Role           string  `json:"role" xml:"role"`
+	TenantID       *int    `json:"tenant_id,omitempty" xml:"tenant_id,omitempty"`
 	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
 	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
 }

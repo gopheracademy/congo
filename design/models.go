@@ -5,10 +5,10 @@ import (
 	. "github.com/goadesign/gorma/dsl"
 )
 
-var sg = StorageGroup("XOR Storage", func() {
+var sg = StorageGroup("Congo Storage", func() {
 	Description("This is the global storage group")
 	Store("postgres", gorma.Postgres, func() {
-		Description("This is the postgresrelational store")
+		Description("This is the postgres relational store")
 		Model("User", func() {
 			BuildsFrom(func() {
 				Payload("user", "create")
@@ -41,6 +41,33 @@ var sg = StorageGroup("XOR Storage", func() {
 			RendersTo(Tenant)
 			Description("This is the Tenant model")
 			HasMany("users", "User")
+			HasMany("events", "Event")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the ID PK field")
+			})
+		})
+		Model("Series", func() {
+			BuildsFrom(func() {
+				Payload("series", "create")
+				Payload("series", "update")
+			})
+			RendersTo(Series)
+			BelongsTo("Tenant")
+			Description("This is the Series model")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the ID PK field")
+			})
+		})
+		Model("Event", func() {
+			BuildsFrom(func() {
+				Payload("event", "create")
+				Payload("event", "update")
+			})
+			RendersTo(Event)
+			BelongsTo("Tenant")
+			Description("This is the Event model")
 			Field("id", gorma.Integer, func() {
 				PrimaryKey()
 				Description("This is the ID PK field")

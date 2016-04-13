@@ -23,9 +23,9 @@ type adminUserPayload struct {
 	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
 	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
 	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
-	MemberID       *int    `json:"member_id,omitempty" xml:"member_id,omitempty"`
 	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
 	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	TenantID       *int    `json:"tenant_id,omitempty" xml:"tenant_id,omitempty"`
 	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
 	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
 }
@@ -75,14 +75,14 @@ func (ut *adminUserPayload) Publicize() *AdminUserPayload {
 	if ut.LastName != nil {
 		pub.LastName = ut.LastName
 	}
-	if ut.MemberID != nil {
-		pub.MemberID = ut.MemberID
-	}
 	if ut.Password != nil {
 		pub.Password = ut.Password
 	}
 	if ut.Role != nil {
 		pub.Role = ut.Role
+	}
+	if ut.TenantID != nil {
+		pub.TenantID = ut.TenantID
 	}
 	if ut.Validated != nil {
 		pub.Validated = ut.Validated
@@ -99,9 +99,9 @@ type AdminUserPayload struct {
 	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
 	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
 	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
-	MemberID       *int    `json:"member_id,omitempty" xml:"member_id,omitempty"`
 	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
 	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	TenantID       *int    `json:"tenant_id,omitempty" xml:"tenant_id,omitempty"`
 	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
 	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
 }

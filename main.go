@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
 	jg "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
+	mjwt "github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/jwt"
-	"github.com/gopheracademy/congo/models"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
@@ -31,6 +30,7 @@ type Settings struct {
 	DatabasePort     int    `envconfig:"db_port"`
 	MaxOpenConns     int    `envconfig:"max_open" default:"100"`
 	MaxIdleConns     int    `envconfig:"max_idle" default:"5"`
+	Debug            bool   `envconfig:"debug" default:"false"`
 }
 
 // Env is the struct that holds important things to be passed into controllers
@@ -52,6 +52,8 @@ func main() {
 	}
 
 	Migrate(env)
+
+	storageList := makeStorage(env)
 	// Create service
 	service := goa.New("API")
 
@@ -64,7 +66,7 @@ func main() {
 		AllowParam:       false,
 		AuthOptions:      false,
 		TTLMinutes:       60,
-		Issuer:           "api.gopheracademy.com",
+		Issuer:           "congo.gopheracademy.com",
 		KeySigningMethod: jwt.RSA256,
 		SigningKeyFunc:   privateKey,
 		ValidationFunc:   pubKey,
@@ -72,6 +74,15 @@ func main() {
 
 	tm := jwt.NewTokenManager(spec)
 
+	pubkey, err := readPubKey()
+	if err != nil {
+		panic(err)
+	}
+	pk, err := jg.ParseRSAPublicKeyFromPEM(pubkey)
+	if err != nil {
+		panic(err)
+	}
+	app.ConfigureJWTSecurity(service, mjwt.New(pk, nil))
 	app.ConfigurePasswordSecurity(service, BasicAuth(env))
 	// Mount "adminuser" controller
 	c := NewAdminuserController(service)
@@ -80,7 +91,7 @@ func main() {
 	c2 := NewAuthController(service, env, tm, spec)
 	app.MountAuthController(service, c2)
 	// Mount "event" controller
-	c3 := NewEventController(service)
+	c3 := NewEventController(service, storageList, env)
 	app.MountEventController(service, c3)
 	// Mount "healthz" controller
 	c4 := NewHealthzController(service)
@@ -89,10 +100,10 @@ func main() {
 	c5 := NewSeriesController(service)
 	app.MountSeriesController(service, c5)
 	// Mount "tenant" controller
-	c6 := NewTenantController(service)
+	c6 := NewTenantController(service, storageList, env)
 	app.MountTenantController(service, c6)
 	// Mount "user" controller
-	c7 := NewUserController(service)
+	c7 := NewUserController(service, storageList, env)
 	app.MountUserController(service, c7)
 	// Mount "validate" controller
 	c8 := NewValidateController(service)
@@ -101,47 +112,4 @@ func main() {
 	swagger.MountController(service)
 
 	service.ListenAndServe(":8080")
-}
-
-func pubKey(*jg.Token) (interface{}, error) {
-	return ioutil.ReadFile("keys/gc.rsa.pub")
-}
-func readPubKey() ([]byte, error) {
-	return ioutil.ReadFile("keys/gc.rsa.pub")
-}
-
-func privateKey() (interface{}, error) {
-	return ioutil.ReadFile("keys/gc.rsa")
-}
-
-func envFromSettings() (*Env, error) {
-	var e Env
-	constr := fmt.Sprintf("user=%s host=%s port=%d dbname=%s password=%s sslmode=disable",
-		settings.DatabaseUsername,
-		settings.DatabaseHost,
-		settings.DatabasePort,
-		settings.DatabaseName,
-		settings.DatabasePassword)
-
-	db, err := gorm.Open("postgres", constr)
-	if err != nil {
-		return nil, err
-	}
-	db.DB().SetMaxIdleConns(settings.MaxIdleConns)
-	db.DB().SetMaxOpenConns(settings.MaxOpenConns)
-	db.LogMode(true)
-	e.DB = *db
-	return &e, nil
-}
-
-func Migrate(e *Env) {
-	//	autoMigrate(e, &AccessToken{}, &RefreshToken{})
-	autoMigrate(e, &models.Tenant{})
-	autoMigrate(e, &models.User{})
-}
-
-func autoMigrate(e *Env, values ...interface{}) {
-	for _, value := range values {
-		e.DB.AutoMigrate(value)
-	}
 }
