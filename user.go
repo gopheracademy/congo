@@ -1,76 +1,70 @@
 package main
 
 import (
-	"fmt"
-
+	"github.com/goadesign/goa"
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/models"
-	"github.com/raphael/goa"
+	"github.com/jinzhu/gorm"
 )
 
-// UserController implements the account resource.
+// UserController implements theuser resource.
 type UserController struct {
-	goa.Controller
-	storage models.UserStorage
+	*goa.Controller
+	e           *Env
+	storagelist map[string]Storage
+	storage     models.UserStorage
 }
 
-// NewUserController creates a account controller.
-func NewUserController(service goa.Service, storage models.UserStorage) app.UserController {
-	return &UserController{storage: storage, Controller: service.NewController("UserController")}
+// NewUserController creates a user controller.
+func NewUserController(service *goa.Service, storagelist map[string]Storage, e *Env) *UserController {
+	return &UserController{
+		Controller:  service.NewController("UserController"),
+		e:           e,
+		storagelist: storagelist,
+		storage:     storagelist["USERSTORAGE"].(models.UserStorage),
+	}
 }
 
 // Create runs the create action.
 func (c *UserController) Create(ctx *app.CreateUserContext) error {
-	m, err := c.storage.Add(ctx, models.UserFromCreatePayload(ctx))
+	a := models.UserFromCreateUserPayload(ctx.Payload)
+	ra, err := c.storage.Add(ctx.Context, a)
 	if err != nil {
-		return ctx.Err()
+		return ctx.Service.Send(ctx, 500, err.Error())
 	}
-	ctx.Header().Set("Location", app.UserHref(m.ID))
+	ctx.ResponseData.Header().Set("Location", app.UserHref(ctx.TenantID, ra.ID))
 	return ctx.Created()
 }
 
 // Delete runs the delete action.
 func (c *UserController) Delete(ctx *app.DeleteUserContext) error {
-	err := c.storage.Delete(ctx, ctx.UserID)
+	err := c.storage.Delete(ctx.Context, ctx.UserID)
 	if err != nil {
-		return ctx.Err()
+		return ctx.NotFound()
 	}
 	return ctx.NoContent()
 }
 
 // List runs the list action.
 func (c *UserController) List(ctx *app.ListUserContext) error {
-	res := c.storage.List(ctx)
-	list := app.UserCollection{}
-	for _, y := range res {
-		fmt.Println(y)
-		nm := y.ToApp()
-		nm.Href = app.UserHref(y.ID)
-		list = append(list, nm)
-	}
-	return ctx.OK(list)
+	res := c.storage.ListUser(ctx.Context, ctx.TenantID)
+	return ctx.OK(res)
 }
 
 // Show runs the show action.
 func (c *UserController) Show(ctx *app.ShowUserContext) error {
-	res, err := c.storage.One(ctx, ctx.UserID)
-	if err != nil {
-		ctx.Error(err.Error())
+	res, err := c.storage.OneUser(ctx.Context, ctx.UserID, ctx.TenantID)
+	if err != nil && err == gorm.ErrRecordNotFound {
+		return ctx.NotFound()
 	}
-	m := res.ToApp()
-	m.ID = int(res.ID)
-	m.Href = app.UserHref(res.ID)
-
-	return ctx.OK(m, "default")
+	return ctx.OK(res)
 }
 
 // Update runs the update action.
 func (c *UserController) Update(ctx *app.UpdateUserContext) error {
-	m := models.UserFromUpdatePayload(ctx)
-	m.ID = ctx.UserID
-	err := c.storage.Update(ctx, m)
+	err := c.storage.UpdateFromUpdateUserPayload(ctx.Context, ctx.Payload, ctx.UserID)
 	if err != nil {
-		fmt.Println(err)
+		goa.LogError(ctx, "updating user", err.Error())
 		return ctx.Err()
 	}
 	return ctx.NoContent()

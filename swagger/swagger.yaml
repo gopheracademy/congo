@@ -1,0 +1,1242 @@
+basePath: /api
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  Authorize:
+    description: Token authorization response
+    example:
+      access_token: Laudantium tempore voluptatem.
+      expires_in: 4.869193e+18
+      tenant:
+        id: 5.7283627e+18
+        name: Est aut adipisci eaque molestias dolorum illo.
+      token_type: Optio beatae aperiam quo.
+      user:
+        active: false
+        email: Beatae consequatur mollitia sed explicabo id.
+        first_name: Eos tempora corporis aliquam id nulla suscipit.
+        href: Est esse a inventore libero sint cumque.
+        id: 7.8311655e+18
+        last_name: Qui molestiae.
+        role: Atque dolorem voluptas et.
+        tenant_id: 6.2444844e+18
+        validated: false
+    properties:
+      access_token:
+        description: access token
+        example: Aut aspernatur excepturi.
+        type: string
+      expires_in:
+        description: Time to expiration in seconds
+        example: 1.4238748e+18
+        format: int64
+        type: integer
+      tenant:
+        description: tenant
+        example:
+          id: 3.9695187e+18
+          name: Et libero culpa.
+        properties:
+          id:
+            description: ID
+            example: 1.9994007e+18
+            format: int64
+            type: integer
+          name:
+            description: name
+            example: Sit eos.
+            type: string
+        type: object
+      token_type:
+        description: type of token
+        example: Error dolores dolorem tempora aut.
+        type: string
+      user:
+        description: user
+        example:
+          active: false
+          email: Ut magnam odit nemo numquam.
+          first_name: Tempora a odit dolores voluptas quis.
+          href: In eos ab porro est exercitationem nisi.
+          id: 7.1807367e+18
+          last_name: Velit excepturi aut minus nam.
+          role: Doloremque blanditiis quo nostrum quo esse.
+          tenant_id: 8.7013987e+18
+          validated: false
+        properties:
+          active:
+            description: Activation status
+            example: false
+            type: boolean
+          email:
+            description: Email address of user
+            example: wz
+            format: email
+            minLength: 2
+            type: string
+          first_name:
+            description: First name of user
+            example: bjyh
+            minLength: 2
+            type: string
+          href:
+            description: API href of record
+            example: Nisi aspernatur non voluptatibus.
+            type: string
+          id:
+            description: ID of record
+            example: 8.769875e+18
+            format: int64
+            type: integer
+          last_name:
+            description: Last name of user
+            example: j8
+            minLength: 2
+            type: string
+          role:
+            description: User's role
+            example: Aliquid aut id quia.
+            type: string
+          tenant_id:
+            example: 7.069451e+18
+            format: int64
+            type: integer
+          validated:
+            description: Validation status
+            example: true
+            type: boolean
+        type: object
+    title: 'Mediatype identifier: application/vnd.authorize+json'
+    type: object
+  CreateAdminuserPayload:
+    properties:
+      email:
+        minLength: 2
+        type: string
+      first_name:
+        minLength: 2
+        type: string
+      id:
+        format: int64
+        type: integer
+      last_name:
+        minLength: 2
+        type: string
+      password:
+        minLength: 8
+        type: string
+      role:
+        type: string
+      tenant_id:
+        format: int64
+        type: integer
+      validated:
+        type: boolean
+      validation_code:
+        minLength: 8
+        type: string
+    required:
+    - first_name
+    - last_name
+    - email
+    - password
+    - role
+    title: CreateAdminuserPayload
+    type: object
+  CreateEventPayload:
+    properties:
+      name:
+        example: 6kvn
+        minLength: 2
+        type: string
+    required:
+    - name
+    title: CreateEventPayload
+    type: object
+  CreateSeriesPayload:
+    properties:
+      name:
+        example: 8q
+        minLength: 2
+        type: string
+    required:
+    - name
+    title: CreateSeriesPayload
+    type: object
+  CreateTenantPayload:
+    properties:
+      name:
+        example: 1g
+        minLength: 2
+        type: string
+    required:
+    - name
+    title: CreateTenantPayload
+    type: object
+  CreateUserPayload:
+    properties:
+      email:
+        example: v8v
+        minLength: 2
+        type: string
+      first_name:
+        minLength: 2
+        type: string
+      id:
+        format: int64
+        type: integer
+      last_name:
+        minLength: 2
+        type: string
+      password:
+        example: cwg227gsxn
+        minLength: 8
+        type: string
+      role:
+        example: Vel odio et inventore.
+        type: string
+      validated:
+        example: true
+        type: boolean
+      validation_code:
+        example: y4r9v66sum
+        minLength: 8
+        type: string
+    required:
+    - first_name
+    - last_name
+    - email
+    - password
+    - role
+    title: CreateUserPayload
+    type: object
+  Event:
+    description: An event is a specific instance of a conference, e.g. GopherCon 2016
+    example:
+      end_date: 1989-11-30T02:51:32-05:00
+      location: Est sit.
+      name: Cupiditate quo molestias dicta excepturi.
+      start_date: 2004-02-11T09:42:24-05:00
+      url: Itaque ex eum hic accusamus qui aspernatur.
+    properties:
+      end_date:
+        description: end_date
+        example: 2003-04-17T13:45:10-04:00
+        format: date-time
+        type: string
+      location:
+        description: location
+        example: Sit ut.
+        type: string
+      name:
+        description: name
+        example: Qui quia voluptates culpa suscipit quia.
+        type: string
+      start_date:
+        description: start_date
+        example: 1995-03-23T19:05:53-05:00
+        format: date-time
+        type: string
+      url:
+        description: event URL
+        example: Aliquam qui.
+        type: string
+    title: 'Mediatype identifier: application/vnd.event+json'
+    type: object
+  EventCollection:
+    example:
+    - end_date: 1999-11-22T14:52:31-05:00
+      location: Nostrum aut quia aut sed recusandae amet.
+      name: Omnis necessitatibus sequi ab qui itaque.
+      start_date: 1989-11-24T06:14:49-05:00
+      url: Delectus sint id reiciendis hic.
+    - end_date: 2001-05-24T18:33:18-04:00
+      location: Voluptatem veniam et dolor excepturi molestias.
+      name: Rerum mollitia et sunt.
+      start_date: 1999-04-16T02:08:59-04:00
+      url: Id tempora facilis voluptas quia.
+    - end_date: 2014-06-18T01:15:35-04:00
+      location: Aperiam nihil voluptatem qui voluptate.
+      name: Nihil nesciunt voluptatem reprehenderit et qui.
+      start_date: 1987-03-08T07:14:21-05:00
+      url: Cumque aut sit.
+    items:
+      example:
+        end_date: 1988-02-03T17:47:27-05:00
+        location: Saepe odit porro.
+        name: Harum tenetur sint aspernatur nemo inventore placeat.
+        start_date: 1976-05-31T06:39:48-04:00
+        url: Vel cumque delectus ipsum facere qui vel.
+      properties:
+        end_date:
+          description: end_date
+          example: 2003-04-17T13:45:10-04:00
+          format: date-time
+          type: string
+        location:
+          description: location
+          example: Sit ut.
+          type: string
+        name:
+          description: name
+          example: Qui quia voluptates culpa suscipit quia.
+          type: string
+        start_date:
+          description: start_date
+          example: 1995-03-23T19:05:53-05:00
+          format: date-time
+          type: string
+        url:
+          description: event URL
+          example: Aliquam qui.
+          type: string
+      type: object
+    title: 'Mediatype identifier: application/vnd.event+json; type=collection'
+    type: array
+  Series:
+    description: A series is a recurring event, e.g. GopherCon
+    example:
+      name: Itaque praesentium incidunt illo distinctio fugit molestias.
+    properties:
+      name:
+        description: name
+        example: Quae incidunt voluptatem dolores tempora esse impedit.
+        type: string
+    title: 'Mediatype identifier: application/vnd.series+json'
+    type: object
+  SeriesCollection:
+    example:
+    - name: Ipsum dolor.
+    - name: Voluptatum aut sapiente consequatur sit autem vel.
+    items:
+      example:
+        name: Ex harum quis.
+      properties:
+        name:
+          description: name
+          example: Quae incidunt voluptatem dolores tempora esse impedit.
+          type: string
+      type: object
+    title: 'Mediatype identifier: application/vnd.series+json; type=collection'
+    type: array
+  Tenant:
+    description: Tenant account in Congo
+    example:
+      id: 2.8749156e+18
+      name: Maiores quia.
+    properties:
+      id:
+        description: ID
+        example: 1.9994007e+18
+        format: int64
+        type: integer
+      name:
+        description: name
+        example: Sit eos.
+        type: string
+    title: 'Mediatype identifier: application/vnd.tenant+json'
+    type: object
+  TenantCollection:
+    example:
+    - id: 4.9610305e+18
+      name: Et voluptatem eum.
+    - id: 7.076086e+18
+      name: Quasi consectetur iusto dolor iure fuga harum.
+    - id: 1.4947862e+18
+      name: Cumque quos.
+    items:
+      example:
+        id: 5.5016846e+18
+        name: Officia aut eum similique reiciendis.
+      properties:
+        id:
+          description: ID
+          example: 1.9994007e+18
+          format: int64
+          type: integer
+        name:
+          description: name
+          example: Sit eos.
+          type: string
+      type: object
+    title: 'Mediatype identifier: application/vnd.tenant+json; type=collection'
+    type: array
+  UpdateAdminuserPayload:
+    properties:
+      email:
+        minLength: 2
+        type: string
+      first_name:
+        minLength: 2
+        type: string
+      id:
+        format: int64
+        type: integer
+      last_name:
+        minLength: 2
+        type: string
+      password:
+        minLength: 8
+        type: string
+      role:
+        type: string
+      validated:
+        type: boolean
+      validation_code:
+        minLength: 8
+        type: string
+    title: UpdateAdminuserPayload
+    type: object
+  UpdateEventPayload:
+    properties:
+      end_date:
+        example: 2015-04-04T05:51:16-04:00
+        format: date-time
+        type: string
+      name:
+        minLength: 2
+        type: string
+      start_date:
+        example: 2011-10-20T15:52:41-04:00
+        format: date-time
+        type: string
+      url:
+        example: z26rj
+        minLength: 5
+        type: string
+    title: UpdateEventPayload
+    type: object
+  UpdateSeriesPayload:
+    properties:
+      name:
+        minLength: 2
+        type: string
+    title: UpdateSeriesPayload
+    type: object
+  UpdateTenantPayload:
+    properties:
+      name:
+        minLength: 2
+        type: string
+    title: UpdateTenantPayload
+    type: object
+  UpdateUserPayload:
+    properties:
+      email:
+        minLength: 2
+        type: string
+      first_name:
+        minLength: 2
+        type: string
+      id:
+        format: int64
+        type: integer
+      last_name:
+        minLength: 2
+        type: string
+      password:
+        minLength: 8
+        type: string
+      role:
+        type: string
+      validated:
+        type: boolean
+      validation_code:
+        minLength: 8
+        type: string
+    title: UpdateUserPayload
+    type: object
+  User:
+    description: A user belonging to a tenant
+    example:
+      active: false
+      email: Quis asperiores.
+      first_name: Aliquam corporis dolorum nobis nihil.
+      href: Quae fuga tempora exercitationem nihil.
+      id: 7.4839644e+18
+      last_name: Qui molestias nihil.
+      role: Expedita et.
+      tenant_id: 6.450897e+18
+      validated: false
+    properties:
+      active:
+        description: Activation status
+        example: false
+        type: boolean
+      email:
+        description: Email address of user
+        example: wz
+        format: email
+        minLength: 2
+        type: string
+      first_name:
+        description: First name of user
+        example: bjyh
+        minLength: 2
+        type: string
+      href:
+        description: API href of record
+        example: Nisi aspernatur non voluptatibus.
+        type: string
+      id:
+        description: ID of record
+        example: 8.769875e+18
+        format: int64
+        type: integer
+      last_name:
+        description: Last name of user
+        example: j8
+        minLength: 2
+        type: string
+      role:
+        description: User's role
+        example: Aliquid aut id quia.
+        type: string
+      tenant_id:
+        example: 7.069451e+18
+        format: int64
+        type: integer
+      validated:
+        description: Validation status
+        example: true
+        type: boolean
+    title: 'Mediatype identifier: application/vnd.user+json'
+    type: object
+  UserCollection:
+    example:
+    - active: true
+      email: Eos earum aut.
+      first_name: A at quia perspiciatis nisi nihil.
+      href: Est perferendis velit et.
+      id: 8.2121116e+18
+      last_name: Ipsa laudantium iste eos qui.
+      role: Sed nam.
+      tenant_id: 1.04518716e+18
+      validated: false
+    - active: true
+      email: Totam porro voluptatibus nam.
+      first_name: Hic quo occaecati enim aut incidunt sed.
+      href: Laudantium suscipit.
+      id: 2.2889023e+18
+      last_name: Reiciendis tempore est.
+      role: Quis autem atque accusantium.
+      tenant_id: 9.008032e+18
+      validated: true
+    items:
+      example:
+        active: true
+        email: Voluptatem et reprehenderit et ad quo.
+        first_name: Blanditiis officiis sint hic ex ea ut.
+        href: Dignissimos rerum repellat aut tempora nihil voluptas.
+        id: 8.1248096e+17
+        last_name: Dolor dolorum sequi corporis non.
+        role: Earum ut eum alias voluptatibus dolorem non.
+        tenant_id: 7.330815e+18
+        validated: true
+      properties:
+        active:
+          description: Activation status
+          example: false
+          type: boolean
+        email:
+          description: Email address of user
+          example: wz
+          format: email
+          minLength: 2
+          type: string
+        first_name:
+          description: First name of user
+          example: bjyh
+          minLength: 2
+          type: string
+        href:
+          description: API href of record
+          example: Nisi aspernatur non voluptatibus.
+          type: string
+        id:
+          description: ID of record
+          example: 8.769875e+18
+          format: int64
+          type: integer
+        last_name:
+          description: Last name of user
+          example: j8
+          minLength: 2
+          type: string
+        role:
+          description: User's role
+          example: Aliquid aut id quia.
+          type: string
+        tenant_id:
+          example: 7.069451e+18
+          format: int64
+          type: integer
+        validated:
+          description: Validation status
+          example: true
+          type: boolean
+      type: object
+    title: 'Mediatype identifier: application/vnd.user+json; type=collection'
+    type: array
+externalDocs:
+  description: Getting Started Guide
+  url: https://congo.com
+host: congo.gopheracademy.com
+info:
+  contact:
+    email: congo
+    name: congo
+    url: https://congo.com
+  description: Congo
+  title: Congo
+  version: ""
+paths:
+  /admin/users:
+    get:
+      description: |
+        List all users
+
+        ** Required security scopes**:
+      operationId: adminuser#list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserCollection'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    post:
+      description: |
+        Record new user
+
+        ** Required security scopes**:
+      operationId: adminuser#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateAdminuserPayload'
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: ^/admin/users/[0-9]+$
+              type: string
+      schemes:
+      - https
+  /admin/users/{userID}:
+    delete:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: adminuser#delete
+      parameters:
+      - description: 'UserID '
+        in: path
+        name: userID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    get:
+      description: |
+        Retrieve user with given id
+
+        ** Required security scopes**:
+      operationId: adminuser#show
+      parameters:
+      - in: path
+        name: userID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    patch:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: adminuser#update
+      parameters:
+      - in: path
+        name: userID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateAdminuserPayload'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+  /auth/refresh:
+    post:
+      description: Obtain a refreshed access token
+      operationId: auth#refresh
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Authorize'
+      schemes:
+      - https
+      security:
+      - password: []
+  /auth/token:
+    post:
+      description: Obtain an access token
+      operationId: auth#token
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Authorize'
+      schemes:
+      - https
+      security:
+      - password: []
+  /healthz:
+    get:
+      description: Get Server Status
+      operationId: healthz#status
+      schemes:
+      - https
+  /tenants:
+    get:
+      description: |
+        List all tenants
+
+        ** Required security scopes**:
+      operationId: tenant#list
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/TenantCollection'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    post:
+      description: |
+        Record new tenant
+
+        ** Required security scopes**:
+      operationId: tenant#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateTenantPayload'
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: ^/tenants/[0-9]+$
+              type: string
+      schemes:
+      - https
+  /tenants/{tenantID}:
+    delete:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: tenant#delete
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    get:
+      description: |
+        Retrieve tenant with given id
+
+        ** Required security scopes**:
+      operationId: tenant#show
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Tenant'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    patch:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: tenant#update
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateTenantPayload'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+  /tenants/{tenantID}/events:
+    get:
+      description: |
+        List all events
+
+        ** Required security scopes**:
+      operationId: event#list
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventCollection'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    post:
+      description: |
+        Record new event
+
+        ** Required security scopes**:
+      operationId: event#create
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateEventPayload'
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: ^/tenants/[0-9]/events/[0-9]+$
+              type: string
+      schemes:
+      - https
+  /tenants/{tenantID}/events/{eventID}:
+    delete:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: event#delete
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    get:
+      description: Retrieve event with given id
+      operationId: event#show
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Event'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    patch:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: event#update
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateEventPayload'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+  /tenants/{tenantID}/series:
+    get:
+      description: |
+        List all series
+
+        ** Required security scopes**:
+      operationId: series#list
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    post:
+      description: |
+        Record new series
+
+        ** Required security scopes**:
+      operationId: series#create
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateSeriesPayload'
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: ^/tenants/[0-9]/series/[0-9]+$
+              type: string
+      schemes:
+      - https
+  /tenants/{tenantID}/series/{seriesID}:
+    delete:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: series#delete
+      parameters:
+      - description: Series ID
+        in: path
+        name: seriesID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    get:
+      description: |
+        Retrieve series with given id
+
+        ** Required security scopes**:
+      operationId: series#show
+      parameters:
+      - in: path
+        name: seriesID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Series'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    patch:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: series#update
+      parameters:
+      - in: path
+        name: seriesID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateSeriesPayload'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+  /tenants/{tenantID}/users:
+    get:
+      description: |
+        List all users for a tenant
+
+        ** Required security scopes**:
+      operationId: user#list
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserCollection'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    post:
+      description: |
+        Record new user
+
+        ** Required security scopes**:
+      operationId: user#create
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateUserPayload'
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: ^/tenants/[0-9]+/users/[0-9]+$
+              type: string
+      schemes:
+      - https
+  /tenants/{tenantID}/users/{userID}:
+    delete:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: user#delete
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - description: 'UserID '
+        in: path
+        name: userID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    get:
+      description: |
+        Retrieve user with given id
+
+        ** Required security scopes**:
+      operationId: user#show
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: path
+        name: userID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    patch:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: user#update
+      parameters:
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: path
+        name: userID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateUserPayload'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+  /validate/{userID}:
+    get:
+      description: validate user email
+      operationId: validate#validate
+      parameters:
+      - in: path
+        name: userID
+        required: true
+        type: string
+      - in: query
+        name: v
+        required: false
+        type: string
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      schemes:
+      - https
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  NoContent:
+    description: No Content
+  NotFound:
+    description: Not Found
+  OK:
+    description: OK
+    schema:
+      $ref: '#/definitions/User'
+schemes:
+- https
+securityDefinitions:
+  jwt:
+    description: |2-
+
+
+      **Token URL**: <a href='https://congo.gopheracademy.com/api/auth/token'>https://congo.gopheracademy.com/api/auth/token</a>
+    in: header
+    name: Authorization
+    type: apiKey
+  password:
+    description: Use your own password!
+    type: basic
+swagger: "2.0"

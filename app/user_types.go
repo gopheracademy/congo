@@ -1,5 +1,5 @@
 //************************************************************************//
-// congo: Application User Types
+// API "congo": Application User Types
 //
 // Generated with goagen v0.0.1, command line:
 // $ goagen
@@ -13,328 +13,381 @@
 package app
 
 import (
-	"github.com/raphael/goa"
+	"github.com/goadesign/goa"
+	"time"
 )
 
-// ProposalModel type
-type ProposalModel struct {
-	Abstract  string
-	Detail    string
-	Firstname string
-	Title     string
-	Withdrawn bool
+// AdminUserPayload user type.
+type adminUserPayload struct {
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	TenantID       *int    `json:"tenant_id,omitempty" xml:"tenant_id,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
 }
 
-// MarshalProposalModel validates and renders an instance of ProposalModel into a interface{}
-func MarshalProposalModel(source *ProposalModel, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Abstract) < 50 {
-		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 50, true, err)
-	}
-	if len(source.Abstract) > 500 {
-		err = goa.InvalidLengthError(`.abstract`, source.Abstract, 500, false, err)
-	}
-	if len(source.Detail) < 100 {
-		err = goa.InvalidLengthError(`.detail`, source.Detail, 100, true, err)
-	}
-	if len(source.Detail) > 2000 {
-		err = goa.InvalidLengthError(`.detail`, source.Detail, 2000, false, err)
-	}
-	if len(source.Firstname) < 2 {
-		err = goa.InvalidLengthError(`.firstname`, source.Firstname, 2, true, err)
-	}
-	if len(source.Title) < 10 {
-		err = goa.InvalidLengthError(`.title`, source.Title, 10, true, err)
-	}
-	if len(source.Title) > 200 {
-		err = goa.InvalidLengthError(`.title`, source.Title, 200, false, err)
-	}
-	tmp78 := map[string]interface{}{
-		"abstract":  source.Abstract,
-		"detail":    source.Detail,
-		"firstname": source.Firstname,
-		"title":     source.Title,
-		"withdrawn": source.Withdrawn,
-	}
-	target = tmp78
-	return
-}
-
-// UnmarshalProposalModel unmarshals and validates a raw interface{} into an instance of ProposalModel
-func UnmarshalProposalModel(source interface{}, inErr error) (target *ProposalModel, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(ProposalModel)
-		if v, ok := val["abstract"]; ok {
-			var tmp79 string
-			if val, ok := v.(string); ok {
-				tmp79 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Abstract`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp79) < 50 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp79, 50, true, err)
-				}
-				if len(tmp79) > 500 {
-					err = goa.InvalidLengthError(`load.Abstract`, tmp79, 500, false, err)
-				}
-			}
-			target.Abstract = tmp79
+// Validate validates the adminUserPayload type instance.
+func (ut *adminUserPayload) Validate() (err error) {
+	if ut.Email != nil {
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
 		}
-		if v, ok := val["detail"]; ok {
-			var tmp80 string
-			if val, ok := v.(string); ok {
-				tmp80 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Detail`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp80) < 100 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp80, 100, true, err)
-				}
-				if len(tmp80) > 2000 {
-					err = goa.InvalidLengthError(`load.Detail`, tmp80, 2000, false, err)
-				}
-			}
-			target.Detail = tmp80
+	}
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
 		}
-		if v, ok := val["firstname"]; ok {
-			var tmp81 string
-			if val, ok := v.(string); ok {
-				tmp81 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp81) < 2 {
-					err = goa.InvalidLengthError(`load.Firstname`, tmp81, 2, true, err)
-				}
-			}
-			target.Firstname = tmp81
+	}
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
 		}
-		if v, ok := val["title"]; ok {
-			var tmp82 string
-			if val, ok := v.(string); ok {
-				tmp82 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Title`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp82) < 10 {
-					err = goa.InvalidLengthError(`load.Title`, tmp82, 10, true, err)
-				}
-				if len(tmp82) > 200 {
-					err = goa.InvalidLengthError(`load.Title`, tmp82, 200, false, err)
-				}
-			}
-			target.Title = tmp82
+	}
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
 		}
-		if v, ok := val["withdrawn"]; ok {
-			var tmp83 bool
-			if val, ok := v.(bool); ok {
-				tmp83 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Withdrawn`, v, "bool", err)
-			}
-			target.Withdrawn = tmp83
+	}
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
 		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
 	}
 	return
 }
 
-// ReviewModel type
-type ReviewModel struct {
-	Comment string
-	Rating  int
+// Publicize creates AdminUserPayload from adminUserPayload
+func (ut *adminUserPayload) Publicize() *AdminUserPayload {
+	var pub AdminUserPayload
+	if ut.Email != nil {
+		pub.Email = ut.Email
+	}
+	if ut.FirstName != nil {
+		pub.FirstName = ut.FirstName
+	}
+	if ut.ID != nil {
+		pub.ID = ut.ID
+	}
+	if ut.LastName != nil {
+		pub.LastName = ut.LastName
+	}
+	if ut.Password != nil {
+		pub.Password = ut.Password
+	}
+	if ut.Role != nil {
+		pub.Role = ut.Role
+	}
+	if ut.TenantID != nil {
+		pub.TenantID = ut.TenantID
+	}
+	if ut.Validated != nil {
+		pub.Validated = ut.Validated
+	}
+	if ut.ValidationCode != nil {
+		pub.ValidationCode = ut.ValidationCode
+	}
+	return &pub
 }
 
-// MarshalReviewModel validates and renders an instance of ReviewModel into a interface{}
-func MarshalReviewModel(source *ReviewModel, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Comment) < 10 {
-		err = goa.InvalidLengthError(`.comment`, source.Comment, 10, true, err)
+// AdminUserPayload user type.
+type AdminUserPayload struct {
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	TenantID       *int    `json:"tenant_id,omitempty" xml:"tenant_id,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
+}
+
+// Validate validates the AdminUserPayload type instance.
+func (ut *AdminUserPayload) Validate() (err error) {
+	if ut.Email != nil {
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
+		}
 	}
-	if len(source.Comment) > 200 {
-		err = goa.InvalidLengthError(`.comment`, source.Comment, 200, false, err)
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
+		}
 	}
-	if source.Rating < 1 {
-		err = goa.InvalidRangeError(`.rating`, source.Rating, 1, true, err)
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
+		}
 	}
-	if source.Rating > 5 {
-		err = goa.InvalidRangeError(`.rating`, source.Rating, 5, false, err)
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
+		}
 	}
-	tmp84 := map[string]interface{}{
-		"comment": source.Comment,
-		"rating":  source.Rating,
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
+		}
 	}
-	target = tmp84
+	return err
+}
+
+// EventPayload user type.
+type eventPayload struct {
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
+}
+
+// Validate validates the eventPayload type instance.
+func (ut *eventPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	if ut.URL != nil {
+		if len(*ut.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.url`, *ut.URL, len(*ut.URL), 5, true))
+		}
+	}
 	return
 }
 
-// UnmarshalReviewModel unmarshals and validates a raw interface{} into an instance of ReviewModel
-func UnmarshalReviewModel(source interface{}, inErr error) (target *ReviewModel, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(ReviewModel)
-		if v, ok := val["comment"]; ok {
-			var tmp85 string
-			if val, ok := v.(string); ok {
-				tmp85 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Comment`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp85) < 10 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp85, 10, true, err)
-				}
-				if len(tmp85) > 200 {
-					err = goa.InvalidLengthError(`load.Comment`, tmp85, 200, false, err)
-				}
-			}
-			target.Comment = tmp85
+// Publicize creates EventPayload from eventPayload
+func (ut *eventPayload) Publicize() *EventPayload {
+	var pub EventPayload
+	if ut.EndDate != nil {
+		pub.EndDate = ut.EndDate
+	}
+	if ut.Name != nil {
+		pub.Name = ut.Name
+	}
+	if ut.StartDate != nil {
+		pub.StartDate = ut.StartDate
+	}
+	if ut.URL != nil {
+		pub.URL = ut.URL
+	}
+	return &pub
+}
+
+// EventPayload user type.
+type EventPayload struct {
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
+}
+
+// Validate validates the EventPayload type instance.
+func (ut *EventPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
 		}
-		if v, ok := val["rating"]; ok {
-			var tmp86 int
-			if f, ok := v.(float64); ok {
-				tmp86 = int(f)
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Rating`, v, "int", err)
-			}
-			if err == nil {
-				if tmp86 < 1 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp86, 1, true, err)
-				}
-				if tmp86 > 5 {
-					err = goa.InvalidRangeError(`load.Rating`, tmp86, 5, false, err)
-				}
-			}
-			target.Rating = tmp86
+	}
+	if ut.URL != nil {
+		if len(*ut.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.url`, *ut.URL, len(*ut.URL), 5, true))
 		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
+	}
+	return err
+}
+
+// SeriesPayload user type.
+type seriesPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the seriesPayload type instance.
+func (ut *seriesPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
 	}
 	return
 }
 
-// UserModel type
-type UserModel struct {
-	Bio       string
-	City      string
-	Country   string
-	Email     string
-	Firstname string
-	Lastname  string
-	Role      string
-	State     string
+// Publicize creates SeriesPayload from seriesPayload
+func (ut *seriesPayload) Publicize() *SeriesPayload {
+	var pub SeriesPayload
+	if ut.Name != nil {
+		pub.Name = ut.Name
+	}
+	return &pub
 }
 
-// MarshalUserModel validates and renders an instance of UserModel into a interface{}
-func MarshalUserModel(source *UserModel, inErr error) (target map[string]interface{}, err error) {
-	err = inErr
-	if len(source.Bio) > 500 {
-		err = goa.InvalidLengthError(`.bio`, source.Bio, 500, false, err)
+// SeriesPayload user type.
+type SeriesPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the SeriesPayload type instance.
+func (ut *SeriesPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
 	}
-	tmp87 := map[string]interface{}{
-		"bio":       source.Bio,
-		"city":      source.City,
-		"country":   source.Country,
-		"email":     source.Email,
-		"firstname": source.Firstname,
-		"lastname":  source.Lastname,
-		"role":      source.Role,
-		"state":     source.State,
+	return err
+}
+
+// TenantPayload user type.
+type tenantPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the tenantPayload type instance.
+func (ut *tenantPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
 	}
-	target = tmp87
 	return
 }
 
-// UnmarshalUserModel unmarshals and validates a raw interface{} into an instance of UserModel
-func UnmarshalUserModel(source interface{}, inErr error) (target *UserModel, err error) {
-	err = inErr
-	if val, ok := source.(map[string]interface{}); ok {
-		target = new(UserModel)
-		if v, ok := val["bio"]; ok {
-			var tmp88 string
-			if val, ok := v.(string); ok {
-				tmp88 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Bio`, v, "string", err)
-			}
-			if err == nil {
-				if len(tmp88) > 500 {
-					err = goa.InvalidLengthError(`load.Bio`, tmp88, 500, false, err)
-				}
-			}
-			target.Bio = tmp88
+// Publicize creates TenantPayload from tenantPayload
+func (ut *tenantPayload) Publicize() *TenantPayload {
+	var pub TenantPayload
+	if ut.Name != nil {
+		pub.Name = ut.Name
+	}
+	return &pub
+}
+
+// TenantPayload user type.
+type TenantPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the TenantPayload type instance.
+func (ut *TenantPayload) Validate() (err error) {
+	if ut.Name != nil {
+		if len(*ut.Name) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
 		}
-		if v, ok := val["city"]; ok {
-			var tmp89 string
-			if val, ok := v.(string); ok {
-				tmp89 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.City`, v, "string", err)
-			}
-			target.City = tmp89
+	}
+	return err
+}
+
+// UserPayload user type.
+type userPayload struct {
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
+}
+
+// Validate validates the userPayload type instance.
+func (ut *userPayload) Validate() (err error) {
+	if ut.Email != nil {
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
 		}
-		if v, ok := val["country"]; ok {
-			var tmp90 string
-			if val, ok := v.(string); ok {
-				tmp90 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Country`, v, "string", err)
-			}
-			target.Country = tmp90
+	}
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
 		}
-		if v, ok := val["email"]; ok {
-			var tmp91 string
-			if val, ok := v.(string); ok {
-				tmp91 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Email`, v, "string", err)
-			}
-			target.Email = tmp91
+	}
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
 		}
-		if v, ok := val["firstname"]; ok {
-			var tmp92 string
-			if val, ok := v.(string); ok {
-				tmp92 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Firstname`, v, "string", err)
-			}
-			target.Firstname = tmp92
+	}
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
 		}
-		if v, ok := val["lastname"]; ok {
-			var tmp93 string
-			if val, ok := v.(string); ok {
-				tmp93 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Lastname`, v, "string", err)
-			}
-			target.Lastname = tmp93
+	}
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
 		}
-		if v, ok := val["role"]; ok {
-			var tmp94 string
-			if val, ok := v.(string); ok {
-				tmp94 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.Role`, v, "string", err)
-			}
-			target.Role = tmp94
-		}
-		if v, ok := val["state"]; ok {
-			var tmp95 string
-			if val, ok := v.(string); ok {
-				tmp95 = val
-			} else {
-				err = goa.InvalidAttributeTypeError(`load.State`, v, "string", err)
-			}
-			target.State = tmp95
-		}
-	} else {
-		err = goa.InvalidAttributeTypeError(`load`, source, "dictionary", err)
 	}
 	return
+}
+
+// Publicize creates UserPayload from userPayload
+func (ut *userPayload) Publicize() *UserPayload {
+	var pub UserPayload
+	if ut.Email != nil {
+		pub.Email = ut.Email
+	}
+	if ut.FirstName != nil {
+		pub.FirstName = ut.FirstName
+	}
+	if ut.ID != nil {
+		pub.ID = ut.ID
+	}
+	if ut.LastName != nil {
+		pub.LastName = ut.LastName
+	}
+	if ut.Password != nil {
+		pub.Password = ut.Password
+	}
+	if ut.Role != nil {
+		pub.Role = ut.Role
+	}
+	if ut.Validated != nil {
+		pub.Validated = ut.Validated
+	}
+	if ut.ValidationCode != nil {
+		pub.ValidationCode = ut.ValidationCode
+	}
+	return &pub
+}
+
+// UserPayload user type.
+type UserPayload struct {
+	Email          *string `json:"email,omitempty" xml:"email,omitempty"`
+	FirstName      *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	ID             *int    `json:"id,omitempty" xml:"id,omitempty"`
+	LastName       *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Password       *string `json:"password,omitempty" xml:"password,omitempty"`
+	Role           *string `json:"role,omitempty" xml:"role,omitempty"`
+	Validated      *bool   `json:"validated,omitempty" xml:"validated,omitempty"`
+	ValidationCode *string `json:"validation_code,omitempty" xml:"validation_code,omitempty"`
+}
+
+// Validate validates the UserPayload type instance.
+func (ut *UserPayload) Validate() (err error) {
+	if ut.Email != nil {
+		if len(*ut.Email) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email`, *ut.Email, len(*ut.Email), 2, true))
+		}
+	}
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
+		}
+	}
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
+		}
+	}
+	if ut.Password != nil {
+		if len(*ut.Password) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.password`, *ut.Password, len(*ut.Password), 8, true))
+		}
+	}
+	if ut.ValidationCode != nil {
+		if len(*ut.ValidationCode) < 8 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.validation_code`, *ut.ValidationCode, len(*ut.ValidationCode), 8, true))
+		}
+	}
+	return err
 }

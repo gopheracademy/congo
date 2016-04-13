@@ -1,13 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
-
 	"github.com/gopheracademy/congo/client"
-	"gopkg.in/alecthomas/kingpin.v2"
+	"github.com/spf13/cobra"
+	"os"
+	"time"
 )
 
 // PrettyPrint is true if the tool output should be formatted for human consumption.
@@ -15,173 +13,303 @@ var PrettyPrint bool
 
 func main() {
 	// Create command line parser
-	app := kingpin.New("congo-cli", "CLI client for the congo service (https://gopheracademy.com/congo/getting-started.html)")
-	c := client.New()
+	app := &cobra.Command{
+		Use:   "congo-cli",
+		Short: `CLI client for the congo service (https://congo.com)`,
+	}
+	c := client.New(nil)
 	c.UserAgent = "congo-cli/1.0"
-	app.Flag("scheme", "Set the requests scheme").Short('s').Default("http").StringVar(&c.Scheme)
-	app.Flag("host", "API hostname").Short('h').Default("api.gopheracademy.com").StringVar(&c.Host)
-	app.Flag("timeout", "Set the request timeout, defaults to 20s").Short('t').Default("20s").DurationVar(&c.Timeout)
-	app.Flag("dump", "Dump HTTP request and response.").BoolVar(&c.Dump)
-	app.Flag("pp", "Pretty print response body").BoolVar(&PrettyPrint)
-	commands := RegisterCommands(app)
-	// Make "client-cli <action> [<resource>] --help" equivalent to
-	// "client-cli help <action> [<resource>]"
-	if os.Args[len(os.Args)-1] == "--help" {
-		args := append([]string{os.Args[0], "help"}, os.Args[1:len(os.Args)-1]...)
-		os.Args = args
+	app.PersistentFlags().StringVarP(&c.Scheme, "scheme", "s", "", "Set the requests scheme")
+	app.PersistentFlags().StringVarP(&c.Host, "host", "H", "congo.gopheracademy.com", "API hostname")
+	app.PersistentFlags().DurationVarP(&c.Timeout, "timeout", "t", time.Duration(20)*time.Second, "Set the request timeout")
+	app.PersistentFlags().BoolVar(&c.Dump, "dump", false, "Dump HTTP request and response.")
+	app.PersistentFlags().BoolVar(&PrettyPrint, "pp", false, "Pretty print response body")
+	RegisterCommands(app, c)
+	if err := app.Execute(); err != nil {
+		fmt.Fprintf(os.Stderr, "request failed: %s", err)
+		os.Exit(-1)
 	}
-	cmdName, err := app.Parse(os.Args[1:])
-	if err != nil {
-		kingpin.Fatalf(err.Error())
-	}
-	cmd, ok := commands[cmdName]
-	if !ok {
-		kingpin.Fatalf("unknown command %s", cmdName)
-	}
-	resp, err := cmd.Run(c)
-	if err != nil {
-		kingpin.Fatalf("request failed: %s", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		kingpin.Fatalf("failed to read body: %s", err)
-	}
-	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		// Let user know if something went wrong
-		var sbody string
-		if len(body) > 0 {
-			sbody = ": " + string(body)
-		}
-		fmt.Printf("error: %d%s", resp.StatusCode, sbody)
-	} else if !c.Dump && len(body) > 0 {
-		var out string
-		if PrettyPrint {
-			var jbody interface{}
-			err = json.Unmarshal(body, &jbody)
-			if err != nil {
-				out = string(body)
-			} else {
-				var b []byte
-				b, err = json.MarshalIndent(jbody, "", "    ")
-				if err == nil {
-					out = string(b)
-				} else {
-					out = string(body)
-				}
-			}
-		} else {
-			out = string(body)
-		}
-		fmt.Print(out)
-	}
-
-	// Figure out exit code
-	exitStatus := 0
-	switch {
-	case resp.StatusCode == 401:
-		exitStatus = 1
-	case resp.StatusCode == 403:
-		exitStatus = 3
-	case resp.StatusCode == 404:
-		exitStatus = 4
-	case resp.StatusCode > 399 && resp.StatusCode < 500:
-		exitStatus = 2
-	case resp.StatusCode > 499:
-		exitStatus = 5
-	}
-	os.Exit(exitStatus)
 }
 
 // RegisterCommands all the resource action subcommands to the application command line.
-func RegisterCommands(app *kingpin.Application) map[string]client.ActionCommand {
-	res := make(map[string]client.ActionCommand)
-	var command, sub *kingpin.CmdClause
-	command = app.Command("callback", "OAUTH2 callback endpoint")
-	tmp1 := new(CallbackAuthCommand)
-	sub = command.Command("auth", "OAUTH2 callback endpoint")
+func RegisterCommands(app *cobra.Command, c *client.Client) {
+	var command, sub *cobra.Command
+	command = &cobra.Command{
+		Use:   "create",
+		Short: `create action`,
+	}
+	tmp1 := new(CreateAdminuserCommand)
+	sub = &cobra.Command{
+		Use:   `adminuser "/api/admin/users"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
+	}
 	tmp1.RegisterFlags(sub)
-	res["callback auth"] = tmp1
-	command = app.Command("create", "create action")
-	tmp2 := new(CreateProposalCommand)
-	sub = command.Command("proposal", "Create a new proposal")
+	command.AddCommand(sub)
+	tmp2 := new(CreateEventCommand)
+	sub = &cobra.Command{
+		Use:   `event "/api/tenants/:tenantID/events"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
+	}
 	tmp2.RegisterFlags(sub)
-	res["create proposal"] = tmp2
-	tmp3 := new(CreateReviewCommand)
-	sub = command.Command("review", "Create a new review")
+	command.AddCommand(sub)
+	tmp3 := new(CreateSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `series "/api/tenants/:tenantID/series"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
+	}
 	tmp3.RegisterFlags(sub)
-	res["create review"] = tmp3
-	tmp4 := new(CreateUserCommand)
-	sub = command.Command("user", "Record new user")
+	command.AddCommand(sub)
+	tmp4 := new(CreateTenantCommand)
+	sub = &cobra.Command{
+		Use:   `tenant "/api/tenants"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
+	}
 	tmp4.RegisterFlags(sub)
-	res["create user"] = tmp4
-	command = app.Command("delete", "delete action")
-	tmp5 := new(DeleteProposalCommand)
-	sub = command.Command("proposal", "")
+	command.AddCommand(sub)
+	tmp5 := new(CreateUserCommand)
+	sub = &cobra.Command{
+		Use:   `user "/api/tenants/:tenantID/users"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
+	}
 	tmp5.RegisterFlags(sub)
-	res["delete proposal"] = tmp5
-	tmp6 := new(DeleteReviewCommand)
-	sub = command.Command("review", "")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "delete",
+		Short: `delete action`,
+	}
+	tmp6 := new(DeleteAdminuserCommand)
+	sub = &cobra.Command{
+		Use:   `adminuser "/api/admin/users/:userID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
+	}
 	tmp6.RegisterFlags(sub)
-	res["delete review"] = tmp6
-	tmp7 := new(DeleteUserCommand)
-	sub = command.Command("user", "")
+	command.AddCommand(sub)
+	tmp7 := new(DeleteEventCommand)
+	sub = &cobra.Command{
+		Use:   `event "/api/tenants/:tenantID/events/:eventID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
+	}
 	tmp7.RegisterFlags(sub)
-	res["delete user"] = tmp7
-	command = app.Command("list", "list action")
-	tmp8 := new(ListProposalCommand)
-	sub = command.Command("proposal", "List all proposals for a user")
+	command.AddCommand(sub)
+	tmp8 := new(DeleteSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `series "/api/tenants/:tenantID/series/:seriesID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
+	}
 	tmp8.RegisterFlags(sub)
-	res["list proposal"] = tmp8
-	tmp9 := new(ListReviewCommand)
-	sub = command.Command("review", "List all reviews for a proposal")
+	command.AddCommand(sub)
+	tmp9 := new(DeleteTenantCommand)
+	sub = &cobra.Command{
+		Use:   `tenant "/api/tenants/:tenantID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
+	}
 	tmp9.RegisterFlags(sub)
-	res["list review"] = tmp9
-	tmp10 := new(ListUserCommand)
-	sub = command.Command("user", "List all users in account")
+	command.AddCommand(sub)
+	tmp10 := new(DeleteUserCommand)
+	sub = &cobra.Command{
+		Use:   `user "/api/tenants/:tenantID/users/:userID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
+	}
 	tmp10.RegisterFlags(sub)
-	res["list user"] = tmp10
-	command = app.Command("oauth", "OAUTH2 login endpoint")
-	tmp11 := new(OauthAuthCommand)
-	sub = command.Command("auth", "OAUTH2 login endpoint")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list",
+		Short: `list action`,
+	}
+	tmp11 := new(ListAdminuserCommand)
+	sub = &cobra.Command{
+		Use:   `adminuser "/api/admin/users"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
+	}
 	tmp11.RegisterFlags(sub)
-	res["oauth auth"] = tmp11
-	command = app.Command("refresh", "Obtain a refreshed access token")
-	tmp12 := new(RefreshAuthCommand)
-	sub = command.Command("auth", "Obtain a refreshed access token")
+	command.AddCommand(sub)
+	tmp12 := new(ListEventCommand)
+	sub = &cobra.Command{
+		Use:   `event "/api/tenants/:tenantID/events"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
+	}
 	tmp12.RegisterFlags(sub)
-	res["refresh auth"] = tmp12
-	command = app.Command("show", "show action")
-	tmp13 := new(ShowProposalCommand)
-	sub = command.Command("proposal", "Retrieve proposal with given id")
+	command.AddCommand(sub)
+	tmp13 := new(ListSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `series "/api/tenants/:tenantID/series"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
+	}
 	tmp13.RegisterFlags(sub)
-	res["show proposal"] = tmp13
-	tmp14 := new(ShowReviewCommand)
-	sub = command.Command("review", "Retrieve review with given id")
+	command.AddCommand(sub)
+	tmp14 := new(ListTenantCommand)
+	sub = &cobra.Command{
+		Use:   `tenant "/api/tenants"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
+	}
 	tmp14.RegisterFlags(sub)
-	res["show review"] = tmp14
-	tmp15 := new(ShowUserCommand)
-	sub = command.Command("user", "Retrieve user with given id")
+	command.AddCommand(sub)
+	tmp15 := new(ListUserCommand)
+	sub = &cobra.Command{
+		Use:   `user "/api/tenants/:tenantID/users"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
+	}
 	tmp15.RegisterFlags(sub)
-	res["show user"] = tmp15
-	command = app.Command("token", "Obtain an access token")
-	tmp16 := new(TokenAuthCommand)
-	sub = command.Command("auth", "Obtain an access token")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "refresh",
+		Short: `Obtain a refreshed access token`,
+	}
+	tmp16 := new(RefreshAuthCommand)
+	sub = &cobra.Command{
+		Use:   `auth "/api/auth/refresh"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp16.Run(c, args) },
+	}
 	tmp16.RegisterFlags(sub)
-	res["token auth"] = tmp16
-	command = app.Command("update", "update action")
-	tmp17 := new(UpdateProposalCommand)
-	sub = command.Command("proposal", "")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "show",
+		Short: `show action`,
+	}
+	tmp17 := new(ShowAdminuserCommand)
+	sub = &cobra.Command{
+		Use:   `adminuser "/api/admin/users/:userID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp17.Run(c, args) },
+	}
 	tmp17.RegisterFlags(sub)
-	res["update proposal"] = tmp17
-	tmp18 := new(UpdateReviewCommand)
-	sub = command.Command("review", "")
+	command.AddCommand(sub)
+	tmp18 := new(ShowEventCommand)
+	sub = &cobra.Command{
+		Use:   `event "/api/tenants/:tenantID/events/:eventID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },
+	}
 	tmp18.RegisterFlags(sub)
-	res["update review"] = tmp18
-	tmp19 := new(UpdateUserCommand)
-	sub = command.Command("user", "")
+	command.AddCommand(sub)
+	tmp19 := new(ShowSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `series "/api/tenants/:tenantID/series/:seriesID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp19.Run(c, args) },
+	}
 	tmp19.RegisterFlags(sub)
-	res["update user"] = tmp19
+	command.AddCommand(sub)
+	tmp20 := new(ShowTenantCommand)
+	sub = &cobra.Command{
+		Use:   `tenant "/api/tenants/:tenantID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp20.Run(c, args) },
+	}
+	tmp20.RegisterFlags(sub)
+	command.AddCommand(sub)
+	tmp21 := new(ShowUserCommand)
+	sub = &cobra.Command{
+		Use:   `user "/api/tenants/:tenantID/users/:userID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp21.Run(c, args) },
+	}
+	tmp21.RegisterFlags(sub)
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "status",
+		Short: `Get Server Status`,
+	}
+	tmp22 := new(StatusHealthzCommand)
+	sub = &cobra.Command{
+		Use:   `healthz "/api/healthz"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp22.Run(c, args) },
+	}
+	tmp22.RegisterFlags(sub)
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "token",
+		Short: `Obtain an access token`,
+	}
+	tmp23 := new(TokenAuthCommand)
+	sub = &cobra.Command{
+		Use:   `auth "/api/auth/token"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp23.Run(c, args) },
+	}
+	tmp23.RegisterFlags(sub)
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "update",
+		Short: `update action`,
+	}
+	tmp24 := new(UpdateAdminuserCommand)
+	sub = &cobra.Command{
+		Use:   `adminuser "/api/admin/users/:userID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp24.Run(c, args) },
+	}
+	tmp24.RegisterFlags(sub)
+	command.AddCommand(sub)
+	tmp25 := new(UpdateEventCommand)
+	sub = &cobra.Command{
+		Use:   `event "/api/tenants/:tenantID/events/:eventID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp25.Run(c, args) },
+	}
+	tmp25.RegisterFlags(sub)
+	command.AddCommand(sub)
+	tmp26 := new(UpdateSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `series "/api/tenants/:tenantID/series/:seriesID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp26.Run(c, args) },
+	}
+	tmp26.RegisterFlags(sub)
+	command.AddCommand(sub)
+	tmp27 := new(UpdateTenantCommand)
+	sub = &cobra.Command{
+		Use:   `tenant "/api/tenants/:tenantID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp27.Run(c, args) },
+	}
+	tmp27.RegisterFlags(sub)
+	command.AddCommand(sub)
+	tmp28 := new(UpdateUserCommand)
+	sub = &cobra.Command{
+		Use:   `user "/api/tenants/:tenantID/users/:userID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp28.Run(c, args) },
+	}
+	tmp28.RegisterFlags(sub)
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "validate",
+		Short: `validate user email`,
+	}
+	tmp29 := new(ValidateValidateCommand)
+	sub = &cobra.Command{
+		Use:   `validate "/api/validate/:userID"`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp29.Run(c, args) },
+	}
+	tmp29.RegisterFlags(sub)
+	command.AddCommand(sub)
+	app.AddCommand(command)
 
-	return res
 }

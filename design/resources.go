@@ -1,12 +1,12 @@
 package design
 
 import (
-	. "github.com/raphael/goa/design"
-	. "github.com/raphael/goa/design/dsl"
+	. "github.com/goadesign/goa/design"
+	. "github.com/goadesign/goa/design/apidsl"
 )
 
 var _ = Resource("auth", func() {
-
+	Security("password")
 	DefaultMedia(Authorize)
 	BasePath("/auth")
 
@@ -15,7 +15,7 @@ var _ = Resource("auth", func() {
 			POST("/token"),
 		)
 		Description("Obtain an access token")
-		Payload(Login)
+
 		Response(Created, func() {
 			Media(Authorize)
 		})
@@ -25,48 +25,41 @@ var _ = Resource("auth", func() {
 			POST("/refresh"),
 		)
 		Description("Obtain a refreshed access token")
-		Payload(Login)
 		Response(Created, func() {
 			Media(Authorize)
 		})
 	})
-	Action("callback", func() {
+})
+
+var _ = Resource("healthz", func() {
+	NoSecurity()
+	BasePath("/healthz")
+	Action("status", func() {
 		Routing(
-			GET("/:provider/callback"),
+			GET(""),
 		)
-		Description("OAUTH2 callback endpoint")
-		Params(func() {
-			Param("provider", String)
-		})
-		Response(OK, func() {
-			Media(Authorize)
-		})
-	})
-	Action("oauth", func() {
-		Routing(
-			GET("/:provider"),
-		)
-		Description("OAUTH2 login endpoint")
-		Params(func() {
-			Param("provider", String)
-		})
-		Response(OK)
+		Description("Get Server Status")
 	})
 })
-var _ = Resource("user", func() {
 
+var _ = Resource("adminuser", func() {
 	DefaultMedia(User)
-	BasePath("users")
+
+	Security("jwt")
+	BasePath("/admin/users")
+
 	Action("list", func() {
 		Routing(
 			GET(""),
 		)
-		Description("List all users in account")
+		Description("List all users")
 		Response(OK, func() {
 			Media(CollectionOf(User, func() {
 				View("default")
+				View("tenant")
 			}))
 		})
+		Response(NotFound)
 	})
 
 	Action("show", func() {
@@ -77,7 +70,6 @@ var _ = Resource("user", func() {
 		Params(func() {
 			Param("userID", Integer)
 		})
-		Metadata("action", "123")
 		Response(OK)
 		Response(NotFound)
 	})
@@ -87,12 +79,14 @@ var _ = Resource("user", func() {
 			POST(""),
 		)
 		Description("Record new user")
-		Payload(UserModel, func() {
-			Required("firstname")
-			Required("lastname")
+		Payload(AdminUserPayload, func() {
+			Required("first_name")
+			Required("last_name")
 			Required("email")
+			Required("password")
+			Required("role")
 		})
-		Response(Created, "^/accounts/[0-9]+/users/[0-9]+$")
+		Response(Created, "^/admin/users/[0-9]+$")
 	})
 
 	Action("update", func() {
@@ -102,7 +96,7 @@ var _ = Resource("user", func() {
 		Params(func() {
 			Param("userID", Integer)
 		})
-		Payload(UserModel)
+		Payload(UserPayload)
 		Response(NoContent)
 		Response(NotFound)
 	})
@@ -111,36 +105,56 @@ var _ = Resource("user", func() {
 			DELETE("/:userID"),
 		)
 		Params(func() {
-			Param("userID", Integer, "User ID")
+			Param("userID", Integer, "UserID ")
 		})
 		Response(NoContent)
 		Response(NotFound)
 	})
+
 })
 
-var _ = Resource("proposal", func() {
-	Parent("user")
-	DefaultMedia(Proposal)
-	BasePath("proposals")
+var _ = Resource("validate", func() {
+	BasePath("/validate")
+
+	NoSecurity()
+	Action("validate", func() {
+		Routing(
+			GET("/:userID"),
+		)
+		Description("validate user email")
+		Params(func() {
+			Param("v", String)
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
+})
+
+var _ = Resource("tenant", func() {
+	DefaultMedia(Tenant)
+	BasePath("/tenants")
+	Security("jwt")
 	Action("list", func() {
 		Routing(
 			GET(""),
 		)
-		Description("List all proposals for a user")
+		Description("List all tenants")
 		Response(OK, func() {
-			Media(CollectionOf(Proposal, func() {
+			Media(CollectionOf(Tenant, func() {
 				View("default")
 			}))
 		})
+		Response(NotFound)
 	})
 
 	Action("show", func() {
 		Routing(
-			GET("/:proposalID"),
+			GET("/:tenantID"),
 		)
-		Description("Retrieve proposal with given id")
+		Description("Retrieve tenant with given id")
 		Params(func() {
-			Param("proposalID", Integer)
+			Param("tenantID", Integer)
 		})
 		Response(OK)
 		Response(NotFound)
@@ -150,61 +164,62 @@ var _ = Resource("proposal", func() {
 		Routing(
 			POST(""),
 		)
-		Description("Create a new proposal")
-		Payload(ProposalModel, func() {
-			Required("title")
-			Required("abstract")
-			Required("detail")
+		Description("Record new tenant")
+		Payload(TenantPayload, func() {
+			Required("name")
 		})
-		Response(Created, "^/users/[0-9]+/proposals/[0-9]+$")
+		Response(Created, "^/tenants/[0-9]+$")
 	})
 
 	Action("update", func() {
 		Routing(
-			PATCH("/:proposalID"),
+			PATCH("/:tenantID"),
 		)
 		Params(func() {
-			Param("proposalID", Integer)
+			Param("tenantID", Integer)
 		})
-		Payload(ProposalModel)
+		Payload(TenantPayload)
 		Response(NoContent)
 		Response(NotFound)
 	})
 	Action("delete", func() {
 		Routing(
-			DELETE("/:proposalID"),
+			DELETE("/:tenantID"),
 		)
 		Params(func() {
-			Param("proposalID", Integer, "Proposal ID")
+			Param("tenantID", Integer, "Tenant ID")
 		})
 		Response(NoContent)
 		Response(NotFound)
 	})
-})
 
-var _ = Resource("review", func() {
-	Parent("proposal")
-	DefaultMedia(Review)
-	BasePath("review")
+})
+var _ = Resource("series", func() {
+	DefaultMedia(Series)
+	Parent("tenant")
+	Security("jwt")
+	BasePath("/series")
+
 	Action("list", func() {
 		Routing(
 			GET(""),
 		)
-		Description("List all reviews for a proposal")
+		Description("List all series")
 		Response(OK, func() {
-			Media(CollectionOf(Review, func() {
+			Media(CollectionOf(Series, func() {
 				View("default")
 			}))
 		})
+		Response(NotFound)
 	})
 
 	Action("show", func() {
 		Routing(
-			GET("/:reviewID"),
+			GET("/:seriesID"),
 		)
-		Description("Retrieve review with given id")
+		Description("Retrieve series with given id")
 		Params(func() {
-			Param("reviewID", Integer)
+			Param("seriesID", Integer)
 		})
 		Response(OK)
 		Response(NotFound)
@@ -214,32 +229,169 @@ var _ = Resource("review", func() {
 		Routing(
 			POST(""),
 		)
-		Description("Create a new review")
-		Payload(ReviewModel, func() {
-			Required("rating")
+		Description("Record new series")
+		Payload(TenantPayload, func() {
+			Required("name")
 		})
-		Response(Created, "^/users/[0-9]+/proposals/[0-9]+/reviews/[0-9]+$")
+		Response(Created, "^/tenants/[0-9]/series/[0-9]+$")
 	})
 
 	Action("update", func() {
 		Routing(
-			PATCH("/:reviewID"),
+			PATCH("/:seriesID"),
 		)
 		Params(func() {
-			Param("reviewID", Integer)
+			Param("seriesID", Integer)
 		})
-		Payload(ReviewModel)
+		Payload(SeriesPayload)
 		Response(NoContent)
 		Response(NotFound)
 	})
 	Action("delete", func() {
 		Routing(
-			DELETE("/:reviewID"),
+			DELETE("/:seriesID"),
 		)
 		Params(func() {
-			Param("reviewID", Integer, "Review ID")
+			Param("seriesID", Integer, "Series ID")
 		})
 		Response(NoContent)
 		Response(NotFound)
 	})
+
+})
+var _ = Resource("event", func() {
+	DefaultMedia(Event)
+	Parent("tenant")
+	BasePath("/events")
+	Security("jwt")
+
+	Action("list", func() {
+		Routing(
+			GET(""),
+		)
+		Description("List all events")
+		Response(OK, func() {
+			Media(CollectionOf(Event, func() {
+				View("default")
+			}))
+		})
+		Response(NotFound)
+	})
+
+	Action("show", func() {
+		NoSecurity()
+		Routing(
+			GET("/:eventID"),
+		)
+		Description("Retrieve event with given id")
+		Params(func() {
+			Param("eventID", Integer)
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
+	Action("create", func() {
+		Routing(
+			POST(""),
+		)
+		Description("Record new event")
+		Payload(TenantPayload, func() {
+			Required("name")
+		})
+		Response(Created, "^/tenants/[0-9]/events/[0-9]+$")
+	})
+
+	Action("update", func() {
+		Routing(
+			PATCH("/:eventID"),
+		)
+		Params(func() {
+			Param("eventID", Integer)
+		})
+		Payload(EventPayload)
+		Response(NoContent)
+		Response(NotFound)
+	})
+	Action("delete", func() {
+		Routing(
+			DELETE("/:eventID"),
+		)
+		Params(func() {
+			Param("eventID", Integer, "Event ID")
+		})
+		Response(NoContent)
+		Response(NotFound)
+	})
+
+})
+
+var _ = Resource("user", func() {
+	DefaultMedia(User)
+	BasePath("/users")
+	Parent("tenant")
+	Security("jwt")
+
+	Action("list", func() {
+		Routing(
+			GET(""),
+		)
+		Description("List all users for a tenant")
+		Response(OK, func() {
+			Media(CollectionOf(User, func() {
+				View("default")
+			}))
+		})
+		Response(NotFound)
+	})
+
+	Action("show", func() {
+		Routing(
+			GET("/:userID"),
+		)
+		Description("Retrieve user with given id")
+		Params(func() {
+			Param("userID", Integer)
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
+	Action("create", func() {
+		Routing(
+			POST(""),
+		)
+		Description("Record new user")
+		Payload(UserPayload, func() {
+			Required("first_name")
+			Required("last_name")
+			Required("email")
+			Required("password")
+			Required("role")
+		})
+		Response(Created, "^/tenants/[0-9]+/users/[0-9]+$")
+	})
+
+	Action("update", func() {
+		Routing(
+			PATCH("/:userID"),
+		)
+		Params(func() {
+			Param("userID", Integer)
+		})
+		Payload(UserPayload)
+		Response(NoContent)
+		Response(NotFound)
+	})
+	Action("delete", func() {
+		Routing(
+			DELETE("/:userID"),
+		)
+		Params(func() {
+			Param("userID", Integer, "UserID ")
+		})
+		Response(NoContent)
+		Response(NotFound)
+	})
+
 })

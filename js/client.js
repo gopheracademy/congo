@@ -1,4 +1,4 @@
-// This module exports functions that give access to the congo API hosted at api.gopheracademy.com.
+// This module exports functions that give access to the congo API hosted at congo.gopheracademy.com.
 // It uses the axios javascript library for making the actual HTTP requests.
 define(['axios'] , function (axios) {
   function merge(obj1, obj2) {
@@ -10,7 +10,7 @@ define(['axios'] , function (axios) {
 
   return function (scheme, host, timeout) {
     scheme = scheme || 'http';
-    host = host || 'api.gopheracademy.com';
+    host = host || 'congo.gopheracademy.com';
     timeout = timeout || 20000;
 
     // Client is the object returned by this module.
@@ -19,31 +19,13 @@ define(['axios'] , function (axios) {
     // URL prefix for all API requests.
     var urlPrefix = scheme + '://' + host;
 
-  // OAUTH2 callback endpoint
-  // path is the request path, the format is "/api/auth/:provider/callback"
-  // config is an optional object to be merged into the config built by the function prior to making the request.
-  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
-  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.callbackAuth = function (path, config) {
-    cfg = {
-      timeout: timeout,
-      url: urlPrefix + path,
-      method: 'get',
-      responseType: 'json'
-    };
-    if (config) {
-      cfg = merge(cfg, config);
-    }
-    return client(cfg);
-  }
-
-  // Create a new proposal
-  // path is the request path, the format is "/api/users/:userID/proposals"
+  // Record new user
+  // path is the request path, the format is "/api/admin/users"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.createProposal = function (path, data, config) {
+  client.createAdminuser = function (path, data, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -57,13 +39,53 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // Create a new review
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review"
+  // Record new event
+  // path is the request path, the format is "/api/tenants/:tenantID/events"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.createReview = function (path, data, config) {
+  client.createEvent = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'post',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // Record new series
+  // path is the request path, the format is "/api/tenants/:tenantID/series"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.createSeries = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'post',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // Record new tenant
+  // path is the request path, the format is "/api/tenants"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.createTenant = function (path, data, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -78,7 +100,7 @@ define(['axios'] , function (axios) {
   }
 
   // Record new user
-  // path is the request path, the format is "/api/users"
+  // path is the request path, the format is "/api/tenants/:tenantID/users"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -97,12 +119,12 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // deleteProposal calls the delete action of the proposal resource.
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID"
+  // deleteAdminuser calls the delete action of the adminuser resource.
+  // path is the request path, the format is "/api/admin/users/:userID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.deleteProposal = function (path, config) {
+  client.deleteAdminuser = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -115,12 +137,48 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // deleteReview calls the delete action of the review resource.
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review/:reviewID"
+  // deleteEvent calls the delete action of the event resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.deleteReview = function (path, config) {
+  client.deleteEvent = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'delete',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // deleteSeries calls the delete action of the series resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/series/:seriesID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.deleteSeries = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'delete',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // deleteTenant calls the delete action of the tenant resource.
+  // path is the request path, the format is "/api/tenants/:tenantID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.deleteTenant = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -134,7 +192,7 @@ define(['axios'] , function (axios) {
   }
 
   // deleteUser calls the delete action of the user resource.
-  // path is the request path, the format is "/api/users/:userID"
+  // path is the request path, the format is "/api/tenants/:tenantID/users/:userID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -151,12 +209,12 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // List all proposals for a user
-  // path is the request path, the format is "/api/users/:userID/proposals"
+  // List all users
+  // path is the request path, the format is "/api/admin/users"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.listProposal = function (path, config) {
+  client.listAdminuser = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -169,12 +227,12 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // List all reviews for a proposal
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review"
+  // List all events
+  // path is the request path, the format is "/api/tenants/:tenantID/events"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.listReview = function (path, config) {
+  client.listEvent = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -187,8 +245,44 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // List all users in account
-  // path is the request path, the format is "/api/users"
+  // List all series
+  // path is the request path, the format is "/api/tenants/:tenantID/series"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.listSeries = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // List all tenants
+  // path is the request path, the format is "/api/tenants"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.listTenant = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // List all users for a tenant
+  // path is the request path, the format is "/api/tenants/:tenantID/users"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -205,36 +299,16 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // OAUTH2 login endpoint
-  // path is the request path, the format is "/api/auth/:provider"
-  // config is an optional object to be merged into the config built by the function prior to making the request.
-  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
-  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.oauthAuth = function (path, config) {
-    cfg = {
-      timeout: timeout,
-      url: urlPrefix + path,
-      method: 'get',
-      responseType: 'json'
-    };
-    if (config) {
-      cfg = merge(cfg, config);
-    }
-    return client(cfg);
-  }
-
   // Obtain a refreshed access token
   // path is the request path, the format is "/api/auth/refresh"
-  // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.refreshAuth = function (path, data, config) {
+  client.refreshAuth = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
       method: 'post',
-    data: data,
       responseType: 'json'
     };
     if (config) {
@@ -243,12 +317,12 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // Retrieve proposal with given id
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID"
+  // Retrieve user with given id
+  // path is the request path, the format is "/api/admin/users/:userID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.showProposal = function (path, config) {
+  client.showAdminuser = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -261,12 +335,48 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // Retrieve review with given id
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review/:reviewID"
+  // Retrieve event with given id
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.showReview = function (path, config) {
+  client.showEvent = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // Retrieve series with given id
+  // path is the request path, the format is "/api/tenants/:tenantID/series/:seriesID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.showSeries = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // Retrieve tenant with given id
+  // path is the request path, the format is "/api/tenants/:tenantID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.showTenant = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -280,7 +390,7 @@ define(['axios'] , function (axios) {
   }
 
   // Retrieve user with given id
-  // path is the request path, the format is "/api/users/:userID"
+  // path is the request path, the format is "/api/tenants/:tenantID/users/:userID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
@@ -297,18 +407,16 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // Obtain an access token
-  // path is the request path, the format is "/api/auth/token"
-  // data contains the action payload (request body)
+  // Get Server Status
+  // path is the request path, the format is "/api/healthz"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.tokenAuth = function (path, data, config) {
+  client.statusHealthz = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
-      method: 'post',
-    data: data,
+      method: 'get',
       responseType: 'json'
     };
     if (config) {
@@ -317,13 +425,31 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // updateProposal calls the update action of the proposal resource.
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID"
+  // Obtain an access token
+  // path is the request path, the format is "/api/auth/token"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.tokenAuth = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'post',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // updateAdminuser calls the update action of the adminuser resource.
+  // path is the request path, the format is "/api/admin/users/:userID"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.updateProposal = function (path, data, config) {
+  client.updateAdminuser = function (path, data, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -337,13 +463,53 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
-  // updateReview calls the update action of the review resource.
-  // path is the request path, the format is "/api/users/:userID/proposals/:proposalID/review/:reviewID"
+  // updateEvent calls the update action of the event resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
-  client.updateReview = function (path, data, config) {
+  client.updateEvent = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'patch',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // updateSeries calls the update action of the series resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/series/:seriesID"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.updateSeries = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'patch',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // updateTenant calls the update action of the tenant resource.
+  // path is the request path, the format is "/api/tenants/:tenantID"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.updateTenant = function (path, data, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -358,7 +524,7 @@ define(['axios'] , function (axios) {
   }
 
   // updateUser calls the update action of the user resource.
-  // path is the request path, the format is "/api/users/:userID"
+  // path is the request path, the format is "/api/tenants/:tenantID/users/:userID"
   // data contains the action payload (request body)
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
@@ -369,6 +535,28 @@ define(['axios'] , function (axios) {
       url: urlPrefix + path,
       method: 'patch',
     data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // validate user email
+  // path is the request path, the format is "/api/validate/:userID"
+  // v is used to build the request query string.
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.validateValidate = function (path, v, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      params: {
+        v: v
+      },
       responseType: 'json'
     };
     if (config) {

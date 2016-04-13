@@ -15,7 +15,7 @@
         }
       });
       requirejs(['client'], function (client) {
-        client().callbackAuth ("/api/auth/Aut aspernatur excepturi./callback")
+        client().listAdminuser ("/api/admin/users")
           .then(function (resp) {
             document.getElementById('response').innerHTML = resp.statusText;
           })

@@ -1,31 +1,26 @@
 package design
 
 import (
-	. "github.com/raphael/goa/design"
-	. "github.com/raphael/goa/design/dsl"
+	. "github.com/goadesign/goa/design"
+	. "github.com/goadesign/goa/design/apidsl"
 )
 
 // This is the api definition used by goa to generate the api
 var _ = API("congo", func() {
-	Title("Congo - Conference Management Made Easy")
-	Description("Multi-tenant conference management application")
-	// Generate roles and permissions for all Resources/Actions
-	Metadata("github.com/bketelsen/gorma#rbac", "All")
+	Title("Congo")
+	Description("Congo")
 	Contact(func() {
-		Name("Gopher Academy")
-		Email("social@gopheracademy.com")
-		URL("https://gopheracademy.com")
+		Name("congo")
+		Email("congo")
+		URL("https://congo.gopheracademy.com")
 	})
-	License(func() {
-		Name("MIT")
-		URL("https://github.com/gopheracademy/congo/blob/master/LICENSE")
-	})
+
 	Docs(func() {
-		Description("congo guide")
-		URL("https://gopheracademy.com/congo/getting-started.html")
+		Description("Getting Started Guide")
+		URL("https://congodocs.gopheracademy.com")
 	})
-	Host("api.gopheracademy.com")
-	Scheme("http")
+	Host("congo.gopheracademy.com")
+	Scheme("https")
 	BasePath("/api")
 
 	ResponseTemplate(Created, func(pattern string) {
@@ -36,5 +31,13 @@ var _ = API("congo", func() {
 				Pattern(pattern)
 			})
 		})
+	})
+
+	JWTSecurity("jwt", func() {
+		Header("Authorization")
+		TokenURL("<a href='https://congo.gopheracademy.com/api/auth/token'>https://congo.gopheracademy.com/api/auth/token</a>")
+	})
+	BasicAuthSecurity("password", func() {
+		Description("Use your own password!")
 	})
 })
