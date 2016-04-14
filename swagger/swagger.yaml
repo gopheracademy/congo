@@ -583,13 +583,13 @@ definitions:
     type: array
 externalDocs:
   description: Getting Started Guide
-  url: https://congo.com
+  url: https://congodocs.gopheracademy.com
 host: congo.gopheracademy.com
 info:
   contact:
     email: congo
     name: congo
-    url: https://congo.com
+    url: https://congo.gopheracademy.com
   description: Congo
   title: Congo
   version: ""

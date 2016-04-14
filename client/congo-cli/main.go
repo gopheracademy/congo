@@ -15,7 +15,7 @@ func main() {
 	// Create command line parser
 	app := &cobra.Command{
 		Use:   "congo-cli",
-		Short: `CLI client for the congo service (https://congo.com)`,
+		Short: `CLI client for the congo service (https://congodocs.gopheracademy.com)`,
 	}
 	c := client.New(nil)
 	c.UserAgent = "congo-cli/1.0"
