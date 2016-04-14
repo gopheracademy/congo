@@ -23,11 +23,11 @@ var settings Settings
 // Settings is the struct that holds config information retrieved
 // from the environment
 type Settings struct {
-	DatabaseHost     string `envconfig:"db_host"`
-	DatabaseUsername string `envconfig:"db_username"`
-	DatabasePassword string `envconfig:"db_password"`
-	DatabaseName     string `envconfig:"db_name"`
-	DatabasePort     int    `envconfig:"db_port"`
+	DatabaseHost     string `envconfig:"db_host" default:"docker.local"`
+	DatabaseUsername string `envconfig:"db_username" default:"congo"`
+	DatabasePassword string `envconfig:"db_password" default:"congopass"`
+	DatabaseName     string `envconfig:"db_name" default:"congo"`
+	DatabasePort     int    `envconfig:"db_port" default:"5432"`
 	MaxOpenConns     int    `envconfig:"max_open" default:"100"`
 	MaxIdleConns     int    `envconfig:"max_idle" default:"5"`
 	Debug            bool   `envconfig:"debug" default:"false"`

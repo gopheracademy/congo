@@ -1,11 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"strings"
 	"testing"
 
 	jg "github.com/dgrijalva/jwt-go"
@@ -16,6 +16,7 @@ import (
 	"github.com/gopheracademy/congo/jwt"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/kr/pretty"
 	_ "github.com/lib/pq"
 )
 
@@ -119,10 +120,14 @@ func TestTenantsNoAuth(t *testing.T) {
 }
 
 func TestTenantsWithAuth(t *testing.T) {
+	token, err := getToken()
+	if err != nil {
+		t.Error(err)
+	}
 	tenantsUrl := "http://localhost:18081/api/tenants"
 
 	request, err := http.NewRequest("GET", tenantsUrl, reader) //Create request with JSON body
-
+	request.Header.Add("Authorization", "Bearer "+token)
 	res, err := http.DefaultClient.Do(request)
 
 	if err != nil {
@@ -132,24 +137,53 @@ func TestTenantsWithAuth(t *testing.T) {
 	if res.StatusCode != 200 {
 		t.Errorf("expected: %d got %d", 200, res.StatusCode) //Uh-oh this means our test failed
 	}
+
+	var a app.TenantCollection
+	err = json.NewDecoder(res.Body).Decode(&a)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(a) < 1 {
+		t.Errorf("expected a tenant, got none")
+	}
+	pretty.Println(a)
+
 }
 
-func TestCreateTenant(t *testing.T) {
+func TestAuth(t *testing.T) {
 
-	tenantsUrl := "http://localhost:18081/api/tenants"
-	tenantJson := `{"username": "dennis", "balance": 200}`
+	token, err := getToken()
 
-	reader = strings.NewReader(tenantJson) //Convert string to reader
+	if err != nil {
+		t.Error(err)
+	}
+	if len(token) < 1 {
+		t.Error("Expected a token, got %s", token)
+	}
+	fmt.Println(token)
 
-	request, err := http.NewRequest("POST", tenantsUrl, reader) //Create request with JSON body
+}
 
+func getToken() (string, error) {
+
+	authurl := "http://localhost:18081/api/auth/token"
+
+	request, err := http.NewRequest("POST", authurl, reader) //Create request with JSON body
+	request.SetBasicAuth("bketelsen@gmail.com", "GopherCon")
 	res, err := http.DefaultClient.Do(request)
 
 	if err != nil {
-		t.Error(err) //Something is wrong while sending request
+		return "", err
 	}
 
 	if res.StatusCode != 201 {
-		t.Errorf("Success expected: %d", res.StatusCode) //Uh-oh this means our test failed
+		return "", err
 	}
+
+	defer res.Body.Close()
+	var a app.Authorize
+	err = json.NewDecoder(res.Body).Decode(&a)
+	return *a.AccessToken, err
+
 }
