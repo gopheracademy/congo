@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 
 	jg "github.com/dgrijalva/jwt-go"
@@ -114,5 +115,41 @@ func TestTenantsNoAuth(t *testing.T) {
 
 	if res.StatusCode != 401 {
 		t.Errorf("expected: %d got %d", 401, res.StatusCode) //Uh-oh this means our test failed
+	}
+}
+
+func TestTenantsWithAuth(t *testing.T) {
+	tenantsUrl := "http://localhost:18081/api/tenants"
+
+	request, err := http.NewRequest("GET", tenantsUrl, reader) //Create request with JSON body
+
+	res, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		t.Error(err) //Something is wrong while sending request
+	}
+
+	if res.StatusCode != 200 {
+		t.Errorf("expected: %d got %d", 200, res.StatusCode) //Uh-oh this means our test failed
+	}
+}
+
+func TestCreateTenant(t *testing.T) {
+
+	tenantsUrl := "http://localhost:18081/api/tenants"
+	tenantJson := `{"username": "dennis", "balance": 200}`
+
+	reader = strings.NewReader(tenantJson) //Convert string to reader
+
+	request, err := http.NewRequest("POST", tenantsUrl, reader) //Create request with JSON body
+
+	res, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		t.Error(err) //Something is wrong while sending request
+	}
+
+	if res.StatusCode != 201 {
+		t.Errorf("Success expected: %d", res.StatusCode) //Uh-oh this means our test failed
 	}
 }
