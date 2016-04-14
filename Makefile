@@ -27,7 +27,7 @@ gen:
 	goagen --design github.com/gopheracademy/congo/design swagger
 	goagen --design github.com/gopheracademy/congo/design gen --pkg-path=github.com/goadesign/gorma
 
-test:
+test:  pgdown pgclean pgup
 	go test ./...
 
 pgup:
