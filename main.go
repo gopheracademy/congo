@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"net/url"
 	"os"
 
 	jg "github.com/dgrijalva/jwt-go"
@@ -15,6 +17,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
+	"github.com/shurcooL/go/gzip_file_server"
 )
 
 // settings holds the congo configuration.
@@ -57,6 +60,8 @@ func main() {
 	// Create service
 	service := goa.New("API")
 
+	h := gzip_file_server.New(assets)
+	service.Mux.Handle("GET", "/assets/*", makeAssetHandler(h))
 	// Setup middleware
 	service.Use(middleware.RequestID())
 	service.Use(middleware.LogRequest(true))
@@ -112,4 +117,12 @@ func main() {
 	swagger.MountController(service)
 
 	service.ListenAndServe(":8080")
+}
+
+func makeAssetHandler(h http.Handler) goa.MuxHandler {
+
+	return func(rw http.ResponseWriter, req *http.Request, v url.Values) {
+		h.ServeHTTP(rw, req)
+	}
+
 }

@@ -4,7 +4,7 @@
 ci: clean prep gen test build
 
 build:
-	go build github.com/gopheracademy/congo
+	go build -tags=dev github.com/gopheracademy/congo
 
 
 clean: pgdown 
