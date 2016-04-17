@@ -6,6 +6,9 @@ ci: clean prep gen test build
 build:
 	go build -tags=dev github.com/gopheracademy/congo
 
+production:
+	go generate
+	go build github.com/gopheracademy/congo
 
 clean: pgdown 
 	rm -rf app/
