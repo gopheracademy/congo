@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 
 	jg "github.com/dgrijalva/jwt-go"
@@ -18,6 +18,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 	"github.com/shurcooL/go/gzip_file_server"
+	"github.com/shurcooL/httpfs/html/vfstemplate"
 )
 
 // settings holds the congo configuration.
@@ -60,8 +61,6 @@ func main() {
 	// Create service
 	service := goa.New("API")
 
-	h := gzip_file_server.New(assets)
-	service.Mux.Handle("GET", "/assets/*", makeAssetHandler(h))
 	// Setup middleware
 	service.Use(middleware.RequestID())
 	service.Use(middleware.LogRequest(true))
@@ -116,13 +115,41 @@ func main() {
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
-	service.ListenAndServe(":8080")
+	http.Handle("/assets/", gzip_file_server.New(assets))
+	http.Handle("/api/", service.Mux)
+	http.HandleFunc("/", mainHandler)
+	http.Handle("/favicon.ico", http.NotFoundHandler())
+
+	err = http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatalln("ListenAndServe:", err)
+	}
 }
 
-func makeAssetHandler(h http.Handler) goa.MuxHandler {
+func loadTemplates() (*template.Template, error) {
+	t := template.New("").Funcs(template.FuncMap{})
+	t, err := vfstemplate.ParseGlob(assets, t, "/assets/*.tmpl")
+	return t, err
+}
 
-	return func(rw http.ResponseWriter, req *http.Request, v url.Values) {
-		h.ServeHTTP(rw, req)
+func mainHandler(w http.ResponseWriter, req *http.Request) {
+	t, err := loadTemplates()
+	if err != nil {
+		log.Println("loadTemplates:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
+	var data = struct {
+		Animals string
+	}{
+		Animals: "gophers",
+	}
+
+	err = t.ExecuteTemplate(w, "index.html.tmpl", data)
+	if err != nil {
+		log.Println("t.Execute:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
