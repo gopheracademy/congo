@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"html/template"
+
 	"log"
-	"net/http"
+
 	"os"
 
 	jg "github.com/dgrijalva/jwt-go"
@@ -17,8 +17,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
-	"github.com/shurcooL/go/gzip_file_server"
-	"github.com/shurcooL/httpfs/html/vfstemplate"
 )
 
 // settings holds the congo configuration.
@@ -115,41 +113,5 @@ func main() {
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
-	http.Handle("/assets/", gzip_file_server.New(assets))
-	http.Handle("/api/", service.Mux)
-	http.HandleFunc("/", mainHandler)
-	http.Handle("/favicon.ico", http.NotFoundHandler())
-
-	err = http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatalln("ListenAndServe:", err)
-	}
-}
-
-func loadTemplates() (*template.Template, error) {
-	t := template.New("").Funcs(template.FuncMap{})
-	t, err := vfstemplate.ParseGlob(assets, t, "/assets/*.tmpl")
-	return t, err
-}
-
-func mainHandler(w http.ResponseWriter, req *http.Request) {
-	t, err := loadTemplates()
-	if err != nil {
-		log.Println("loadTemplates:", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	var data = struct {
-		Animals string
-	}{
-		Animals: "gophers",
-	}
-
-	err = t.ExecuteTemplate(w, "index.html.tmpl", data)
-	if err != nil {
-		log.Println("t.Execute:", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	service.ListenAndServe(":8080")
 }

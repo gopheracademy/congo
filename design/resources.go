@@ -134,7 +134,7 @@ var _ = Resource("validate", func() {
 var _ = Resource("tenant", func() {
 	DefaultMedia(Tenant)
 	BasePath("/tenants")
-	Security("jwt")
+	//	Security("jwt")
 	Action("list", func() {
 		Routing(
 			GET(""),

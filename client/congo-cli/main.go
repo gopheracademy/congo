@@ -44,7 +44,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
-	tmp1.RegisterFlags(sub)
+	tmp1.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp2 := new(CreateEventCommand)
 	sub = &cobra.Command{
@@ -52,7 +52,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
-	tmp2.RegisterFlags(sub)
+	tmp2.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp3 := new(CreateSeriesCommand)
 	sub = &cobra.Command{
@@ -60,7 +60,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
-	tmp3.RegisterFlags(sub)
+	tmp3.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp4 := new(CreateTenantCommand)
 	sub = &cobra.Command{
@@ -68,7 +68,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
-	tmp4.RegisterFlags(sub)
+	tmp4.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp5 := new(CreateUserCommand)
 	sub = &cobra.Command{
@@ -76,7 +76,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
-	tmp5.RegisterFlags(sub)
+	tmp5.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -89,7 +89,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
 	}
-	tmp6.RegisterFlags(sub)
+	tmp6.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp7 := new(DeleteEventCommand)
 	sub = &cobra.Command{
@@ -97,7 +97,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
 	}
-	tmp7.RegisterFlags(sub)
+	tmp7.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp8 := new(DeleteSeriesCommand)
 	sub = &cobra.Command{
@@ -105,7 +105,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
-	tmp8.RegisterFlags(sub)
+	tmp8.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp9 := new(DeleteTenantCommand)
 	sub = &cobra.Command{
@@ -113,7 +113,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
 	}
-	tmp9.RegisterFlags(sub)
+	tmp9.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp10 := new(DeleteUserCommand)
 	sub = &cobra.Command{
@@ -121,7 +121,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
 	}
-	tmp10.RegisterFlags(sub)
+	tmp10.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -134,7 +134,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
 	}
-	tmp11.RegisterFlags(sub)
+	tmp11.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp12 := new(ListEventCommand)
 	sub = &cobra.Command{
@@ -142,7 +142,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
 	}
-	tmp12.RegisterFlags(sub)
+	tmp12.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp13 := new(ListSeriesCommand)
 	sub = &cobra.Command{
@@ -150,7 +150,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
 	}
-	tmp13.RegisterFlags(sub)
+	tmp13.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp14 := new(ListTenantCommand)
 	sub = &cobra.Command{
@@ -158,7 +158,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
 	}
-	tmp14.RegisterFlags(sub)
+	tmp14.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp15 := new(ListUserCommand)
 	sub = &cobra.Command{
@@ -166,7 +166,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
 	}
-	tmp15.RegisterFlags(sub)
+	tmp15.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -179,7 +179,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp16.Run(c, args) },
 	}
-	tmp16.RegisterFlags(sub)
+	tmp16.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -192,7 +192,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp17.Run(c, args) },
 	}
-	tmp17.RegisterFlags(sub)
+	tmp17.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp18 := new(ShowEventCommand)
 	sub = &cobra.Command{
@@ -200,7 +200,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },
 	}
-	tmp18.RegisterFlags(sub)
+	tmp18.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp19 := new(ShowSeriesCommand)
 	sub = &cobra.Command{
@@ -208,7 +208,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp19.Run(c, args) },
 	}
-	tmp19.RegisterFlags(sub)
+	tmp19.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp20 := new(ShowTenantCommand)
 	sub = &cobra.Command{
@@ -216,7 +216,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp20.Run(c, args) },
 	}
-	tmp20.RegisterFlags(sub)
+	tmp20.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp21 := new(ShowUserCommand)
 	sub = &cobra.Command{
@@ -224,7 +224,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp21.Run(c, args) },
 	}
-	tmp21.RegisterFlags(sub)
+	tmp21.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -237,7 +237,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp22.Run(c, args) },
 	}
-	tmp22.RegisterFlags(sub)
+	tmp22.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -250,7 +250,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp23.Run(c, args) },
 	}
-	tmp23.RegisterFlags(sub)
+	tmp23.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -263,7 +263,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp24.Run(c, args) },
 	}
-	tmp24.RegisterFlags(sub)
+	tmp24.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp25 := new(UpdateEventCommand)
 	sub = &cobra.Command{
@@ -271,7 +271,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp25.Run(c, args) },
 	}
-	tmp25.RegisterFlags(sub)
+	tmp25.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp26 := new(UpdateSeriesCommand)
 	sub = &cobra.Command{
@@ -279,7 +279,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp26.Run(c, args) },
 	}
-	tmp26.RegisterFlags(sub)
+	tmp26.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp27 := new(UpdateTenantCommand)
 	sub = &cobra.Command{
@@ -287,7 +287,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp27.Run(c, args) },
 	}
-	tmp27.RegisterFlags(sub)
+	tmp27.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	tmp28 := new(UpdateUserCommand)
 	sub = &cobra.Command{
@@ -295,7 +295,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp28.Run(c, args) },
 	}
-	tmp28.RegisterFlags(sub)
+	tmp28.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
@@ -308,7 +308,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp29.Run(c, args) },
 	}
-	tmp29.RegisterFlags(sub)
+	tmp29.RegisterFlags(sub, c)
 	command.AddCommand(sub)
 	app.AddCommand(command)
 

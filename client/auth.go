@@ -21,6 +21,7 @@ func (c *Client) RefreshAuth(ctx context.Context, path string) (*http.Response, 
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerPassword.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -38,5 +39,6 @@ func (c *Client) TokenAuth(ctx context.Context, path string) (*http.Response, er
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerPassword.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }

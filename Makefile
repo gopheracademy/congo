@@ -4,11 +4,11 @@
 ci: clean prep gen test build
 
 build:
-	go build -tags=dev github.com/gopheracademy/congo
+	go build -tags=dev -o congo github.com/gopheracademy/congo
 
 production:
 	go generate
-	go build github.com/gopheracademy/congo
+	go build -o congogithub.com/gopheracademy/congo
 
 clean: pgdown 
 	rm -rf app/
@@ -29,10 +29,11 @@ gen:
 	goagen --design github.com/gopheracademy/congo/design schema
 	goagen --design github.com/gopheracademy/congo/design swagger
 	goagen --design github.com/gopheracademy/congo/design gen --pkg-path=github.com/goadesign/gorma
+	cd ..
 
 test:  pgdown pgclean pgup
 	sleep 10
-	CONGOTEST_DEBUG=true CONGOTEST_DB_HOST=docker.local CONGOTEST_DB_USERNAME=congo CONGOTEST_DB_NAME=congo CONGOTEST_DB_PORT=5432 CONGOTEST_DB_PASSWORD=congopass go test -v ./...
+	CONGOTEST_DEBUG=true CONGOTEST_DB_HOST=localhost CONGOTEST_DB_USERNAME=congo CONGOTEST_DB_NAME=congo CONGOTEST_DB_PORT=5432 CONGOTEST_DB_PASSWORD=congopass go test -v ./...
 
 pgup:
 	docker-compose -f dc-postgres.yml up -d
@@ -44,7 +45,7 @@ pgclean:
 	docker-compose -f dc-postgres.yml rm
 
 appdev:
-	CONGO_DEBUG=true CONGO_DB_HOST=docker.local CONGO_DB_USERNAME=congo CONGO_DB_NAME=congo CONGO_DB_PORT=5432 CONGO_DB_PASSWORD=congopass ./congo
+	CONGO_DEBUG=true CONGO_DB_HOST=localhost CONGO_DB_USERNAME=congo CONGO_DB_NAME=congo CONGO_DB_PORT=5432 CONGO_DB_PASSWORD=congopass ./congo
 
 run: pgup build appdev
  

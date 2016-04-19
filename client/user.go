@@ -30,6 +30,7 @@ func (c *Client) CreateUser(ctx context.Context, path string, payload *app.Creat
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -47,6 +48,7 @@ func (c *Client) DeleteUser(ctx context.Context, path string) (*http.Response, e
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -64,6 +66,7 @@ func (c *Client) ListUser(ctx context.Context, path string) (*http.Response, err
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -81,6 +84,7 @@ func (c *Client) ShowUser(ctx context.Context, path string) (*http.Response, err
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -103,5 +107,6 @@ func (c *Client) UpdateUser(ctx context.Context, path string, payload *app.Updat
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }

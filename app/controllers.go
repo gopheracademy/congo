@@ -14,6 +14,7 @@ package app
 
 import (
 	"github.com/goadesign/goa"
+	"github.com/goadesign/goa/cors"
 	"golang.org/x/net/context"
 	"net/http"
 )
@@ -47,6 +48,8 @@ type AdminuserController interface {
 func MountAdminuserController(service *goa.Service, ctrl AdminuserController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/admin/users", cors.HandlePreflight(service.Context, handleAdminuserOrigin))
+	service.Mux.Handle("OPTIONS", "/api/admin/users/:userID", cors.HandlePreflight(service.Context, handleAdminuserOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewCreateAdminuserContext(ctx, service)
@@ -58,6 +61,7 @@ func MountAdminuserController(service *goa.Service, ctrl AdminuserController) {
 		}
 		return ctrl.Create(rctx)
 	}
+	h = handleAdminuserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/api/admin/users", ctrl.MuxHandler("Create", h, unmarshalCreateAdminuserPayload))
 	service.LogInfo("mount", "ctrl", "Adminuser", "action", "Create", "route", "POST /api/admin/users", "security", "jwt")
@@ -69,6 +73,7 @@ func MountAdminuserController(service *goa.Service, ctrl AdminuserController) {
 		}
 		return ctrl.Delete(rctx)
 	}
+	h = handleAdminuserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("DELETE", "/api/admin/users/:userID", ctrl.MuxHandler("Delete", h, nil))
 	service.LogInfo("mount", "ctrl", "Adminuser", "action", "Delete", "route", "DELETE /api/admin/users/:userID", "security", "jwt")
@@ -80,6 +85,7 @@ func MountAdminuserController(service *goa.Service, ctrl AdminuserController) {
 		}
 		return ctrl.List(rctx)
 	}
+	h = handleAdminuserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/admin/users", ctrl.MuxHandler("List", h, nil))
 	service.LogInfo("mount", "ctrl", "Adminuser", "action", "List", "route", "GET /api/admin/users", "security", "jwt")
@@ -91,6 +97,7 @@ func MountAdminuserController(service *goa.Service, ctrl AdminuserController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleAdminuserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/admin/users/:userID", ctrl.MuxHandler("Show", h, nil))
 	service.LogInfo("mount", "ctrl", "Adminuser", "action", "Show", "route", "GET /api/admin/users/:userID", "security", "jwt")
@@ -105,9 +112,34 @@ func MountAdminuserController(service *goa.Service, ctrl AdminuserController) {
 		}
 		return ctrl.Update(rctx)
 	}
+	h = handleAdminuserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("PATCH", "/api/admin/users/:userID", ctrl.MuxHandler("Update", h, unmarshalUpdateAdminuserPayload))
 	service.LogInfo("mount", "ctrl", "Adminuser", "action", "Update", "route", "PATCH /api/admin/users/:userID", "security", "jwt")
+}
+
+// handleAdminuserOrigin applies the CORS response headers corresponding to the origin.
+func handleAdminuserOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }
 
 // unmarshalCreateAdminuserPayload unmarshals the request body into the context request data Payload field.
@@ -147,6 +179,8 @@ type AuthController interface {
 func MountAuthController(service *goa.Service, ctrl AuthController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/auth/refresh", cors.HandlePreflight(service.Context, handleAuthOrigin))
+	service.Mux.Handle("OPTIONS", "/api/auth/token", cors.HandlePreflight(service.Context, handleAuthOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewRefreshAuthContext(ctx, service)
@@ -155,6 +189,7 @@ func MountAuthController(service *goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Refresh(rctx)
 	}
+	h = handleAuthOrigin(h)
 	h = handleSecurity("password", h)
 	service.Mux.Handle("POST", "/api/auth/refresh", ctrl.MuxHandler("Refresh", h, nil))
 	service.LogInfo("mount", "ctrl", "Auth", "action", "Refresh", "route", "POST /api/auth/refresh", "security", "password")
@@ -166,9 +201,34 @@ func MountAuthController(service *goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Token(rctx)
 	}
+	h = handleAuthOrigin(h)
 	h = handleSecurity("password", h)
 	service.Mux.Handle("POST", "/api/auth/token", ctrl.MuxHandler("Token", h, nil))
 	service.LogInfo("mount", "ctrl", "Auth", "action", "Token", "route", "POST /api/auth/token", "security", "password")
+}
+
+// handleAuthOrigin applies the CORS response headers corresponding to the origin.
+func handleAuthOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }
 
 // EventController is the controller interface for the Event actions.
@@ -185,6 +245,8 @@ type EventController interface {
 func MountEventController(service *goa.Service, ctrl EventController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/events", cors.HandlePreflight(service.Context, handleEventOrigin))
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/events/:eventID", cors.HandlePreflight(service.Context, handleEventOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewCreateEventContext(ctx, service)
@@ -196,6 +258,7 @@ func MountEventController(service *goa.Service, ctrl EventController) {
 		}
 		return ctrl.Create(rctx)
 	}
+	h = handleEventOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/api/tenants/:tenantID/events", ctrl.MuxHandler("Create", h, unmarshalCreateEventPayload))
 	service.LogInfo("mount", "ctrl", "Event", "action", "Create", "route", "POST /api/tenants/:tenantID/events", "security", "jwt")
@@ -207,6 +270,7 @@ func MountEventController(service *goa.Service, ctrl EventController) {
 		}
 		return ctrl.Delete(rctx)
 	}
+	h = handleEventOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("DELETE", "/api/tenants/:tenantID/events/:eventID", ctrl.MuxHandler("Delete", h, nil))
 	service.LogInfo("mount", "ctrl", "Event", "action", "Delete", "route", "DELETE /api/tenants/:tenantID/events/:eventID", "security", "jwt")
@@ -218,6 +282,7 @@ func MountEventController(service *goa.Service, ctrl EventController) {
 		}
 		return ctrl.List(rctx)
 	}
+	h = handleEventOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID/events", ctrl.MuxHandler("List", h, nil))
 	service.LogInfo("mount", "ctrl", "Event", "action", "List", "route", "GET /api/tenants/:tenantID/events", "security", "jwt")
@@ -229,6 +294,7 @@ func MountEventController(service *goa.Service, ctrl EventController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleEventOrigin(h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID/events/:eventID", ctrl.MuxHandler("Show", h, nil))
 	service.LogInfo("mount", "ctrl", "Event", "action", "Show", "route", "GET /api/tenants/:tenantID/events/:eventID")
 
@@ -242,9 +308,34 @@ func MountEventController(service *goa.Service, ctrl EventController) {
 		}
 		return ctrl.Update(rctx)
 	}
+	h = handleEventOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("PATCH", "/api/tenants/:tenantID/events/:eventID", ctrl.MuxHandler("Update", h, unmarshalUpdateEventPayload))
 	service.LogInfo("mount", "ctrl", "Event", "action", "Update", "route", "PATCH /api/tenants/:tenantID/events/:eventID", "security", "jwt")
+}
+
+// handleEventOrigin applies the CORS response headers corresponding to the origin.
+func handleEventOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }
 
 // unmarshalCreateEventPayload unmarshals the request body into the context request data Payload field.
@@ -283,6 +374,7 @@ type HealthzController interface {
 func MountHealthzController(service *goa.Service, ctrl HealthzController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/healthz", cors.HandlePreflight(service.Context, handleHealthzOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewStatusHealthzContext(ctx, service)
@@ -291,8 +383,33 @@ func MountHealthzController(service *goa.Service, ctrl HealthzController) {
 		}
 		return ctrl.Status(rctx)
 	}
+	h = handleHealthzOrigin(h)
 	service.Mux.Handle("GET", "/api/healthz", ctrl.MuxHandler("Status", h, nil))
 	service.LogInfo("mount", "ctrl", "Healthz", "action", "Status", "route", "GET /api/healthz")
+}
+
+// handleHealthzOrigin applies the CORS response headers corresponding to the origin.
+func handleHealthzOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }
 
 // SeriesController is the controller interface for the Series actions.
@@ -309,6 +426,8 @@ type SeriesController interface {
 func MountSeriesController(service *goa.Service, ctrl SeriesController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/series", cors.HandlePreflight(service.Context, handleSeriesOrigin))
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/series/:seriesID", cors.HandlePreflight(service.Context, handleSeriesOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewCreateSeriesContext(ctx, service)
@@ -320,6 +439,7 @@ func MountSeriesController(service *goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.Create(rctx)
 	}
+	h = handleSeriesOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/api/tenants/:tenantID/series", ctrl.MuxHandler("Create", h, unmarshalCreateSeriesPayload))
 	service.LogInfo("mount", "ctrl", "Series", "action", "Create", "route", "POST /api/tenants/:tenantID/series", "security", "jwt")
@@ -331,6 +451,7 @@ func MountSeriesController(service *goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.Delete(rctx)
 	}
+	h = handleSeriesOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("DELETE", "/api/tenants/:tenantID/series/:seriesID", ctrl.MuxHandler("Delete", h, nil))
 	service.LogInfo("mount", "ctrl", "Series", "action", "Delete", "route", "DELETE /api/tenants/:tenantID/series/:seriesID", "security", "jwt")
@@ -342,6 +463,7 @@ func MountSeriesController(service *goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.List(rctx)
 	}
+	h = handleSeriesOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID/series", ctrl.MuxHandler("List", h, nil))
 	service.LogInfo("mount", "ctrl", "Series", "action", "List", "route", "GET /api/tenants/:tenantID/series", "security", "jwt")
@@ -353,6 +475,7 @@ func MountSeriesController(service *goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleSeriesOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID/series/:seriesID", ctrl.MuxHandler("Show", h, nil))
 	service.LogInfo("mount", "ctrl", "Series", "action", "Show", "route", "GET /api/tenants/:tenantID/series/:seriesID", "security", "jwt")
@@ -367,9 +490,34 @@ func MountSeriesController(service *goa.Service, ctrl SeriesController) {
 		}
 		return ctrl.Update(rctx)
 	}
+	h = handleSeriesOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("PATCH", "/api/tenants/:tenantID/series/:seriesID", ctrl.MuxHandler("Update", h, unmarshalUpdateSeriesPayload))
 	service.LogInfo("mount", "ctrl", "Series", "action", "Update", "route", "PATCH /api/tenants/:tenantID/series/:seriesID", "security", "jwt")
+}
+
+// handleSeriesOrigin applies the CORS response headers corresponding to the origin.
+func handleSeriesOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }
 
 // unmarshalCreateSeriesPayload unmarshals the request body into the context request data Payload field.
@@ -412,6 +560,8 @@ type TenantController interface {
 func MountTenantController(service *goa.Service, ctrl TenantController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/tenants", cors.HandlePreflight(service.Context, handleTenantOrigin))
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID", cors.HandlePreflight(service.Context, handleTenantOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewCreateTenantContext(ctx, service)
@@ -423,9 +573,9 @@ func MountTenantController(service *goa.Service, ctrl TenantController) {
 		}
 		return ctrl.Create(rctx)
 	}
-	h = handleSecurity("jwt", h)
+	h = handleTenantOrigin(h)
 	service.Mux.Handle("POST", "/api/tenants", ctrl.MuxHandler("Create", h, unmarshalCreateTenantPayload))
-	service.LogInfo("mount", "ctrl", "Tenant", "action", "Create", "route", "POST /api/tenants", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Tenant", "action", "Create", "route", "POST /api/tenants")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewDeleteTenantContext(ctx, service)
@@ -434,9 +584,9 @@ func MountTenantController(service *goa.Service, ctrl TenantController) {
 		}
 		return ctrl.Delete(rctx)
 	}
-	h = handleSecurity("jwt", h)
+	h = handleTenantOrigin(h)
 	service.Mux.Handle("DELETE", "/api/tenants/:tenantID", ctrl.MuxHandler("Delete", h, nil))
-	service.LogInfo("mount", "ctrl", "Tenant", "action", "Delete", "route", "DELETE /api/tenants/:tenantID", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Tenant", "action", "Delete", "route", "DELETE /api/tenants/:tenantID")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewListTenantContext(ctx, service)
@@ -445,9 +595,9 @@ func MountTenantController(service *goa.Service, ctrl TenantController) {
 		}
 		return ctrl.List(rctx)
 	}
-	h = handleSecurity("jwt", h)
+	h = handleTenantOrigin(h)
 	service.Mux.Handle("GET", "/api/tenants", ctrl.MuxHandler("List", h, nil))
-	service.LogInfo("mount", "ctrl", "Tenant", "action", "List", "route", "GET /api/tenants", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Tenant", "action", "List", "route", "GET /api/tenants")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewShowTenantContext(ctx, service)
@@ -456,9 +606,9 @@ func MountTenantController(service *goa.Service, ctrl TenantController) {
 		}
 		return ctrl.Show(rctx)
 	}
-	h = handleSecurity("jwt", h)
+	h = handleTenantOrigin(h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID", ctrl.MuxHandler("Show", h, nil))
-	service.LogInfo("mount", "ctrl", "Tenant", "action", "Show", "route", "GET /api/tenants/:tenantID", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Tenant", "action", "Show", "route", "GET /api/tenants/:tenantID")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewUpdateTenantContext(ctx, service)
@@ -470,9 +620,33 @@ func MountTenantController(service *goa.Service, ctrl TenantController) {
 		}
 		return ctrl.Update(rctx)
 	}
-	h = handleSecurity("jwt", h)
+	h = handleTenantOrigin(h)
 	service.Mux.Handle("PATCH", "/api/tenants/:tenantID", ctrl.MuxHandler("Update", h, unmarshalUpdateTenantPayload))
-	service.LogInfo("mount", "ctrl", "Tenant", "action", "Update", "route", "PATCH /api/tenants/:tenantID", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Tenant", "action", "Update", "route", "PATCH /api/tenants/:tenantID")
+}
+
+// handleTenantOrigin applies the CORS response headers corresponding to the origin.
+func handleTenantOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }
 
 // unmarshalCreateTenantPayload unmarshals the request body into the context request data Payload field.
@@ -515,6 +689,8 @@ type UserController interface {
 func MountUserController(service *goa.Service, ctrl UserController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/users", cors.HandlePreflight(service.Context, handleUserOrigin))
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/users/:userID", cors.HandlePreflight(service.Context, handleUserOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewCreateUserContext(ctx, service)
@@ -526,6 +702,7 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Create(rctx)
 	}
+	h = handleUserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/api/tenants/:tenantID/users", ctrl.MuxHandler("Create", h, unmarshalCreateUserPayload))
 	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /api/tenants/:tenantID/users", "security", "jwt")
@@ -537,6 +714,7 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Delete(rctx)
 	}
+	h = handleUserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("DELETE", "/api/tenants/:tenantID/users/:userID", ctrl.MuxHandler("Delete", h, nil))
 	service.LogInfo("mount", "ctrl", "User", "action", "Delete", "route", "DELETE /api/tenants/:tenantID/users/:userID", "security", "jwt")
@@ -548,6 +726,7 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.List(rctx)
 	}
+	h = handleUserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID/users", ctrl.MuxHandler("List", h, nil))
 	service.LogInfo("mount", "ctrl", "User", "action", "List", "route", "GET /api/tenants/:tenantID/users", "security", "jwt")
@@ -559,6 +738,7 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleUserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID/users/:userID", ctrl.MuxHandler("Show", h, nil))
 	service.LogInfo("mount", "ctrl", "User", "action", "Show", "route", "GET /api/tenants/:tenantID/users/:userID", "security", "jwt")
@@ -573,9 +753,34 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Update(rctx)
 	}
+	h = handleUserOrigin(h)
 	h = handleSecurity("jwt", h)
 	service.Mux.Handle("PATCH", "/api/tenants/:tenantID/users/:userID", ctrl.MuxHandler("Update", h, unmarshalUpdateUserPayload))
 	service.LogInfo("mount", "ctrl", "User", "action", "Update", "route", "PATCH /api/tenants/:tenantID/users/:userID", "security", "jwt")
+}
+
+// handleUserOrigin applies the CORS response headers corresponding to the origin.
+func handleUserOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }
 
 // unmarshalCreateUserPayload unmarshals the request body into the context request data Payload field.
@@ -614,6 +819,7 @@ type ValidateController interface {
 func MountValidateController(service *goa.Service, ctrl ValidateController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/validate/:userID", cors.HandlePreflight(service.Context, handleValidateOrigin))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewValidateValidateContext(ctx, service)
@@ -622,6 +828,31 @@ func MountValidateController(service *goa.Service, ctrl ValidateController) {
 		}
 		return ctrl.Validate(rctx)
 	}
+	h = handleValidateOrigin(h)
 	service.Mux.Handle("GET", "/api/validate/:userID", ctrl.MuxHandler("Validate", h, nil))
 	service.LogInfo("mount", "ctrl", "Validate", "action", "Validate", "route", "GET /api/validate/:userID")
+}
+
+// handleValidateOrigin applies the CORS response headers corresponding to the origin.
+func handleValidateOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLog(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+		return h(ctx, rw, req)
+	}
 }

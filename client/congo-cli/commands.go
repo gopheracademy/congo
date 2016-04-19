@@ -130,7 +130,7 @@ func (cmd *CreateAdminuserCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.CreateAdminuser(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -142,8 +142,9 @@ func (cmd *CreateAdminuserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateAdminuserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *CreateAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the DeleteAdminuserCommand command.
@@ -155,7 +156,7 @@ func (cmd *DeleteAdminuserCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.DeleteAdminuser(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -167,7 +168,8 @@ func (cmd *DeleteAdminuserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteAdminuserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *DeleteAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ListAdminuserCommand command.
@@ -179,7 +181,7 @@ func (cmd *ListAdminuserCommand) Run(c *client.Client, args []string) error {
 		path = "/api/admin/users"
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ListAdminuser(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -191,7 +193,8 @@ func (cmd *ListAdminuserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListAdminuserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ListAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ShowAdminuserCommand command.
@@ -203,7 +206,7 @@ func (cmd *ShowAdminuserCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ShowAdminuser(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -215,7 +218,8 @@ func (cmd *ShowAdminuserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowAdminuserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ShowAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the UpdateAdminuserCommand command.
@@ -234,7 +238,7 @@ func (cmd *UpdateAdminuserCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.UpdateAdminuser(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -246,8 +250,9 @@ func (cmd *UpdateAdminuserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateAdminuserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *UpdateAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the RefreshAuthCommand command.
@@ -259,7 +264,7 @@ func (cmd *RefreshAuthCommand) Run(c *client.Client, args []string) error {
 		path = "/api/auth/refresh"
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.RefreshAuth(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -271,7 +276,8 @@ func (cmd *RefreshAuthCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *RefreshAuthCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *RefreshAuthCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerPassword.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the TokenAuthCommand command.
@@ -283,7 +289,7 @@ func (cmd *TokenAuthCommand) Run(c *client.Client, args []string) error {
 		path = "/api/auth/token"
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.TokenAuth(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -295,7 +301,8 @@ func (cmd *TokenAuthCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *TokenAuthCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *TokenAuthCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerPassword.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the CreateEventCommand command.
@@ -314,7 +321,7 @@ func (cmd *CreateEventCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.CreateEvent(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -326,8 +333,9 @@ func (cmd *CreateEventCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateEventCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *CreateEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the DeleteEventCommand command.
@@ -339,7 +347,7 @@ func (cmd *DeleteEventCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.DeleteEvent(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -351,7 +359,8 @@ func (cmd *DeleteEventCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteEventCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *DeleteEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ListEventCommand command.
@@ -363,7 +372,7 @@ func (cmd *ListEventCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ListEvent(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -375,7 +384,8 @@ func (cmd *ListEventCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListEventCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ListEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ShowEventCommand command.
@@ -387,7 +397,7 @@ func (cmd *ShowEventCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ShowEvent(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -399,7 +409,7 @@ func (cmd *ShowEventCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowEventCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ShowEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 }
 
 // Run makes the HTTP request corresponding to the UpdateEventCommand command.
@@ -418,7 +428,7 @@ func (cmd *UpdateEventCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.UpdateEvent(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -430,8 +440,9 @@ func (cmd *UpdateEventCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateEventCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *UpdateEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the StatusHealthzCommand command.
@@ -443,7 +454,7 @@ func (cmd *StatusHealthzCommand) Run(c *client.Client, args []string) error {
 		path = "/api/healthz"
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.StatusHealthz(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -455,7 +466,7 @@ func (cmd *StatusHealthzCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *StatusHealthzCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *StatusHealthzCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 }
 
 // Run makes the HTTP request corresponding to the CreateSeriesCommand command.
@@ -474,7 +485,7 @@ func (cmd *CreateSeriesCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.CreateSeries(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -486,8 +497,9 @@ func (cmd *CreateSeriesCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateSeriesCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *CreateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the DeleteSeriesCommand command.
@@ -499,7 +511,7 @@ func (cmd *DeleteSeriesCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.DeleteSeries(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -511,7 +523,8 @@ func (cmd *DeleteSeriesCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteSeriesCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *DeleteSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ListSeriesCommand command.
@@ -523,7 +536,7 @@ func (cmd *ListSeriesCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ListSeries(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -535,7 +548,8 @@ func (cmd *ListSeriesCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListSeriesCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ListSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ShowSeriesCommand command.
@@ -547,7 +561,7 @@ func (cmd *ShowSeriesCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ShowSeries(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -559,7 +573,8 @@ func (cmd *ShowSeriesCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowSeriesCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ShowSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the UpdateSeriesCommand command.
@@ -578,7 +593,7 @@ func (cmd *UpdateSeriesCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.UpdateSeries(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -590,8 +605,9 @@ func (cmd *UpdateSeriesCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateSeriesCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *UpdateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the CreateTenantCommand command.
@@ -610,7 +626,7 @@ func (cmd *CreateTenantCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.CreateTenant(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -622,7 +638,7 @@ func (cmd *CreateTenantCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateTenantCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *CreateTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
 }
 
@@ -635,7 +651,7 @@ func (cmd *DeleteTenantCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.DeleteTenant(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -647,7 +663,7 @@ func (cmd *DeleteTenantCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteTenantCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *DeleteTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 }
 
 // Run makes the HTTP request corresponding to the ListTenantCommand command.
@@ -659,7 +675,7 @@ func (cmd *ListTenantCommand) Run(c *client.Client, args []string) error {
 		path = "/api/tenants"
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ListTenant(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -671,7 +687,7 @@ func (cmd *ListTenantCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListTenantCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ListTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 }
 
 // Run makes the HTTP request corresponding to the ShowTenantCommand command.
@@ -683,7 +699,7 @@ func (cmd *ShowTenantCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ShowTenant(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -695,7 +711,7 @@ func (cmd *ShowTenantCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowTenantCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ShowTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 }
 
 // Run makes the HTTP request corresponding to the UpdateTenantCommand command.
@@ -714,7 +730,7 @@ func (cmd *UpdateTenantCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.UpdateTenant(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -726,7 +742,7 @@ func (cmd *UpdateTenantCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateTenantCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *UpdateTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
 }
 
@@ -746,7 +762,7 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.CreateUser(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -758,8 +774,9 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateUserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *CreateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the DeleteUserCommand command.
@@ -771,7 +788,7 @@ func (cmd *DeleteUserCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.DeleteUser(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -783,7 +800,8 @@ func (cmd *DeleteUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteUserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *DeleteUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ListUserCommand command.
@@ -795,7 +813,7 @@ func (cmd *ListUserCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ListUser(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -807,7 +825,8 @@ func (cmd *ListUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListUserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ListUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ShowUserCommand command.
@@ -819,7 +838,7 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ShowUser(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -831,7 +850,8 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowUserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ShowUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the UpdateUserCommand command.
@@ -850,7 +870,7 @@ func (cmd *UpdateUserCommand) Run(c *client.Client, args []string) error {
 		}
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.UpdateUser(ctx, path, &payload)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -862,8 +882,9 @@ func (cmd *UpdateUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateUserCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *UpdateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	c.SignerJWT.RegisterFlags(cc)
 }
 
 // Run makes the HTTP request corresponding to the ValidateValidateCommand command.
@@ -875,7 +896,7 @@ func (cmd *ValidateValidateCommand) Run(c *client.Client, args []string) error {
 		return fmt.Errorf("missing path argument")
 	}
 	logger := goa.NewStdLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.UseLogger(context.Background(), logger)
+	ctx := goa.WithLogger(context.Background(), logger)
 	resp, err := c.ValidateValidate(ctx, path, cmd.V)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
@@ -887,7 +908,7 @@ func (cmd *ValidateValidateCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ValidateValidateCommand) RegisterFlags(cc *cobra.Command) {
+func (cmd *ValidateValidateCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var tmp30 string
 	cc.Flags().StringVar(&cmd.V, "v", tmp30, ``)
 }

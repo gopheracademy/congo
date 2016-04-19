@@ -718,10 +718,7 @@ paths:
       - https
   /tenants:
     get:
-      description: |
-        List all tenants
-
-        ** Required security scopes**:
+      description: List all tenants
       operationId: tenant#list
       responses:
         "200":
@@ -733,10 +730,7 @@ paths:
       schemes:
       - https
     post:
-      description: |
-        Record new tenant
-
-        ** Required security scopes**:
+      description: Record new tenant
       operationId: tenant#create
       parameters:
       - in: body
@@ -756,10 +750,6 @@ paths:
       - https
   /tenants/{tenantID}:
     delete:
-      description: |2
-
-
-        ** Required security scopes**:
       operationId: tenant#delete
       parameters:
       - description: Tenant ID
@@ -775,10 +765,7 @@ paths:
       schemes:
       - https
     get:
-      description: |
-        Retrieve tenant with given id
-
-        ** Required security scopes**:
+      description: Retrieve tenant with given id
       operationId: tenant#show
       parameters:
       - in: path
@@ -795,10 +782,6 @@ paths:
       schemes:
       - https
     patch:
-      description: |2
-
-
-        ** Required security scopes**:
       operationId: tenant#update
       parameters:
       - in: path

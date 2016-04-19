@@ -30,6 +30,7 @@ func (c *Client) CreateEvent(ctx context.Context, path string, payload *app.Crea
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -47,6 +48,7 @@ func (c *Client) DeleteEvent(ctx context.Context, path string) (*http.Response, 
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -64,6 +66,7 @@ func (c *Client) ListEvent(ctx context.Context, path string) (*http.Response, er
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -103,5 +106,6 @@ func (c *Client) UpdateEvent(ctx context.Context, path string, payload *app.Upda
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }

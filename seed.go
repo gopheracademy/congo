@@ -20,6 +20,13 @@ func createTenants(db gorm.DB) error {
 		tenant.Name = name
 
 		err = db.Create(&tenant).Error
+
+		tenant2 := models.Tenant{}
+		name = "SomeOther Tenant"
+		tenant2 = models.Tenant{}
+		tenant2.Name = name
+
+		err = db.Create(&tenant2).Error
 	}
 	return err
 

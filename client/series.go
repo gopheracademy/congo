@@ -30,6 +30,7 @@ func (c *Client) CreateSeries(ctx context.Context, path string, payload *app.Cre
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -47,6 +48,7 @@ func (c *Client) DeleteSeries(ctx context.Context, path string) (*http.Response,
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -64,6 +66,7 @@ func (c *Client) ListSeries(ctx context.Context, path string) (*http.Response, e
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -81,6 +84,7 @@ func (c *Client) ShowSeries(ctx context.Context, path string) (*http.Response, e
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -103,5 +107,6 @@ func (c *Client) UpdateSeries(ctx context.Context, path string, payload *app.Upd
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }

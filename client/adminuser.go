@@ -30,6 +30,7 @@ func (c *Client) CreateAdminuser(ctx context.Context, path string, payload *app.
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -47,6 +48,7 @@ func (c *Client) DeleteAdminuser(ctx context.Context, path string) (*http.Respon
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -64,6 +66,7 @@ func (c *Client) ListAdminuser(ctx context.Context, path string) (*http.Response
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -81,6 +84,7 @@ func (c *Client) ShowAdminuser(ctx context.Context, path string) (*http.Response
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
@@ -103,5 +107,6 @@ func (c *Client) UpdateAdminuser(ctx context.Context, path string, payload *app.
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }

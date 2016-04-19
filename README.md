@@ -6,7 +6,7 @@
 
 ![My cool picture](https://raw.githubusercontent.com/gopheracademy/congo/master/logo.jpg).
 
-Conference Management Software for Conference Organizers
+WIP Conference Management Software for Conference Organizers
 
 ## We'd love you to join our effort
 We need Go developers to volunteer for the backend / API.  We also need front-end developers for help with frontend applications (management interface, conference websites, etc)
