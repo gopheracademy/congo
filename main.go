@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"path/filepath"
 
 	"log"
 
@@ -13,10 +15,13 @@ import (
 	mjwt "github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/gopheracademy/congo/app"
 	"github.com/gopheracademy/congo/jwt"
+	"github.com/gopheracademy/congo/models"
 	"github.com/gopheracademy/congo/swagger"
 	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
+	"github.com/qor/admin"
+	"github.com/qor/qor"
 )
 
 // settings holds the congo configuration.
@@ -61,7 +66,7 @@ func main() {
 
 	// Setup middleware
 	service.Use(middleware.RequestID())
-	service.Use(middleware.LogRequest(true))
+	//	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
 	spec := &jwt.Specification{
@@ -110,8 +115,34 @@ func main() {
 	// Mount "validate" controller
 	c8 := NewValidateController(service)
 	app.MountValidateController(service, c8)
+
+	c9 := NewUIController(service)
+	app.MountUIController(service, c9)
+
+	c10 := NewSpeakerController(service, storageList, env)
+	app.MountSpeakerController(service, c10)
+
+	c11 := NewPresentationController(service, storageList, env)
+	app.MountPresentationController(service, c11)
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
-	service.ListenAndServe(":8080")
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	Admin := admin.New(&qor.Config{DB: &env.DB})
+
+	Admin.AddResource(&models.Tenant{})
+	Admin.AddResource(&models.Series{})
+	Admin.AddResource(&models.Event{})
+	Admin.AddResource(&models.Speaker{})
+	Admin.AddResource(&models.Presentation{})
+	Admin.AddResource(&models.User{})
+	mux := http.NewServeMux()
+	Admin.MountTo("/admin", mux)
+	go http.ListenAndServe(":19000", mux)
+	service.ServeFiles("/assets/*filepath", filepath.Join(dir, "public"))
+	service.ListenAndServe(":18080")
 }

@@ -127,7 +127,7 @@ func handleAdminuserOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -138,6 +138,7 @@ func handleAdminuserOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
 }
@@ -216,7 +217,7 @@ func handleAuthOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -227,6 +228,7 @@ func handleAuthOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
 }
@@ -323,7 +325,7 @@ func handleEventOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -334,6 +336,7 @@ func handleEventOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
 }
@@ -397,7 +400,7 @@ func handleHealthzOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -408,8 +411,143 @@ func handleHealthzOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
+}
+
+// PresentationController is the controller interface for the Presentation actions.
+type PresentationController interface {
+	goa.Muxer
+	Create(*CreatePresentationContext) error
+	Delete(*DeletePresentationContext) error
+	List(*ListPresentationContext) error
+	Show(*ShowPresentationContext) error
+	Update(*UpdatePresentationContext) error
+}
+
+// MountPresentationController "mounts" a Presentation resource controller on the given service.
+func MountPresentationController(service *goa.Service, ctrl PresentationController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations", cors.HandlePreflight(service.Context, handlePresentationOrigin))
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID", cors.HandlePreflight(service.Context, handlePresentationOrigin))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewCreatePresentationContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreatePresentationPayload)
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handlePresentationOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("POST", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations", ctrl.MuxHandler("Create", h, unmarshalCreatePresentationPayload))
+	service.LogInfo("mount", "ctrl", "Presentation", "action", "Create", "route", "POST /api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations", "security", "jwt")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewDeletePresentationContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handlePresentationOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("DELETE", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID", ctrl.MuxHandler("Delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Presentation", "action", "Delete", "route", "DELETE /api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID", "security", "jwt")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewListPresentationContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handlePresentationOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("GET", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations", ctrl.MuxHandler("List", h, nil))
+	service.LogInfo("mount", "ctrl", "Presentation", "action", "List", "route", "GET /api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations", "security", "jwt")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewShowPresentationContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handlePresentationOrigin(h)
+	service.Mux.Handle("GET", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID", ctrl.MuxHandler("Show", h, nil))
+	service.LogInfo("mount", "ctrl", "Presentation", "action", "Show", "route", "GET /api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewUpdatePresentationContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdatePresentationPayload)
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handlePresentationOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("PATCH", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID", ctrl.MuxHandler("Update", h, unmarshalUpdatePresentationPayload))
+	service.LogInfo("mount", "ctrl", "Presentation", "action", "Update", "route", "PATCH /api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID", "security", "jwt")
+}
+
+// handlePresentationOrigin applies the CORS response headers corresponding to the origin.
+func handlePresentationOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreatePresentationPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreatePresentationPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createPresentationPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdatePresentationPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdatePresentationPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updatePresentationPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // SeriesController is the controller interface for the Series actions.
@@ -505,7 +643,7 @@ func handleSeriesOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -516,6 +654,7 @@ func handleSeriesOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
 }
@@ -536,6 +675,140 @@ func unmarshalCreateSeriesPayload(ctx context.Context, service *goa.Service, req
 // unmarshalUpdateSeriesPayload unmarshals the request body into the context request data Payload field.
 func unmarshalUpdateSeriesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
 	payload := &updateSeriesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// SpeakerController is the controller interface for the Speaker actions.
+type SpeakerController interface {
+	goa.Muxer
+	Create(*CreateSpeakerContext) error
+	Delete(*DeleteSpeakerContext) error
+	List(*ListSpeakerContext) error
+	Show(*ShowSpeakerContext) error
+	Update(*UpdateSpeakerContext) error
+}
+
+// MountSpeakerController "mounts" a Speaker resource controller on the given service.
+func MountSpeakerController(service *goa.Service, ctrl SpeakerController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/events/:eventID/speakers", cors.HandlePreflight(service.Context, handleSpeakerOrigin))
+	service.Mux.Handle("OPTIONS", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID", cors.HandlePreflight(service.Context, handleSpeakerOrigin))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewCreateSpeakerContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateSpeakerPayload)
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSpeakerOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("POST", "/api/tenants/:tenantID/events/:eventID/speakers", ctrl.MuxHandler("Create", h, unmarshalCreateSpeakerPayload))
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "Create", "route", "POST /api/tenants/:tenantID/events/:eventID/speakers", "security", "jwt")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewDeleteSpeakerContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSpeakerOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("DELETE", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID", ctrl.MuxHandler("Delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "Delete", "route", "DELETE /api/tenants/:tenantID/events/:eventID/speakers/:speakerID", "security", "jwt")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewListSpeakerContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSpeakerOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("GET", "/api/tenants/:tenantID/events/:eventID/speakers", ctrl.MuxHandler("List", h, nil))
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "List", "route", "GET /api/tenants/:tenantID/events/:eventID/speakers", "security", "jwt")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewShowSpeakerContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleSpeakerOrigin(h)
+	service.Mux.Handle("GET", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID", ctrl.MuxHandler("Show", h, nil))
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "Show", "route", "GET /api/tenants/:tenantID/events/:eventID/speakers/:speakerID")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewUpdateSpeakerContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateSpeakerPayload)
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSpeakerOrigin(h)
+	h = handleSecurity("jwt", h)
+	service.Mux.Handle("PATCH", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID", ctrl.MuxHandler("Update", h, unmarshalUpdateSpeakerPayload))
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "Update", "route", "PATCH /api/tenants/:tenantID/events/:eventID/speakers/:speakerID", "security", "jwt")
+}
+
+// handleSpeakerOrigin applies the CORS response headers corresponding to the origin.
+func handleSpeakerOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateSpeakerPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateSpeakerPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createSpeakerPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateSpeakerPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateSpeakerPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateSpeakerPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}
@@ -634,7 +907,7 @@ func handleTenantOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -645,6 +918,7 @@ func handleTenantOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
 }
@@ -673,6 +947,55 @@ func unmarshalUpdateTenantPayload(ctx context.Context, service *goa.Service, req
 	}
 	goa.ContextRequest(ctx).Payload = payload.Publicize()
 	return nil
+}
+
+// UIController is the controller interface for the UI actions.
+type UIController interface {
+	goa.Muxer
+	Bootstrap(*BootstrapUIContext) error
+}
+
+// MountUIController "mounts" a UI resource controller on the given service.
+func MountUIController(service *goa.Service, ctrl UIController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/", cors.HandlePreflight(service.Context, handleUIOrigin))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		rctx, err := NewBootstrapUIContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Bootstrap(rctx)
+	}
+	h = handleUIOrigin(h)
+	service.Mux.Handle("GET", "/", ctrl.MuxHandler("Bootstrap", h, nil))
+	service.LogInfo("mount", "ctrl", "UI", "action", "Bootstrap", "route", "GET /")
+}
+
+// handleUIOrigin applies the CORS response headers corresponding to the origin.
+func handleUIOrigin(h goa.Handler) goa.Handler {
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:5000") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
 }
 
 // UserController is the controller interface for the User actions.
@@ -768,7 +1091,7 @@ func handleUserOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -779,6 +1102,7 @@ func handleUserOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
 }
@@ -842,7 +1166,7 @@ func handleValidateOrigin(h goa.Handler) goa.Handler {
 			return h(ctx, rw, req)
 		}
 		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLog(ctx, "origin", origin)
+			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Max-Age", "600")
@@ -853,6 +1177,7 @@ func handleValidateOrigin(h goa.Handler) goa.Handler {
 			}
 			return h(ctx, rw, req)
 		}
+
 		return h(ctx, rw, req)
 	}
 }

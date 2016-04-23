@@ -66,10 +66,14 @@ func (mt *Authorize) Validate() (err error) {
 type Event struct {
 	// end_date
 	EndDate *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	// ID of record
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
 	// location
 	Location *string `json:"location,omitempty" xml:"location,omitempty"`
 	// name
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+	Name          *string                `json:"name,omitempty" xml:"name,omitempty"`
+	Presentations PresentationCollection `json:"presentations,omitempty" xml:"presentations,omitempty"`
+	Speakers      SpeakerCollection      `json:"speakers,omitempty" xml:"speakers,omitempty"`
 	// start_date
 	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
 	// event URL
@@ -91,10 +95,60 @@ type Login struct {
 	Password *string `json:"password,omitempty" xml:"password,omitempty"`
 }
 
+// PresentationAdmin media type.
+//
+// Identifier: application/vnd.presentation+json
+type PresentationAdmin struct {
+	// short description of talk
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	// detailed description of talk - not for public display
+	Detail *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	// ID of record
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+	// Links to related resources
+	Links *PresentationLinks `json:"links,omitempty" xml:"links,omitempty"`
+	// name of presentation
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Presentation media type.
+//
+// Identifier: application/vnd.presentation+json
+type Presentation struct {
+	// short description of talk
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	// ID of record
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+	// Links to related resources
+	Links *PresentationLinks `json:"links,omitempty" xml:"links,omitempty"`
+	// name of presentation
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// PresentationLinks contains links to related resources of Presentation.
+type PresentationLinks struct {
+	Speaker *SpeakerLink `json:"speaker,omitempty" xml:"speaker,omitempty"`
+}
+
+// PresentationAdminCollection media type is a collection of PresentationAdmin.
+//
+// Identifier: application/vnd.presentation+json; type=collection
+type PresentationAdminCollection []*PresentationAdmin
+
+// PresentationCollection media type is a collection of Presentation.
+//
+// Identifier: application/vnd.presentation+json; type=collection
+type PresentationCollection []*Presentation
+
+// PresentationLinksArray contains links to related resources of PresentationCollection.
+type PresentationLinksArray []*PresentationLinks
+
 // Series media type.
 //
 // Identifier: application/vnd.series+json
 type Series struct {
+	// ID of record
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
 	// name
 	Name *string `json:"name,omitempty" xml:"name,omitempty"`
 }
@@ -103,6 +157,76 @@ type Series struct {
 //
 // Identifier: application/vnd.series+json; type=collection
 type SeriesCollection []*Series
+
+// SpeakerAdmin media type.
+//
+// Identifier: application/vnd.speaker+json
+type SpeakerAdmin struct {
+	// speaker bio
+	Bio *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	// email address
+	Email *string `json:"email,omitempty" xml:"email,omitempty"`
+	// first name
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	// github handle
+	Github *string `json:"github,omitempty" xml:"github,omitempty"`
+	// ID of record
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+	// url of speaker image
+	ImageURL *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	// last name
+	LastName *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	// linkedin url
+	Linkedin *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	// twitter handle - no @
+	Twitter *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// Speaker media type.
+//
+// Identifier: application/vnd.speaker+json
+type Speaker struct {
+	// speaker bio
+	Bio *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	// first name
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	// github handle
+	Github *string `json:"github,omitempty" xml:"github,omitempty"`
+	// ID of record
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+	// url of speaker image
+	ImageURL *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	// last name
+	LastName *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	// linkedin url
+	Linkedin *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	// twitter handle - no @
+	Twitter *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// SpeakerLink media type.
+//
+// Identifier: application/vnd.speaker+json
+type SpeakerLink struct {
+	Href *string `json:"href,omitempty" xml:"href,omitempty"`
+	// ID of record
+	ID *int `json:"id,omitempty" xml:"id,omitempty"`
+}
+
+// SpeakerAdminCollection media type is a collection of SpeakerAdmin.
+//
+// Identifier: application/vnd.speaker+json; type=collection
+type SpeakerAdminCollection []*SpeakerAdmin
+
+// SpeakerCollection media type is a collection of Speaker.
+//
+// Identifier: application/vnd.speaker+json; type=collection
+type SpeakerCollection []*Speaker
+
+// SpeakerLinkCollection media type is a collection of SpeakerLink.
+//
+// Identifier: application/vnd.speaker+json; type=collection
+type SpeakerLinkCollection []*SpeakerLink
 
 // Tenant media type.
 //

@@ -67,7 +67,36 @@ var sg = StorageGroup("Congo Storage", func() {
 			})
 			RendersTo(Event)
 			BelongsTo("Tenant")
+			HasMany("speakers", "Speaker")
+			HasMany("presentations", "Presentation")
 			Description("This is the Event model")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the ID PK field")
+			})
+		})
+		Model("Speaker", func() {
+			BuildsFrom(func() {
+				Payload("speaker", "create")
+				Payload("speaker", "update")
+			})
+			RendersTo(Speaker)
+			BelongsTo("Event")
+			Description("This is the Speaker model")
+			Field("id", gorma.Integer, func() {
+				PrimaryKey()
+				Description("This is the ID PK field")
+			})
+		})
+		Model("Presentation", func() {
+			BuildsFrom(func() {
+				Payload("presentation", "create")
+				Payload("presentation", "update")
+			})
+			RendersTo(Presentation)
+			BelongsTo("Event")
+			BelongsTo("Speaker")
+			Description("This is the presentation model")
 			Field("id", gorma.Integer, func() {
 				PrimaryKey()
 				Description("This is the ID PK field")

@@ -5,6 +5,20 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
+var _ = Resource("ui", func() {
+	BasePath("/")
+
+	Action("bootstrap", func() {
+		Routing(
+			GET("//"),
+		)
+		Description("Render single page app HTML")
+		Response(OK, func() {
+			Media("text/html")
+		})
+	})
+})
+
 var _ = Resource("auth", func() {
 	Security("password")
 	DefaultMedia(Authorize)
@@ -296,7 +310,7 @@ var _ = Resource("event", func() {
 			POST(""),
 		)
 		Description("Record new event")
-		Payload(TenantPayload, func() {
+		Payload(EventPayload, func() {
 			Required("name")
 		})
 		Response(Created, "^/tenants/[0-9]/events/[0-9]+$")
@@ -326,6 +340,139 @@ var _ = Resource("event", func() {
 
 })
 
+var _ = Resource("speaker", func() {
+	DefaultMedia(Speaker)
+	Parent("event")
+	BasePath("/speakers")
+	Security("jwt")
+
+	Action("list", func() {
+		Routing(
+			GET(""),
+		)
+		Description("List all speakers")
+		Response(OK, func() {
+			Media(CollectionOf(Speaker, func() {
+				View("default")
+			}))
+		})
+		Response(NotFound)
+	})
+
+	Action("show", func() {
+		NoSecurity()
+		Routing(
+			GET("/:speakerID"),
+		)
+		Description("Retrieve speaker with given id")
+		Params(func() {
+			Param("speakerID", Integer)
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
+	Action("create", func() {
+		Routing(
+			POST(""),
+		)
+		Description("Record new speaker")
+		Payload(SpeakerPayload, func() {
+			Required("first_name", "last_name")
+		})
+		Response(Created, "^/tenants/[0-9]/events/[0-9]/speakers/[0-9]+$")
+	})
+
+	Action("update", func() {
+		Routing(
+			PATCH("/:speakerID"),
+		)
+		Params(func() {
+			Param("speakerID", Integer)
+		})
+		Payload(SpeakerPayload)
+		Response(NoContent)
+		Response(NotFound)
+	})
+	Action("delete", func() {
+		Routing(
+			DELETE("/:speakerID"),
+		)
+		Params(func() {
+			Param("speakerID", Integer, "Speaker ID")
+		})
+		Response(NoContent)
+		Response(NotFound)
+	})
+
+})
+
+var _ = Resource("presentation", func() {
+	DefaultMedia(Presentation)
+	Parent("speaker")
+	BasePath("/presentations")
+	Security("jwt")
+
+	Action("list", func() {
+		Routing(
+			GET(""),
+		)
+		Description("List all presentations")
+		Response(OK, func() {
+			Media(CollectionOf(Presentation, func() {
+				View("default")
+			}))
+		})
+		Response(NotFound)
+	})
+
+	Action("show", func() {
+		NoSecurity()
+		Routing(
+			GET("/:presentationID"),
+		)
+		Description("Retrieve presentation with given id")
+		Params(func() {
+			Param("presentationID", Integer)
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
+	Action("create", func() {
+		Routing(
+			POST(""),
+		)
+		Description("Record new presentation")
+		Payload(PresentationPayload, func() {
+			Required("abstract")
+		})
+		Response(Created, "^/tenants/[0-9]/events/[0-9]/presentations/[0-9]+$")
+	})
+
+	Action("update", func() {
+		Routing(
+			PATCH("/:presentationID"),
+		)
+		Params(func() {
+			Param("presentationID", Integer)
+		})
+		Payload(PresentationPayload)
+		Response(NoContent)
+		Response(NotFound)
+	})
+	Action("delete", func() {
+		Routing(
+			DELETE("/:presentationID"),
+		)
+		Params(func() {
+			Param("presentationID", Integer, "Presentation ID")
+		})
+		Response(NoContent)
+		Response(NotFound)
+	})
+
+})
 var _ = Resource("user", func() {
 	DefaultMedia(User)
 	BasePath("/users")

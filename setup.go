@@ -48,6 +48,8 @@ func Migrate(e *Env) {
 	autoMigrate(e, &models.User{})
 	autoMigrate(e, &models.Series{})
 	autoMigrate(e, &models.Event{})
+	autoMigrate(e, &models.Speaker{})
+	autoMigrate(e, &models.Presentation{})
 	createTenants(e.DB)
 	createUsers(e.DB)
 	createSeries(e.DB)
@@ -75,6 +77,11 @@ func makeStorage(e *Env) map[string]Storage {
 	eventStorage := models.NewEventDB(e.DB)
 	storage["EVENTSTORAGE"] = eventStorage
 
+	speakerStorage := models.NewSpeakerDB(e.DB)
+	storage["SPEAKERSTORAGE"] = speakerStorage
+
+	presentationStorage := models.NewPresentationDB(e.DB)
+	storage["PRESENTATIONSTORAGE"] = presentationStorage
 	seriesStorage := models.NewSeriesDB(e.DB)
 	storage["SERIESSTORAGE"] = seriesStorage
 	return storage

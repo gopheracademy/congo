@@ -24,9 +24,19 @@ func EventHref(tenantID, eventID interface{}) string {
 	return fmt.Sprintf("/api/tenants/%v/events/%v", tenantID, eventID)
 }
 
+// PresentationHref returns the resource href.
+func PresentationHref(tenantID, eventID, speakerID, presentationID interface{}) string {
+	return fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v/presentations/%v", tenantID, eventID, speakerID, presentationID)
+}
+
 // SeriesHref returns the resource href.
 func SeriesHref(tenantID, seriesID interface{}) string {
 	return fmt.Sprintf("/api/tenants/%v/series/%v", tenantID, seriesID)
+}
+
+// SpeakerHref returns the resource href.
+func SpeakerHref(tenantID, eventID, speakerID interface{}) string {
+	return fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v", tenantID, eventID, speakerID)
 }
 
 // TenantHref returns the resource href.

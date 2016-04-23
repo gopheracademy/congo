@@ -200,6 +200,55 @@ func (ut *EventPayload) Validate() (err error) {
 	return err
 }
 
+// PresentationPayload user type.
+type presentationPayload struct {
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the presentationPayload type instance.
+func (ut *presentationPayload) Validate() (err error) {
+	if ut.Abstract != nil {
+		if len(*ut.Abstract) < 10 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.abstract`, *ut.Abstract, len(*ut.Abstract), 10, true))
+		}
+	}
+	return
+}
+
+// Publicize creates PresentationPayload from presentationPayload
+func (ut *presentationPayload) Publicize() *PresentationPayload {
+	var pub PresentationPayload
+	if ut.Abstract != nil {
+		pub.Abstract = ut.Abstract
+	}
+	if ut.Detail != nil {
+		pub.Detail = ut.Detail
+	}
+	if ut.Name != nil {
+		pub.Name = ut.Name
+	}
+	return &pub
+}
+
+// PresentationPayload user type.
+type PresentationPayload struct {
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate validates the PresentationPayload type instance.
+func (ut *PresentationPayload) Validate() (err error) {
+	if ut.Abstract != nil {
+		if len(*ut.Abstract) < 10 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.abstract`, *ut.Abstract, len(*ut.Abstract), 10, true))
+		}
+	}
+	return err
+}
+
 // SeriesPayload user type.
 type seriesPayload struct {
 	Name *string `json:"name,omitempty" xml:"name,omitempty"`
@@ -234,6 +283,95 @@ func (ut *SeriesPayload) Validate() (err error) {
 	if ut.Name != nil {
 		if len(*ut.Name) < 2 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, *ut.Name, len(*ut.Name), 2, true))
+		}
+	}
+	return err
+}
+
+// SpeakerPayload user type.
+type speakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// Validate validates the speakerPayload type instance.
+func (ut *speakerPayload) Validate() (err error) {
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
+		}
+	}
+	if ut.ImageURL != nil {
+		if len(*ut.ImageURL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.image_url`, *ut.ImageURL, len(*ut.ImageURL), 5, true))
+		}
+	}
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
+		}
+	}
+	return
+}
+
+// Publicize creates SpeakerPayload from speakerPayload
+func (ut *speakerPayload) Publicize() *SpeakerPayload {
+	var pub SpeakerPayload
+	if ut.Bio != nil {
+		pub.Bio = ut.Bio
+	}
+	if ut.FirstName != nil {
+		pub.FirstName = ut.FirstName
+	}
+	if ut.Github != nil {
+		pub.Github = ut.Github
+	}
+	if ut.ImageURL != nil {
+		pub.ImageURL = ut.ImageURL
+	}
+	if ut.LastName != nil {
+		pub.LastName = ut.LastName
+	}
+	if ut.Linkedin != nil {
+		pub.Linkedin = ut.Linkedin
+	}
+	if ut.Twitter != nil {
+		pub.Twitter = ut.Twitter
+	}
+	return &pub
+}
+
+// SpeakerPayload user type.
+type SpeakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// Validate validates the SpeakerPayload type instance.
+func (ut *SpeakerPayload) Validate() (err error) {
+	if ut.FirstName != nil {
+		if len(*ut.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.first_name`, *ut.FirstName, len(*ut.FirstName), 2, true))
+		}
+	}
+	if ut.ImageURL != nil {
+		if len(*ut.ImageURL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.image_url`, *ut.ImageURL, len(*ut.ImageURL), 5, true))
+		}
+	}
+	if ut.LastName != nil {
+		if len(*ut.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.last_name`, *ut.LastName, len(*ut.LastName), 2, true))
 		}
 	}
 	return err

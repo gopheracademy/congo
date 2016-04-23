@@ -10,13 +10,19 @@ import (
 	"net/url"
 )
 
-// CreateTenantPayload is the tenant create action payload.
-type CreateTenantPayload struct {
-	Name string `json:"name" xml:"name"`
+// CreateSpeakerPayload is the speaker create action payload.
+type CreateSpeakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName string  `json:"first_name" xml:"first_name"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  string  `json:"last_name" xml:"last_name"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
 }
 
-// Record new tenant
-func (c *Client) CreateTenant(ctx context.Context, path string, payload *CreateTenantPayload) (*http.Response, error) {
+// Record new speaker
+func (c *Client) CreateSpeaker(ctx context.Context, path string, payload *CreateSpeakerPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -34,11 +40,12 @@ func (c *Client) CreateTenant(ctx context.Context, path string, payload *CreateT
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
-// DeleteTenant makes a request to the delete action endpoint of the tenant resource
-func (c *Client) DeleteTenant(ctx context.Context, path string) (*http.Response, error) {
+// DeleteSpeaker makes a request to the delete action endpoint of the speaker resource
+func (c *Client) DeleteSpeaker(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -51,11 +58,30 @@ func (c *Client) DeleteTenant(ctx context.Context, path string) (*http.Response,
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
-// List all tenants
-func (c *Client) ListTenant(ctx context.Context, path string) (*http.Response, error) {
+// List all speakers
+func (c *Client) ListSpeaker(ctx context.Context, path string) (*http.Response, error) {
+	var body io.Reader
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("GET", u.String(), body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
+	return c.Client.Do(ctx, req)
+}
+
+// Retrieve speaker with given id
+func (c *Client) ShowSpeaker(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -71,30 +97,19 @@ func (c *Client) ListTenant(ctx context.Context, path string) (*http.Response, e
 	return c.Client.Do(ctx, req)
 }
 
-// Retrieve tenant with given id
-func (c *Client) ShowTenant(ctx context.Context, path string) (*http.Response, error) {
-	var body io.Reader
-	scheme := c.Scheme
-	if scheme == "" {
-		scheme = "https"
-	}
-	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	req, err := http.NewRequest("GET", u.String(), body)
-	if err != nil {
-		return nil, err
-	}
-	header := req.Header
-	header.Set("Content-Type", "application/json")
-	return c.Client.Do(ctx, req)
+// UpdateSpeakerPayload is the speaker update action payload.
+type UpdateSpeakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
 }
 
-// UpdateTenantPayload is the tenant update action payload.
-type UpdateTenantPayload struct {
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
-}
-
-// UpdateTenant makes a request to the update action endpoint of the tenant resource
-func (c *Client) UpdateTenant(ctx context.Context, path string, payload *UpdateTenantPayload) (*http.Response, error) {
+// UpdateSpeaker makes a request to the update action endpoint of the speaker resource
+func (c *Client) UpdateSpeaker(ctx context.Context, path string, payload *UpdateSpeakerPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -112,5 +127,6 @@ func (c *Client) UpdateTenant(ctx context.Context, path string, payload *UpdateT
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }

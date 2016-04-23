@@ -4,15 +4,23 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gopheracademy/congo/app"
 	"golang.org/x/net/context"
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 )
 
+// CreateEventPayload is the event create action payload.
+type CreateEventPayload struct {
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      string     `json:"name" xml:"name"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
+}
+
 // Record new event
-func (c *Client) CreateEvent(ctx context.Context, path string, payload *app.CreateEventPayload) (*http.Response, error) {
+func (c *Client) CreateEvent(ctx context.Context, path string, payload *CreateEventPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -87,8 +95,16 @@ func (c *Client) ShowEvent(ctx context.Context, path string) (*http.Response, er
 	return c.Client.Do(ctx, req)
 }
 
+// UpdateEventPayload is the event update action payload.
+type UpdateEventPayload struct {
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
+}
+
 // UpdateEvent makes a request to the update action endpoint of the event resource
-func (c *Client) UpdateEvent(ctx context.Context, path string, payload *app.UpdateEventPayload) (*http.Response, error) {
+func (c *Client) UpdateEvent(ctx context.Context, path string, payload *UpdateEventPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

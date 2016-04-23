@@ -21,16 +21,18 @@ import (
 
 // This is the Event model
 type Event struct {
-	ID        int `gorm:"primary_key"` // This is the ID PK field
-	CreatedAt time.Time
-	DeletedAt *time.Time
-	EndDate   *time.Time
-	Name      string
-	StartDate *time.Time
-	TenantID  int // has many Event
-	URL       *string
-	UpdatedAt time.Time
-	Tenant    Tenant
+	ID            int `gorm:"primary_key"` // This is the ID PK field
+	CreatedAt     time.Time
+	DeletedAt     *time.Time
+	EndDate       *time.Time
+	Name          string
+	Presentations []Presentation // has many Presentations
+	Speakers      []Speaker      // has many Speakers
+	StartDate     *time.Time
+	TenantID      int // has many Event
+	URL           *string
+	UpdatedAt     time.Time
+	Tenant        Tenant
 }
 
 // TableName overrides the table name settings in Gorm to force a specific table name
@@ -168,7 +170,16 @@ func (m *EventDB) Delete(ctx context.Context, id int) error {
 // only copying the non-nil fields from the source.
 func EventFromCreateEventPayload(payload *app.CreateEventPayload) *Event {
 	event := &Event{}
+	if payload.EndDate != nil {
+		event.EndDate = payload.EndDate
+	}
 	event.Name = payload.Name
+	if payload.StartDate != nil {
+		event.StartDate = payload.StartDate
+	}
+	if payload.URL != nil {
+		event.URL = payload.URL
+	}
 
 	return event
 }
@@ -183,7 +194,16 @@ func (m *EventDB) UpdateFromCreateEventPayload(ctx context.Context, payload *app
 		goa.LogError(ctx, "error retrieving Event", "error", err.Error())
 		return err
 	}
+	if payload.EndDate != nil {
+		obj.EndDate = payload.EndDate
+	}
 	obj.Name = payload.Name
+	if payload.StartDate != nil {
+		obj.StartDate = payload.StartDate
+	}
+	if payload.URL != nil {
+		obj.URL = payload.URL
+	}
 
 	err = m.Db.Save(&obj).Error
 	return err

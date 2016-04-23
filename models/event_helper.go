@@ -45,7 +45,14 @@ func (m *EventDB) ListEvent(ctx context.Context, tenantID int) []*app.Event {
 func (m *Event) EventToEvent() *app.Event {
 	event := &app.Event{}
 	event.EndDate = m.EndDate
+	event.ID = &m.ID
 	event.Name = &m.Name
+	for _, k := range m.Presentations {
+		event.Presentations = append(event.Presentations, k.PresentationToPresentation())
+	}
+	for _, k := range m.Speakers {
+		event.Speakers = append(event.Speakers, k.SpeakerToSpeaker())
+	}
 	event.StartDate = m.StartDate
 	event.URL = m.URL
 
@@ -57,7 +64,7 @@ func (m *EventDB) OneEvent(ctx context.Context, id int, tenantID int) (*app.Even
 	defer goa.MeasureSince([]string{"goa", "db", "event", "oneevent"}, time.Now())
 
 	var native Event
-	err := m.Db.Scopes(EventFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Preload("Tenant").Where("id = ?", id).Find(&native).Error
+	err := m.Db.Scopes(EventFilterByTenant(tenantID, &m.Db)).Table(m.TableName()).Preload("Presentations").Preload("Speakers").Preload("Tenant").Where("id = ?", id).Find(&native).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
 		goa.LogError(ctx, "error getting Event", "error", err.Error())

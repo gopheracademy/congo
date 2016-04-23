@@ -4,15 +4,19 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gopheracademy/congo/app"
 	"golang.org/x/net/context"
 	"io"
 	"net/http"
 	"net/url"
 )
 
+// CreateSeriesPayload is the series create action payload.
+type CreateSeriesPayload struct {
+	Name string `json:"name" xml:"name"`
+}
+
 // Record new series
-func (c *Client) CreateSeries(ctx context.Context, path string, payload *app.CreateSeriesPayload) (*http.Response, error) {
+func (c *Client) CreateSeries(ctx context.Context, path string, payload *CreateSeriesPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -88,8 +92,13 @@ func (c *Client) ShowSeries(ctx context.Context, path string) (*http.Response, e
 	return c.Client.Do(ctx, req)
 }
 
+// UpdateSeriesPayload is the series update action payload.
+type UpdateSeriesPayload struct {
+	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
 // UpdateSeries makes a request to the update action endpoint of the series resource
-func (c *Client) UpdateSeries(ctx context.Context, path string, payload *app.UpdateSeriesPayload) (*http.Response, error) {
+func (c *Client) UpdateSeries(ctx context.Context, path string, payload *UpdateSeriesPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {

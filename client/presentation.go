@@ -10,13 +10,15 @@ import (
 	"net/url"
 )
 
-// CreateTenantPayload is the tenant create action payload.
-type CreateTenantPayload struct {
-	Name string `json:"name" xml:"name"`
+// CreatePresentationPayload is the presentation create action payload.
+type CreatePresentationPayload struct {
+	Abstract string  `json:"abstract" xml:"abstract"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
 }
 
-// Record new tenant
-func (c *Client) CreateTenant(ctx context.Context, path string, payload *CreateTenantPayload) (*http.Response, error) {
+// Record new presentation
+func (c *Client) CreatePresentation(ctx context.Context, path string, payload *CreatePresentationPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -34,11 +36,12 @@ func (c *Client) CreateTenant(ctx context.Context, path string, payload *CreateT
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
-// DeleteTenant makes a request to the delete action endpoint of the tenant resource
-func (c *Client) DeleteTenant(ctx context.Context, path string) (*http.Response, error) {
+// DeletePresentation makes a request to the delete action endpoint of the presentation resource
+func (c *Client) DeletePresentation(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -51,11 +54,30 @@ func (c *Client) DeleteTenant(ctx context.Context, path string) (*http.Response,
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }
 
-// List all tenants
-func (c *Client) ListTenant(ctx context.Context, path string) (*http.Response, error) {
+// List all presentations
+func (c *Client) ListPresentation(ctx context.Context, path string) (*http.Response, error) {
+	var body io.Reader
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "https"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("GET", u.String(), body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
+	return c.Client.Do(ctx, req)
+}
+
+// Retrieve presentation with given id
+func (c *Client) ShowPresentation(ctx context.Context, path string) (*http.Response, error) {
 	var body io.Reader
 	scheme := c.Scheme
 	if scheme == "" {
@@ -71,30 +93,15 @@ func (c *Client) ListTenant(ctx context.Context, path string) (*http.Response, e
 	return c.Client.Do(ctx, req)
 }
 
-// Retrieve tenant with given id
-func (c *Client) ShowTenant(ctx context.Context, path string) (*http.Response, error) {
-	var body io.Reader
-	scheme := c.Scheme
-	if scheme == "" {
-		scheme = "https"
-	}
-	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	req, err := http.NewRequest("GET", u.String(), body)
-	if err != nil {
-		return nil, err
-	}
-	header := req.Header
-	header.Set("Content-Type", "application/json")
-	return c.Client.Do(ctx, req)
+// UpdatePresentationPayload is the presentation update action payload.
+type UpdatePresentationPayload struct {
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
 }
 
-// UpdateTenantPayload is the tenant update action payload.
-type UpdateTenantPayload struct {
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
-}
-
-// UpdateTenant makes a request to the update action endpoint of the tenant resource
-func (c *Client) UpdateTenant(ctx context.Context, path string, payload *UpdateTenantPayload) (*http.Response, error) {
+// UpdatePresentation makes a request to the update action endpoint of the presentation resource
+func (c *Client) UpdatePresentation(ctx context.Context, path string, payload *UpdatePresentationPayload) (*http.Response, error) {
 	var body io.Reader
 	b, err := json.Marshal(payload)
 	if err != nil {
@@ -112,5 +119,6 @@ func (c *Client) UpdateTenant(ctx context.Context, path string, payload *UpdateT
 	}
 	header := req.Header
 	header.Set("Content-Type", "application/json")
+	c.SignerJWT.Sign(ctx, req)
 	return c.Client.Do(ctx, req)
 }

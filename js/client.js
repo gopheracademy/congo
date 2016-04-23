@@ -19,6 +19,24 @@ define(['axios'] , function (axios) {
     // URL prefix for all API requests.
     var urlPrefix = scheme + '://' + host;
 
+  // Render single page app HTML
+  // path is the request path, the format is "/"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.bootstrapUi = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
   // Record new user
   // path is the request path, the format is "/api/admin/users"
   // data contains the action payload (request body)
@@ -59,6 +77,26 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
+  // Record new presentation
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.createPresentation = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'post',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
   // Record new series
   // path is the request path, the format is "/api/tenants/:tenantID/series"
   // data contains the action payload (request body)
@@ -66,6 +104,26 @@ define(['axios'] , function (axios) {
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
   client.createSeries = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'post',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // Record new speaker
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.createSpeaker = function (path, data, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -155,12 +213,48 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
+  // deletePresentation calls the delete action of the presentation resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.deletePresentation = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'delete',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
   // deleteSeries calls the delete action of the series resource.
   // path is the request path, the format is "/api/tenants/:tenantID/series/:seriesID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
   client.deleteSeries = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'delete',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // deleteSpeaker calls the delete action of the speaker resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.deleteSpeaker = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -245,12 +339,48 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
+  // List all presentations
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.listPresentation = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
   // List all series
   // path is the request path, the format is "/api/tenants/:tenantID/series"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
   client.listSeries = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // List all speakers
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.listSpeaker = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -353,12 +483,48 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
+  // Retrieve presentation with given id
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.showPresentation = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
   // Retrieve series with given id
   // path is the request path, the format is "/api/tenants/:tenantID/series/:seriesID"
   // config is an optional object to be merged into the config built by the function prior to making the request.
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
   client.showSeries = function (path, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'get',
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // Retrieve speaker with given id
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID"
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.showSpeaker = function (path, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,
@@ -483,6 +649,26 @@ define(['axios'] , function (axios) {
     return client(cfg);
   }
 
+  // updatePresentation calls the update action of the presentation resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID/presentations/:presentationID"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.updatePresentation = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'patch',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
   // updateSeries calls the update action of the series resource.
   // path is the request path, the format is "/api/tenants/:tenantID/series/:seriesID"
   // data contains the action payload (request body)
@@ -490,6 +676,26 @@ define(['axios'] , function (axios) {
   // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
   // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
   client.updateSeries = function (path, data, config) {
+    cfg = {
+      timeout: timeout,
+      url: urlPrefix + path,
+      method: 'patch',
+    data: data,
+      responseType: 'json'
+    };
+    if (config) {
+      cfg = merge(cfg, config);
+    }
+    return client(cfg);
+  }
+
+  // updateSpeaker calls the update action of the speaker resource.
+  // path is the request path, the format is "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID"
+  // data contains the action payload (request body)
+  // config is an optional object to be merged into the config built by the function prior to making the request.
+  // The content of the config object is described here: https://github.com/mzabriskie/axios#request-api
+  // This function returns a promise which raises an error if the HTTP response is a 4xx or 5xx.
+  client.updateSpeaker = function (path, data, config) {
     cfg = {
       timeout: timeout,
       url: urlPrefix + path,

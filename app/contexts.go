@@ -535,7 +535,10 @@ func NewCreateEventContext(ctx context.Context, service *goa.Service) (*CreateEv
 
 // createEventPayload is the event create action payload.
 type createEventPayload struct {
-	Name *string `json:"name,omitempty" xml:"name,omitempty"`
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      *string    `json:"name,omitempty" xml:"name,omitempty"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -549,21 +552,38 @@ func (payload *createEventPayload) Validate() (err error) {
 			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.name`, *payload.Name, len(*payload.Name), 2, true))
 		}
 	}
+	if payload.URL != nil {
+		if len(*payload.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.url`, *payload.URL, len(*payload.URL), 5, true))
+		}
+	}
 	return err
 }
 
 // Publicize creates CreateEventPayload from createEventPayload
 func (payload *createEventPayload) Publicize() *CreateEventPayload {
 	var pub CreateEventPayload
+	if payload.EndDate != nil {
+		pub.EndDate = payload.EndDate
+	}
 	if payload.Name != nil {
 		pub.Name = *payload.Name
+	}
+	if payload.StartDate != nil {
+		pub.StartDate = payload.StartDate
+	}
+	if payload.URL != nil {
+		pub.URL = payload.URL
 	}
 	return &pub
 }
 
 // CreateEventPayload is the event create action payload.
 type CreateEventPayload struct {
-	Name string `json:"name" xml:"name"`
+	EndDate   *time.Time `json:"end_date,omitempty" xml:"end_date,omitempty"`
+	Name      string     `json:"name" xml:"name"`
+	StartDate *time.Time `json:"start_date,omitempty" xml:"start_date,omitempty"`
+	URL       *string    `json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -574,6 +594,11 @@ func (payload *CreateEventPayload) Validate() (err error) {
 
 	if len(payload.Name) < 2 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.name`, payload.Name, len(payload.Name), 2, true))
+	}
+	if payload.URL != nil {
+		if len(*payload.URL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.url`, *payload.URL, len(*payload.URL), 5, true))
+		}
 	}
 	return err
 }
@@ -850,6 +875,443 @@ func NewStatusHealthzContext(ctx context.Context, service *goa.Service) (*Status
 	req := goa.ContextRequest(ctx)
 	rctx := StatusHealthzContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
 	return &rctx, err
+}
+
+// CreatePresentationContext provides the presentation create action context.
+type CreatePresentationContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service   *goa.Service
+	EventID   int
+	SpeakerID int
+	TenantID  int
+	Payload   *CreatePresentationPayload
+}
+
+// NewCreatePresentationContext parses the incoming request URL and body, performs validations and creates the
+// context used by the presentation controller create action.
+func NewCreatePresentationContext(ctx context.Context, service *goa.Service) (*CreatePresentationContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := CreatePresentationContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// createPresentationPayload is the presentation create action payload.
+type createPresentationPayload struct {
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *createPresentationPayload) Validate() (err error) {
+	if payload.Abstract == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "abstract"))
+	}
+
+	if payload.Abstract != nil {
+		if len(*payload.Abstract) < 10 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.abstract`, *payload.Abstract, len(*payload.Abstract), 10, true))
+		}
+	}
+	return err
+}
+
+// Publicize creates CreatePresentationPayload from createPresentationPayload
+func (payload *createPresentationPayload) Publicize() *CreatePresentationPayload {
+	var pub CreatePresentationPayload
+	if payload.Abstract != nil {
+		pub.Abstract = *payload.Abstract
+	}
+	if payload.Detail != nil {
+		pub.Detail = payload.Detail
+	}
+	if payload.Name != nil {
+		pub.Name = payload.Name
+	}
+	return &pub
+}
+
+// CreatePresentationPayload is the presentation create action payload.
+type CreatePresentationPayload struct {
+	Abstract string  `json:"abstract" xml:"abstract"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *CreatePresentationPayload) Validate() (err error) {
+	if payload.Abstract == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "abstract"))
+	}
+
+	if len(payload.Abstract) < 10 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.abstract`, payload.Abstract, len(payload.Abstract), 10, true))
+	}
+	return err
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreatePresentationContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// DeletePresentationContext provides the presentation delete action context.
+type DeletePresentationContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service        *goa.Service
+	EventID        int
+	PresentationID int
+	SpeakerID      int
+	TenantID       int
+}
+
+// NewDeletePresentationContext parses the incoming request URL and body, performs validations and creates the
+// context used by the presentation controller delete action.
+func NewDeletePresentationContext(ctx context.Context, service *goa.Service) (*DeletePresentationContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := DeletePresentationContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramPresentationID := req.Params["presentationID"]
+	if len(paramPresentationID) > 0 {
+		rawPresentationID := paramPresentationID[0]
+		if presentationID, err2 := strconv.Atoi(rawPresentationID); err2 == nil {
+			rctx.PresentationID = presentationID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("presentationID", rawPresentationID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeletePresentationContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeletePresentationContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// ListPresentationContext provides the presentation list action context.
+type ListPresentationContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service   *goa.Service
+	EventID   int
+	SpeakerID int
+	TenantID  int
+}
+
+// NewListPresentationContext parses the incoming request URL and body, performs validations and creates the
+// context used by the presentation controller list action.
+func NewListPresentationContext(ctx context.Context, service *goa.Service) (*ListPresentationContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := ListPresentationContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// OKAdmin sends a HTTP response with status code 200.
+func (ctx *ListPresentationContext) OKAdmin(r PresentationAdminCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.presentation+json; type=collection")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPresentationContext) OK(r PresentationCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.presentation+json; type=collection")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPresentationContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// ShowPresentationContext provides the presentation show action context.
+type ShowPresentationContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service        *goa.Service
+	EventID        int
+	PresentationID int
+	SpeakerID      int
+	TenantID       int
+}
+
+// NewShowPresentationContext parses the incoming request URL and body, performs validations and creates the
+// context used by the presentation controller show action.
+func NewShowPresentationContext(ctx context.Context, service *goa.Service) (*ShowPresentationContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := ShowPresentationContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramPresentationID := req.Params["presentationID"]
+	if len(paramPresentationID) > 0 {
+		rawPresentationID := paramPresentationID[0]
+		if presentationID, err2 := strconv.Atoi(rawPresentationID); err2 == nil {
+			rctx.PresentationID = presentationID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("presentationID", rawPresentationID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// OKAdmin sends a HTTP response with status code 200.
+func (ctx *ShowPresentationContext) OKAdmin(r *PresentationAdmin) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.presentation")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowPresentationContext) OK(r *Presentation) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.presentation")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowPresentationContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UpdatePresentationContext provides the presentation update action context.
+type UpdatePresentationContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service        *goa.Service
+	EventID        int
+	PresentationID int
+	SpeakerID      int
+	TenantID       int
+	Payload        *UpdatePresentationPayload
+}
+
+// NewUpdatePresentationContext parses the incoming request URL and body, performs validations and creates the
+// context used by the presentation controller update action.
+func NewUpdatePresentationContext(ctx context.Context, service *goa.Service) (*UpdatePresentationContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := UpdatePresentationContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramPresentationID := req.Params["presentationID"]
+	if len(paramPresentationID) > 0 {
+		rawPresentationID := paramPresentationID[0]
+		if presentationID, err2 := strconv.Atoi(rawPresentationID); err2 == nil {
+			rctx.PresentationID = presentationID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("presentationID", rawPresentationID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// updatePresentationPayload is the presentation update action payload.
+type updatePresentationPayload struct {
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *updatePresentationPayload) Validate() (err error) {
+	if payload.Abstract != nil {
+		if len(*payload.Abstract) < 10 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.abstract`, *payload.Abstract, len(*payload.Abstract), 10, true))
+		}
+	}
+	return err
+}
+
+// Publicize creates UpdatePresentationPayload from updatePresentationPayload
+func (payload *updatePresentationPayload) Publicize() *UpdatePresentationPayload {
+	var pub UpdatePresentationPayload
+	if payload.Abstract != nil {
+		pub.Abstract = payload.Abstract
+	}
+	if payload.Detail != nil {
+		pub.Detail = payload.Detail
+	}
+	if payload.Name != nil {
+		pub.Name = payload.Name
+	}
+	return &pub
+}
+
+// UpdatePresentationPayload is the presentation update action payload.
+type UpdatePresentationPayload struct {
+	Abstract *string `json:"abstract,omitempty" xml:"abstract,omitempty"`
+	Detail   *string `json:"detail,omitempty" xml:"detail,omitempty"`
+	Name     *string `json:"name,omitempty" xml:"name,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *UpdatePresentationPayload) Validate() (err error) {
+	if payload.Abstract != nil {
+		if len(*payload.Abstract) < 10 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.abstract`, *payload.Abstract, len(*payload.Abstract), 10, true))
+		}
+	}
+	return err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *UpdatePresentationContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdatePresentationContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
 }
 
 // CreateSeriesContext provides the series create action context.
@@ -1157,6 +1619,477 @@ func (ctx *UpdateSeriesContext) NotFound() error {
 	return nil
 }
 
+// CreateSpeakerContext provides the speaker create action context.
+type CreateSpeakerContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service  *goa.Service
+	EventID  int
+	TenantID int
+	Payload  *CreateSpeakerPayload
+}
+
+// NewCreateSpeakerContext parses the incoming request URL and body, performs validations and creates the
+// context used by the speaker controller create action.
+func NewCreateSpeakerContext(ctx context.Context, service *goa.Service) (*CreateSpeakerContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := CreateSpeakerContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// createSpeakerPayload is the speaker create action payload.
+type createSpeakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *createSpeakerPayload) Validate() (err error) {
+	if payload.FirstName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "first_name"))
+	}
+	if payload.LastName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "last_name"))
+	}
+
+	if payload.FirstName != nil {
+		if len(*payload.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.first_name`, *payload.FirstName, len(*payload.FirstName), 2, true))
+		}
+	}
+	if payload.ImageURL != nil {
+		if len(*payload.ImageURL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.image_url`, *payload.ImageURL, len(*payload.ImageURL), 5, true))
+		}
+	}
+	if payload.LastName != nil {
+		if len(*payload.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.last_name`, *payload.LastName, len(*payload.LastName), 2, true))
+		}
+	}
+	return err
+}
+
+// Publicize creates CreateSpeakerPayload from createSpeakerPayload
+func (payload *createSpeakerPayload) Publicize() *CreateSpeakerPayload {
+	var pub CreateSpeakerPayload
+	if payload.Bio != nil {
+		pub.Bio = payload.Bio
+	}
+	if payload.FirstName != nil {
+		pub.FirstName = *payload.FirstName
+	}
+	if payload.Github != nil {
+		pub.Github = payload.Github
+	}
+	if payload.ImageURL != nil {
+		pub.ImageURL = payload.ImageURL
+	}
+	if payload.LastName != nil {
+		pub.LastName = *payload.LastName
+	}
+	if payload.Linkedin != nil {
+		pub.Linkedin = payload.Linkedin
+	}
+	if payload.Twitter != nil {
+		pub.Twitter = payload.Twitter
+	}
+	return &pub
+}
+
+// CreateSpeakerPayload is the speaker create action payload.
+type CreateSpeakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName string  `json:"first_name" xml:"first_name"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  string  `json:"last_name" xml:"last_name"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *CreateSpeakerPayload) Validate() (err error) {
+	if payload.FirstName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "first_name"))
+	}
+	if payload.LastName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "last_name"))
+	}
+
+	if len(payload.FirstName) < 2 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.first_name`, payload.FirstName, len(payload.FirstName), 2, true))
+	}
+	if payload.ImageURL != nil {
+		if len(*payload.ImageURL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.image_url`, *payload.ImageURL, len(*payload.ImageURL), 5, true))
+		}
+	}
+	if len(payload.LastName) < 2 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.last_name`, payload.LastName, len(payload.LastName), 2, true))
+	}
+	return err
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreateSpeakerContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// DeleteSpeakerContext provides the speaker delete action context.
+type DeleteSpeakerContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service   *goa.Service
+	EventID   int
+	SpeakerID int
+	TenantID  int
+}
+
+// NewDeleteSpeakerContext parses the incoming request URL and body, performs validations and creates the
+// context used by the speaker controller delete action.
+func NewDeleteSpeakerContext(ctx context.Context, service *goa.Service) (*DeleteSpeakerContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := DeleteSpeakerContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteSpeakerContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteSpeakerContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// ListSpeakerContext provides the speaker list action context.
+type ListSpeakerContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service  *goa.Service
+	EventID  int
+	TenantID int
+}
+
+// NewListSpeakerContext parses the incoming request URL and body, performs validations and creates the
+// context used by the speaker controller list action.
+func NewListSpeakerContext(ctx context.Context, service *goa.Service) (*ListSpeakerContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := ListSpeakerContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// OKAdmin sends a HTTP response with status code 200.
+func (ctx *ListSpeakerContext) OKAdmin(r SpeakerAdminCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker+json; type=collection")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSpeakerContext) OK(r SpeakerCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker+json; type=collection")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSpeakerContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// ShowSpeakerContext provides the speaker show action context.
+type ShowSpeakerContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service   *goa.Service
+	EventID   int
+	SpeakerID int
+	TenantID  int
+}
+
+// NewShowSpeakerContext parses the incoming request URL and body, performs validations and creates the
+// context used by the speaker controller show action.
+func NewShowSpeakerContext(ctx context.Context, service *goa.Service) (*ShowSpeakerContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := ShowSpeakerContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// OKAdmin sends a HTTP response with status code 200.
+func (ctx *ShowSpeakerContext) OKAdmin(r *SpeakerAdmin) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowSpeakerContext) OK(r *Speaker) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker")
+	return ctx.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowSpeakerContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UpdateSpeakerContext provides the speaker update action context.
+type UpdateSpeakerContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service   *goa.Service
+	EventID   int
+	SpeakerID int
+	TenantID  int
+	Payload   *UpdateSpeakerPayload
+}
+
+// NewUpdateSpeakerContext parses the incoming request URL and body, performs validations and creates the
+// context used by the speaker controller update action.
+func NewUpdateSpeakerContext(ctx context.Context, service *goa.Service) (*UpdateSpeakerContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := UpdateSpeakerContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	paramEventID := req.Params["eventID"]
+	if len(paramEventID) > 0 {
+		rawEventID := paramEventID[0]
+		if eventID, err2 := strconv.Atoi(rawEventID); err2 == nil {
+			rctx.EventID = eventID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("eventID", rawEventID, "integer"))
+		}
+	}
+	paramSpeakerID := req.Params["speakerID"]
+	if len(paramSpeakerID) > 0 {
+		rawSpeakerID := paramSpeakerID[0]
+		if speakerID, err2 := strconv.Atoi(rawSpeakerID); err2 == nil {
+			rctx.SpeakerID = speakerID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("speakerID", rawSpeakerID, "integer"))
+		}
+	}
+	paramTenantID := req.Params["tenantID"]
+	if len(paramTenantID) > 0 {
+		rawTenantID := paramTenantID[0]
+		if tenantID, err2 := strconv.Atoi(rawTenantID); err2 == nil {
+			rctx.TenantID = tenantID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("tenantID", rawTenantID, "integer"))
+		}
+	}
+	return &rctx, err
+}
+
+// updateSpeakerPayload is the speaker update action payload.
+type updateSpeakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *updateSpeakerPayload) Validate() (err error) {
+	if payload.FirstName != nil {
+		if len(*payload.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.first_name`, *payload.FirstName, len(*payload.FirstName), 2, true))
+		}
+	}
+	if payload.ImageURL != nil {
+		if len(*payload.ImageURL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.image_url`, *payload.ImageURL, len(*payload.ImageURL), 5, true))
+		}
+	}
+	if payload.LastName != nil {
+		if len(*payload.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.last_name`, *payload.LastName, len(*payload.LastName), 2, true))
+		}
+	}
+	return err
+}
+
+// Publicize creates UpdateSpeakerPayload from updateSpeakerPayload
+func (payload *updateSpeakerPayload) Publicize() *UpdateSpeakerPayload {
+	var pub UpdateSpeakerPayload
+	if payload.Bio != nil {
+		pub.Bio = payload.Bio
+	}
+	if payload.FirstName != nil {
+		pub.FirstName = payload.FirstName
+	}
+	if payload.Github != nil {
+		pub.Github = payload.Github
+	}
+	if payload.ImageURL != nil {
+		pub.ImageURL = payload.ImageURL
+	}
+	if payload.LastName != nil {
+		pub.LastName = payload.LastName
+	}
+	if payload.Linkedin != nil {
+		pub.Linkedin = payload.Linkedin
+	}
+	if payload.Twitter != nil {
+		pub.Twitter = payload.Twitter
+	}
+	return &pub
+}
+
+// UpdateSpeakerPayload is the speaker update action payload.
+type UpdateSpeakerPayload struct {
+	Bio       *string `json:"bio,omitempty" xml:"bio,omitempty"`
+	FirstName *string `json:"first_name,omitempty" xml:"first_name,omitempty"`
+	Github    *string `json:"github,omitempty" xml:"github,omitempty"`
+	ImageURL  *string `json:"image_url,omitempty" xml:"image_url,omitempty"`
+	LastName  *string `json:"last_name,omitempty" xml:"last_name,omitempty"`
+	Linkedin  *string `json:"linkedin,omitempty" xml:"linkedin,omitempty"`
+	Twitter   *string `json:"twitter,omitempty" xml:"twitter,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *UpdateSpeakerPayload) Validate() (err error) {
+	if payload.FirstName != nil {
+		if len(*payload.FirstName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.first_name`, *payload.FirstName, len(*payload.FirstName), 2, true))
+		}
+	}
+	if payload.ImageURL != nil {
+		if len(*payload.ImageURL) < 5 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.image_url`, *payload.ImageURL, len(*payload.ImageURL), 5, true))
+		}
+	}
+	if payload.LastName != nil {
+		if len(*payload.LastName) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.last_name`, *payload.LastName, len(*payload.LastName), 2, true))
+		}
+	}
+	return err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *UpdateSpeakerContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateSpeakerContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
 // CreateTenantContext provides the tenant create action context.
 type CreateTenantContext struct {
 	context.Context
@@ -1410,6 +2343,31 @@ func (ctx *UpdateTenantContext) NoContent() error {
 func (ctx *UpdateTenantContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
 	return nil
+}
+
+// BootstrapUIContext provides the ui bootstrap action context.
+type BootstrapUIContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Service *goa.Service
+}
+
+// NewBootstrapUIContext parses the incoming request URL and body, performs validations and creates the
+// context used by the ui controller bootstrap action.
+func NewBootstrapUIContext(ctx context.Context, service *goa.Service) (*BootstrapUIContext, error) {
+	var err error
+	req := goa.ContextRequest(ctx)
+	rctx := BootstrapUIContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *BootstrapUIContext) OK(resp []byte) error {
+	ctx.ResponseData.Header().Set("Content-Type", "text/html")
+	ctx.ResponseData.WriteHeader(200)
+	_, err := ctx.ResponseData.Write(resp)
+	return err
 }
 
 // CreateUserContext provides the user create action context.

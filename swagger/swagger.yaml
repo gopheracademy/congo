@@ -148,28 +148,87 @@ definitions:
     type: object
   CreateEventPayload:
     properties:
+      end_date:
+        example: 1979-07-05T11:15:08-04:00
+        format: date-time
+        type: string
       name:
-        example: tw
+        example: nbqp
         minLength: 2
+        type: string
+      start_date:
+        example: 1984-03-10T12:52:26-05:00
+        format: date-time
+        type: string
+      url:
+        example: 1dp91o3
+        minLength: 5
         type: string
     required:
     - name
     title: CreateEventPayload
     type: object
+  CreatePresentationPayload:
+    properties:
+      abstract:
+        example: 8yjbij39e7
+        minLength: 10
+        type: string
+      detail:
+        example: Ut sint eveniet.
+        type: string
+      name:
+        example: Animi aut.
+        type: string
+    required:
+    - abstract
+    title: CreatePresentationPayload
+    type: object
   CreateSeriesPayload:
     properties:
       name:
-        example: snyg
+        example: nj
         minLength: 2
         type: string
     required:
     - name
     title: CreateSeriesPayload
     type: object
+  CreateSpeakerPayload:
+    properties:
+      bio:
+        example: Non voluptas eum nihil.
+        type: string
+      first_name:
+        example: jg
+        minLength: 2
+        type: string
+      github:
+        example: Voluptate delectus dolorem soluta iste.
+        type: string
+      image_url:
+        example: kh63r
+        minLength: 5
+        type: string
+      last_name:
+        example: sd
+        minLength: 2
+        type: string
+      linkedin:
+        example: Aliquam consequatur consequuntur impedit ducimus aliquam consequuntur.
+        type: string
+      twitter:
+        example: Qui voluptatem sit mollitia aut quos.
+        type: string
+    required:
+    - first_name
+    - last_name
+    title: CreateSpeakerPayload
+    type: object
   CreateTenantPayload:
     properties:
       name:
-        example: z6k
+        example: 7r2f
         minLength: 2
         type: string
     required:
@@ -179,7 +238,7 @@ definitions:
   CreateUserPayload:
     properties:
       email:
-        example: 6rjm
+        example: "54"
         minLength: 2
         type: string
       first_name:
@@ -192,17 +251,17 @@ definitions:
         minLength: 2
         type: string
       password:
-        example: 3rle6ysw
+        example: 0375ll5g
         minLength: 8
         type: string
       role:
-        example: Blanditiis aut id iusto minima.
+        example: Fugiat sunt fuga id.
         type: string
       validated:
-        example: false
+        example: true
         type: boolean
       validation_code:
-        example: qgm3gf1gi9
+        example: n8yyptq3i
         minLength: 8
         type: string
     required:
@@ -216,117 +275,1094 @@ definitions:
   Event:
     description: An event is a specific instance of a conference, e.g. GopherCon 2016
     example:
-      end_date: 1989-11-30T02:51:32-05:00
-      location: Est sit.
-      name: Cupiditate quo molestias dicta excepturi.
-      start_date: 2004-02-11T09:42:24-05:00
-      url: Itaque ex eum hic accusamus qui aspernatur.
+      end_date: 1974-12-08T06:34:22-05:00
+      id: 2.219768e+18
+      location: Tempora saepe veniam.
+      name: Tempore labore.
+      presentations:
+      - abstract: Non itaque vero suscipit occaecati quas.
+        detail: Dolor voluptatem nihil error.
+        id: 3.09935e+18
+        name: Deleniti omnis recusandae facilis quaerat quo illum.
+        speaker:
+          bio: Necessitatibus adipisci.
+          email: Quasi sunt eligendi soluta ratione.
+          first_name: Autem reprehenderit ea.
+          github: Officiis aut doloribus qui non.
+          href: Non libero sed ipsum nihil.
+          id: 5.393156e+18
+          image_url: Quidem voluptatem.
+          last_name: Inventore atque qui repellendus ut.
+          linkedin: Quo possimus provident optio voluptatem sapiente.
+          twitter: Fugit id quaerat.
+      - abstract: Consequatur expedita.
+        detail: Minima sequi sed.
+        id: 5.493574e+18
+        name: Velit est sit ut.
+        speaker:
+          bio: Tenetur commodi aperiam beatae quo ut.
+          email: Vel autem tempora praesentium placeat.
+          first_name: Veniam quia aspernatur in.
+          github: Ut rerum corrupti enim.
+          href: Impedit vel voluptas enim.
+          id: 5.499502e+17
+          image_url: Cupiditate quos vel voluptates ea necessitatibus sed.
+          last_name: Rem sed itaque omnis aut delectus.
+          linkedin: Qui et vitae enim optio aliquam.
+          twitter: Iure voluptatibus facere.
+      speakers:
+      - bio: Sequi corrupti delectus quia sit nihil sed.
+        email: Voluptates voluptatem assumenda et atque.
+        first_name: Voluptatem eos.
+        github: Et et.
+        href: Minus magnam sequi quia commodi adipisci dolor.
+        id: 4.5743752e+18
+        image_url: Deserunt in.
+        last_name: Minima voluptatum sunt.
+        linkedin: Rerum amet hic nihil.
+        twitter: Veritatis nesciunt ea dolores.
+      start_date: 1990-11-05T10:52:40-05:00
+      url: Vero iste veniam saepe voluptas.
     properties:
       end_date:
         description: end_date
         example: 2003-04-17T13:45:10-04:00
         format: date-time
         type: string
+      id:
+        description: ID of record
+        example: 8.151004e+18
+        format: int64
+        type: integer
       location:
         description: location
-        example: Sit ut.
+        example: Ut enim qui quia voluptates culpa.
         type: string
       name:
         description: name
-        example: Qui quia voluptates culpa suscipit quia.
+        example: Quia similique nihil aliquam.
         type: string
+      presentations:
+        example:
+        - abstract: Id quis asperiores ipsum aliquam.
+          detail: Dolorum nobis nihil vero quae.
+          id: 8.987121e+18
+          name: Exercitationem nihil fugiat facilis qui molestias nihil.
+          speaker:
+            bio: Expedita et.
+            email: Non quis pariatur voluptatem et reprehenderit et.
+            first_name: Quo ad blanditiis officiis.
+            github: Hic ex ea ut.
+            href: Dignissimos rerum repellat aut tempora nihil voluptas.
+            id: 8.1248096e+17
+            image_url: Dolor dolorum sequi corporis non.
+            last_name: Earum ut eum alias voluptatibus dolorem non.
+            linkedin: Praesentium quia enim et eos earum.
+            twitter: Officiis a at quia.
+        - abstract: Nisi nihil.
+          detail: Est perferendis velit et.
+          id: 8.2121116e+18
+          name: Ipsa laudantium iste eos qui.
+          speaker:
+            bio: Sed nam.
+            email: Minus molestiae necessitatibus totam porro.
+            first_name: Nam at hic.
+            github: Occaecati enim.
+            href: Incidunt sed aspernatur laudantium suscipit nihil omnis.
+            id: 4.7682004e+18
+            image_url: Est est quis autem.
+            last_name: Accusantium et.
+            linkedin: Possimus dolore aut.
+            twitter: Suscipit fuga modi aut delectus qui.
+        items:
+          example:
+            abstract: Porro alias.
+            detail: Dolor in voluptatem sit neque iusto.
+            id: 8.9590945e+18
+            name: Quae incidunt voluptatem dolores tempora esse impedit.
+            speaker:
+              bio: Itaque praesentium incidunt illo distinctio fugit molestias.
+              email: Ex harum quis.
+              first_name: Aut ipsum dolor.
+              github: Voluptatum aut sapiente consequatur sit autem vel.
+              href: Et maiores quia dolorum ab officia.
+              id: 3.446227e+18
+              image_url: Similique reiciendis aut sit.
+              last_name: Et voluptatem eum.
+              linkedin: Omnis quasi consectetur iusto dolor iure fuga.
+              twitter: Aut placeat cumque.
+          properties:
+            abstract:
+              description: short description of talk
+              example: Ut nihil.
+              type: string
+            detail:
+              description: detailed description of talk - not for public display
+              example: Sit ducimus cupiditate quo molestias.
+              type: string
+            id:
+              description: ID of record
+              example: 8.211863e+18
+              format: int64
+              type: integer
+            name:
+              description: name of presentation
+              example: Corporis ullam itaque.
+              type: string
+            speaker:
+              description: speaker who is giving the talk
+              example:
+                bio: Id reiciendis hic et doloremque voluptatem veniam.
+                email: Dolor excepturi.
+                first_name: Voluptate rerum mollitia et sunt.
+                github: Accusantium id tempora facilis.
+                href: Quia tempora ipsum aperiam nihil voluptatem qui.
+                id: 3.3609094e+18
+                image_url: Nihil nesciunt voluptatem reprehenderit et qui.
+                last_name: Libero cumque aut sit et numquam.
+                linkedin: Minima odit ex distinctio dolorem similique.
+                twitter: Atque molestiae numquam quae.
+              properties:
+                bio:
+                  description: speaker bio
+                  example: Eum hic accusamus qui aspernatur vitae.
+                  type: string
+                email:
+                  description: email address
+                  example: Saepe odit porro.
+                  type: string
+                first_name:
+                  description: first name
+                  example: Harum tenetur sint aspernatur nemo inventore placeat.
+                  type: string
+                github:
+                  description: github handle
+                  example: Impedit vel.
+                  type: string
+                href:
+                  example: Delectus ipsum facere qui vel.
+                  type: string
+                id:
+                  description: ID of record
+                  example: 3.234056e+18
+                  format: int64
+                  type: integer
+                image_url:
+                  description: url of speaker image
+                  example: Debitis nostrum.
+                  type: string
+                last_name:
+                  description: last name
+                  example: Quia aut sed recusandae amet.
+                  type: string
+                linkedin:
+                  description: linkedin url
+                  example: Omnis necessitatibus sequi ab qui itaque.
+                  type: string
+                twitter:
+                  description: twitter handle - no @
+                  example: Est delectus.
+                  type: string
+              type: object
+          type: object
+        type: array
+      speakers:
+        example:
+        - bio: Inventore sequi quidem molestias nesciunt aspernatur.
+          email: Itaque eum ea temporibus quibusdam vitae.
+          first_name: Ut a et sit.
+          github: Quos in doloremque illo hic.
+          href: Incidunt quis quo.
+          id: 3.1834146e+18
+          image_url: Illo reiciendis.
+          last_name: Dolores enim est cum dicta eum facilis.
+          linkedin: Enim ipsum tempore perferendis sapiente velit vero.
+          twitter: Odio est sunt omnis quia.
+        - bio: Voluptas hic.
+          email: Hic incidunt.
+          first_name: Odit aut repudiandae asperiores.
+          github: Harum voluptas aut doloremque fugit omnis debitis.
+          href: Earum autem rerum consectetur officia corrupti eos.
+          id: 3.0082844e+18
+          image_url: Voluptatum qui.
+          last_name: Excepturi quis consectetur nam facere numquam accusamus.
+          linkedin: Molestias et nisi similique.
+          twitter: A voluptas sed est qui sunt.
+        - bio: Voluptatibus sint facere quibusdam nobis.
+          email: Dolores saepe quia quis nihil unde.
+          first_name: Ipsa occaecati exercitationem velit non.
+          github: Id molestias.
+          href: Quisquam vitae quia tenetur officia.
+          id: 6.587664e+18
+          image_url: Numquam quo id mollitia.
+          last_name: Omnis architecto sit hic et id labore.
+          linkedin: Libero in ad.
+          twitter: Quos dolor voluptatem saepe sunt.
+        items:
+          example:
+            bio: Vel saepe vel eum necessitatibus.
+            email: Repellat quos fugit quod dicta dolores iusto.
+            first_name: Aut id iusto minima est omnis mollitia.
+            github: Qui accusantium molestiae.
+            href: Et et et totam repellat.
+            id: 7.759144e+18
+            image_url: Ipsum quaerat.
+            last_name: Aut fugit dolor molestiae.
+            linkedin: Pariatur dolores.
+            twitter: Quas necessitatibus ea vel.
+          properties:
+            bio:
+              description: speaker bio
+              example: Eum hic accusamus qui aspernatur vitae.
+              type: string
+            email:
+              description: email address
+              example: Saepe odit porro.
+              type: string
+            first_name:
+              description: first name
+              example: Harum tenetur sint aspernatur nemo inventore placeat.
+              type: string
+            github:
+              description: github handle
+              example: Impedit vel.
+              type: string
+            href:
+              example: Delectus ipsum facere qui vel.
+              type: string
+            id:
+              description: ID of record
+              example: 3.234056e+18
+              format: int64
+              type: integer
+            image_url:
+              description: url of speaker image
+              example: Debitis nostrum.
+              type: string
+            last_name:
+              description: last name
+              example: Quia aut sed recusandae amet.
+              type: string
+            linkedin:
+              description: linkedin url
+              example: Omnis necessitatibus sequi ab qui itaque.
+              type: string
+            twitter:
+              description: twitter handle - no @
+              example: Est delectus.
+              type: string
+          type: object
+        type: array
       start_date:
         description: start_date
-        example: 1995-03-23T19:05:53-05:00
+        example: 1998-03-16T07:20:55-05:00
         format: date-time
         type: string
       url:
         description: event URL
-        example: Aliquam qui.
+        example: Quasi consequatur voluptatem natus error.
         type: string
     title: 'Mediatype identifier: application/vnd.event+json'
     type: object
   EventCollection:
     example:
-    - end_date: 1999-11-22T14:52:31-05:00
-      location: Nostrum aut quia aut sed recusandae amet.
-      name: Omnis necessitatibus sequi ab qui itaque.
-      start_date: 1989-11-24T06:14:49-05:00
-      url: Delectus sint id reiciendis hic.
-    - end_date: 2001-05-24T18:33:18-04:00
-      location: Voluptatem veniam et dolor excepturi molestias.
-      name: Rerum mollitia et sunt.
-      start_date: 1999-04-16T02:08:59-04:00
-      url: Id tempora facilis voluptas quia.
-    - end_date: 2014-06-18T01:15:35-04:00
-      location: Aperiam nihil voluptatem qui voluptate.
-      name: Nihil nesciunt voluptatem reprehenderit et qui.
-      start_date: 1987-03-08T07:14:21-05:00
-      url: Cumque aut sit.
+    - end_date: 1982-01-25T17:38:07-05:00
+      id: 3.3179173e+18
+      location: Itaque aspernatur reiciendis aut debitis culpa nesciunt.
+      name: Voluptates quia nostrum ut ab quia et.
+      presentations:
+      - abstract: Officia eos.
+        detail: Reprehenderit assumenda et est.
+        id: 4.1091652e+18
+        name: Possimus dolore doloremque sed.
+        speaker:
+          bio: Temporibus ut.
+          email: Quia temporibus ut libero ut laboriosam ad.
+          first_name: Aliquam iste.
+          github: In molestiae quo non.
+          href: Officiis sint ea neque quia minus laborum.
+          id: 5.2957664e+18
+          image_url: Harum et.
+          last_name: Consequatur natus.
+          linkedin: Quas voluptates ullam veritatis soluta rem.
+          twitter: Est repudiandae eum quis eos.
+      speakers:
+      - bio: Veniam nostrum a dolorem tempore hic doloremque.
+        email: Non quia.
+        first_name: Perspiciatis quisquam est.
+        github: Quaerat nam qui.
+        href: Rerum officia dignissimos architecto fuga dolorum.
+        id: 6.858822e+18
+        image_url: Veritatis omnis id.
+        last_name: Deleniti veritatis sequi.
+        linkedin: Nesciunt sed omnis officiis.
+        twitter: Nesciunt est.
+      - bio: Neque ipsam rem ea iure.
+        email: Corrupti mollitia et molestias temporibus enim qui.
+        first_name: Nostrum quo enim iure velit voluptas.
+        github: Ut autem eligendi voluptatibus ratione velit.
+        href: Mollitia ut.
+        id: 3.9932825e+18
+        image_url: Consequatur minus dolores.
+        last_name: Eius est et aliquam inventore est ab.
+        linkedin: Ullam et sapiente quo qui facere unde.
+        twitter: Iusto corporis asperiores et.
+      start_date: 1982-05-07T04:31:26-04:00
+      url: Qui dolorem aut vel numquam blanditiis sed.
+    - end_date: 2014-04-14T14:01:43-04:00
+      id: 8.00679e+18
+      location: Dolorem in laborum blanditiis reprehenderit.
+      name: Iste maiores aspernatur.
+      presentations:
+      - abstract: Quidem quae veritatis quia eos omnis.
+        detail: Reiciendis veniam molestias ut quasi voluptas veritatis.
+        id: 5.2004877e+18
+        name: Nam omnis.
+        speaker:
+          bio: Odio repudiandae laboriosam sit aliquam iusto.
+          email: Omnis temporibus ea.
+          first_name: Et vel.
+          github: Nobis totam ut.
+          href: Rerum ut ea qui repellat ad tempore.
+          id: 7.8232864e+17
+          image_url: Tenetur cum suscipit.
+          last_name: Assumenda sapiente impedit aut rerum velit.
+          linkedin: Ut sed eos aspernatur vitae.
+          twitter: Eum id iure adipisci.
+      - abstract: Unde inventore corrupti.
+        detail: Quia omnis minus laborum accusamus minus.
+        id: 5.111889e+18
+        name: Dicta tempora.
+        speaker:
+          bio: Iure aut dicta sit molestiae qui architecto.
+          email: Exercitationem non officiis corrupti.
+          first_name: Officia reprehenderit consequatur in doloremque dolore.
+          github: Similique cum.
+          href: Dignissimos ipsa quibusdam rerum consequuntur.
+          id: 1.7980675e+18
+          image_url: Ad odio sit recusandae ducimus quos repellat.
+          last_name: Eum laudantium et quaerat.
+          linkedin: Id nemo magni qui ut.
+          twitter: Autem error quibusdam.
+      - abstract: Natus exercitationem reiciendis.
+        detail: Est quia excepturi.
+        id: 1.8591392e+18
+        name: Alias voluptatem culpa est necessitatibus rerum vel.
+        speaker:
+          bio: Qui qui officia.
+          email: Rerum est.
+          first_name: Et autem veritatis id similique porro.
+          github: Architecto et quidem odio consequatur et commodi.
+          href: Ea sapiente neque officiis.
+          id: 2.2549241e+18
+          image_url: Porro iusto eos enim adipisci consequatur.
+          last_name: Explicabo qui autem qui sed eius.
+          linkedin: Doloribus commodi.
+          twitter: Omnis aut dolor eos.
+      speakers:
+      - bio: Occaecati officiis quasi est.
+        email: Ut sapiente ut.
+        first_name: Et vitae odio quisquam est blanditiis dolorem.
+        github: Vitae ipsum.
+        href: Minus modi vel consequuntur dignissimos nemo.
+        id: 5.037118e+18
+        image_url: Molestiae reiciendis rerum.
+        last_name: Tenetur numquam molestias ipsa dolorem.
+        linkedin: Voluptas veniam quidem doloremque corporis.
+        twitter: Non quo incidunt ea veritatis deleniti quia.
+      - bio: Veniam dolore excepturi rerum saepe atque sed.
+        email: Optio quia similique incidunt.
+        first_name: Tempore aspernatur voluptatibus inventore illo laboriosam.
+        github: Dolorem quibusdam quibusdam dignissimos fuga molestiae in.
+        href: Labore laudantium distinctio officiis earum.
+        id: 7.92648e+18
+        image_url: Officiis et quas omnis.
+        last_name: Sunt nostrum.
+        linkedin: Voluptas aliquid asperiores quos consequatur.
+        twitter: Sit qui perspiciatis id ducimus alias.
+      start_date: 2005-08-24T03:57:45-04:00
+      url: Aut ipsum.
     items:
       example:
-        end_date: 1988-02-03T17:47:27-05:00
-        location: Saepe odit porro.
-        name: Harum tenetur sint aspernatur nemo inventore placeat.
-        start_date: 1976-05-31T06:39:48-04:00
-        url: Vel cumque delectus ipsum facere qui vel.
+        end_date: 1983-01-25T06:26:06-05:00
+        id: 4.641384e+18
+        location: Soluta quia temporibus sunt dolorum temporibus quasi.
+        name: Distinctio sapiente eaque.
+        presentations:
+        - abstract: Sunt voluptas provident ratione quo voluptatem.
+          detail: Eum sit beatae ut.
+          id: 4.8689096e+18
+          name: Doloremque nulla deserunt dolore.
+          speaker:
+            bio: Suscipit fugit possimus velit.
+            email: Omnis adipisci omnis quod repellendus quis.
+            first_name: Dolor est aperiam dolores.
+            github: Cumque illum a in sed.
+            href: Est hic.
+            id: 8.909299e+18
+            image_url: Inventore molestiae dicta voluptatem in tempore.
+            last_name: Eligendi autem ad exercitationem.
+            linkedin: Architecto et illo animi non.
+            twitter: Earum iure eligendi.
+        - abstract: Voluptatem in tenetur ut magnam.
+          detail: Autem sit.
+          id: 7.1253824e+18
+          name: In itaque consectetur.
+          speaker:
+            bio: Ducimus porro ut vel officia recusandae voluptatem.
+            email: Non minus et.
+            first_name: Provident reprehenderit non.
+            github: Eaque non velit id amet facilis provident.
+            href: Animi possimus maiores ipsam.
+            id: 6.279917e+18
+            image_url: Et aut.
+            last_name: Rerum consequatur corrupti.
+            linkedin: Iste vitae consectetur quia ut ea.
+            twitter: Voluptatem et voluptatem.
+        - abstract: Nostrum velit veniam itaque ea laudantium.
+          detail: Laudantium iure saepe dolorem fuga.
+          id: 5.5624744e+18
+          name: Magnam illo voluptatem.
+          speaker:
+            bio: Repellendus repudiandae odio ad.
+            email: At dolor omnis rerum.
+            first_name: Ex ut eum architecto modi beatae expedita.
+            github: Inventore delectus.
+            href: Consectetur quia et aperiam sit id id.
+            id: 4.209465e+18
+            image_url: Soluta sit eum.
+            last_name: Ut dolore provident non reprehenderit voluptatem.
+            linkedin: Cumque itaque numquam nihil temporibus maxime.
+            twitter: Ipsa cum rem at architecto fugit.
+        speakers:
+        - bio: Sed nihil.
+          email: Architecto iusto quia.
+          first_name: Nihil quis eius soluta.
+          github: Natus voluptas voluptates vitae alias.
+          href: Cum maxime quas.
+          id: 5.577551e+18
+          image_url: Consequatur facere vel velit molestias quis exercitationem.
+          last_name: Repellendus consectetur qui commodi earum error.
+          linkedin: Sit quam officia et et.
+          twitter: Est itaque neque facilis et eos.
+        start_date: 1987-07-21T00:12:24-04:00
+        url: Quis esse.
       properties:
         end_date:
           description: end_date
           example: 2003-04-17T13:45:10-04:00
           format: date-time
           type: string
+        id:
+          description: ID of record
+          example: 8.151004e+18
+          format: int64
+          type: integer
         location:
           description: location
-          example: Sit ut.
+          example: Ut enim qui quia voluptates culpa.
           type: string
         name:
           description: name
-          example: Qui quia voluptates culpa suscipit quia.
+          example: Quia similique nihil aliquam.
           type: string
+        presentations:
+          example:
+          - abstract: Id quis asperiores ipsum aliquam.
+            detail: Dolorum nobis nihil vero quae.
+            id: 8.987121e+18
+            name: Exercitationem nihil fugiat facilis qui molestias nihil.
+            speaker:
+              bio: Expedita et.
+              email: Non quis pariatur voluptatem et reprehenderit et.
+              first_name: Quo ad blanditiis officiis.
+              github: Hic ex ea ut.
+              href: Dignissimos rerum repellat aut tempora nihil voluptas.
+              id: 8.1248096e+17
+              image_url: Dolor dolorum sequi corporis non.
+              last_name: Earum ut eum alias voluptatibus dolorem non.
+              linkedin: Praesentium quia enim et eos earum.
+              twitter: Officiis a at quia.
+          - abstract: Nisi nihil.
+            detail: Est perferendis velit et.
+            id: 8.2121116e+18
+            name: Ipsa laudantium iste eos qui.
+            speaker:
+              bio: Sed nam.
+              email: Minus molestiae necessitatibus totam porro.
+              first_name: Nam at hic.
+              github: Occaecati enim.
+              href: Incidunt sed aspernatur laudantium suscipit nihil omnis.
+              id: 4.7682004e+18
+              image_url: Est est quis autem.
+              last_name: Accusantium et.
+              linkedin: Possimus dolore aut.
+              twitter: Suscipit fuga modi aut delectus qui.
+          items:
+            example:
+              abstract: Porro alias.
+              detail: Dolor in voluptatem sit neque iusto.
+              id: 8.9590945e+18
+              name: Quae incidunt voluptatem dolores tempora esse impedit.
+              speaker:
+                bio: Itaque praesentium incidunt illo distinctio fugit molestias.
+                email: Ex harum quis.
+                first_name: Aut ipsum dolor.
+                github: Voluptatum aut sapiente consequatur sit autem vel.
+                href: Et maiores quia dolorum ab officia.
+                id: 3.446227e+18
+                image_url: Similique reiciendis aut sit.
+                last_name: Et voluptatem eum.
+                linkedin: Omnis quasi consectetur iusto dolor iure fuga.
+                twitter: Aut placeat cumque.
+            properties:
+              abstract:
+                description: short description of talk
+                example: Ut nihil.
+                type: string
+              detail:
+                description: detailed description of talk - not for public display
+                example: Sit ducimus cupiditate quo molestias.
+                type: string
+              id:
+                description: ID of record
+                example: 8.211863e+18
+                format: int64
+                type: integer
+              name:
+                description: name of presentation
+                example: Corporis ullam itaque.
+                type: string
+              speaker:
+                description: speaker who is giving the talk
+                example:
+                  bio: Id reiciendis hic et doloremque voluptatem veniam.
+                  email: Dolor excepturi.
+                  first_name: Voluptate rerum mollitia et sunt.
+                  github: Accusantium id tempora facilis.
+                  href: Quia tempora ipsum aperiam nihil voluptatem qui.
+                  id: 3.3609094e+18
+                  image_url: Nihil nesciunt voluptatem reprehenderit et qui.
+                  last_name: Libero cumque aut sit et numquam.
+                  linkedin: Minima odit ex distinctio dolorem similique.
+                  twitter: Atque molestiae numquam quae.
+                properties:
+                  bio:
+                    description: speaker bio
+                    example: Eum hic accusamus qui aspernatur vitae.
+                    type: string
+                  email:
+                    description: email address
+                    example: Saepe odit porro.
+                    type: string
+                  first_name:
+                    description: first name
+                    example: Harum tenetur sint aspernatur nemo inventore placeat.
+                    type: string
+                  github:
+                    description: github handle
+                    example: Impedit vel.
+                    type: string
+                  href:
+                    example: Delectus ipsum facere qui vel.
+                    type: string
+                  id:
+                    description: ID of record
+                    example: 3.234056e+18
+                    format: int64
+                    type: integer
+                  image_url:
+                    description: url of speaker image
+                    example: Debitis nostrum.
+                    type: string
+                  last_name:
+                    description: last name
+                    example: Quia aut sed recusandae amet.
+                    type: string
+                  linkedin:
+                    description: linkedin url
+                    example: Omnis necessitatibus sequi ab qui itaque.
+                    type: string
+                  twitter:
+                    description: twitter handle - no @
+                    example: Est delectus.
+                    type: string
+                type: object
+            type: object
+          type: array
+        speakers:
+          example:
+          - bio: Inventore sequi quidem molestias nesciunt aspernatur.
+            email: Itaque eum ea temporibus quibusdam vitae.
+            first_name: Ut a et sit.
+            github: Quos in doloremque illo hic.
+            href: Incidunt quis quo.
+            id: 3.1834146e+18
+            image_url: Illo reiciendis.
+            last_name: Dolores enim est cum dicta eum facilis.
+            linkedin: Enim ipsum tempore perferendis sapiente velit vero.
+            twitter: Odio est sunt omnis quia.
+          - bio: Voluptas hic.
+            email: Hic incidunt.
+            first_name: Odit aut repudiandae asperiores.
+            github: Harum voluptas aut doloremque fugit omnis debitis.
+            href: Earum autem rerum consectetur officia corrupti eos.
+            id: 3.0082844e+18
+            image_url: Voluptatum qui.
+            last_name: Excepturi quis consectetur nam facere numquam accusamus.
+            linkedin: Molestias et nisi similique.
+            twitter: A voluptas sed est qui sunt.
+          - bio: Voluptatibus sint facere quibusdam nobis.
+            email: Dolores saepe quia quis nihil unde.
+            first_name: Ipsa occaecati exercitationem velit non.
+            github: Id molestias.
+            href: Quisquam vitae quia tenetur officia.
+            id: 6.587664e+18
+            image_url: Numquam quo id mollitia.
+            last_name: Omnis architecto sit hic et id labore.
+            linkedin: Libero in ad.
+            twitter: Quos dolor voluptatem saepe sunt.
+          items:
+            example:
+              bio: Vel saepe vel eum necessitatibus.
+              email: Repellat quos fugit quod dicta dolores iusto.
+              first_name: Aut id iusto minima est omnis mollitia.
+              github: Qui accusantium molestiae.
+              href: Et et et totam repellat.
+              id: 7.759144e+18
+              image_url: Ipsum quaerat.
+              last_name: Aut fugit dolor molestiae.
+              linkedin: Pariatur dolores.
+              twitter: Quas necessitatibus ea vel.
+            properties:
+              bio:
+                description: speaker bio
+                example: Eum hic accusamus qui aspernatur vitae.
+                type: string
+              email:
+                description: email address
+                example: Saepe odit porro.
+                type: string
+              first_name:
+                description: first name
+                example: Harum tenetur sint aspernatur nemo inventore placeat.
+                type: string
+              github:
+                description: github handle
+                example: Impedit vel.
+                type: string
+              href:
+                example: Delectus ipsum facere qui vel.
+                type: string
+              id:
+                description: ID of record
+                example: 3.234056e+18
+                format: int64
+                type: integer
+              image_url:
+                description: url of speaker image
+                example: Debitis nostrum.
+                type: string
+              last_name:
+                description: last name
+                example: Quia aut sed recusandae amet.
+                type: string
+              linkedin:
+                description: linkedin url
+                example: Omnis necessitatibus sequi ab qui itaque.
+                type: string
+              twitter:
+                description: twitter handle - no @
+                example: Est delectus.
+                type: string
+            type: object
+          type: array
         start_date:
           description: start_date
-          example: 1995-03-23T19:05:53-05:00
+          example: 1998-03-16T07:20:55-05:00
           format: date-time
           type: string
         url:
           description: event URL
-          example: Aliquam qui.
+          example: Quasi consequatur voluptatem natus error.
           type: string
       type: object
     title: 'Mediatype identifier: application/vnd.event+json; type=collection'
     type: array
+  Presentation:
+    description: A presentation is a scheduled talk given by a speaker
+    example:
+      abstract: Numquam eveniet.
+      detail: Non laboriosam quo sed ducimus ut eum.
+      id: 1.9422193e+18
+      name: Quisquam et earum numquam nihil aliquid.
+      speaker:
+        bio: Dignissimos non.
+        email: Eum nam aperiam aut veniam unde.
+        first_name: In soluta ullam quis fugiat velit.
+        github: Enim provident.
+        href: Perspiciatis et.
+        id: 8.7156544e+18
+        image_url: Nemo quasi tempore magni veniam ut ducimus.
+        last_name: Consectetur ipsum quia.
+        linkedin: Unde repellendus optio et amet pariatur mollitia.
+        twitter: Vel et sed quia et in.
+    properties:
+      abstract:
+        description: short description of talk
+        example: Ut nihil.
+        type: string
+      detail:
+        description: detailed description of talk - not for public display
+        example: Sit ducimus cupiditate quo molestias.
+        type: string
+      id:
+        description: ID of record
+        example: 8.211863e+18
+        format: int64
+        type: integer
+      name:
+        description: name of presentation
+        example: Corporis ullam itaque.
+        type: string
+      speaker:
+        description: speaker who is giving the talk
+        example:
+          bio: Id reiciendis hic et doloremque voluptatem veniam.
+          email: Dolor excepturi.
+          first_name: Voluptate rerum mollitia et sunt.
+          github: Accusantium id tempora facilis.
+          href: Quia tempora ipsum aperiam nihil voluptatem qui.
+          id: 3.3609094e+18
+          image_url: Nihil nesciunt voluptatem reprehenderit et qui.
+          last_name: Libero cumque aut sit et numquam.
+          linkedin: Minima odit ex distinctio dolorem similique.
+          twitter: Atque molestiae numquam quae.
+        properties:
+          bio:
+            description: speaker bio
+            example: Eum hic accusamus qui aspernatur vitae.
+            type: string
+          email:
+            description: email address
+            example: Saepe odit porro.
+            type: string
+          first_name:
+            description: first name
+            example: Harum tenetur sint aspernatur nemo inventore placeat.
+            type: string
+          github:
+            description: github handle
+            example: Impedit vel.
+            type: string
+          href:
+            example: Delectus ipsum facere qui vel.
+            type: string
+          id:
+            description: ID of record
+            example: 3.234056e+18
+            format: int64
+            type: integer
+          image_url:
+            description: url of speaker image
+            example: Debitis nostrum.
+            type: string
+          last_name:
+            description: last name
+            example: Quia aut sed recusandae amet.
+            type: string
+          linkedin:
+            description: linkedin url
+            example: Omnis necessitatibus sequi ab qui itaque.
+            type: string
+          twitter:
+            description: twitter handle - no @
+            example: Est delectus.
+            type: string
+        type: object
+    title: 'Mediatype identifier: application/vnd.presentation+json'
+    type: object
+  PresentationCollection:
+    example:
+    - abstract: Pariatur labore aut qui.
+      detail: In numquam exercitationem.
+      id: 1.6212201e+18
+      name: Est ut.
+      speaker:
+        bio: Voluptatum et quia non ex eum.
+        email: Esse aut consequatur.
+        first_name: Voluptate ut nam ex aliquam.
+        github: Molestiae iure sed repellendus reiciendis.
+        href: Ipsam praesentium.
+        id: 3.5196002e+18
+        image_url: Et enim magni.
+        last_name: Et est perferendis laudantium mollitia.
+        linkedin: Voluptatum molestias aut.
+        twitter: Modi dolorem voluptas dolor asperiores id.
+    items:
+      example:
+        abstract: Porro alias.
+        detail: Dolor in voluptatem sit neque iusto.
+        id: 8.9590945e+18
+        name: Quae incidunt voluptatem dolores tempora esse impedit.
+        speaker:
+          bio: Itaque praesentium incidunt illo distinctio fugit molestias.
+          email: Ex harum quis.
+          first_name: Aut ipsum dolor.
+          github: Voluptatum aut sapiente consequatur sit autem vel.
+          href: Et maiores quia dolorum ab officia.
+          id: 3.446227e+18
+          image_url: Similique reiciendis aut sit.
+          last_name: Et voluptatem eum.
+          linkedin: Omnis quasi consectetur iusto dolor iure fuga.
+          twitter: Aut placeat cumque.
+      properties:
+        abstract:
+          description: short description of talk
+          example: Ut nihil.
+          type: string
+        detail:
+          description: detailed description of talk - not for public display
+          example: Sit ducimus cupiditate quo molestias.
+          type: string
+        id:
+          description: ID of record
+          example: 8.211863e+18
+          format: int64
+          type: integer
+        name:
+          description: name of presentation
+          example: Corporis ullam itaque.
+          type: string
+        speaker:
+          description: speaker who is giving the talk
+          example:
+            bio: Id reiciendis hic et doloremque voluptatem veniam.
+            email: Dolor excepturi.
+            first_name: Voluptate rerum mollitia et sunt.
+            github: Accusantium id tempora facilis.
+            href: Quia tempora ipsum aperiam nihil voluptatem qui.
+            id: 3.3609094e+18
+            image_url: Nihil nesciunt voluptatem reprehenderit et qui.
+            last_name: Libero cumque aut sit et numquam.
+            linkedin: Minima odit ex distinctio dolorem similique.
+            twitter: Atque molestiae numquam quae.
+          properties:
+            bio:
+              description: speaker bio
+              example: Eum hic accusamus qui aspernatur vitae.
+              type: string
+            email:
+              description: email address
+              example: Saepe odit porro.
+              type: string
+            first_name:
+              description: first name
+              example: Harum tenetur sint aspernatur nemo inventore placeat.
+              type: string
+            github:
+              description: github handle
+              example: Impedit vel.
+              type: string
+            href:
+              example: Delectus ipsum facere qui vel.
+              type: string
+            id:
+              description: ID of record
+              example: 3.234056e+18
+              format: int64
+              type: integer
+            image_url:
+              description: url of speaker image
+              example: Debitis nostrum.
+              type: string
+            last_name:
+              description: last name
+              example: Quia aut sed recusandae amet.
+              type: string
+            linkedin:
+              description: linkedin url
+              example: Omnis necessitatibus sequi ab qui itaque.
+              type: string
+            twitter:
+              description: twitter handle - no @
+              example: Est delectus.
+              type: string
+          type: object
+      type: object
+    title: 'Mediatype identifier: application/vnd.presentation+json; type=collection'
+    type: array
   Series:
     description: A series is a recurring event, e.g. GopherCon
     example:
-      name: Et quae.
+      id: 7.1339437e+18
+      name: Repellendus sapiente dignissimos optio.
     properties:
+      id:
+        description: ID of record
+        example: 5.854521e+18
+        format: int64
+        type: integer
       name:
         description: name
-        example: Dolor in voluptatem sit neque iusto.
+        example: Porro beatae molestiae repudiandae ea quas.
         type: string
     title: 'Mediatype identifier: application/vnd.series+json'
     type: object
   SeriesCollection:
     example:
-    - name: Impedit magnam itaque praesentium incidunt illo.
-    - name: Fugit molestias eos ex harum quis ea.
+    - id: 1.945541e+18
+      name: Corporis et dolores repellat qui eum.
+    - id: 5.517364e+18
+      name: Magnam modi eligendi nihil cumque iusto aliquam.
+    - id: 3.3185273e+18
+      name: Repellendus non autem laboriosam.
     items:
       example:
-        name: Voluptatem dolores.
+        id: 5.780746e+18
+        name: Numquam eaque ut architecto quisquam dolorem.
       properties:
+        id:
+          description: ID of record
+          example: 5.854521e+18
+          format: int64
+          type: integer
         name:
           description: name
-          example: Dolor in voluptatem sit neque iusto.
+          example: Porro beatae molestiae repudiandae ea quas.
           type: string
       type: object
     title: 'Mediatype identifier: application/vnd.series+json; type=collection'
     type: array
+  Speaker:
+    description: A speaker is someone giving a talk at an event
+    example:
+      bio: Cumque eos voluptate.
+      email: Voluptate quasi repellendus cum eius.
+      first_name: Nihil corrupti ad qui omnis doloremque.
+      github: Ut et fugit sed autem voluptas.
+      href: Provident facilis recusandae aliquam consequuntur magnam dolor.
+      id: 5.8452067e+18
+      image_url: Enim ipsum aut est fuga nihil.
+      last_name: Sit aut qui.
+      linkedin: Aliquid numquam est sunt.
+      twitter: Laborum aperiam.
+    properties:
+      bio:
+        description: speaker bio
+        example: Eum hic accusamus qui aspernatur vitae.
+        type: string
+      email:
+        description: email address
+        example: Saepe odit porro.
+        type: string
+      first_name:
+        description: first name
+        example: Harum tenetur sint aspernatur nemo inventore placeat.
+        type: string
+      github:
+        description: github handle
+        example: Impedit vel.
+        type: string
+      href:
+        example: Delectus ipsum facere qui vel.
+        type: string
+      id:
+        description: ID of record
+        example: 3.234056e+18
+        format: int64
+        type: integer
+      image_url:
+        description: url of speaker image
+        example: Debitis nostrum.
+        type: string
+      last_name:
+        description: last name
+        example: Quia aut sed recusandae amet.
+        type: string
+      linkedin:
+        description: linkedin url
+        example: Omnis necessitatibus sequi ab qui itaque.
+        type: string
+      twitter:
+        description: twitter handle - no @
+        example: Est delectus.
+        type: string
+    title: 'Mediatype identifier: application/vnd.speaker+json'
+    type: object
+  SpeakerCollection:
+    example:
+    - bio: Sit voluptas nemo nobis harum rerum.
+      email: Architecto voluptate debitis.
+      first_name: Qui quia et excepturi repellendus voluptate suscipit.
+      github: Omnis nobis.
+      href: Quos repudiandae expedita sint quidem.
+      id: 6.4541635e+18
+      image_url: Quibusdam ut quisquam.
+      last_name: A nesciunt dolorem.
+      linkedin: Et molestiae.
+      twitter: A tempore reiciendis velit aut ipsum.
+    items:
+      example:
+        bio: Vel saepe vel eum necessitatibus.
+        email: Repellat quos fugit quod dicta dolores iusto.
+        first_name: Aut id iusto minima est omnis mollitia.
+        github: Qui accusantium molestiae.
+        href: Et et et totam repellat.
+        id: 7.759144e+18
+        image_url: Ipsum quaerat.
+        last_name: Aut fugit dolor molestiae.
+        linkedin: Pariatur dolores.
+        twitter: Quas necessitatibus ea vel.
+      properties:
+        bio:
+          description: speaker bio
+          example: Eum hic accusamus qui aspernatur vitae.
+          type: string
+        email:
+          description: email address
+          example: Saepe odit porro.
+          type: string
+        first_name:
+          description: first name
+          example: Harum tenetur sint aspernatur nemo inventore placeat.
+          type: string
+        github:
+          description: github handle
+          example: Impedit vel.
+          type: string
+        href:
+          example: Delectus ipsum facere qui vel.
+          type: string
+        id:
+          description: ID of record
+          example: 3.234056e+18
+          format: int64
+          type: integer
+        image_url:
+          description: url of speaker image
+          example: Debitis nostrum.
+          type: string
+        last_name:
+          description: last name
+          example: Quia aut sed recusandae amet.
+          type: string
+        linkedin:
+          description: linkedin url
+          example: Omnis necessitatibus sequi ab qui itaque.
+          type: string
+        twitter:
+          description: twitter handle - no @
+          example: Est delectus.
+          type: string
+      type: object
+    title: 'Mediatype identifier: application/vnd.speaker+json; type=collection'
+    type: array
   Tenant:
     description: Tenant account in Congo
     example:
-      id: 8.688219e+17
-      name: Dolor tempore.
+      id: 1.8489864e+18
+      name: Consectetur nostrum voluptas nihil.
     properties:
       id:
         description: ID
@@ -341,14 +1377,14 @@ definitions:
     type: object
   TenantCollection:
     example:
-    - id: 4.8374784e+18
-      name: Ab officia aut eum similique reiciendis.
-    - id: 3.1373646e+18
-      name: Nisi et voluptatem.
+    - id: 1.4240409e+18
+      name: Corrupti debitis natus.
+    - id: 4.6074298e+18
+      name: Et quia aut omnis et mollitia.
     items:
       example:
-        id: 5.995526e+18
-        name: Sapiente consequatur sit autem vel mollitia et.
+        id: 2.6233003e+18
+        name: Neque voluptatum vel.
       properties:
         id:
           description: ID
@@ -391,21 +1427,29 @@ definitions:
   UpdateEventPayload:
     properties:
       end_date:
-        example: 1993-02-24T21:28:42-05:00
         format: date-time
         type: string
       name:
         minLength: 2
         type: string
       start_date:
-        example: 1998-06-05T03:55:04-04:00
         format: date-time
         type: string
       url:
-        example: jmk0diz
         minLength: 5
         type: string
     title: UpdateEventPayload
+    type: object
+  UpdatePresentationPayload:
+    properties:
+      abstract:
+        minLength: 10
+        type: string
+      detail:
+        type: string
+      name:
+        type: string
+    title: UpdatePresentationPayload
     type: object
   UpdateSeriesPayload:
     properties:
@@ -413,6 +1457,27 @@ definitions:
         minLength: 2
         type: string
     title: UpdateSeriesPayload
+    type: object
+  UpdateSpeakerPayload:
+    properties:
+      bio:
+        type: string
+      first_name:
+        minLength: 2
+        type: string
+      github:
+        type: string
+      image_url:
+        minLength: 5
+        type: string
+      last_name:
+        minLength: 2
+        type: string
+      linkedin:
+        type: string
+      twitter:
+        type: string
+    title: UpdateSpeakerPayload
     type: object
   UpdateTenantPayload:
     properties:
@@ -450,14 +1515,14 @@ definitions:
   User:
     description: A user belonging to a tenant
     example:
-      active: true
-      email: Omnis quasi consectetur iusto dolor iure fuga.
-      first_name: Aut placeat cumque.
-      href: Praesentium id quis asperiores ipsum aliquam corporis.
-      id: 9.1285914e+18
-      last_name: Nihil vero quae fuga tempora exercitationem nihil.
-      role: Facilis qui molestias nihil saepe.
-      tenant_id: 5.30938e+18
+      active: false
+      email: Fuga voluptatem maxime quos ut nemo atque.
+      first_name: Repellat placeat.
+      href: Aut rerum asperiores sed.
+      id: 8.228688e+18
+      last_name: Incidunt qui odio totam.
+      role: Odio quia voluptas accusamus perspiciatis.
+      tenant_id: 3.0208978e+18
       validated: false
     properties:
       active:
@@ -506,25 +1571,34 @@ definitions:
   UserCollection:
     example:
     - active: true
-      email: Earum ut eum alias voluptatibus dolorem non.
-      first_name: Praesentium quia enim et eos earum.
-      href: Officiis a at quia.
-      id: 1.9858597e+18
-      last_name: Nihil aperiam est.
-      role: Velit et atque earum ipsa.
-      tenant_id: 2.9530716e+18
+      email: Ab molestiae perferendis.
+      first_name: Aut aliquid expedita velit blanditiis.
+      href: Cum qui dolorum tenetur consequatur placeat.
+      id: 3.3329622e+18
+      last_name: Vero consequatur beatae vel.
+      role: Nobis ipsum minus sed quod autem.
+      tenant_id: 2.940668e+16
+      validated: false
+    - active: true
+      email: Saepe voluptas labore deserunt.
+      first_name: Cum nisi et.
+      href: Vel ut molestiae eligendi similique.
+      id: 5.6056874e+18
+      last_name: Distinctio quia ab cum.
+      role: Qui soluta.
+      tenant_id: 1.4053923e+18
       validated: false
     items:
       example:
         active: false
-        email: Quis pariatur.
-        first_name: Et reprehenderit et ad.
-        href: Ad blanditiis officiis sint hic ex.
-        id: 9.27952e+17
-        last_name: Quas dignissimos rerum.
-        role: Aut tempora nihil voluptas quo nesciunt dolor.
-        tenant_id: 3.2152477e+18
-        validated: true
+        email: Ea non nobis quis dicta quas.
+        first_name: Sed dolorem quisquam et dolorum necessitatibus repellat.
+        href: Non soluta quod assumenda.
+        id: 2.8647995e+18
+        last_name: Ut tempora officiis totam qui et voluptatem.
+        role: Soluta sit dolores et odio.
+        tenant_id: 1.1579577e+18
+        validated: false
       properties:
         active:
           description: Activation status
@@ -583,6 +1657,15 @@ info:
   title: Congo
   version: ""
 paths:
+  /:
+    get:
+      description: Render single page app HTML
+      operationId: ui#bootstrap
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - https
   /admin/users:
     get:
       description: |
@@ -912,6 +1995,304 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/UpdateEventPayload'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+  /tenants/{tenantID}/events/{eventID}/speakers:
+    get:
+      description: |
+        List all speakers
+
+        ** Required security scopes**:
+      operationId: speaker#list
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SpeakerCollection'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    post:
+      description: |
+        Record new speaker
+
+        ** Required security scopes**:
+      operationId: speaker#create
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateSpeakerPayload'
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: ^/tenants/[0-9]/events/[0-9]/speakers/[0-9]+$
+              type: string
+      schemes:
+      - https
+  /tenants/{tenantID}/events/{eventID}/speakers/{speakerID}:
+    delete:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: speaker#delete
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - description: Speaker ID
+        in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    get:
+      description: Retrieve speaker with given id
+      operationId: speaker#show
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Speaker'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    patch:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: speaker#update
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateSpeakerPayload'
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+  /tenants/{tenantID}/events/{eventID}/speakers/{speakerID}/presentations:
+    get:
+      description: |
+        List all presentations
+
+        ** Required security scopes**:
+      operationId: presentation#list
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PresentationCollection'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    post:
+      description: |
+        Record new presentation
+
+        ** Required security scopes**:
+      operationId: presentation#create
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreatePresentationPayload'
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: ^/tenants/[0-9]/events/[0-9]/presentations/[0-9]+$
+              type: string
+      schemes:
+      - https
+  /tenants/{tenantID}/events/{eventID}/speakers/{speakerID}/presentations/{presentationID}:
+    delete:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: presentation#delete
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - description: Presentation ID
+        in: path
+        name: presentationID
+        required: true
+        type: integer
+      - in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    get:
+      description: Retrieve presentation with given id
+      operationId: presentation#show
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: presentationID
+        required: true
+        type: integer
+      - in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Presentation'
+        "404":
+          description: Not Found
+      schemes:
+      - https
+    patch:
+      description: |2
+
+
+        ** Required security scopes**:
+      operationId: presentation#update
+      parameters:
+      - in: path
+        name: eventID
+        required: true
+        type: integer
+      - in: path
+        name: presentationID
+        required: true
+        type: integer
+      - in: path
+        name: speakerID
+        required: true
+        type: integer
+      - in: path
+        name: tenantID
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdatePresentationPayload'
       responses:
         "204":
           description: No Content

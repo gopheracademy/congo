@@ -61,6 +61,35 @@ var EventPayload = Type("EventPayload", func() {
 
 })
 
+// SpeakerPayload defines the data structure used in the create speaker request body.
+// It is also the base type for the speaker media type used to render speakers.
+var SpeakerPayload = Type("SpeakerPayload", func() {
+	Attribute("first_name", func() {
+		MinLength(2)
+	})
+	Attribute("last_name", func() {
+		MinLength(2)
+	})
+	Attribute("bio")
+	Attribute("twitter")
+	Attribute("linkedin")
+	Attribute("github")
+	Attribute("image_url", func() {
+		MinLength(5)
+	})
+
+})
+
+// PresentationPayload defines the data structure used in the create presentation request body.
+// It is also the base type for the presentation media type used to render presentation.
+var PresentationPayload = Type("PresentationPayload", func() {
+	Attribute("abstract", func() {
+		MinLength(10)
+	})
+	Attribute("name")
+	Attribute("detail")
+})
+
 // AdminUserPayload defines the data structure used in the create user request body.
 // It is also the base type for the user media type used to render users.
 var AdminUserPayload = Type("AdminUserPayload", func() {

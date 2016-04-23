@@ -44,6 +44,7 @@ func (m *SeriesDB) ListSeries(ctx context.Context, tenantID int) []*app.Series {
 // SeriesToSeries returns the Series representation of Series.
 func (m *Series) SeriesToSeries() *app.Series {
 	series := &app.Series{}
+	series.ID = &m.ID
 	series.Name = &m.Name
 
 	return series
