@@ -713,9 +713,8 @@ func MountSpeakerController(service *goa.Service, ctrl SpeakerController) {
 		return ctrl.Create(rctx)
 	}
 	h = handleSpeakerOrigin(h)
-	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/api/tenants/:tenantID/events/:eventID/speakers", ctrl.MuxHandler("Create", h, unmarshalCreateSpeakerPayload))
-	service.LogInfo("mount", "ctrl", "Speaker", "action", "Create", "route", "POST /api/tenants/:tenantID/events/:eventID/speakers", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "Create", "route", "POST /api/tenants/:tenantID/events/:eventID/speakers")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewDeleteSpeakerContext(ctx, service)
@@ -725,9 +724,8 @@ func MountSpeakerController(service *goa.Service, ctrl SpeakerController) {
 		return ctrl.Delete(rctx)
 	}
 	h = handleSpeakerOrigin(h)
-	h = handleSecurity("jwt", h)
 	service.Mux.Handle("DELETE", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID", ctrl.MuxHandler("Delete", h, nil))
-	service.LogInfo("mount", "ctrl", "Speaker", "action", "Delete", "route", "DELETE /api/tenants/:tenantID/events/:eventID/speakers/:speakerID", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "Delete", "route", "DELETE /api/tenants/:tenantID/events/:eventID/speakers/:speakerID")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewListSpeakerContext(ctx, service)
@@ -737,9 +735,8 @@ func MountSpeakerController(service *goa.Service, ctrl SpeakerController) {
 		return ctrl.List(rctx)
 	}
 	h = handleSpeakerOrigin(h)
-	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/api/tenants/:tenantID/events/:eventID/speakers", ctrl.MuxHandler("List", h, nil))
-	service.LogInfo("mount", "ctrl", "Speaker", "action", "List", "route", "GET /api/tenants/:tenantID/events/:eventID/speakers", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "List", "route", "GET /api/tenants/:tenantID/events/:eventID/speakers")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		rctx, err := NewShowSpeakerContext(ctx, service)
@@ -763,9 +760,8 @@ func MountSpeakerController(service *goa.Service, ctrl SpeakerController) {
 		return ctrl.Update(rctx)
 	}
 	h = handleSpeakerOrigin(h)
-	h = handleSecurity("jwt", h)
 	service.Mux.Handle("PATCH", "/api/tenants/:tenantID/events/:eventID/speakers/:speakerID", ctrl.MuxHandler("Update", h, unmarshalUpdateSpeakerPayload))
-	service.LogInfo("mount", "ctrl", "Speaker", "action", "Update", "route", "PATCH /api/tenants/:tenantID/events/:eventID/speakers/:speakerID", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Speaker", "action", "Update", "route", "PATCH /api/tenants/:tenantID/events/:eventID/speakers/:speakerID")
 }
 
 // handleSpeakerOrigin applies the CORS response headers corresponding to the origin.
@@ -947,55 +943,6 @@ func unmarshalUpdateTenantPayload(ctx context.Context, service *goa.Service, req
 	}
 	goa.ContextRequest(ctx).Payload = payload.Publicize()
 	return nil
-}
-
-// UIController is the controller interface for the UI actions.
-type UIController interface {
-	goa.Muxer
-	Bootstrap(*BootstrapUIContext) error
-}
-
-// MountUIController "mounts" a UI resource controller on the given service.
-func MountUIController(service *goa.Service, ctrl UIController) {
-	initService(service)
-	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/", cors.HandlePreflight(service.Context, handleUIOrigin))
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		rctx, err := NewBootstrapUIContext(ctx, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Bootstrap(rctx)
-	}
-	h = handleUIOrigin(h)
-	service.Mux.Handle("GET", "/", ctrl.MuxHandler("Bootstrap", h, nil))
-	service.LogInfo("mount", "ctrl", "UI", "action", "Bootstrap", "route", "GET /")
-}
-
-// handleUIOrigin applies the CORS response headers corresponding to the origin.
-func handleUIOrigin(h goa.Handler) goa.Handler {
-	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		origin := req.Header.Get("Origin")
-		if origin == "" {
-			// Not a CORS request
-			return h(ctx, rw, req)
-		}
-		if cors.MatchOrigin(origin, "http://localhost:5000") {
-			ctx = goa.WithLogContext(ctx, "origin", origin)
-			rw.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
-			rw.Header().Set("Vary", "Origin")
-			rw.Header().Set("Access-Control-Max-Age", "600")
-			rw.Header().Set("Access-Control-Allow-Credentials", "true")
-			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
-				// We are handling a preflight request
-				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
-			}
-			return h(ctx, rw, req)
-		}
-
-		return h(ctx, rw, req)
-	}
 }
 
 // UserController is the controller interface for the User actions.

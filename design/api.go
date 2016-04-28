@@ -33,11 +33,12 @@ var _ = API("congo", func() {
 		})
 	})
 
-    Origin("http://localhost:5000", func() {
+	Origin("http://localhost:5000", func() {
 		Methods("GET", "POST", "PUT", "PATCH", "DELETE")
 		MaxAge(600)
 		Credentials()
 	})
+
 	JWTSecurity("jwt", func() {
 		Header("Authorization")
 		TokenURL("<a href='https://congo.gopheracademy.com/api/auth/token'>https://congo.gopheracademy.com/api/auth/token</a>")

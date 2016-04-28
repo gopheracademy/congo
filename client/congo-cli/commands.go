@@ -19,16 +19,20 @@ type (
 	}
 	// DeleteAdminuserCommand is the command line data structure for the delete action of adminuser
 	DeleteAdminuserCommand struct {
+		// UserID
+		UserID int
 	}
 	// ListAdminuserCommand is the command line data structure for the list action of adminuser
 	ListAdminuserCommand struct {
 	}
 	// ShowAdminuserCommand is the command line data structure for the show action of adminuser
 	ShowAdminuserCommand struct {
+		UserID int
 	}
 	// UpdateAdminuserCommand is the command line data structure for the update action of adminuser
 	UpdateAdminuserCommand struct {
 		Payload string
+		UserID  int
 	}
 	// RefreshAuthCommand is the command line data structure for the refresh action of auth
 	RefreshAuthCommand struct {
@@ -38,74 +42,125 @@ type (
 	}
 	// CreateEventCommand is the command line data structure for the create action of event
 	CreateEventCommand struct {
-		Payload string
+		Payload  string
+		TenantID int
 	}
 	// DeleteEventCommand is the command line data structure for the delete action of event
 	DeleteEventCommand struct {
+		// Event ID
+		EventID  int
+		TenantID int
 	}
 	// ListEventCommand is the command line data structure for the list action of event
 	ListEventCommand struct {
+		TenantID int
 	}
 	// ShowEventCommand is the command line data structure for the show action of event
 	ShowEventCommand struct {
+		EventID  int
+		TenantID int
 	}
 	// UpdateEventCommand is the command line data structure for the update action of event
 	UpdateEventCommand struct {
-		Payload string
+		Payload  string
+		EventID  int
+		TenantID int
 	}
 	// StatusHealthzCommand is the command line data structure for the status action of healthz
 	StatusHealthzCommand struct {
 	}
 	// CreatePresentationCommand is the command line data structure for the create action of presentation
 	CreatePresentationCommand struct {
-		Payload string
+		Payload   string
+		EventID   int
+		SpeakerID int
+		TenantID  int
 	}
 	// DeletePresentationCommand is the command line data structure for the delete action of presentation
 	DeletePresentationCommand struct {
+		EventID int
+		// Presentation ID
+		PresentationID int
+		SpeakerID      int
+		TenantID       int
 	}
 	// ListPresentationCommand is the command line data structure for the list action of presentation
 	ListPresentationCommand struct {
+		EventID   int
+		SpeakerID int
+		TenantID  int
 	}
 	// ShowPresentationCommand is the command line data structure for the show action of presentation
 	ShowPresentationCommand struct {
+		EventID        int
+		PresentationID int
+		SpeakerID      int
+		TenantID       int
 	}
 	// UpdatePresentationCommand is the command line data structure for the update action of presentation
 	UpdatePresentationCommand struct {
-		Payload string
+		Payload        string
+		EventID        int
+		PresentationID int
+		SpeakerID      int
+		TenantID       int
 	}
 	// CreateSeriesCommand is the command line data structure for the create action of series
 	CreateSeriesCommand struct {
-		Payload string
+		Payload  string
+		TenantID int
 	}
 	// DeleteSeriesCommand is the command line data structure for the delete action of series
 	DeleteSeriesCommand struct {
+		// Series ID
+		SeriesID int
+		TenantID int
 	}
 	// ListSeriesCommand is the command line data structure for the list action of series
 	ListSeriesCommand struct {
+		TenantID int
 	}
 	// ShowSeriesCommand is the command line data structure for the show action of series
 	ShowSeriesCommand struct {
+		SeriesID int
+		TenantID int
 	}
 	// UpdateSeriesCommand is the command line data structure for the update action of series
 	UpdateSeriesCommand struct {
-		Payload string
+		Payload  string
+		SeriesID int
+		TenantID int
 	}
 	// CreateSpeakerCommand is the command line data structure for the create action of speaker
 	CreateSpeakerCommand struct {
-		Payload string
+		Payload  string
+		EventID  int
+		TenantID int
 	}
 	// DeleteSpeakerCommand is the command line data structure for the delete action of speaker
 	DeleteSpeakerCommand struct {
+		EventID int
+		// Speaker ID
+		SpeakerID int
+		TenantID  int
 	}
 	// ListSpeakerCommand is the command line data structure for the list action of speaker
 	ListSpeakerCommand struct {
+		EventID  int
+		TenantID int
 	}
 	// ShowSpeakerCommand is the command line data structure for the show action of speaker
 	ShowSpeakerCommand struct {
+		EventID   int
+		SpeakerID int
+		TenantID  int
 	}
 	// UpdateSpeakerCommand is the command line data structure for the update action of speaker
 	UpdateSpeakerCommand struct {
-		Payload string
+		Payload   string
+		EventID   int
+		SpeakerID int
+		TenantID  int
 	}
 	// CreateTenantCommand is the command line data structure for the create action of tenant
 	CreateTenantCommand struct {
@@ -113,40 +168,51 @@ type (
 	}
 	// DeleteTenantCommand is the command line data structure for the delete action of tenant
 	DeleteTenantCommand struct {
+		// Tenant ID
+		TenantID int
 	}
 	// ListTenantCommand is the command line data structure for the list action of tenant
 	ListTenantCommand struct {
 	}
 	// ShowTenantCommand is the command line data structure for the show action of tenant
 	ShowTenantCommand struct {
+		TenantID int
 	}
 	// UpdateTenantCommand is the command line data structure for the update action of tenant
 	UpdateTenantCommand struct {
-		Payload string
-	}
-	// BootstrapUICommand is the command line data structure for the bootstrap action of ui
-	BootstrapUICommand struct {
+		Payload  string
+		TenantID int
 	}
 	// CreateUserCommand is the command line data structure for the create action of user
 	CreateUserCommand struct {
-		Payload string
+		Payload  string
+		TenantID int
 	}
 	// DeleteUserCommand is the command line data structure for the delete action of user
 	DeleteUserCommand struct {
+		TenantID int
+		// UserID
+		UserID int
 	}
 	// ListUserCommand is the command line data structure for the list action of user
 	ListUserCommand struct {
+		TenantID int
 	}
 	// ShowUserCommand is the command line data structure for the show action of user
 	ShowUserCommand struct {
+		TenantID int
+		UserID   int
 	}
 	// UpdateUserCommand is the command line data structure for the update action of user
 	UpdateUserCommand struct {
-		Payload string
+		Payload  string
+		TenantID int
+		UserID   int
 	}
 	// ValidateValidateCommand is the command line data structure for the validate action of validate
 	ValidateValidateCommand struct {
-		V string
+		UserID string
+		V      string
 	}
 )
 
@@ -189,7 +255,7 @@ func (cmd *DeleteAdminuserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/admin/users/%v", cmd.UserID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -205,6 +271,8 @@ func (cmd *DeleteAdminuserCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID int
+	cc.Flags().IntVar(&cmd.UserID, "userID", userID, `UserID `)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -239,7 +307,7 @@ func (cmd *ShowAdminuserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/admin/users/%v", cmd.UserID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -255,6 +323,8 @@ func (cmd *ShowAdminuserCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID int
+	cc.Flags().IntVar(&cmd.UserID, "userID", userID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -264,7 +334,7 @@ func (cmd *UpdateAdminuserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/admin/users/%v", cmd.UserID)
 	}
 	var payload client.UpdateAdminuserPayload
 	if cmd.Payload != "" {
@@ -288,6 +358,8 @@ func (cmd *UpdateAdminuserCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateAdminuserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var userID int
+	cc.Flags().IntVar(&cmd.UserID, "userID", userID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -347,7 +419,7 @@ func (cmd *CreateEventCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events", cmd.TenantID)
 	}
 	var payload client.CreateEventPayload
 	if cmd.Payload != "" {
@@ -371,6 +443,8 @@ func (cmd *CreateEventCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -380,7 +454,7 @@ func (cmd *DeleteEventCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v", cmd.EventID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -396,6 +470,10 @@ func (cmd *DeleteEventCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, `Event ID`)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -405,7 +483,7 @@ func (cmd *ListEventCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events", cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -421,6 +499,8 @@ func (cmd *ListEventCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -430,7 +510,7 @@ func (cmd *ShowEventCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v", cmd.EventID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -446,6 +526,10 @@ func (cmd *ShowEventCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the UpdateEventCommand command.
@@ -454,7 +538,7 @@ func (cmd *UpdateEventCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v", cmd.EventID, cmd.TenantID)
 	}
 	var payload client.UpdateEventPayload
 	if cmd.Payload != "" {
@@ -478,6 +562,10 @@ func (cmd *UpdateEventCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateEventCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -511,7 +599,7 @@ func (cmd *CreatePresentationCommand) Run(c *client.Client, args []string) error
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v/presentations", cmd.EventID, cmd.SpeakerID, cmd.TenantID)
 	}
 	var payload client.CreatePresentationPayload
 	if cmd.Payload != "" {
@@ -535,6 +623,12 @@ func (cmd *CreatePresentationCommand) Run(c *client.Client, args []string) error
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreatePresentationCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -544,7 +638,7 @@ func (cmd *DeletePresentationCommand) Run(c *client.Client, args []string) error
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v/presentations/%v", cmd.EventID, cmd.PresentationID, cmd.SpeakerID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -560,6 +654,14 @@ func (cmd *DeletePresentationCommand) Run(c *client.Client, args []string) error
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeletePresentationCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var presentationID int
+	cc.Flags().IntVar(&cmd.PresentationID, "presentationID", presentationID, `Presentation ID`)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -569,7 +671,7 @@ func (cmd *ListPresentationCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v/presentations", cmd.EventID, cmd.SpeakerID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -585,6 +687,12 @@ func (cmd *ListPresentationCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListPresentationCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -594,7 +702,7 @@ func (cmd *ShowPresentationCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v/presentations/%v", cmd.EventID, cmd.PresentationID, cmd.SpeakerID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -610,6 +718,14 @@ func (cmd *ShowPresentationCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowPresentationCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var presentationID int
+	cc.Flags().IntVar(&cmd.PresentationID, "presentationID", presentationID, ``)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the UpdatePresentationCommand command.
@@ -618,7 +734,7 @@ func (cmd *UpdatePresentationCommand) Run(c *client.Client, args []string) error
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v/presentations/%v", cmd.EventID, cmd.PresentationID, cmd.SpeakerID, cmd.TenantID)
 	}
 	var payload client.UpdatePresentationPayload
 	if cmd.Payload != "" {
@@ -642,6 +758,14 @@ func (cmd *UpdatePresentationCommand) Run(c *client.Client, args []string) error
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdatePresentationCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var presentationID int
+	cc.Flags().IntVar(&cmd.PresentationID, "presentationID", presentationID, ``)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -651,7 +775,7 @@ func (cmd *CreateSeriesCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/series", cmd.TenantID)
 	}
 	var payload client.CreateSeriesPayload
 	if cmd.Payload != "" {
@@ -675,6 +799,8 @@ func (cmd *CreateSeriesCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -684,7 +810,7 @@ func (cmd *DeleteSeriesCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/series/%v", cmd.SeriesID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -700,6 +826,10 @@ func (cmd *DeleteSeriesCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "seriesID", seriesID, `Series ID`)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -709,7 +839,7 @@ func (cmd *ListSeriesCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/series", cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -725,6 +855,8 @@ func (cmd *ListSeriesCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -734,7 +866,7 @@ func (cmd *ShowSeriesCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/series/%v", cmd.SeriesID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -750,6 +882,10 @@ func (cmd *ShowSeriesCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "seriesID", seriesID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -759,7 +895,7 @@ func (cmd *UpdateSeriesCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/series/%v", cmd.SeriesID, cmd.TenantID)
 	}
 	var payload client.UpdateSeriesPayload
 	if cmd.Payload != "" {
@@ -783,6 +919,10 @@ func (cmd *UpdateSeriesCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "seriesID", seriesID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -792,7 +932,7 @@ func (cmd *CreateSpeakerCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers", cmd.EventID, cmd.TenantID)
 	}
 	var payload client.CreateSpeakerPayload
 	if cmd.Payload != "" {
@@ -816,7 +956,10 @@ func (cmd *CreateSpeakerCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateSpeakerCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
-	c.SignerJWT.RegisterFlags(cc)
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the DeleteSpeakerCommand command.
@@ -825,7 +968,7 @@ func (cmd *DeleteSpeakerCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v", cmd.EventID, cmd.SpeakerID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -841,7 +984,12 @@ func (cmd *DeleteSpeakerCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteSpeakerCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	c.SignerJWT.RegisterFlags(cc)
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, `Speaker ID`)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the ListSpeakerCommand command.
@@ -850,7 +998,7 @@ func (cmd *ListSpeakerCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers", cmd.EventID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -866,7 +1014,10 @@ func (cmd *ListSpeakerCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListSpeakerCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	c.SignerJWT.RegisterFlags(cc)
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the ShowSpeakerCommand command.
@@ -875,7 +1026,7 @@ func (cmd *ShowSpeakerCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v", cmd.EventID, cmd.SpeakerID, cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -891,6 +1042,12 @@ func (cmd *ShowSpeakerCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowSpeakerCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the UpdateSpeakerCommand command.
@@ -899,7 +1056,7 @@ func (cmd *UpdateSpeakerCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/events/%v/speakers/%v", cmd.EventID, cmd.SpeakerID, cmd.TenantID)
 	}
 	var payload client.UpdateSpeakerPayload
 	if cmd.Payload != "" {
@@ -923,7 +1080,12 @@ func (cmd *UpdateSpeakerCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateSpeakerCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
-	c.SignerJWT.RegisterFlags(cc)
+	var eventID int
+	cc.Flags().IntVar(&cmd.EventID, "eventID", eventID, ``)
+	var speakerID int
+	cc.Flags().IntVar(&cmd.SpeakerID, "speakerID", speakerID, ``)
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the CreateTenantCommand command.
@@ -964,7 +1126,7 @@ func (cmd *DeleteTenantCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v", cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -980,6 +1142,8 @@ func (cmd *DeleteTenantCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, `Tenant ID`)
 }
 
 // Run makes the HTTP request corresponding to the ListTenantCommand command.
@@ -1012,7 +1176,7 @@ func (cmd *ShowTenantCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v", cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -1028,6 +1192,8 @@ func (cmd *ShowTenantCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the UpdateTenantCommand command.
@@ -1036,7 +1202,7 @@ func (cmd *UpdateTenantCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v", cmd.TenantID)
 	}
 	var payload client.UpdateTenantPayload
 	if cmd.Payload != "" {
@@ -1060,30 +1226,8 @@ func (cmd *UpdateTenantCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateTenantCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
-}
-
-// Run makes the HTTP request corresponding to the BootstrapUICommand command.
-func (cmd *BootstrapUICommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/"
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.BootstrapUI(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *BootstrapUICommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 }
 
 // Run makes the HTTP request corresponding to the CreateUserCommand command.
@@ -1092,7 +1236,7 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/users", cmd.TenantID)
 	}
 	var payload client.CreateUserPayload
 	if cmd.Payload != "" {
@@ -1116,6 +1260,8 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -1125,7 +1271,7 @@ func (cmd *DeleteUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/users/%v", cmd.TenantID, cmd.UserID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -1141,6 +1287,10 @@ func (cmd *DeleteUserCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
+	var userID int
+	cc.Flags().IntVar(&cmd.UserID, "userID", userID, `UserID `)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -1150,7 +1300,7 @@ func (cmd *ListUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/users", cmd.TenantID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -1166,6 +1316,8 @@ func (cmd *ListUserCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ListUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -1175,7 +1327,7 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/users/%v", cmd.TenantID, cmd.UserID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -1191,6 +1343,10 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
+	var userID int
+	cc.Flags().IntVar(&cmd.UserID, "userID", userID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -1200,7 +1356,7 @@ func (cmd *UpdateUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/tenants/%v/users/%v", cmd.TenantID, cmd.UserID)
 	}
 	var payload client.UpdateUserPayload
 	if cmd.Payload != "" {
@@ -1224,6 +1380,10 @@ func (cmd *UpdateUserCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *UpdateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request JSON body")
+	var tenantID int
+	cc.Flags().IntVar(&cmd.TenantID, "tenantID", tenantID, ``)
+	var userID int
+	cc.Flags().IntVar(&cmd.UserID, "userID", userID, ``)
 	c.SignerJWT.RegisterFlags(cc)
 }
 
@@ -1233,7 +1393,7 @@ func (cmd *ValidateValidateCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		return fmt.Errorf("missing path argument")
+		path = fmt.Sprintf("/api/validate/%v", cmd.UserID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -1249,6 +1409,8 @@ func (cmd *ValidateValidateCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ValidateValidateCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var tmp41 string
-	cc.Flags().StringVar(&cmd.V, "v", tmp41, ``)
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "userID", userID, ``)
+	var v string
+	cc.Flags().StringVar(&cmd.V, "v", v, ``)
 }

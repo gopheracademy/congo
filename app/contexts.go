@@ -1925,13 +1925,13 @@ func NewShowSpeakerContext(ctx context.Context, service *goa.Service) (*ShowSpea
 
 // OKAdmin sends a HTTP response with status code 200.
 func (ctx *ShowSpeakerContext) OKAdmin(r *SpeakerAdmin) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker")
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker+json")
 	return ctx.Service.Send(ctx.Context, 200, r)
 }
 
 // OK sends a HTTP response with status code 200.
 func (ctx *ShowSpeakerContext) OK(r *Speaker) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker")
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.speaker+json")
 	return ctx.Service.Send(ctx.Context, 200, r)
 }
 
@@ -2343,31 +2343,6 @@ func (ctx *UpdateTenantContext) NoContent() error {
 func (ctx *UpdateTenantContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
 	return nil
-}
-
-// BootstrapUIContext provides the ui bootstrap action context.
-type BootstrapUIContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	Service *goa.Service
-}
-
-// NewBootstrapUIContext parses the incoming request URL and body, performs validations and creates the
-// context used by the ui controller bootstrap action.
-func NewBootstrapUIContext(ctx context.Context, service *goa.Service) (*BootstrapUIContext, error) {
-	var err error
-	req := goa.ContextRequest(ctx)
-	rctx := BootstrapUIContext{Context: ctx, ResponseData: goa.ContextResponse(ctx), RequestData: req, Service: service}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *BootstrapUIContext) OK(resp []byte) error {
-	ctx.ResponseData.Header().Set("Content-Type", "text/html")
-	ctx.ResponseData.WriteHeader(200)
-	_, err := ctx.ResponseData.Write(resp)
-	return err
 }
 
 // CreateUserContext provides the user create action context.

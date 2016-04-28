@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
-	"path/filepath"
 
 	"log"
 
@@ -22,6 +22,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/qor/admin"
 	"github.com/qor/qor"
+	"github.com/shurcooL/go/gzip_file_server"
+	"github.com/shurcooL/httpfs/html/vfstemplate"
 )
 
 // settings holds the congo configuration.
@@ -116,9 +118,6 @@ func main() {
 	c8 := NewValidateController(service)
 	app.MountValidateController(service, c8)
 
-	c9 := NewUIController(service)
-	app.MountUIController(service, c9)
-
 	c10 := NewSpeakerController(service, storageList, env)
 	app.MountSpeakerController(service, c10)
 
@@ -126,11 +125,6 @@ func main() {
 	app.MountPresentationController(service, c11)
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
-
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	Admin := admin.New(&qor.Config{DB: &env.DB})
 
@@ -142,7 +136,44 @@ func main() {
 	Admin.AddResource(&models.User{})
 	mux := http.NewServeMux()
 	Admin.MountTo("/admin", mux)
-	go http.ListenAndServe(":19000", mux)
-	service.ServeFiles("/assets/*filepath", filepath.Join(dir, "public"))
-	service.ListenAndServe(":18080")
+
+	http.Handle("/assets/", gzip_file_server.New(assets))
+	fs := http.FileServer(http.Dir("bower_components"))
+	http.Handle("/bower_components/", http.StripPrefix("/bower_components", fs))
+	http.Handle("/api/", service.Mux)
+	http.HandleFunc("/", mainHandler)
+	http.Handle("/favicon.ico", http.NotFoundHandler())
+
+	err = http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatalln("ListenAndServe:", err)
+	}
+}
+
+func loadTemplates() (*template.Template, error) {
+	t := template.New("").Delims("<<", ">>").Funcs(template.FuncMap{})
+	t, err := vfstemplate.ParseGlob(assets, t, "/assets/*.tmpl")
+	return t, err
+}
+
+func mainHandler(w http.ResponseWriter, req *http.Request) {
+	t, err := loadTemplates()
+	if err != nil {
+		log.Println("loadTemplates:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var data = struct {
+		Animals string
+	}{
+		Animals: "gophers",
+	}
+
+	err = t.ExecuteTemplate(w, "index.html.tmpl", data)
+	if err != nil {
+		log.Println("t.Execute:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

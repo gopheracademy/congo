@@ -1,0 +1,27 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-styles/typography.html">
+
+<dom-module id="my-login">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+      span,
+      input {
+        @apply(--paper-font-body2);
+      }
+    </style>
+	<div id="loginform" hidden$="{{hideform}}">
+    <h3 class="page-title" tabindex="-1" >Please Log In to Continue</h3>
+    <form is="iron-form" id="form" method="post" action="#" >
+		<paper-input name="name" label="login name" value={{username}}></paper-input>
+		<paper-input type="password" name="password" label="password" value={{password}}></paper-input>
+	</form>
+
+	<paper-button raised on-click="doLogin"><iron-icon icon="arrow-forward"></iron-icon>Login</paper-button>
+	</div>
+  </template>
+	<script src="/assets/elements/my-login/my-login.js"></script>
+	<script>PolymerGo("my-login")</script>
+</dom-module>

@@ -33,7 +33,7 @@ gen:
 
 test:  pgdown pgclean pgup
 	sleep 10
-	CONGOTEST_DEBUG=true CONGOTEST_DB_HOST=127.0.0.1 CONGOTEST_DB_USERNAME=congo CONGOTEST_DB_NAME=congo CONGOTEST_DB_PORT=5432 CONGOTEST_DB_PASSWORD=congopass go test -v ./...
+	CONGOTEST_DEBUG=true CONGOTEST_DB_HOST=localhost CONGOTEST_DB_USERNAME=congo CONGOTEST_DB_NAME=congo CONGOTEST_DB_PORT=5432 CONGOTEST_DB_PASSWORD=congopass go test -v ./...
 
 pgup:
 	docker-compose -f dc-postgres.yml up -d

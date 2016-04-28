@@ -1657,15 +1657,6 @@ info:
   title: Congo
   version: ""
 paths:
-  /:
-    get:
-      description: Render single page app HTML
-      operationId: ui#bootstrap
-      responses:
-        "200":
-          description: OK
-      schemes:
-      - https
   /admin/users:
     get:
       description: |
@@ -2004,10 +1995,7 @@ paths:
       - https
   /tenants/{tenantID}/events/{eventID}/speakers:
     get:
-      description: |
-        List all speakers
-
-        ** Required security scopes**:
+      description: List all speakers
       operationId: speaker#list
       parameters:
       - in: path
@@ -2028,10 +2016,7 @@ paths:
       schemes:
       - https
     post:
-      description: |
-        Record new speaker
-
-        ** Required security scopes**:
+      description: Record new speaker
       operationId: speaker#create
       parameters:
       - in: path
@@ -2059,10 +2044,6 @@ paths:
       - https
   /tenants/{tenantID}/events/{eventID}/speakers/{speakerID}:
     delete:
-      description: |2
-
-
-        ** Required security scopes**:
       operationId: speaker#delete
       parameters:
       - in: path
@@ -2111,10 +2092,6 @@ paths:
       schemes:
       - https
     patch:
-      description: |2
-
-
-        ** Required security scopes**:
       operationId: speaker#update
       parameters:
       - in: path

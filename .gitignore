@@ -26,7 +26,8 @@ congo
 congo-cli
 
 # UI Cruft
-ui/node_modules/
+node_modules/
+bower_components/
 public/app.js
 public/app.js.map
 
@@ -34,3 +35,5 @@ public/app.js.map
 keys/
 .idea/
 .vscode/
+
+.DS_Store

@@ -5,20 +5,6 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = Resource("ui", func() {
-	BasePath("/")
-
-	Action("bootstrap", func() {
-		Routing(
-			GET("//"),
-		)
-		Description("Render single page app HTML")
-		Response(OK, func() {
-			Media("text/html")
-		})
-	})
-})
-
 var _ = Resource("auth", func() {
 	Security("password")
 	DefaultMedia(Authorize)
@@ -344,7 +330,7 @@ var _ = Resource("speaker", func() {
 	DefaultMedia(Speaker)
 	Parent("event")
 	BasePath("/speakers")
-	Security("jwt")
+	//	Security("jwt")
 
 	Action("list", func() {
 		Routing(
@@ -368,7 +354,9 @@ var _ = Resource("speaker", func() {
 		Params(func() {
 			Param("speakerID", Integer)
 		})
-		Response(OK)
+		Response(OK, func() {
+			Media(Speaker)
+		})
 		Response(NotFound)
 	})
 
