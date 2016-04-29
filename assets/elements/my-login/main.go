@@ -16,6 +16,7 @@ func init() {
 	polymer.Register("my-login", &Login{})
 }
 
+// Login is the base component struct
 type Login struct {
 	*polymer.Proto
 	DoLogin  chan *polymer.Event `polymer:"handler"`
@@ -24,14 +25,17 @@ type Login struct {
 	Message  string              `polymer:"bind"`
 }
 
+// Created is a callback
 func (l *Login) Created() {
 	l.Username = "user@example.com"
 }
 
+// Ready is a callback
 func (l *Login) Ready() {
 	l.ListenToggleEvents()
 }
 
+// ListenToggleEvents creates listeners to polymer events
 func (l *Login) ListenToggleEvents() {
 	go func() {
 		for {
@@ -50,6 +54,8 @@ func (l *Login) ListenToggleEvents() {
 		}
 	}()
 }
+
+// login processes a login with the username and password
 func login(u, p string) bool {
 
 	req, err := http.NewRequest("POST", "/api/auth/token", nil)
