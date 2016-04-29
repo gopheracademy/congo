@@ -1,6 +1,6 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-styles/typography.html">
-
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 <dom-module id="my-login">
   <template>
     <style include="shared-styles">
@@ -14,6 +14,7 @@
     </style>
 	<div id="loginform" hidden$="{{hideform}}">
     <h3 class="page-title" tabindex="-1" >Please Log In to Continue</h3>
+    <span>{{message}}</span>
     <form is="iron-form" id="form" method="post" action="#" >
 		<paper-input name="name" label="login name" value={{username}}></paper-input>
 		<paper-input type="password" name="password" label="password" value={{password}}></paper-input>
