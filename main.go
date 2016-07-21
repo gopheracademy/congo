@@ -22,8 +22,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/qor/admin"
 	"github.com/qor/qor"
-	"github.com/shurcooL/go/gzip_file_server"
 	"github.com/shurcooL/httpfs/html/vfstemplate"
+	"github.com/shurcooL/httpgzip"
 )
 
 // settings holds the congo configuration.
@@ -137,8 +137,8 @@ func main() {
 	mux := http.NewServeMux()
 	Admin.MountTo("/admin", mux)
 
-	http.Handle("/assets/", gzip_file_server.New(assets))
-	fs := http.FileServer(http.Dir("bower_components"))
+	http.Handle("/assets/", httpgzip.FileServer(assets, httpgzip.FileServerOptions{}))
+	fs := httpgzip.FileServer(http.Dir("bower_components"), httpgzip.FileServerOptions{})
 	http.Handle("/bower_components/", http.StripPrefix("/bower_components", fs))
 	http.Handle("/api/", service.Mux)
 	http.HandleFunc("/", mainHandler)
